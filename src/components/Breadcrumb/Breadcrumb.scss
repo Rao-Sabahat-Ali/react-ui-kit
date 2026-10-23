@@ -1,0 +1,50 @@
+.ui-breadcrumb {
+  --bs-breadcrumb-divider-color: var(--ui-color-text-subtle);
+  --bs-breadcrumb-item-active-color: var(--ui-color-text);
+  --bs-breadcrumb-item-padding-x: var(--ui-space-2);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-breadcrumb__link {
+  color: var(--ui-color-link);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+
+  &:hover {
+    color: var(--ui-color-link-hover);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    border-radius: var(--ui-radius-sm);
+  }
+}
+
+.ui-breadcrumb__current {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-breadcrumb__separator {
+  color: var(--ui-color-text-subtle);
+  padding-inline-end: var(--ui-space-2);
+}
+
+.ui-breadcrumb__more {
+  min-inline-size: 24px;
+  min-block-size: 24px;
+  color: var(--ui-color-text-muted);
+}
+
+@media (pointer: coarse) {
+  .ui-breadcrumb__link,
+  .ui-breadcrumb__more {
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
