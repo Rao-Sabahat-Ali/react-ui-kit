@@ -68,7 +68,6 @@ export function MultiStateCheckbox<T>({
       type="button"
       id={control.id}
       aria-label={`${label}: ${stateLabel}`}
-      aria-invalid={control.invalid || undefined}
       {...rest}
       aria-describedby={control.describedBy}
       onClick={handleClick}

@@ -80,6 +80,8 @@ export function Rating({
   };
 
   return (
+    // Focus lives on the star radios (roving tabindex), not the group container.
+    // eslint-disable-next-line jsx-a11y/interactive-supports-focus
     <div
       ref={ref}
       role="radiogroup"

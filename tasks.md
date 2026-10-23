@@ -20,30 +20,30 @@ Profiles: all. Shared groundwork first (UI-200), then controls in order.
 - [x] **UI-200** Shared: `utils/mask.ts`, `utils/date.ts` (Intl-based calendar maths), `utils/number.ts` (locale parse/format), `useTypeahead`, `useRovingFocus` hooks with tests; all reserved locale keys + plural `tp()`.
 - [x] **UI-201** Switch — spec `switch.md` — reviews: a11y-reviewer
 - [x] **UI-202** RadioButton — spec `radio-button.md` — reviews: a11y-reviewer
-- [ ] **UI-203** InputTextarea — spec `input-textarea.md` — reviews: a11y-reviewer
-- [ ] **UI-204** InputGroup — spec `input-group.md` — reviews: a11y-reviewer
-- [ ] **UI-205** IconField — spec `icon-field.md` — reviews: a11y-reviewer
-- [ ] **UI-206** FloatLabel — spec `float-label.md` — reviews: a11y-reviewer
-- [ ] **UI-207** Password — spec `password.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-208** InputNumber — spec `input-number.md` — reviews: a11y-reviewer
+- [x] **UI-203** InputTextarea — spec `input-textarea.md` — reviews: a11y-reviewer
+- [x] **UI-204** InputGroup — spec `input-group.md` — reviews: a11y-reviewer
+- [x] **UI-205** IconField — spec `icon-field.md` — reviews: a11y-reviewer
+- [x] **UI-206** FloatLabel — spec `float-label.md` — reviews: a11y-reviewer
+- [x] **UI-207** Password — spec `password.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-208** InputNumber — spec `input-number.md` — reviews: a11y-reviewer
 - [x] **UI-209** SelectButton — spec `select-button.md` — reviews: a11y-reviewer
-- [ ] **UI-210** ToggleButton — spec `toggle-button.md` — reviews: a11y-reviewer
-- [ ] **UI-211** TriStateCheckbox — spec `tri-state-checkbox.md` — reviews: a11y-reviewer
-- [ ] **UI-212** MultiStateCheckbox — spec `multi-state-checkbox.md` — reviews: a11y-reviewer
+- [x] **UI-210** ToggleButton — spec `toggle-button.md` — reviews: a11y-reviewer
+- [x] **UI-211** TriStateCheckbox — spec `tri-state-checkbox.md` — reviews: a11y-reviewer
+- [x] **UI-212** MultiStateCheckbox — spec `multi-state-checkbox.md` — reviews: a11y-reviewer
 - [ ] **UI-213** ListBox — spec `list-box.md` — reviews: a11y-reviewer
 - [ ] **UI-214** MultiSelect — spec `multi-select.md` — reviews: a11y-reviewer
 - [ ] **UI-215** AutoComplete — spec `auto-complete.md` — reviews: a11y-reviewer
 - [ ] **UI-216** Chips — spec `chips.md` — reviews: a11y-reviewer
-- [ ] **UI-217** InputMask — spec `input-mask.md` — reviews: a11y-reviewer
-- [ ] **UI-218** KeyFilter — spec `key-filter.md` — reviews: a11y-reviewer
-- [ ] **UI-219** InputOtp — spec `input-otp.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-220** Slider — spec `slider.md` — reviews: a11y-reviewer
-- [ ] **UI-221** Rating — spec `rating.md` — reviews: a11y-reviewer
+- [x] **UI-217** InputMask — spec `input-mask.md` — reviews: a11y-reviewer
+- [x] **UI-218** KeyFilter — spec `key-filter.md` — reviews: a11y-reviewer
+- [x] **UI-219** InputOtp — spec `input-otp.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-220** Slider — spec `slider.md` — reviews: a11y-reviewer
+- [x] **UI-221** Rating — spec `rating.md` — reviews: a11y-reviewer
 - [ ] **UI-222** DatePicker — spec `date-picker.md` — reviews: a11y-reviewer
 - [ ] **UI-223** CascadeSelect — spec `cascade-select.md` — reviews: a11y-reviewer
 - [ ] **UI-224** TreeSelect — spec `tree-select.md` — reviews: a11y-reviewer
 - [ ] **UI-225** ColorPicker — spec `color-picker.md` — reviews: a11y-reviewer
-- [ ] **UI-226** Knob — spec `knob.md` — reviews: a11y-reviewer
+- [x] **UI-226** Knob — spec `knob.md` — reviews: a11y-reviewer
 - [ ] **UI-227** Mention — spec `mention.md` — reviews: security-reviewer, a11y-reviewer
 - [x] **UI-240** `utils/sanitize.ts` allowlist HTML sanitizer + tests (prereq for Editor).
 - [ ] **UI-228** Editor — spec `editor.md` — reviews: security-reviewer, a11y-reviewer

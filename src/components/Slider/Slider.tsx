@@ -253,7 +253,7 @@ export function Slider({
               }}
               data-thumb={index}
               role="slider"
-              tabIndex={disabled ? undefined : 0}
+              tabIndex={disabled ? -1 : 0}
               aria-valuemin={lower}
               aria-valuemax={upper}
               aria-valuenow={v}
