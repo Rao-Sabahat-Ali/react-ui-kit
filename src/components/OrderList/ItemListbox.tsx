@@ -144,6 +144,8 @@ export function ItemListbox<T>({
       }
       case 'Enter':
         if (!onActivate) return;
+        // The item may leave this list: keep keyboard focus on a neighbour.
+        pendingFocus.current = keys[index + 1] ?? keys[index - 1] ?? null;
         onActivate(items[index]!, index);
         break;
       default: {
