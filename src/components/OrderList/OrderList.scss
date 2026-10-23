@@ -1,0 +1,106 @@
+.ui-order-list {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  color: var(--ui-color-text);
+}
+
+.ui-order-list__controls {
+  flex: none;
+  align-self: center;
+}
+
+.ui-order-list__main {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.ui-order-list__header {
+  padding: var(--ui-space-2) var(--ui-space-3);
+  border: 1px solid var(--ui-color-border);
+  border-block-end: 0;
+  border-start-start-radius: var(--ui-radius);
+  border-start-end-radius: var(--ui-radius);
+  background: var(--ui-color-bg-subtle);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-item-listbox {
+  overflow: auto;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface);
+}
+
+.ui-order-list__header + .ui-item-listbox {
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}
+
+.ui-item-listbox--disabled {
+  opacity: 0.65;
+}
+
+.ui-item-listbox__list {
+  margin: 0;
+  border-radius: 0;
+}
+
+.ui-item-listbox__option {
+  position: relative;
+  border-inline: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: pan-y;
+  background: var(--ui-color-surface);
+  color: var(--ui-color-text);
+
+  &.active {
+    background: var(--ui-color-primary-subtle);
+    border-color: var(--ui-color-border);
+    color: var(--ui-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
+    z-index: 1;
+  }
+
+  @media (pointer: coarse) {
+    min-block-size: 2.75rem;
+  }
+}
+
+.ui-item-listbox__option--dragging {
+  opacity: 0.5;
+}
+
+.ui-item-listbox__option--drop-before::before,
+.ui-item-listbox__option--drop-after::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  block-size: 2px;
+  background: var(--ui-color-primary);
+}
+
+.ui-item-listbox__option--drop-before::before {
+  inset-block-start: 0;
+}
+
+.ui-item-listbox__option--drop-after::after {
+  inset-block-end: 0;
+}
+
+@media (max-width: 575.98px) {
+  .ui-order-list {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ui-order-list__controls {
+    flex-direction: row;
+    align-self: flex-start;
+  }
+}
