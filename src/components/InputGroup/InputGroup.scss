@@ -1,0 +1,29 @@
+.ui-input-group {
+  & > .form-control,
+  & > .form-select,
+  & > .ui-input-text,
+  & > .btn {
+    min-height: var(--ui-control-height-md);
+  }
+
+  & > .input-group-text {
+    padding-inline: var(--ui-control-padding-x);
+    color: var(--ui-color-text-muted);
+    background-color: var(--ui-color-surface-muted, var(--ui-color-surface));
+    border-color: var(--ui-color-border);
+  }
+
+  &.input-group-sm > .form-control,
+  &.input-group-sm > .btn {
+    min-height: var(--ui-control-height-sm);
+  }
+
+  &.input-group-lg > .form-control,
+  &.input-group-lg > .btn {
+    min-height: var(--ui-control-height-lg);
+  }
+}
+
+.ui-input-group__addon {
+  border-radius: var(--ui-radius);
+}
