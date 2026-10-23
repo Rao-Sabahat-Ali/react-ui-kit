@@ -1,0 +1,58 @@
+.ui-tree-table {
+  --ui-tree-table-indent: 1.5rem;
+}
+
+.ui-tree-table__cell-start {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  vertical-align: middle;
+  margin-inline-end: var(--ui-space-2);
+
+  .form-check {
+    margin: 0;
+    min-block-size: 0;
+  }
+
+  .form-check-input {
+    float: none;
+    margin: 0;
+  }
+}
+
+.ui-tree-table__toggler {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  flex: none;
+  cursor: pointer;
+}
+
+.ui-tree-table__toggler--empty {
+  cursor: default;
+}
+
+.ui-tree-table__chevron {
+  transition: transform var(--ui-duration) var(--ui-easing);
+}
+
+.ui-tree-table__chevron--open {
+  transform: rotate(90deg);
+}
+
+.ui-tree-table__row--selectable {
+  cursor: pointer;
+}
+
+.ui-tree-table__row:focus-visible {
+  outline: 2px solid var(--ui-color-focus-ring);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tree-table__chevron {
+    transition: none;
+  }
+}
