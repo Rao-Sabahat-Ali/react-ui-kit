@@ -5,6 +5,8 @@ import { cx } from '../../utils/cx';
 import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
 import { Icon } from '../Icon/Icon';
+import { useKeyFilter } from '../KeyFilter/useKeyFilter';
+import type { KeyFilterPattern } from '../KeyFilter/patterns';
 
 export interface InputTextProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'size' | 'type' | 'prefix'> {
   value?: string;
@@ -17,6 +19,8 @@ export interface InputTextProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   suffix?: ReactNode;
   clearable?: boolean;
   plaintext?: boolean;
+  /** Restrict typed/pasted characters: a preset name or a single-character RegExp. */
+  keyFilter?: KeyFilterPattern;
   ref?: Ref<HTMLInputElement>;
 }
 
@@ -31,6 +35,9 @@ export function InputText({
   suffix,
   clearable = false,
   plaintext = false,
+  keyFilter,
+  onKeyDown,
+  onPaste,
   className,
   id: idProp,
   required: requiredProp,
@@ -41,6 +48,7 @@ export function InputText({
   const control = useFieldControl({ id: idProp, invalid: invalidProp, required: requiredProp, 'aria-describedby': rest['aria-describedby'] });
   const [value, setValue] = useControllableState<string>(valueProp, defaultValue);
   const innerRef = useRef<HTMLInputElement | null>(null);
+  const filter = useKeyFilter(keyFilter);
 
   const setRefs = (node: HTMLInputElement | null) => {
     innerRef.current = node;
@@ -49,8 +57,17 @@ export function InputText({
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-    onChange?.(event.target.value, event);
+    let next = event.target.value;
+    // Backstop for input paths that bypass keydown/paste (mobile keyboards, drop); never mid-composition.
+    if (keyFilter && !(event.nativeEvent as InputEvent).isComposing) {
+      const filtered = filter.filter(next);
+      if (filtered !== next) {
+        event.target.value = filtered;
+        next = filtered;
+      }
+    }
+    setValue(next);
+    onChange?.(next, event);
   };
 
   const handleClear = () => {
@@ -69,6 +86,14 @@ export function InputText({
       required={control.required || undefined}
       aria-invalid={control.invalid || undefined}
       {...rest}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        if (!event.defaultPrevented) filter.props.onKeyDown?.(event);
+      }}
+      onPaste={(event) => {
+        onPaste?.(event);
+        if (!event.defaultPrevented) filter.props.onPaste?.(event);
+      }}
       aria-describedby={control.describedBy}
       readOnly={plaintext || rest.readOnly}
       className={cx(
