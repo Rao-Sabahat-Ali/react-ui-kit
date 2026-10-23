@@ -1,0 +1,32 @@
+.ui-scroll-panel {
+  --ui-scroll-thumb: var(--ui-color-border-strong);
+  --ui-scroll-thumb-hover: var(--ui-color-text-subtle);
+  --ui-scroll-track: transparent;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-scroll-thumb) var(--ui-scroll-track);
+
+  &::-webkit-scrollbar {
+    inline-size: var(--ui-space-2);
+    block-size: var(--ui-space-2);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--ui-scroll-track);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: var(--ui-radius-pill);
+    background: var(--ui-scroll-thumb);
+
+    &:hover {
+      background: var(--ui-scroll-thumb-hover);
+    }
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: 2px solid transparent;
+  }
+}

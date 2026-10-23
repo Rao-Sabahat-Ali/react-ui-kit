@@ -1,0 +1,36 @@
+.ui-scroll-top {
+  position: fixed;
+  inset-block-end: var(--ui-space-6);
+  inset-inline-end: var(--ui-space-6);
+  z-index: var(--ui-z-fixed);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ui-control-height-lg);
+  block-size: var(--ui-control-height-lg);
+  padding: 0;
+  border-radius: var(--ui-radius-circle);
+  box-shadow: var(--ui-shadow-md);
+
+  &[hidden] {
+    display: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: 2px solid transparent;
+  }
+}
+
+.ui-scroll-top--parent {
+  position: sticky;
+  inset-block-end: var(--ui-space-4);
+  margin-inline-start: auto;
+}
+
+@media (pointer: coarse) {
+  .ui-scroll-top {
+    min-inline-size: var(--ui-touch-target-min);
+    min-block-size: var(--ui-touch-target-min);
+  }
+}

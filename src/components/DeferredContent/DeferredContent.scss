@@ -1,0 +1,7 @@
+.ui-deferred-content {
+  min-block-size: var(--ui-space-8);
+}
+
+.ui-deferred-content--loaded {
+  min-block-size: 0;
+}

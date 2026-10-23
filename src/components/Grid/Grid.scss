@@ -1,0 +1,13 @@
+.ui-grid {
+  --bs-gutter-x: var(--ui-gap, var(--ui-space-4));
+  --bs-gutter-y: 0;
+  margin-inline: calc(-0.5 * var(--bs-gutter-x));
+}
+
+.ui-grid.list-unstyled {
+  padding-inline-start: 0;
+}
+
+.ui-grid__col {
+  min-inline-size: 0;
+}

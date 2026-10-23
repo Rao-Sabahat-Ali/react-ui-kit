@@ -1,0 +1,142 @@
+.ui-stepper {
+  --ui-stepper-marker-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+}
+
+.ui-stepper__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-3) var(--ui-space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-stepper--vertical {
+  flex-direction: row;
+  align-items: flex-start;
+
+  .ui-stepper__list {
+    flex: 0 0 auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .ui-stepper__panel {
+    flex: 1 1 auto;
+  }
+}
+
+.ui-stepper__step {
+  flex: 0 1 auto;
+}
+
+.ui-stepper__header {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  min-block-size: var(--ui-touch-target-min, 24px);
+  padding: var(--ui-space-1);
+  border: 0;
+  border-radius: var(--ui-radius);
+  background: transparent;
+  color: var(--ui-color-text-muted);
+  font: inherit;
+  text-align: start;
+}
+
+button.ui-stepper__header {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--ui-color-text);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: 2px solid transparent;
+  }
+}
+
+.ui-stepper__marker {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ui-stepper-marker-size);
+  block-size: var(--ui-stepper-marker-size);
+  border: 2px solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius-circle);
+  background: var(--ui-color-surface);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  transition: background-color var(--ui-duration) var(--ui-easing), border-color var(--ui-duration) var(--ui-easing);
+}
+
+.ui-stepper__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+}
+
+.ui-stepper__label {
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-stepper__optional,
+.ui-stepper__description {
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-stepper__step--current {
+  .ui-stepper__header {
+    color: var(--ui-color-text);
+  }
+
+  .ui-stepper__marker {
+    border-color: var(--ui-color-primary);
+    background: var(--ui-color-primary);
+    color: var(--ui-color-primary-contrast);
+  }
+}
+
+.ui-stepper__step--done .ui-stepper__marker {
+  border-color: var(--ui-color-success);
+  background: var(--ui-color-success-subtle);
+  color: var(--ui-color-success-emphasis);
+}
+
+.ui-stepper__step--error {
+  .ui-stepper__marker {
+    border-color: var(--ui-color-danger);
+    background: var(--ui-color-danger-subtle);
+    color: var(--ui-color-danger-emphasis);
+  }
+}
+
+.ui-stepper__error {
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-danger-emphasis);
+}
+
+.ui-stepper__heading {
+  margin-block-end: var(--ui-space-3);
+  font-size: var(--ui-font-size-lg);
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-stepper__marker {
+    transition: none;
+  }
+}

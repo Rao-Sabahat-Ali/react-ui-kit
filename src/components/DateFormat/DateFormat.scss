@@ -1,0 +1,8 @@
+.ui-date-format {
+  font-family: var(--ui-font-family);
+}
+
+.ui-date-format--empty,
+.ui-date-format--muted {
+  color: var(--ui-color-text-muted);
+}
