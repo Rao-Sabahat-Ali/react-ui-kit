@@ -10,7 +10,7 @@ import { Skeleton } from '../Skeleton/Skeleton';
 
 export type DataViewLayout = 'list' | 'grid';
 
-export interface GridColumns {
+export interface DataViewColumns {
   xs?: number;
   sm?: number;
   md?: number;
@@ -22,7 +22,7 @@ export interface DataViewProps<T> {
   data: T[];
   layout?: DataViewLayout;
   itemTemplate: (item: T, layout: DataViewLayout) => ReactNode;
-  gridColumns?: GridColumns;
+  gridColumns?: DataViewColumns;
   dataKey?: keyof T & string;
   paginator?: boolean;
   page?: number;
@@ -42,10 +42,10 @@ export interface DataViewProps<T> {
   'aria-label'?: string;
 }
 
-const DEFAULT_COLUMNS: GridColumns = { xs: 1, sm: 2, lg: 3, xl: 4 };
+const DEFAULT_COLUMNS: DataViewColumns = { xs: 1, sm: 2, lg: 3, xl: 4 };
 
-function gridClasses(columns: GridColumns): string[] {
-  return (Object.entries(columns) as [keyof GridColumns, number | undefined][])
+function gridClasses(columns: DataViewColumns): string[] {
+  return (Object.entries(columns) as [keyof DataViewColumns, number | undefined][])
     .filter(([, n]) => n !== undefined)
     .map(([bp, n]) => (bp === 'xs' ? `row-cols-${n}` : `row-cols-${bp}-${n}`));
 }

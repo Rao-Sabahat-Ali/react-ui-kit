@@ -41,7 +41,7 @@ Profiles: all. Shared groundwork first (UI-200), then controls in order.
 - [x] **UI-221** Rating — spec `rating.md` — reviews: a11y-reviewer
 - [x] **UI-222** DatePicker — spec `date-picker.md` — reviews: a11y-reviewer
 - [x] **UI-223** CascadeSelect — spec `cascade-select.md` — reviews: a11y-reviewer
-- [ ] **UI-224** TreeSelect — spec `tree-select.md` — reviews: a11y-reviewer
+- [x] **UI-224** TreeSelect — spec `tree-select.md` — reviews: a11y-reviewer
 - [x] **UI-225** ColorPicker — spec `color-picker.md` — reviews: a11y-reviewer
 - [x] **UI-226** Knob — spec `knob.md` — reviews: a11y-reviewer
 - [x] **UI-227** Mention — spec `mention.md` — reviews: security-reviewer, a11y-reviewer
@@ -102,21 +102,21 @@ Needed by every profile; unlocks real app scaffolds.
 - [x] **UI-454** NumberFormat — spec `number-format.md`
 - [x] **UI-455** DateFormat — spec `date-format.md`
 - [x] **UI-456** CommandPalette — spec `command-palette.md` — reviews: a11y-reviewer
-- [ ] **UI-457** Scheduler — spec `scheduler.md` — reviews: a11y-reviewer
+- [x] **UI-457** Scheduler — spec `scheduler.md` — reviews: a11y-reviewer
 - [x] **UI-458** Generated high-contrast tokens replace hand-written bridge CSS (TOK-011).
 
 ## Phase 5 — Data
 
 - [ ] **UI-500** DataTable phase 2: column filters, global filter, lazy/server mode, resize/reorder, frozen columns, row expansion, column visibility, CSV export, `stateKey` persistence (after SPEC-013 adds ACs)
 - [ ] **UI-501** DataTable phase 3: inline cell/row editing, virtual scroll, row grouping, grid keyboard navigation, context menu
-- [ ] **UI-502** VirtualScroller — spec `virtual-scroller.md` — reviews: a11y-reviewer
-- [ ] **UI-503** DataView — spec `data-view.md` — reviews: a11y-reviewer
-- [ ] **UI-504** Tree — spec `tree.md` — reviews: a11y-reviewer
-- [ ] **UI-505** TreeTable — spec `tree-table.md` — reviews: a11y-reviewer
-- [ ] **UI-506** OrderList — spec `order-list.md` — reviews: a11y-reviewer
-- [ ] **UI-507** PickList — spec `pick-list.md` — reviews: a11y-reviewer
-- [ ] **UI-508** Timeline — spec `timeline.md` — reviews: a11y-reviewer
-- [ ] **UI-509** OrganizationChart — spec `organization-chart.md` — reviews: a11y-reviewer
+- [x] **UI-502** VirtualScroller — spec `virtual-scroller.md` — reviews: a11y-reviewer
+- [x] **UI-503** DataView — spec `data-view.md` — reviews: a11y-reviewer
+- [x] **UI-504** Tree — spec `tree.md` — reviews: a11y-reviewer
+- [x] **UI-505** TreeTable — spec `tree-table.md` — reviews: a11y-reviewer
+- [x] **UI-506** OrderList — spec `order-list.md` — reviews: a11y-reviewer
+- [x] **UI-507** PickList — spec `pick-list.md` — reviews: a11y-reviewer
+- [x] **UI-508** Timeline — spec `timeline.md` — reviews: a11y-reviewer
+- [x] **UI-509** OrganizationChart — spec `organization-chart.md` — reviews: a11y-reviewer
 
 ## Phase 6 — Charts, media, files, misc
 
@@ -136,6 +136,7 @@ Needed by every profile; unlocks real app scaffolds.
 ## Follow-ups from parallel build
 
 - [ ] **UI-901** Move local English label defaults to locale keys: MultiSelect ("Select all", "{count} selected"), AutoComplete ("Show suggestions"), Chips ("Invalid value"), ColorPicker ("Saturation and brightness", "Hex colour", "Preset colours"), DatePicker ("Previous/Next 12 years", AM/PM, "Presets"), CommandPalette footer hint, Slider ("Minimum"/"Maximum"), MultiStateCheckbox ("None"), Kbd key names, Stepper error label.
+- [ ] **UI-903** Scheduler: eventCount_one/_other + schedulerView locale keys; use Popover for "+n more"; mobile dots + selected-day list from spec profile notes.
 - [ ] **UI-902** Move `Responsive<T>` helper from Stack to `src/utils`; let ListBox virtual mode use VirtualScroller once merged.
 
 ## Ops / quality
