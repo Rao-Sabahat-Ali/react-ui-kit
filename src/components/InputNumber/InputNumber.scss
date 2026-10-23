@@ -1,0 +1,89 @@
+.ui-input-number__input.form-control {
+  min-height: var(--ui-control-height-md);
+  padding-inline: var(--ui-control-padding-x);
+  font-variant-numeric: tabular-nums;
+
+  &.form-control-sm {
+    min-height: var(--ui-control-height-sm);
+  }
+
+  &.form-control-lg {
+    min-height: var(--ui-control-height-lg);
+  }
+}
+
+.ui-input-number__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--bs-border-width) solid var(--ui-color-border);
+  color: var(--ui-color-text-muted);
+  background: var(--ui-color-surface);
+  touch-action: none;
+  user-select: none;
+
+  &:hover:not(:disabled) {
+    color: var(--ui-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-input-number--horizontal {
+  .ui-input-number__button {
+    min-inline-size: var(--ui-control-height-md);
+  }
+
+  .ui-input-number__input {
+    text-align: center;
+  }
+}
+
+.ui-input-number--stacked {
+  .ui-input-number__stack {
+    display: flex;
+    flex-direction: column;
+    inline-size: var(--ui-control-height-md);
+    margin-inline-start: calc(var(--bs-border-width) * -1);
+  }
+
+  .ui-input-number__button {
+    flex: 1 1 50%;
+    min-block-size: 0;
+    padding: 0;
+    border-inline-start: var(--bs-border-width) solid var(--ui-color-border);
+  }
+
+  .ui-input-number__button--up {
+    border-start-end-radius: var(--ui-radius);
+    border-end-end-radius: 0;
+    border-end-start-radius: 0;
+    border-start-start-radius: 0;
+  }
+
+  .ui-input-number__button--down {
+    margin-block-start: calc(var(--bs-border-width) * -1);
+    border-end-end-radius: var(--ui-radius);
+    border-start-end-radius: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  .ui-input-number__input {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-input-number__button {
+    min-inline-size: var(--ui-touch-target-min);
+  }
+
+  .ui-input-number--stacked .ui-input-number__stack {
+    inline-size: var(--ui-touch-target-min);
+  }
+}
