@@ -53,7 +53,11 @@ export function useOverlay({ rootRef, contentRef, onEscape, initialFocus, modal 
       const index = overlayStack.lastIndexOf(root);
       if (index !== -1) overlayStack.splice(index, 1);
       syncInert();
-      if (restoreTo?.isConnected && !restoreTo.closest('[inert]')) restoreTo.focus();
+      // Restore only when focus would otherwise be lost (it was inside the overlay or on <body>);
+      // never override a deliberate move (e.g. Tab out of a menu to the next control).
+      const active = document.activeElement;
+      const lost = !active || active === document.body || root.contains(active) || !active.isConnected;
+      if (lost && restoreTo?.isConnected && !restoreTo.closest('[inert]')) restoreTo.focus();
     };
   }, [rootRef, modal]);
 

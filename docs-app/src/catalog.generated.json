@@ -5,7 +5,7 @@
       "name": "Accordion",
       "slug": "accordion",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Vertically stacked sections that expand/collapse (FAQ, filters, settings groups).",
       "profiles": [
         "all"
@@ -25,7 +25,7 @@
       "name": "AutoComplete",
       "slug": "auto-complete",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Text input that suggests options as the user types, from local or async sources. Single or multiple (chips) selection.",
       "profiles": [
         "all"
@@ -35,7 +35,7 @@
       "name": "Avatar",
       "slug": "avatar",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Represent a user/entity with image, initials or icon. AvatarGroup overlaps several with \"+N\".",
       "profiles": [
         "all"
@@ -55,7 +55,7 @@
       "name": "BlockUI",
       "slug": "block-ui",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Block interaction with a region (or full screen) during processing (POS payment).",
       "profiles": [
         "all"
@@ -78,7 +78,7 @@
       "name": "Breadcrumb",
       "slug": "breadcrumb",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Show location in hierarchy and navigate up.",
       "profiles": [
         "all"
@@ -108,7 +108,7 @@
       "name": "Carousel",
       "slug": "carousel",
       "category": "media",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Cycle through items, showing N visible per page with responsive options.",
       "profiles": [
         "ecommerce",
@@ -120,7 +120,7 @@
       "name": "CascadeSelect",
       "slug": "cascade-select",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Select a leaf from nested groups (Country → State → City) via cascading sub-panels.",
       "profiles": [
         "all"
@@ -130,7 +130,7 @@
       "name": "Chart",
       "slug": "chart",
       "category": "chart",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "In-house SVG charts (no Chart.js/D3): line, area, bar (vertical/horizontal, stacked/grouped), pie, doughnut, sparkline. Responsive via ResizeObserver; themed from `--ui-color-chart-*`.",
       "profiles": [
         "dashboard",
@@ -153,7 +153,7 @@
       "name": "Chip",
       "slug": "chip",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Compact entity (person, filter) with optional image/icon and remove action.",
       "profiles": [
         "all"
@@ -163,7 +163,7 @@
       "name": "Chips",
       "slug": "chips",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Free-form multiple value entry (tags, emails). Values become removable chips.",
       "profiles": [
         "all"
@@ -173,7 +173,7 @@
       "name": "ColorPicker",
       "slug": "color-picker",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Pick a colour via saturation/value area, hue slider, optional alpha, hex input and preset swatches. `native` mode uses `<input type=\"color\">`.",
       "profiles": [
         "cms",
@@ -186,7 +186,7 @@
       "name": "CommandPalette",
       "slug": "command-palette",
       "category": "overlay",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Keyboard-first launcher (Ctrl/Cmd+K) that lets power users search and run commands or jump to pages from anywhere in the app. Combines a modal Dialog with a combobox input and a grouped listbox of results, supporting recent items and async (server) search with cancellation.",
       "profiles": [
         "admin",
@@ -209,7 +209,7 @@
       "name": "ConfirmPopup",
       "slug": "confirm-popup",
       "category": "overlay",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Lightweight confirmation anchored to the triggering element (row delete in a table).",
       "profiles": [
         "all"
@@ -219,7 +219,7 @@
       "name": "ContextMenu",
       "slug": "context-menu",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Menu opened on right-click / long-press / Shift+F10 / ContextMenu key on a target (table rows, tree nodes).",
       "profiles": [
         "admin",
@@ -241,7 +241,7 @@
       "name": "DataView",
       "slug": "data-view",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Display records as a list or responsive card grid with layout toggle, sorting and pagination. Primary catalogue view for ecommerce and POS.",
       "profiles": [
         "all"
@@ -251,7 +251,7 @@
       "name": "DateFormat",
       "slug": "date-format",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Displays a date/time with `Intl.DateTimeFormat`, or as relative time (\"3 days ago\", \"in 2 hours\") with `Intl.RelativeTimeFormat`, always wrapped in a semantic `<time dateTime>` element with the absolute value in a `title` tooltip. Locale comes from LocaleProvider; time zone defaults to the system zone.",
       "profiles": [
         "all"
@@ -261,7 +261,7 @@
       "name": "DatePicker",
       "slug": "date-picker",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Select a date, date range, multiple dates, month/year, and optionally time. Inline calendar mode for dashboards/booking. No date library: built on `utils/date.ts` + `Intl.DateTimeFormat`.",
       "profiles": [
         "all"
@@ -271,7 +271,7 @@
       "name": "DeferredContent",
       "slug": "deferred-content",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Mount children only when the placeholder scrolls into view (IntersectionObserver) — lazy heavy widgets/images.",
       "profiles": [
         "all"
@@ -291,7 +291,7 @@
       "name": "Divider",
       "slug": "divider",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Separate content horizontally or vertically, optionally with a label (\"or\").",
       "profiles": [
         "all"
@@ -301,7 +301,7 @@
       "name": "Dock",
       "slug": "dock",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "macOS-style launcher of icon items with magnification on hover (game launchers, desktop-like UIs).",
       "profiles": [
         "game",
@@ -322,7 +322,7 @@
       "name": "Editor",
       "slug": "editor",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Lightweight rich-text editor without third-party engines (no Quill/TipTap). contentEditable with an internal command layer (Selection/Range API) producing a sanitised HTML subset.",
       "profiles": [
         "cms",
@@ -354,7 +354,7 @@
       "name": "Fieldset",
       "slug": "fieldset",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Group related controls with a legend; optionally collapsible.",
       "profiles": [
         "all"
@@ -364,7 +364,7 @@
       "name": "FileUpload",
       "slug": "file-upload",
       "category": "file",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Select or drop files, validate, preview and upload with progress. Upload transport is provided by the app (no HTTP client dependency).",
       "profiles": [
         "all"
@@ -374,7 +374,7 @@
       "name": "FloatLabel",
       "slug": "float-label",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Bootstrap floating-label layout for InputText, InputTextarea, Select (native), Password. Saves vertical space in short forms (login, checkout).",
       "profiles": [
         "saas",
@@ -396,7 +396,7 @@
       "name": "Galleria",
       "slug": "galleria",
       "category": "media",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Image gallery with main view, thumbnails, captions, indicators and fullscreen mode (product photos, media libraries).",
       "profiles": [
         "ecommerce",
@@ -408,7 +408,7 @@
       "name": "Grid",
       "slug": "grid",
       "category": "layout",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Typed wrapper over the Bootstrap 5.3 row/column grid for responsive two-dimensional layouts: equal-width card grids (`columns` per breakpoint) or explicit column spans (`Grid.Col`), with gutter tokens.",
       "profiles": [
         "all"
@@ -418,7 +418,7 @@
       "name": "IconField",
       "slug": "icon-field",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Places an icon inside an input (start or end) without addon borders (search boxes).",
       "profiles": [
         "all"
@@ -438,7 +438,7 @@
       "name": "Image",
       "slug": "image",
       "category": "media",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Responsive image with lazy loading, placeholder/fallback, aspect ratio box and optional preview (zoom dialog).",
       "profiles": [
         "all"
@@ -448,7 +448,7 @@
       "name": "Inplace",
       "slug": "inplace",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Display value that turns into an editor on activation (inline editing of titles, table cells outside DataTable).",
       "profiles": [
         "admin",
@@ -460,7 +460,7 @@
       "name": "InputGroup",
       "slug": "input-group",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Combine controls, addons and buttons into one visual unit (`$` + amount + `.00`, search + button).",
       "profiles": [
         "all"
@@ -470,7 +470,7 @@
       "name": "InputMask",
       "slug": "input-mask",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Formatted input for fixed patterns (phone, postal code, serial). In-house mask engine (`utils/mask.ts`).",
       "profiles": [
         "all"
@@ -480,7 +480,7 @@
       "name": "InputNumber",
       "slug": "input-number",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Numeric entry with locale formatting (decimal, currency, percent), min/max, step and optional stepper buttons.",
       "profiles": [
         "all"
@@ -490,7 +490,7 @@
       "name": "InputOtp",
       "slug": "input-otp",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "One-time code entry split into N boxes; also used as POS PIN pad input.",
       "profiles": [
         "all"
@@ -510,7 +510,7 @@
       "name": "InputTextarea",
       "slug": "input-textarea",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Multi-line plain text with optional auto-resize and character counter.",
       "profiles": [
         "all"
@@ -520,7 +520,7 @@
       "name": "Kbd",
       "slug": "kbd",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Displays a keyboard key or key combination (e.g. `Ctrl` + `K`) using semantic `<kbd>` markup. Resolves the platform-aware `Mod` key (⌘ on Apple platforms, Ctrl elsewhere) so shortcut hints are correct for every user.",
       "profiles": [
         "all"
@@ -530,7 +530,7 @@
       "name": "KeyFilter",
       "slug": "key-filter",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Restrict characters typed/pasted into an input. Delivered as a hook `useKeyFilter(pattern)` returning input props and as `keyFilter` prop on InputText.",
       "profiles": [
         "all"
@@ -540,7 +540,7 @@
       "name": "Knob",
       "slug": "knob",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Circular SVG dial for a bounded value (volume, gauge input/display).",
       "profiles": [
         "game",
@@ -552,7 +552,7 @@
       "name": "Link",
       "slug": "link",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "A styled, router-agnostic anchor. Renders a real `<a href>` (so middle-click, copy link and open-in-new-tab work) and lets the app intercept plain left clicks through `onNavigate` to perform client-side routing with any router. Handles external-link safety and announcements, and sanitises `href` with `safeUrl`.",
       "profiles": [
         "all"
@@ -562,7 +562,7 @@
       "name": "ListBox",
       "slug": "list-box",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Always-visible list for single or multiple selection with optional filter, groups and templates. Supports virtualisation for large lists.",
       "profiles": [
         "all"
@@ -582,7 +582,7 @@
       "name": "MegaMenu",
       "slug": "mega-menu",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Large multi-column dropdown navigation (category trees, featured content).",
       "profiles": [
         "ecommerce",
@@ -593,7 +593,7 @@
       "name": "Mention",
       "slug": "mention",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Textarea that opens suggestions on trigger characters (`@user`, `#tag`).",
       "profiles": [
         "cms",
@@ -604,7 +604,7 @@
       "name": "Menu",
       "slug": "menu",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "List of actions or links, inline or as popup from a trigger. Defines the shared `MenuItem` model used by all menu components.",
       "profiles": [
         "all"
@@ -614,7 +614,7 @@
       "name": "Menubar",
       "slug": "menubar",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Horizontal application/site menu with dropdown submenus; collapses to a toggle below a breakpoint.",
       "profiles": [
         "all"
@@ -634,7 +634,7 @@
       "name": "Messages",
       "slug": "messages",
       "category": "messages",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Stack of dynamic inline Message items (e.g., server responses at top of a form), managed imperatively.",
       "profiles": [
         "all"
@@ -644,7 +644,7 @@
       "name": "MeterGroup",
       "slug": "meter-group",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Show multiple values as segments of one bar (storage usage by type) with legend.",
       "profiles": [
         "dashboard",
@@ -656,7 +656,7 @@
       "name": "MultiSelect",
       "slug": "multi-select",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Choose multiple options from a popup list with checkboxes, filter and select-all.",
       "profiles": [
         "all"
@@ -666,7 +666,7 @@
       "name": "MultiStateCheckbox",
       "slug": "multi-state-checkbox",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Cycle through N custom states (e.g. Public → Private → Shared) with icon per state.",
       "profiles": [
         "admin",
@@ -677,7 +677,7 @@
       "name": "NumberFormat",
       "slug": "number-format",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Displays a number formatted with `Intl.NumberFormat` (decimal, currency, percent, unit, compact notation) using the locale from LocaleProvider, with tabular numerals for aligned columns. Replaces ad-hoc `toFixed`/string concatenation.",
       "profiles": [
         "all"
@@ -687,7 +687,7 @@
       "name": "OrderList",
       "slug": "order-list",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Reorder a list via buttons (top/up/down/bottom), keyboard or drag and drop.",
       "profiles": [
         "cms",
@@ -699,7 +699,7 @@
       "name": "OrganizationChart",
       "slug": "organization-chart",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Hierarchical top-down chart of nodes (org structure, decision trees), collapsible, selectable.",
       "profiles": [
         "admin",
@@ -730,7 +730,7 @@
       "name": "PanelMenu",
       "slug": "panel-menu",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Accordion-style hierarchical menu (settings navigation, sidebar sections).",
       "profiles": [
         "admin",
@@ -743,7 +743,7 @@
       "name": "Panel",
       "slug": "panel",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Titled container with header actions and optional collapse — dashboard widgets, settings sections.",
       "profiles": [
         "all"
@@ -753,7 +753,7 @@
       "name": "Password",
       "slug": "password",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Password input with show/hide toggle and optional strength meter + requirement checklist.",
       "profiles": [
         "all"
@@ -763,7 +763,7 @@
       "name": "PickList",
       "slug": "pick-list",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Move items between source and target lists (assign permissions, choose columns).",
       "profiles": [
         "admin",
@@ -774,7 +774,7 @@
       "name": "Popover",
       "slug": "popover",
       "category": "overlay",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Non-modal floating panel anchored to a trigger with arbitrary content (filters, quick details).",
       "profiles": [
         "all"
@@ -814,7 +814,7 @@
       "name": "Rating",
       "slug": "rating",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Star rating input or read-only display (supports half stars in read-only).",
       "profiles": [
         "ecommerce",
@@ -826,7 +826,7 @@
       "name": "Scheduler",
       "slug": "scheduler",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Read-oriented calendar that shows events in **month** and **week** views, with keyboard grid navigation consistent with DatePicker, a today button, previous/next navigation and event click handling. All date math is done with native `Date` + `Intl` (no external date library).",
       "profiles": [
         "saas",
@@ -839,7 +839,7 @@
       "name": "ScrollPanel",
       "slug": "scroll-panel",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Scrollable region with themed thin scrollbars (CSS `scrollbar-color`/`scrollbar-width`, `::-webkit-scrollbar`), no JS scrollbars.",
       "profiles": [
         "all"
@@ -849,7 +849,7 @@
       "name": "ScrollTop",
       "slug": "scroll-top",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Floating button to return to top after scrolling past a threshold (window or container).",
       "profiles": [
         "landing",
@@ -904,7 +904,7 @@
       "name": "Slider",
       "slug": "slider",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Select a value or range along a track. Custom-rendered (range needs two thumbs); single mode may use native `form-range`.",
       "profiles": [
         "all"
@@ -914,7 +914,7 @@
       "name": "SpeedDial",
       "slug": "speed-dial",
       "category": "button",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Floating action button that expands into 2–6 related actions (linear, circle, semi-circle, quarter-circle layouts).",
       "profiles": [
         "saas",
@@ -936,7 +936,7 @@
       "name": "SplitButton",
       "slug": "split-button",
       "category": "button",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Default action plus a menu of related alternatives (\"Save\" + \"Save as draft\", \"Save and close\").",
       "profiles": [
         "all"
@@ -946,7 +946,7 @@
       "name": "Splitter",
       "slug": "splitter",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Resizable panes (editor/preview, list/detail). Nested splitters supported.",
       "profiles": [
         "cms",
@@ -958,7 +958,7 @@
       "name": "Stack",
       "slug": "stack",
       "category": "layout",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "One-dimensional flex layout primitive that spaces its children vertically or horizontally using spacing tokens, so app code stops hand-writing `d-flex gap-*` combinations and margin hacks.",
       "profiles": [
         "all"
@@ -981,7 +981,7 @@
       "name": "Stepper",
       "slug": "stepper",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Guided multi-step process with step panels (onboarding, checkout, wizards). `Steps` is the navigation-only indicator.",
       "profiles": [
         "all"
@@ -991,7 +991,7 @@
       "name": "Steps",
       "slug": "steps",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Progress indicator for a multi-step process (navigation only; panels managed elsewhere, e.g. routed checkout).",
       "profiles": [
         "all"
@@ -1011,7 +1011,7 @@
       "name": "TabMenu",
       "slug": "tab-menu",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Route-level navigation styled as tabs (each tab is a URL). Use Tabs when panels are in-page.",
       "profiles": [
         "all"
@@ -1051,7 +1051,7 @@
       "name": "ThemeToggle",
       "slug": "theme-toggle",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Ready-made control for switching light/dark/system using `useTheme()`.",
       "profiles": [
         "all"
@@ -1061,7 +1061,7 @@
       "name": "TieredMenu",
       "slug": "tiered-menu",
       "category": "menu",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Menu with nested flyout submenus.",
       "profiles": [
         "all"
@@ -1071,7 +1071,7 @@
       "name": "Timeline",
       "slug": "timeline",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Chronological sequence of events (order status, activity feed, quests).",
       "profiles": [
         "all"
@@ -1091,7 +1091,7 @@
       "name": "ToggleButton",
       "slug": "toggle-button",
       "category": "button",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Button with pressed state (bold in toolbar, \"Follow\" button).",
       "profiles": [
         "all"
@@ -1101,7 +1101,7 @@
       "name": "Toolbar",
       "slug": "toolbar",
       "category": "panel",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Group of controls with start / center / end slots (table actions, editor tools).",
       "profiles": [
         "all"
@@ -1111,7 +1111,7 @@
       "name": "Tooltip",
       "slug": "tooltip",
       "category": "overlay",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Short supplementary label on hover/focus. Never essential info (not shown on touch).",
       "profiles": [
         "all"
@@ -1135,7 +1135,7 @@
       "name": "TreeSelect",
       "slug": "tree-select",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Select one or many nodes from a hierarchical tree in a popup (categories, org units).",
       "profiles": [
         "admin",
@@ -1147,7 +1147,7 @@
       "name": "TreeTable",
       "slug": "tree-table",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Hierarchical rows with columns (file browser, budget breakdown). Shares column API, sorting and pagination with DataTable.",
       "profiles": [
         "admin",
@@ -1159,7 +1159,7 @@
       "name": "Tree",
       "slug": "tree",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Hierarchical data with expand/collapse, selection (single, multiple, checkbox), filter, lazy loading of children, optional drag and drop.",
       "profiles": [
         "all"
@@ -1169,7 +1169,7 @@
       "name": "TriStateCheckbox",
       "slug": "tri-state-checkbox",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Checkbox cycling `null` → `true` → `false` → `null` (filters: any / yes / no).",
       "profiles": [
         "admin",
@@ -1180,7 +1180,7 @@
       "name": "VirtualScroller",
       "slug": "virtual-scroller",
       "category": "data",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Render only visible items of very large lists/grids (fixed item size v1, variable v2). Used internally by ListBox, Select, DataTable.",
       "profiles": [
         "all"

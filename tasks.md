@@ -46,32 +46,32 @@ Profiles: all. Shared groundwork first (UI-200), then controls in order.
 - [x] **UI-226** Knob — spec `knob.md` — reviews: a11y-reviewer
 - [x] **UI-227** Mention — spec `mention.md` — reviews: security-reviewer, a11y-reviewer
 - [x] **UI-240** `utils/sanitize.ts` allowlist HTML sanitizer + tests (prereq for Editor).
-- [ ] **UI-228** Editor — spec `editor.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-228** Editor — spec `editor.md` — reviews: security-reviewer, a11y-reviewer
 
 ## Phase 3 — Overlays, menus, messages
 
 Reuse Dialog overlay stack, useFloating, useFocusTrap.
 
-- [ ] **UI-301** Tooltip — spec `tooltip.md` — reviews: a11y-reviewer
-- [ ] **UI-302** Popover — spec `popover.md` — reviews: a11y-reviewer
+- [x] **UI-301** Tooltip — spec `tooltip.md` — reviews: a11y-reviewer
+- [x] **UI-302** Popover — spec `popover.md` — reviews: a11y-reviewer
 - [x] **UI-303** Drawer — spec `drawer.md` — reviews: a11y-reviewer
 - [x] **UI-304** ConfirmDialog — spec `confirm-dialog.md` — reviews: a11y-reviewer
-- [ ] **UI-305** ConfirmPopup — spec `confirm-popup.md` — reviews: a11y-reviewer
+- [x] **UI-305** ConfirmPopup — spec `confirm-popup.md` — reviews: a11y-reviewer
 - [x] **UI-306** Toast — spec `toast.md`
 - [x] **UI-307** Messages — spec `messages.md`
-- [ ] **UI-308** Menu — spec `menu.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-309** TieredMenu — spec `tiered-menu.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-310** ContextMenu — spec `context-menu.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-311** SplitButton — spec `split-button.md` — reviews: a11y-reviewer
-- [ ] **UI-312** Menubar — spec `menubar.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-313** MegaMenu — spec `mega-menu.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-314** PanelMenu — spec `panel-menu.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-315** Breadcrumb — spec `breadcrumb.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-316** Steps — spec `steps.md` — reviews: a11y-reviewer
-- [ ] **UI-317** TabMenu — spec `tab-menu.md` — reviews: a11y-reviewer
-- [ ] **UI-318** SpeedDial — spec `speed-dial.md` — reviews: a11y-reviewer
-- [ ] **UI-319** Dock — spec `dock.md` — reviews: a11y-reviewer
-- [ ] **UI-320** ThemeToggle `mode="menu"` (light/dark/system) using Menu — closes ThemeToggle AC-2
+- [x] **UI-308** Menu — spec `menu.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-309** TieredMenu — spec `tiered-menu.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-310** ContextMenu — spec `context-menu.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-311** SplitButton — spec `split-button.md` — reviews: a11y-reviewer
+- [x] **UI-312** Menubar — spec `menubar.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-313** MegaMenu — spec `mega-menu.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-314** PanelMenu — spec `panel-menu.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-315** Breadcrumb — spec `breadcrumb.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-316** Steps — spec `steps.md` — reviews: a11y-reviewer
+- [x] **UI-317** TabMenu — spec `tab-menu.md` — reviews: a11y-reviewer
+- [x] **UI-318** SpeedDial — spec `speed-dial.md` — reviews: a11y-reviewer
+- [x] **UI-319** Dock — spec `dock.md` — reviews: a11y-reviewer
+- [x] **UI-320** ThemeToggle `mode="menu"` (light/dark/system) using Menu — closes ThemeToggle AC-2
 
 ## Phase 4 — Layout, panels, app shells
 
@@ -127,25 +127,26 @@ Needed by every profile; unlocks real app scaffolds.
 - [x] **UI-605** BlockUI — spec `block-ui.md`
 - [x] **UI-606** Inplace — spec `inplace.md`
 - [x] **UI-607** ScrollTop — spec `scroll-top.md`
-- [ ] **UI-608** Image — spec `image.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-609** Carousel — spec `carousel.md` — reviews: a11y-reviewer
-- [ ] **UI-610** Galleria — spec `galleria.md` — reviews: a11y-reviewer
-- [ ] **UI-611** FileUpload — spec `file-upload.md` — reviews: security-reviewer
-- [ ] **UI-612** Chart — spec `chart.md`
+- [x] **UI-608** Image — spec `image.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-609** Carousel — spec `carousel.md` — reviews: a11y-reviewer
+- [x] **UI-610** Galleria — spec `galleria.md` — reviews: a11y-reviewer
+- [x] **UI-611** FileUpload — spec `file-upload.md` — reviews: security-reviewer
+- [x] **UI-612** Chart — spec `chart.md`
 
 ## Follow-ups from parallel build
 
 - [ ] **UI-901** Move local English label defaults to locale keys: MultiSelect ("Select all", "{count} selected"), AutoComplete ("Show suggestions"), Chips ("Invalid value"), ColorPicker ("Saturation and brightness", "Hex colour", "Preset colours"), DatePicker ("Previous/Next 12 years", AM/PM, "Presets"), CommandPalette footer hint, Slider ("Minimum"/"Maximum"), MultiStateCheckbox ("None"), Kbd key names, Stepper error label.
 - [ ] **UI-903** Scheduler: eventCount_one/_other + schedulerView locale keys; use Popover for "+n more"; mobile dots + selected-day list from spec profile notes.
+- [ ] **UI-904** Move Tooltip/shared.ts helpers (mergeRefs, isRtl, focusAdjacentTabbable) to src/utils; locale keys confirmation, viewAll, stepError, theme*, Chart/Editor labels; built-in icons pause, play, rotate, maximize.
 - [ ] **UI-902** Move `Responsive<T>` helper from Stack to `src/utils`; let ListBox virtual mode use VirtualScroller once merged.
 
 ## Ops / quality
 
-- [ ] **OPS-010** GitHub Actions: `npm ci && npm run check && npm run build:docs` on PRs. — reviewer
-- [ ] **OPS-011** Lint: evaluate ESLint (react-hooks, jsx-a11y) as dev deps — needs architect approval + ADR.
+- [x] **OPS-010** GitHub Actions: `npm ci && npm run check && npm run build:docs` on PRs. — reviewer
+- [x] **OPS-011** Lint: evaluate ESLint (react-hooks, jsx-a11y) as dev deps — needs architect approval + ADR.
 - [ ] **OPS-012** Automated a11y smoke: axe-core (dev-only) over every docs example in jsdom or Playwright. — architect, a11y-reviewer
 - [ ] **OPS-013** Visual regression for light/dark × 3 profiles (Playwright screenshots of docs pages). — architect
 - [ ] **OPS-014** Release flow: semver tags, CHANGELOG.md, `npm pack` smoke test installing into a Vite app; bump submodule in design-system-mcp. — architect
 - [ ] **OPS-015** Docs hosting decision (private repo: Vercel/Netlify with auth, or local only). — architect
-- [ ] **OPS-016** Bundle budget check (fail CI if `dist/index.js` gzip grows > 10% without note).
+- [x] **OPS-016** Bundle budget check (fail CI if `dist/index.js` gzip grows > 10% without note).
 - [ ] **OPS-017** Starter templates per profile (`examples/admin`, `examples/pos`, …) once AppShell lands — consumed by MCP `scaffold_app`.
