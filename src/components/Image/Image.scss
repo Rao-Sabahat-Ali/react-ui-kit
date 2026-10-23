@@ -1,0 +1,110 @@
+.ui-image {
+  position: relative;
+  display: inline-block;
+  max-inline-size: 100%;
+  vertical-align: middle;
+}
+
+.ui-image--ratio {
+  display: block;
+  overflow: hidden;
+  background: var(--ui-color-surface-sunken);
+
+  .ui-image__img,
+  .ui-image__trigger {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+.ui-image--ratio-1x1 { aspect-ratio: 1 / 1; }
+.ui-image--ratio-4x3 { aspect-ratio: 4 / 3; }
+.ui-image--ratio-16x9 { aspect-ratio: 16 / 9; }
+.ui-image--ratio-21x9 { aspect-ratio: 21 / 9; }
+
+.ui-image__img {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+.ui-image__img--cover { object-fit: cover; }
+.ui-image__img--contain { object-fit: contain; }
+
+.ui-image__img--hidden {
+  opacity: 0;
+}
+
+.ui-image__placeholder {
+  position: absolute;
+  inset: 0;
+  display: block;
+
+  > .ui-skeleton,
+  > .ui-skeleton > .ui-skeleton__item {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+.ui-image--error {
+  background: var(--ui-color-surface-sunken);
+}
+
+.ui-image__trigger {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  border-radius: var(--ui-radius);
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-image__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+  margin-block-end: var(--ui-space-3);
+
+  .btn {
+    min-inline-size: 2.25rem;
+    min-block-size: 2.25rem;
+  }
+}
+
+.ui-image__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  min-block-size: 50vh;
+  background: var(--ui-color-surface-sunken);
+  border-radius: var(--ui-radius);
+}
+
+.ui-image__preview {
+  max-inline-size: 100%;
+  max-block-size: 75vh;
+  transition: transform var(--ui-duration) var(--ui-easing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-image__preview {
+    transition: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-image__toolbar .btn {
+    min-inline-size: var(--ui-touch-target-min);
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
