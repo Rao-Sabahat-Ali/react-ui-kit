@@ -1,0 +1,31 @@
+.ui-mention {
+  position: relative;
+}
+
+.ui-mention__input {
+  resize: vertical;
+}
+
+.ui-mention__panel {
+  z-index: var(--ui-z-dropdown);
+  min-inline-size: 12rem;
+  max-block-size: 16rem;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.ui-mention__option {
+  cursor: pointer;
+  min-block-size: var(--ui-control-height-sm);
+  transition: background-color var(--ui-duration) var(--ui-easing);
+
+  @media (pointer: coarse) {
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-mention__option {
+    transition: none;
+  }
+}
