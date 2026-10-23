@@ -1,0 +1,123 @@
+.ui-tree {
+  --ui-tree-indent: 1.25rem;
+  color: var(--ui-color-text);
+}
+
+.ui-tree__filter {
+  margin-block-end: var(--ui-space-2);
+}
+
+.ui-tree__node {
+  outline: none;
+
+  &:focus-visible > .ui-tree__row {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-tree__node--dragging > .ui-tree__row {
+  opacity: 0.5;
+}
+
+.ui-tree__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-block-size: 2rem;
+  padding-inline-end: var(--ui-space-2);
+  border-radius: var(--ui-radius-sm);
+  user-select: none;
+
+  &:hover {
+    background: var(--ui-color-bg-subtle);
+  }
+
+  @media (pointer: coarse) {
+    min-block-size: 2.75rem;
+  }
+}
+
+.ui-tree__row--selected {
+  background: var(--ui-color-primary-subtle);
+}
+
+.ui-tree__row--selectable {
+  cursor: pointer;
+}
+
+.ui-tree__row--disabled {
+  color: var(--ui-color-text-muted);
+  cursor: not-allowed;
+}
+
+.ui-tree__row--drop-inside {
+  box-shadow: inset 0 0 0 2px var(--ui-color-primary);
+}
+
+.ui-tree__row--drop-before::before,
+.ui-tree__row--drop-after::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  block-size: 2px;
+  background: var(--ui-color-primary);
+}
+
+.ui-tree__row--drop-before::before {
+  inset-block-start: 0;
+}
+
+.ui-tree__row--drop-after::after {
+  inset-block-end: 0;
+}
+
+.ui-tree__toggler {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  flex: none;
+  cursor: pointer;
+}
+
+.ui-tree__toggler--empty {
+  cursor: default;
+}
+
+.ui-tree__chevron {
+  transition: transform var(--ui-duration) var(--ui-easing);
+}
+
+.ui-tree__chevron--open {
+  transform: rotate(90deg);
+}
+
+.ui-tree__checkbox {
+  margin: 0;
+  min-block-size: 0;
+}
+
+.ui-tree__icon {
+  flex: none;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-tree__label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-tree__empty {
+  padding: var(--ui-space-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tree__chevron {
+    transition: none;
+  }
+}
