@@ -7,6 +7,8 @@ export interface LocaleContextValue {
   locale: string;
   dir: 'ltr' | 'rtl';
   t: (key: MessageKey, vars?: Record<string, string | number>) => string;
+  /** Plural-aware lookup: uses `${base}_${Intl.PluralRules category}`, falling back to `_other`. */
+  tp: (base: string, count: number, vars?: Record<string, string | number>) => string;
 }
 
 export function interpolate(template: string, vars?: Record<string, string | number>): string {
@@ -17,10 +19,13 @@ export function interpolate(template: string, vars?: Record<string, string | num
 function createValue(locale: string, messages: Partial<Messages> | undefined, dir?: 'ltr' | 'rtl'): LocaleContextValue {
   const merged = { ...en, ...messages };
   const language = locale.split('-')[0]?.toLowerCase() ?? 'en';
+  const plural = new Intl.PluralRules(locale);
+  const lookup = (key: string) => (merged as Record<string, string | undefined>)[key] ?? (en as Record<string, string | undefined>)[key];
   return {
     locale,
     dir: dir ?? (RTL_LANGUAGES.has(language) ? 'rtl' : 'ltr'),
     t: (key, vars) => interpolate(merged[key] ?? en[key], vars),
+    tp: (base, count, vars) => interpolate(lookup(`${base}_${plural.select(count)}`) ?? lookup(`${base}_other`) ?? base, { count, ...vars }),
   };
 }
 

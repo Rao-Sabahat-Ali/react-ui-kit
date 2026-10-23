@@ -17,7 +17,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done. Each UI task = component 
 
 Profiles: all. Shared groundwork first (UI-200), then controls in order.
 
-- [ ] **UI-200** Shared: `utils/mask.ts`, `utils/date.ts` (Intl-based calendar maths), `utils/number.ts` (locale parse/format), `useTypeahead`, `useRovingFocus` hooks with tests
+- [x] **UI-200** Shared: `utils/mask.ts`, `utils/date.ts` (Intl-based calendar maths), `utils/number.ts` (locale parse/format), `useTypeahead`, `useRovingFocus` hooks with tests; all reserved locale keys + plural `tp()`.
 - [x] **UI-201** Switch — spec `switch.md` — reviews: a11y-reviewer
 - [x] **UI-202** RadioButton — spec `radio-button.md` — reviews: a11y-reviewer
 - [ ] **UI-203** InputTextarea — spec `input-textarea.md` — reviews: a11y-reviewer
@@ -45,7 +45,7 @@ Profiles: all. Shared groundwork first (UI-200), then controls in order.
 - [ ] **UI-225** ColorPicker — spec `color-picker.md` — reviews: a11y-reviewer
 - [ ] **UI-226** Knob — spec `knob.md` — reviews: a11y-reviewer
 - [ ] **UI-227** Mention — spec `mention.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-240** `utils/sanitize.ts` allowlist HTML sanitizer + tests (prereq for Editor) — security-reviewer required
+- [x] **UI-240** `utils/sanitize.ts` allowlist HTML sanitizer + tests (prereq for Editor).
 - [ ] **UI-228** Editor — spec `editor.md` — reviews: security-reviewer, a11y-reviewer
 
 ## Phase 3 — Overlays, menus, messages
@@ -92,6 +92,18 @@ Needed by every profile; unlocks real app scaffolds.
 - [ ] **UI-413** Stepper — spec `stepper.md` — reviews: a11y-reviewer
 - [ ] **UI-414** ScrollPanel — spec `scroll-panel.md` — reviews: a11y-reviewer
 - [ ] **UI-415** DeferredContent — spec `deferred-content.md` — reviews: a11y-reviewer
+
+## Phase 4b — New specs (design-system v0.3.0)
+
+- [ ] **UI-450** Link — spec `link.md`
+- [ ] **UI-451** Kbd — spec `kbd.md`
+- [ ] **UI-452** Stack — spec `stack.md`
+- [ ] **UI-453** Grid — spec `grid.md`
+- [ ] **UI-454** NumberFormat — spec `number-format.md`
+- [ ] **UI-455** DateFormat — spec `date-format.md`
+- [ ] **UI-456** CommandPalette — spec `command-palette.md` — reviews: a11y-reviewer
+- [ ] **UI-457** Scheduler — spec `scheduler.md` — reviews: a11y-reviewer
+- [x] **UI-458** Generated high-contrast tokens replace hand-written bridge CSS (TOK-011).
 
 ## Phase 5 — Data
 

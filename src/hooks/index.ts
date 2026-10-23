@@ -5,3 +5,5 @@ export { useScrollLock } from './useScrollLock';
 export { useMediaQuery, usePrefersReducedMotion } from './useMediaQuery';
 export { useFloating } from './useFloating';
 export { useOverlay, type OverlayOptions } from './useOverlay';
+export { useTypeahead } from './useTypeahead';
+export { useRovingFocus, type RovingOptions } from './useRovingFocus';

@@ -183,6 +183,19 @@
       ]
     },
     {
+      "name": "CommandPalette",
+      "slug": "command-palette",
+      "category": "overlay",
+      "status": "specified",
+      "purpose": "Keyboard-first launcher (Ctrl/Cmd+K) that lets power users search and run commands or jump to pages from anywhere in the app. Combines a modal Dialog with a combobox input and a grouped listbox of results, supporting recent items and async (server) search with cancellation.",
+      "profiles": [
+        "admin",
+        "saas",
+        "dashboard",
+        "cms"
+      ]
+    },
+    {
       "name": "ConfirmDialog",
       "slug": "confirm-dialog",
       "category": "overlay",
@@ -230,6 +243,16 @@
       "category": "data",
       "status": "specified",
       "purpose": "Display records as a list or responsive card grid with layout toggle, sorting and pagination. Primary catalogue view for ecommerce and POS.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "DateFormat",
+      "slug": "date-format",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Displays a date/time with `Intl.DateTimeFormat`, or as relative time (\"3 days ago\", \"in 2 hours\") with `Intl.RelativeTimeFormat`, always wrapped in a semantic `<time dateTime>` element with the absolute value in a `title` tooltip. Locale comes from LocaleProvider; time zone defaults to the system zone.",
       "profiles": [
         "all"
       ]
@@ -382,6 +405,16 @@
       ]
     },
     {
+      "name": "Grid",
+      "slug": "grid",
+      "category": "layout",
+      "status": "specified",
+      "purpose": "Typed wrapper over the Bootstrap 5.3 row/column grid for responsive two-dimensional layouts: equal-width card grids (`columns` per breakpoint) or explicit column spans (`Grid.Col`), with gutter tokens.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "IconField",
       "slug": "icon-field",
       "category": "form",
@@ -484,6 +517,16 @@
       ]
     },
     {
+      "name": "Kbd",
+      "slug": "kbd",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Displays a keyboard key or key combination (e.g. `Ctrl` + `K`) using semantic `<kbd>` markup. Resolves the platform-aware `Mod` key (⌘ on Apple platforms, Ctrl elsewhere) so shortcut hints are correct for every user.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "KeyFilter",
       "slug": "key-filter",
       "category": "form",
@@ -503,6 +546,16 @@
         "game",
         "dashboard",
         "saas"
+      ]
+    },
+    {
+      "name": "Link",
+      "slug": "link",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "A styled, router-agnostic anchor. Renders a real `<a href>` (so middle-click, copy link and open-in-new-tab work) and lets the app intercept plain left clicks through `onNavigate` to perform client-side routing with any router. Handles external-link safety and announcements, and sanitises `href` with `safeUrl`.",
+      "profiles": [
+        "all"
       ]
     },
     {
@@ -618,6 +671,16 @@
       "profiles": [
         "admin",
         "saas"
+      ]
+    },
+    {
+      "name": "NumberFormat",
+      "slug": "number-format",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Displays a number formatted with `Intl.NumberFormat` (decimal, currency, percent, unit, compact notation) using the locale from LocaleProvider, with tabular numerals for aligned columns. Replaces ad-hoc `toFixed`/string concatenation.",
+      "profiles": [
+        "all"
       ]
     },
     {
@@ -760,6 +823,19 @@
       ]
     },
     {
+      "name": "Scheduler",
+      "slug": "scheduler",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Read-oriented calendar that shows events in **month** and **week** views, with keyboard grid navigation consistent with DatePicker, a today button, previous/next navigation and event click handling. All date math is done with native `Date` + `Intl` (no external date library).",
+      "profiles": [
+        "saas",
+        "admin",
+        "dashboard",
+        "cms"
+      ]
+    },
+    {
       "name": "ScrollPanel",
       "slug": "scroll-panel",
       "category": "panel",
@@ -876,6 +952,16 @@
         "cms",
         "admin",
         "saas"
+      ]
+    },
+    {
+      "name": "Stack",
+      "slug": "stack",
+      "category": "layout",
+      "status": "specified",
+      "purpose": "One-dimensional flex layout primitive that spaces its children vertically or horizontally using spacing tokens, so app code stops hand-writing `d-flex gap-*` combinations and margin hacks.",
+      "profiles": [
+        "all"
       ]
     },
     {

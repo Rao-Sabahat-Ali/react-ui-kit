@@ -173,12 +173,7 @@ h6,
   box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
 }
 
-@media (prefers-contrast: more) {
-  :root {
-    --ui-color-border: var(--ui-color-border-strong);
-    --ui-focus-ring-width: 0.1875rem;
-  }
-}
+// High contrast tokens are generated into _tokens.generated.scss (design-system-mcp TOK-011).
 
 @media (forced-colors: active) {
   :focus-visible {
