@@ -1,0 +1,32 @@
+.ui-input-textarea__control {
+  min-height: var(--ui-control-height-md);
+  padding-inline: var(--ui-control-padding-x);
+  border-radius: var(--ui-radius);
+  resize: vertical;
+
+  &.form-control-sm {
+    min-height: var(--ui-control-height-sm);
+    border-radius: var(--ui-radius-sm);
+  }
+
+  &.form-control-lg {
+    min-height: var(--ui-control-height-lg);
+    border-radius: var(--ui-radius-lg);
+  }
+}
+
+.ui-input-textarea__control--auto {
+  resize: none;
+  overflow-y: hidden;
+}
+
+.ui-input-textarea__count {
+  text-align: end;
+  margin-block-start: var(--ui-space-1);
+  color: var(--ui-color-text-muted);
+
+  &--limit {
+    color: var(--ui-color-danger);
+    font-weight: var(--ui-font-weight-medium);
+  }
+}
