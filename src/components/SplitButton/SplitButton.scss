@@ -1,0 +1,22 @@
+.ui-split-button__toggle {
+  min-inline-size: 24px;
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-split-button__toggle,
+  .ui-split-button__main {
+    min-block-size: var(--ui-touch-target-min);
+    min-inline-size: var(--ui-touch-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-split-button .ui-menu--popup {
+    animation: none;
+  }
+}
