@@ -3,9 +3,9 @@ import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { clamp } from '../../utils/number';
 import { Icon, type IconName } from '../Icon/Icon';
+import type { ChartColor } from '../Chart/Chart';
 
 /** Chart palette slot (`--ui-color-chart-{n}`). */
-export type ChartColor = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 export interface MeterItem {
   label: string;
