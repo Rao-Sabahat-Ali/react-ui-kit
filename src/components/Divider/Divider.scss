@@ -1,0 +1,59 @@
+.ui-divider {
+  --ui-divider-color: var(--ui-color-border);
+  --ui-divider-style: solid;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-divider--dashed {
+  --ui-divider-style: dashed;
+}
+
+.ui-divider--dotted {
+  --ui-divider-style: dotted;
+}
+
+.ui-divider--horizontal {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  inline-size: 100%;
+  margin-block: var(--ui-space-4);
+  border: 0;
+
+  &:not(.ui-divider--labelled) {
+    border-block-start: 1px var(--ui-divider-style) var(--ui-divider-color);
+  }
+
+  &.ui-divider--labelled {
+    &::before,
+    &::after {
+      content: '';
+      flex: 1 1 0;
+      border-block-start: 1px var(--ui-divider-style) var(--ui-divider-color);
+    }
+  }
+
+  &.ui-divider--start::before {
+    flex: 0 0 var(--ui-space-4);
+  }
+
+  &.ui-divider--end::after {
+    flex: 0 0 var(--ui-space-4);
+  }
+}
+
+.ui-divider--vertical {
+  display: inline-block;
+  align-self: stretch;
+  min-block-size: 1em;
+  margin-inline: var(--ui-space-3);
+  border-inline-start: 1px var(--ui-divider-style) var(--ui-divider-color);
+  width: 0;
+  opacity: 1;
+  background-color: transparent;
+}
+
+.ui-divider__label {
+  flex: 0 0 auto;
+}
