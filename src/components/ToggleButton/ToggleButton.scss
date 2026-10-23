@@ -1,0 +1,12 @@
+.ui-toggle-button {
+  &.active {
+    box-shadow: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-toggle-button {
+    min-block-size: var(--ui-touch-target-min);
+    min-inline-size: var(--ui-touch-target-min);
+  }
+}
