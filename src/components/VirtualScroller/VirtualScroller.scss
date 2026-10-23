@@ -1,0 +1,48 @@
+.ui-virtual-scroller {
+  position: relative;
+  overflow: auto;
+  contain: strict;
+  border-radius: var(--ui-radius);
+  color: var(--ui-color-text);
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-virtual-scroller--horizontal {
+  overflow-y: hidden;
+}
+
+.ui-virtual-scroller--vertical {
+  overflow-x: hidden;
+}
+
+.ui-virtual-scroller__spacer {
+  position: relative;
+  max-inline-size: none;
+}
+
+.ui-virtual-scroller__content {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  will-change: transform;
+}
+
+.ui-virtual-scroller--horizontal .ui-virtual-scroller__content {
+  inline-size: auto;
+  block-size: 100%;
+}
+
+.ui-virtual-scroller__item {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.ui-virtual-scroller--horizontal .ui-virtual-scroller__item {
+  flex: none;
+  block-size: 100%;
+}
