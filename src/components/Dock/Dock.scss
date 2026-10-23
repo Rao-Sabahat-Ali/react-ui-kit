@@ -1,0 +1,87 @@
+.ui-dock {
+  --ui-dock-item-size: 3rem;
+  --ui-dock-scale: 1.35;
+  display: inline-flex;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background-color: rgba(var(--ui-color-surface-raised-rgb), 0.85);
+  box-shadow: var(--ui-shadow-lg);
+  backdrop-filter: blur(8px);
+}
+
+.ui-dock--vertical {
+  flex-direction: column;
+}
+
+.ui-dock__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ui-dock-item-size);
+  block-size: var(--ui-dock-item-size);
+  border: 0;
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-color-bg-subtle);
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-xl);
+  text-decoration: none;
+
+  &[aria-current='page'] {
+    box-shadow: inset 0 -3px 0 var(--ui-color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+// Magnification uses transform only, so neighbours never shift under the pointer.
+.ui-dock--magnify .ui-dock__item {
+  transition: transform var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+
+  &:hover,
+  &:focus-visible {
+    transform: scale(var(--ui-dock-scale));
+  }
+}
+
+.ui-dock--bottom .ui-dock__item {
+  transform-origin: bottom center;
+}
+
+.ui-dock--top .ui-dock__item {
+  transform-origin: top center;
+}
+
+.ui-dock--left .ui-dock__item {
+  transform-origin: center left;
+}
+
+.ui-dock--right .ui-dock__item {
+  transform-origin: center right;
+}
+
+@media (pointer: coarse) {
+  .ui-dock__item {
+    min-inline-size: var(--ui-touch-target-min);
+    min-block-size: var(--ui-touch-target-min);
+  }
+
+  .ui-dock--magnify .ui-dock__item:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-dock--magnify .ui-dock__item {
+    transition: none;
+
+    &:hover,
+    &:focus-visible {
+      transform: none;
+    }
+  }
+}
