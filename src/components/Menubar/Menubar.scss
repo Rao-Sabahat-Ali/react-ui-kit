@@ -1,0 +1,103 @@
+.ui-menubar {
+  --bs-navbar-color: var(--ui-color-text-muted);
+  --bs-navbar-hover-color: var(--ui-color-text);
+  --bs-navbar-active-color: var(--ui-color-text);
+  --bs-nav-link-color: var(--ui-color-text-muted);
+  --bs-nav-link-hover-color: var(--ui-color-text);
+  background-color: var(--ui-color-surface);
+  border-block-end: 1px solid var(--ui-color-border);
+}
+
+.ui-menubar__inner {
+  gap: var(--ui-space-3);
+}
+
+.ui-menubar__end {
+  margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.ui-menubar__item {
+  position: relative;
+}
+
+.ui-menubar__top {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  min-height: 2rem;
+
+  &[aria-current='page'],
+  &.active {
+    color: var(--ui-color-text);
+    font-weight: var(--ui-font-weight-medium);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    border-radius: var(--ui-radius-sm);
+  }
+}
+
+.ui-menubar__submenu {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  z-index: var(--ui-z-dropdown);
+  animation: ui-menubar-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+
+  &[hidden] {
+    display: none !important;
+  }
+}
+
+.ui-menubar__link[aria-current='page'] {
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-menubar__group-list {
+  padding-inline-start: var(--ui-space-2);
+}
+
+.ui-menubar__panel {
+  flex-basis: 100%;
+  padding-block: var(--ui-space-2);
+
+  .ui-menubar__submenu {
+    position: static;
+    box-shadow: none;
+    border: 0;
+  }
+}
+
+.ui-menubar__vertical {
+  position: static;
+  box-shadow: none;
+  border: 0;
+  inline-size: 100%;
+}
+
+@media (pointer: coarse) {
+  .ui-menubar__top,
+  .ui-menubar__toggler {
+    min-height: var(--ui-touch-target-min);
+  }
+}
+
+@keyframes ui-menubar-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-menubar__submenu {
+    animation: none;
+  }
+}

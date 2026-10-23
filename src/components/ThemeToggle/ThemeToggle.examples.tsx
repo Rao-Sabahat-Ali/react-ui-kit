@@ -12,4 +12,10 @@ export const examples = [
       </div>
     ),
   },
+  {
+    title: 'Menu with system option',
+    description: 'Menu button with Light / Dark / System radio items.',
+    code: `<ThemeToggle mode="menu" />`,
+    render: () => <ThemeToggle mode="menu" appearance="outline" />,
+  },
 ];

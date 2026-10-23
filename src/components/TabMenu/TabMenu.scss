@@ -1,0 +1,42 @@
+.ui-tab-menu {
+  --bs-nav-link-color: var(--ui-color-text-muted);
+  --bs-nav-link-hover-color: var(--ui-color-text);
+  --bs-nav-tabs-link-active-color: var(--ui-color-text);
+  --bs-nav-tabs-border-color: var(--ui-color-border);
+  --bs-nav-underline-link-active-color: var(--ui-color-text);
+  --bs-nav-pills-link-active-bg: var(--ui-color-primary);
+  --bs-nav-pills-link-active-color: var(--ui-color-primary-contrast);
+}
+
+// Overflowing tabs scroll horizontally instead of wrapping.
+.ui-tab-menu__list {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  overscroll-behavior-inline: contain;
+  white-space: nowrap;
+}
+
+.ui-tab-menu__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-tab-menu__link {
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tab-menu__list {
+    scroll-behavior: auto;
+  }
+}

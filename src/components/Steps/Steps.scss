@@ -1,0 +1,105 @@
+.ui-steps {
+  display: flex;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.ui-steps--vertical {
+  flex-direction: column;
+}
+
+.ui-steps__item {
+  flex: 1 1 0;
+  position: relative;
+}
+
+.ui-steps--horizontal .ui-steps__item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 1rem;
+  inset-inline-start: calc(2rem + var(--ui-space-2));
+  inset-inline-end: var(--ui-space-2);
+  block-size: 1px;
+  background-color: var(--ui-color-border);
+}
+
+.ui-steps__content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: start;
+  font: inherit;
+  position: relative;
+  z-index: 1;
+}
+
+.ui-steps__button {
+  cursor: pointer;
+  border-radius: var(--ui-radius-sm);
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-steps__marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: var(--ui-radius-circle);
+  border: 1px solid var(--ui-color-border-strong);
+  background-color: var(--ui-color-surface);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-steps__text {
+  display: flex;
+  flex-direction: column;
+  padding-block-start: 0.25rem;
+}
+
+.ui-steps__label {
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-steps__description {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-steps__item--complete .ui-steps__marker {
+  background-color: var(--ui-color-primary);
+  border-color: var(--ui-color-primary);
+  color: var(--ui-color-primary-contrast);
+}
+
+.ui-steps__item--current .ui-steps__marker {
+  border-color: var(--ui-color-primary);
+  color: var(--ui-color-primary);
+  box-shadow: 0 0 0 3px var(--ui-color-primary-subtle);
+}
+
+.ui-steps__item--error .ui-steps__marker {
+  background-color: var(--ui-color-danger-subtle);
+  border-color: var(--ui-color-danger);
+  color: var(--ui-color-danger-emphasis);
+}
+
+@media (pointer: coarse) {
+  .ui-steps__button {
+    min-block-size: var(--ui-touch-target-min);
+  }
+}

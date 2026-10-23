@@ -1,0 +1,45 @@
+.ui-tooltip {
+  --bs-tooltip-zindex: var(--ui-z-tooltip);
+  --bs-tooltip-bg: var(--ui-color-text);
+  --bs-tooltip-color: var(--ui-color-text-inverse);
+  --bs-tooltip-border-radius: var(--ui-radius-sm);
+  --bs-tooltip-font-size: var(--ui-font-size-sm);
+  --bs-tooltip-opacity: 1;
+  margin: 0;
+  pointer-events: auto;
+  animation: ui-tooltip-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+
+  // Bridges the offset gap so the pointer can travel onto the tooltip (WCAG 1.4.13 hoverable).
+  &::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--ui-space-2));
+  }
+}
+
+.ui-tooltip__inner {
+  position: relative;
+}
+
+.ui-tooltip--top .ui-tooltip__arrow,
+.ui-tooltip--bottom .ui-tooltip__arrow {
+  left: calc(50% - var(--bs-tooltip-arrow-width) / 2);
+}
+
+.ui-tooltip--start .ui-tooltip__arrow,
+.ui-tooltip--end .ui-tooltip__arrow {
+  top: calc(50% - var(--bs-tooltip-arrow-width) / 2);
+}
+
+@keyframes ui-tooltip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tooltip {
+    animation: none;
+  }
+}
