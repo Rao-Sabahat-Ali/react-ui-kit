@@ -1,0 +1,106 @@
+.ui-panel-menu {
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-color-surface);
+  overflow: hidden;
+}
+
+.ui-panel-menu__list {
+  margin: 0;
+}
+
+.ui-panel-menu__section--root + .ui-panel-menu__section--root {
+  border-block-start: 1px solid var(--ui-color-border);
+}
+
+.ui-panel-menu__heading {
+  margin: 0;
+}
+
+.ui-panel-menu__header,
+.ui-panel-menu__link {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  inline-size: 100%;
+  min-block-size: 2.5rem;
+  padding-block: var(--ui-space-2);
+  padding-inline: var(--ui-space-3);
+  border: 0;
+  background: none;
+  color: var(--ui-color-text);
+  text-align: start;
+  text-decoration: none;
+  font: inherit;
+
+  &:hover {
+    background-color: var(--ui-color-bg-subtle);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-panel-menu__header {
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-panel-menu__label {
+  flex: 1 1 auto;
+}
+
+.ui-panel-menu__chevron {
+  transition: transform var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+}
+
+.ui-panel-menu__header--open .ui-panel-menu__chevron {
+  transform: rotate(180deg);
+}
+
+.ui-panel-menu__content {
+  padding-inline-start: var(--ui-space-3);
+  animation: ui-panel-menu-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+}
+
+.ui-panel-menu__link {
+  color: var(--ui-color-text-muted);
+
+  &.active,
+  &[aria-current='page'] {
+    color: var(--ui-color-primary);
+    font-weight: var(--ui-font-weight-semibold);
+    box-shadow: inset 3px 0 0 var(--ui-color-primary);
+  }
+
+  &.disabled {
+    color: var(--ui-color-text-subtle);
+    cursor: default;
+  }
+}
+
+[dir='rtl'] .ui-panel-menu__link.active {
+  box-shadow: inset -3px 0 0 var(--ui-color-primary);
+}
+
+@media (pointer: coarse) {
+  .ui-panel-menu__header,
+  .ui-panel-menu__link {
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+@keyframes ui-panel-menu-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-panel-menu__content,
+  .ui-panel-menu__chevron {
+    animation: none;
+    transition: none;
+  }
+}
