@@ -1,0 +1,194 @@
+.ui-date-picker {
+  position: relative;
+}
+
+.ui-date-picker__input {
+  min-block-size: var(--ui-control-height-md);
+}
+
+.ui-date-picker__popup {
+  z-index: var(--ui-z-popover);
+  padding: var(--ui-space-3);
+  margin: 0;
+}
+
+.ui-date-picker--inline .ui-date-picker__calendar {
+  display: inline-flex;
+  padding: var(--ui-space-3);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background-color: var(--ui-color-surface-raised);
+}
+
+.ui-date-picker__calendar {
+  display: flex;
+  gap: var(--ui-space-3);
+}
+
+.ui-date-picker__presets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  padding-inline-end: var(--ui-space-3);
+  border-inline-end: 1px solid var(--ui-color-border);
+}
+
+.ui-date-picker__preset {
+  text-align: start;
+  white-space: nowrap;
+}
+
+.ui-date-picker__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+}
+
+.ui-date-picker__header {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+}
+
+.ui-date-picker__title {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  gap: var(--ui-space-1);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-date-picker__title-btn {
+  font-weight: inherit;
+}
+
+.ui-date-picker__months {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-4);
+}
+
+.ui-date-picker__month-title {
+  text-align: center;
+  font-weight: var(--ui-font-weight-semibold);
+  margin-block-end: var(--ui-space-1);
+}
+
+.ui-date-picker__grid {
+  border-collapse: collapse;
+}
+
+.ui-date-picker__weekday {
+  padding: var(--ui-space-1);
+  text-align: center;
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-date-picker__cell {
+  padding: 1px;
+  text-align: center;
+}
+
+.ui-date-picker__day,
+.ui-date-picker__period,
+.ui-date-picker__nav {
+  min-inline-size: 2.25rem;
+  min-block-size: 2.25rem;
+  border-radius: var(--ui-radius);
+  color: var(--ui-color-text);
+  transition: background-color var(--ui-duration) var(--ui-easing);
+
+  &:hover {
+    background-color: var(--ui-color-bg-subtle);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  @media (pointer: coarse) {
+    min-inline-size: var(--ui-touch-target-min);
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+.ui-date-picker__period {
+  min-inline-size: 4.5rem;
+}
+
+.ui-date-picker__day--outside {
+  color: var(--ui-color-text-subtle);
+}
+
+.ui-date-picker__day--today {
+  font-weight: var(--ui-font-weight-bold);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.ui-date-picker__day--in-range {
+  border-radius: 0;
+  background-color: var(--ui-color-primary-subtle);
+  color: var(--ui-color-primary-emphasis);
+}
+
+.ui-date-picker__day--preview {
+  background-color: var(--ui-color-bg-subtle);
+  outline: 1px dashed var(--ui-color-primary);
+  outline-offset: -1px;
+}
+
+.ui-date-picker__day--selected,
+.ui-date-picker__day--range-edge,
+.ui-date-picker__day--selected:hover {
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-color-primary);
+  color: var(--ui-color-primary-contrast);
+}
+
+.ui-date-picker__day--disabled {
+  color: var(--ui-color-text-subtle);
+  text-decoration: line-through;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.ui-date-picker__time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-1);
+}
+
+.ui-date-picker__spin {
+  inline-size: 3rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  cursor: ns-resize;
+}
+
+.ui-date-picker__buttonbar {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  padding-block-start: var(--ui-space-2);
+  border-block-start: 1px solid var(--ui-color-border);
+}
+
+.ui-date-picker--disabled {
+  opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-date-picker__day,
+  .ui-date-picker__period,
+  .ui-date-picker__nav {
+    transition: none;
+  }
+}

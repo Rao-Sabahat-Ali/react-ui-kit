@@ -1,0 +1,95 @@
+.ui-list-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+}
+
+.ui-list-box__list {
+  overflow-y: auto;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-color-surface);
+  outline: 2px solid transparent;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  &.is-invalid {
+    border-color: var(--ui-color-danger);
+  }
+
+  // Borders come from the container.
+  > .list-group-item,
+  .ui-list-box__group-wrap > .list-group-item,
+  .ui-list-box__spacer > .list-group-item {
+    border-inline: 0;
+    border-radius: 0;
+  }
+}
+
+.ui-list-box__option {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-block-size: var(--ui-control-height-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--ui-duration) var(--ui-easing);
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+
+  @media (pointer: coarse) {
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+.ui-list-box__option--focused:not(.active) {
+  background-color: var(--ui-color-bg-subtle);
+  color: var(--ui-color-text);
+}
+
+.ui-list-box__list:focus-visible .ui-list-box__option--focused,
+.ui-list-box__option--focused.active {
+  outline: 2px solid var(--ui-color-focus-ring);
+  outline-offset: -2px;
+}
+
+.ui-list-box__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex-shrink: 0;
+  border: 1px solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius-sm);
+  background-color: var(--ui-color-surface);
+  color: var(--ui-color-primary);
+}
+
+.ui-list-box__group {
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  color: var(--ui-color-text-muted);
+  background-color: var(--ui-color-surface-sunken);
+}
+
+.ui-list-box__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-list-box--disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-list-box__option {
+    transition: none;
+  }
+}

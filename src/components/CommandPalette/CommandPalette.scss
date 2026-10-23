@@ -1,0 +1,178 @@
+.ui-command-palette-root {
+  --ui-command-palette-width: 40rem;
+  --ui-command-palette-max-height: min(60vh, 28rem);
+}
+
+.ui-command-palette__backdrop {
+  z-index: var(--ui-z-modal-backdrop);
+  background-color: var(--ui-color-overlay);
+  opacity: 1;
+}
+
+.ui-command-palette {
+  z-index: var(--ui-z-modal);
+}
+
+.ui-command-palette__dialog {
+  max-inline-size: var(--ui-command-palette-width);
+  margin-block-start: 12vh;
+}
+
+.ui-command-palette__content {
+  overflow: hidden;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background-color: var(--ui-color-surface-raised);
+  box-shadow: var(--ui-shadow-xl);
+  animation: ui-command-palette-in var(--ui-duration) var(--ui-easing);
+}
+
+.ui-command-palette__search-wrap {
+  position: relative;
+  border-block-end: 1px solid var(--ui-color-border);
+}
+
+.ui-command-palette__search-icon {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: var(--ui-space-4);
+  transform: translateY(-50%);
+  color: var(--ui-color-text-muted);
+  pointer-events: none;
+}
+
+.ui-command-palette__search {
+  min-block-size: var(--ui-control-height-lg);
+  padding-inline-start: calc(var(--ui-space-4) * 2 + 1rem);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: var(--ui-font-size-lg);
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.ui-command-palette__body {
+  max-block-size: var(--ui-command-palette-max-height);
+  overflow-y: auto;
+  padding: var(--ui-space-2);
+}
+
+.ui-command-palette__group + .ui-command-palette__group,
+.ui-command-palette__item + .ui-command-palette__group {
+  margin-block-start: var(--ui-space-2);
+}
+
+.ui-command-palette__group-label {
+  padding: var(--ui-space-1) var(--ui-space-3);
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-command-palette__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-block-size: var(--ui-control-height-md);
+  border: 0;
+  border-radius: var(--ui-radius);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--ui-duration) var(--ui-easing);
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  @media (pointer: coarse) {
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+.ui-command-palette__item--active {
+  background-color: var(--ui-color-primary-subtle);
+  color: var(--ui-color-primary-emphasis);
+  outline: 2px solid transparent;
+}
+
+.ui-command-palette__icon {
+  display: inline-flex;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-command-palette__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.ui-command-palette__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-command-palette__match {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-command-palette__description {
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-command-palette__shortcut {
+  display: inline-flex;
+  gap: var(--ui-space-1);
+}
+
+.ui-command-palette__kbd {
+  padding: 0 var(--ui-space-1);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-sm);
+  background-color: var(--ui-color-surface);
+  color: var(--ui-color-text-muted);
+  font-family: var(--ui-font-family-mono);
+  font-size: var(--ui-font-size-xs);
+}
+
+.ui-command-palette__empty,
+.ui-command-palette__loading {
+  padding: var(--ui-space-6) var(--ui-space-3);
+  text-align: center;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-command-palette__footer {
+  padding: var(--ui-space-2) var(--ui-space-4);
+  border-block-start: 1px solid var(--ui-color-border);
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+}
+
+@keyframes ui-command-palette-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-command-palette__content {
+    animation: none;
+  }
+
+  .ui-command-palette__item {
+    transition: none;
+  }
+}

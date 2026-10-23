@@ -1,0 +1,95 @@
+.ui-chips__control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-block-size: var(--ui-control-height-md);
+  padding-block: var(--ui-space-1);
+  cursor: text;
+
+  &.form-control-sm {
+    min-block-size: var(--ui-control-height-sm);
+  }
+
+  &.form-control-lg {
+    min-block-size: var(--ui-control-height-lg);
+  }
+
+  &:focus-within {
+    border-color: var(--ui-color-focus-ring);
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  &.disabled {
+    background-color: var(--ui-color-bg-subtle);
+    cursor: not-allowed;
+  }
+}
+
+.ui-chips__list {
+  display: contents;
+}
+
+.ui-chips__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  max-inline-size: 100%;
+  background-color: var(--ui-color-secondary-subtle);
+  color: var(--ui-color-secondary-emphasis);
+  border-radius: var(--ui-radius-pill);
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-chips__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-chips__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.5rem;
+  min-block-size: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-circle);
+  background: none;
+  color: inherit;
+  transition: background-color var(--ui-duration) var(--ui-easing);
+
+  &:hover {
+    background-color: var(--ui-color-bg-subtle);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  @media (pointer: coarse) {
+    min-inline-size: var(--ui-touch-target-min);
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+.ui-chips__input {
+  flex: 1 1 6rem;
+  min-inline-size: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ui-color-text);
+  outline: 2px solid transparent;
+
+  &[readonly] {
+    cursor: default;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-chips__remove {
+    transition: none;
+  }
+}
