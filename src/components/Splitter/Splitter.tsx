@@ -74,6 +74,8 @@ export function Splitter({ layout = 'horizontal', onResizeEnd, stateKey, classNa
   const [dragging, setDragging] = useState<number | null>(null);
 
   // Keep state consistent if the number of panels changes.
+  // Runs after every render on purpose (children can change); guarded against loops.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (sizes.length !== count) setSizes(initialSizes(panels.map((p) => p.props)));
   });
@@ -177,6 +179,8 @@ export function Splitter({ layout = 'horizontal', onResizeEnd, stateKey, classNa
             {panel.props.children}
           </div>
           {i < count - 1 && (
+            // APG window splitter: a focusable separator with value and keyboard resizing.
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
             <div
               role="separator"
               tabIndex={0}

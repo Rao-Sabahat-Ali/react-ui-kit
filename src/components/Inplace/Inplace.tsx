@@ -53,6 +53,8 @@ export function Inplace({ display, children, active, defaultActive = false, onTo
   return (
     <div ref={ref} className={cx('ui-inplace', isActive && 'ui-inplace--active', disabled && 'ui-inplace--disabled', className)} {...rest}>
       {isActive ? (
+        // Escape-to-cancel for the editor contents; focus goes to the first field inside.
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div ref={editorRef} tabIndex={-1} className="ui-inplace__content" onKeyDown={handleKeyDown}>
           {children(close)}
           {closable && (

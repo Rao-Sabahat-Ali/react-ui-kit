@@ -43,6 +43,8 @@ export function BlockUI({ blocked, fullScreen = false, template, className, chil
       </div>
       <div className="ui-block-ui__live" role="status">
         {blocked && (
+          // Programmatic focus target while blocked; keys are swallowed so the blocked content can't be operated.
+          // eslint-disable-next-line jsx-a11y/no-static-element-interactions
           <div ref={overlayRef} tabIndex={-1} className="ui-block-ui__overlay" onKeyDown={handleKeyDown}>
             {template ?? (
               <div className="ui-block-ui__message">

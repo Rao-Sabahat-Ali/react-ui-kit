@@ -58,7 +58,7 @@ Reuse Dialog overlay stack, useFloating, useFocusTrap.
 - [x] **UI-304** ConfirmDialog — spec `confirm-dialog.md` — reviews: a11y-reviewer
 - [ ] **UI-305** ConfirmPopup — spec `confirm-popup.md` — reviews: a11y-reviewer
 - [x] **UI-306** Toast — spec `toast.md`
-- [ ] **UI-307** Messages — spec `messages.md`
+- [x] **UI-307** Messages — spec `messages.md`
 - [ ] **UI-308** Menu — spec `menu.md` — reviews: security-reviewer, a11y-reviewer
 - [ ] **UI-309** TieredMenu — spec `tiered-menu.md` — reviews: security-reviewer, a11y-reviewer
 - [ ] **UI-310** ContextMenu — spec `context-menu.md` — reviews: security-reviewer, a11y-reviewer
@@ -83,24 +83,24 @@ Needed by every profile; unlocks real app scaffolds.
 - [x] **UI-404** PageHeader — spec `page-header.md` — reviews: a11y-reviewer
 - [x] **UI-405** EmptyState — spec `empty-state.md` — reviews: a11y-reviewer
 - [x] **UI-406** StatCard — spec `stat-card.md` — reviews: a11y-reviewer
-- [ ] **UI-407** Accordion — spec `accordion.md` — reviews: a11y-reviewer
-- [ ] **UI-408** Panel — spec `panel.md` — reviews: a11y-reviewer
-- [ ] **UI-409** Fieldset — spec `fieldset.md` — reviews: a11y-reviewer
-- [ ] **UI-410** Divider — spec `divider.md` — reviews: a11y-reviewer
-- [ ] **UI-411** Toolbar — spec `toolbar.md` — reviews: a11y-reviewer
-- [ ] **UI-412** Splitter — spec `splitter.md` — reviews: security-reviewer, a11y-reviewer
-- [ ] **UI-413** Stepper — spec `stepper.md` — reviews: a11y-reviewer
-- [ ] **UI-414** ScrollPanel — spec `scroll-panel.md` — reviews: a11y-reviewer
-- [ ] **UI-415** DeferredContent — spec `deferred-content.md` — reviews: a11y-reviewer
+- [x] **UI-407** Accordion — spec `accordion.md` — reviews: a11y-reviewer
+- [x] **UI-408** Panel — spec `panel.md` — reviews: a11y-reviewer
+- [x] **UI-409** Fieldset — spec `fieldset.md` — reviews: a11y-reviewer
+- [x] **UI-410** Divider — spec `divider.md` — reviews: a11y-reviewer
+- [x] **UI-411** Toolbar — spec `toolbar.md` — reviews: a11y-reviewer
+- [x] **UI-412** Splitter — spec `splitter.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-413** Stepper — spec `stepper.md` — reviews: a11y-reviewer
+- [x] **UI-414** ScrollPanel — spec `scroll-panel.md` — reviews: a11y-reviewer
+- [x] **UI-415** DeferredContent — spec `deferred-content.md` — reviews: a11y-reviewer
 
 ## Phase 4b — New specs (design-system v0.3.0)
 
-- [ ] **UI-450** Link — spec `link.md`
-- [ ] **UI-451** Kbd — spec `kbd.md`
-- [ ] **UI-452** Stack — spec `stack.md`
-- [ ] **UI-453** Grid — spec `grid.md`
-- [ ] **UI-454** NumberFormat — spec `number-format.md`
-- [ ] **UI-455** DateFormat — spec `date-format.md`
+- [x] **UI-450** Link — spec `link.md`
+- [x] **UI-451** Kbd — spec `kbd.md`
+- [x] **UI-452** Stack — spec `stack.md`
+- [x] **UI-453** Grid — spec `grid.md`
+- [x] **UI-454** NumberFormat — spec `number-format.md`
+- [x] **UI-455** DateFormat — spec `date-format.md`
 - [ ] **UI-456** CommandPalette — spec `command-palette.md` — reviews: a11y-reviewer
 - [ ] **UI-457** Scheduler — spec `scheduler.md` — reviews: a11y-reviewer
 - [x] **UI-458** Generated high-contrast tokens replace hand-written bridge CSS (TOK-011).
@@ -121,12 +121,12 @@ Needed by every profile; unlocks real app scaffolds.
 ## Phase 6 — Charts, media, files, misc
 
 - [x] **UI-601** ProgressBar — spec `progress-bar.md`
-- [ ] **UI-602** MeterGroup — spec `meter-group.md`
-- [ ] **UI-603** Avatar — spec `avatar.md`
-- [ ] **UI-604** Chip — spec `chip.md`
-- [ ] **UI-605** BlockUI — spec `block-ui.md`
-- [ ] **UI-606** Inplace — spec `inplace.md`
-- [ ] **UI-607** ScrollTop — spec `scroll-top.md`
+- [x] **UI-602** MeterGroup — spec `meter-group.md`
+- [x] **UI-603** Avatar — spec `avatar.md`
+- [x] **UI-604** Chip — spec `chip.md`
+- [x] **UI-605** BlockUI — spec `block-ui.md`
+- [x] **UI-606** Inplace — spec `inplace.md`
+- [x] **UI-607** ScrollTop — spec `scroll-top.md`
 - [ ] **UI-608** Image — spec `image.md` — reviews: security-reviewer, a11y-reviewer
 - [ ] **UI-609** Carousel — spec `carousel.md` — reviews: a11y-reviewer
 - [ ] **UI-610** Galleria — spec `galleria.md` — reviews: a11y-reviewer

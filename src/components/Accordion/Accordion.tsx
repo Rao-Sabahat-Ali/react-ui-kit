@@ -72,6 +72,8 @@ export function Accordion({ multiple = false, value, defaultValue, onChange, flu
 
   return (
     <AccordionContext.Provider value={ctx}>
+      {/* Delegates Arrow/Home/End between the header buttons (APG accordion); the buttons are the focus targets. */}
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         ref={(node) => {
           rootRef.current = node;

@@ -14,6 +14,8 @@ export function ScrollPanel({ height, ariaLabel, className, style, children, ref
   const [needsFocus, setNeedsFocus] = useState(true);
 
   // Keyboard users must be able to scroll: if nothing inside is focusable, the container becomes the tab stop.
+  // Runs after every render on purpose (children can change); guarded against loops.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const el = innerRef.current;
     if (!el) return;
@@ -33,8 +35,10 @@ export function ScrollPanel({ height, ariaLabel, className, style, children, ref
         if (typeof ref === 'function') ref(node);
         else if (ref) ref.current = node;
       }}
+      // Named, keyboard-scrollable region only when nothing inside can take focus.
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={needsFocus ? 0 : undefined}
-      role={named ? 'region' : undefined}
+      role={needsFocus ? 'region' : undefined}
       aria-label={named ? ariaLabel : undefined}
       className={cx('ui-scroll-panel', className)}
       style={{ ...(height !== undefined ? ({ height } as CSSProperties) : {}), ...style }}
