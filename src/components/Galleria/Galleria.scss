@@ -1,0 +1,210 @@
+.ui-galleria {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+}
+
+.ui-galleria--thumbs-top {
+  flex-direction: column-reverse;
+}
+
+.ui-galleria--thumbs-start,
+.ui-galleria--thumbs-end {
+  flex-direction: row;
+
+  .ui-galleria__main {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
+  .ui-galleria__thumbs {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    max-block-size: 28rem;
+    overflow-y: auto;
+  }
+}
+
+.ui-galleria--thumbs-start {
+  flex-direction: row-reverse;
+}
+
+.ui-galleria__main {
+  position: relative;
+}
+
+.ui-galleria__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface-sunken);
+}
+
+.ui-galleria__figure {
+  margin: 0;
+  inline-size: 100%;
+}
+
+.ui-galleria__image {
+  display: block;
+  inline-size: 100%;
+  max-block-size: 70vh;
+  object-fit: contain;
+}
+
+.ui-galleria__caption {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  padding: var(--ui-space-2) var(--ui-space-3);
+  background: var(--ui-color-overlay);
+  color: var(--ui-color-text-inverse);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-galleria__nav,
+.ui-galleria__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 2.25rem;
+  min-block-size: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-circle);
+  background: var(--ui-color-surface-raised);
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-lg);
+
+  &:disabled {
+    opacity: 0.4;
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-galleria__nav {
+  position: absolute;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+
+  &--prev { inset-inline-start: var(--ui-space-2); }
+  &--next { inset-inline-end: var(--ui-space-2); }
+}
+
+.ui-galleria__actions {
+  position: absolute;
+  inset-block-start: var(--ui-space-2);
+  inset-inline-end: var(--ui-space-2);
+  display: flex;
+  gap: var(--ui-space-1);
+}
+
+.ui-galleria__indicators {
+  display: flex;
+  justify-content: center;
+  gap: var(--ui-space-1);
+  margin-block-start: var(--ui-space-2);
+}
+
+.ui-galleria__indicator {
+  position: relative;
+  inline-size: 24px;
+  block-size: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    inline-size: 0.625rem;
+    block-size: 0.625rem;
+    border-radius: var(--ui-radius-circle);
+    background: var(--ui-color-border-strong);
+    transform: translate(-50%, -50%);
+  }
+
+  &--active::before {
+    background: var(--ui-color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    border-radius: var(--ui-radius-circle);
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-galleria__thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+}
+
+.ui-galleria__thumb {
+  flex: none;
+  inline-size: 4.5rem;
+  block-size: 3.25rem;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-color-surface-sunken);
+  opacity: 0.7;
+  transition: opacity var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+
+  &:hover,
+  &--active {
+    opacity: 1;
+  }
+
+  &--active {
+    border-color: var(--ui-color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-galleria__thumb-img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.ui-galleria__dialog {
+  .ui-galleria__stage {
+    block-size: 100%;
+    background: transparent;
+  }
+
+  .ui-galleria__image {
+    max-block-size: calc(100vh - 8rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-galleria__thumb {
+    transition: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-galleria__nav,
+  .ui-galleria__action,
+  .ui-galleria__indicator {
+    min-inline-size: var(--ui-touch-target-min);
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
