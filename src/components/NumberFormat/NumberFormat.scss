@@ -1,0 +1,19 @@
+.ui-number-format {
+  font-family: var(--ui-font-family);
+}
+
+.ui-number-format--tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-number-format--positive {
+  color: var(--ui-color-success-emphasis);
+}
+
+.ui-number-format--negative {
+  color: var(--ui-color-danger-emphasis);
+}
+
+.ui-number-format--empty {
+  color: var(--ui-color-text-muted);
+}
