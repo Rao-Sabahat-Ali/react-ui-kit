@@ -1,0 +1,190 @@
+.ui-slider {
+  --ui-slider-track-size: 0.375rem;
+  --ui-slider-thumb-size: 1.25rem;
+  --ui-slider-length: 12rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  padding-block: calc(var(--ui-slider-thumb-size) / 2);
+  padding-inline: calc(var(--ui-slider-thumb-size) / 2);
+
+  &--disabled {
+    opacity: 0.5;
+  }
+
+  &--vertical {
+    display: inline-flex;
+    flex-direction: column;
+    block-size: var(--ui-slider-length);
+    padding-block: calc(var(--ui-slider-thumb-size) / 2);
+  }
+}
+
+.ui-slider__track {
+  position: relative;
+  flex: 1 1 auto;
+  border-radius: var(--ui-radius-sm);
+  background-color: var(--ui-color-border);
+  touch-action: none;
+  cursor: pointer;
+
+  .ui-slider--horizontal & {
+    block-size: var(--ui-slider-track-size);
+    min-inline-size: 0;
+  }
+
+  .ui-slider--vertical & {
+    inline-size: var(--ui-slider-track-size);
+    flex: 1 1 auto;
+    min-block-size: 0;
+  }
+
+  .ui-slider--disabled & {
+    cursor: not-allowed;
+  }
+}
+
+.ui-slider__range {
+  position: absolute;
+  border-radius: inherit;
+  background-color: var(--ui-color-primary);
+
+  .ui-slider--horizontal & {
+    inset-block: 0;
+  }
+
+  .ui-slider--vertical & {
+    inset-inline: 0;
+  }
+}
+
+.ui-slider__thumb {
+  position: absolute;
+  inline-size: var(--ui-slider-thumb-size);
+  block-size: var(--ui-slider-thumb-size);
+  border-radius: 50%;
+  background-color: var(--ui-color-surface);
+  border: 2px solid var(--ui-color-primary);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  transition: box-shadow var(--ui-duration) var(--ui-easing);
+
+  .ui-slider--horizontal & {
+    inset-block-start: 50%;
+    translate: -50% -50%;
+  }
+
+  .ui-slider--vertical & {
+    inset-inline-start: 50%;
+    translate: -50% 50%;
+  }
+
+  [dir='rtl'] .ui-slider--horizontal & {
+    translate: 50% -50%;
+  }
+
+  &:focus-visible,
+  &.is-active {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  &:hover .ui-slider__tooltip,
+  &:focus-visible .ui-slider__tooltip,
+  &.is-active .ui-slider__tooltip {
+    opacity: 1;
+  }
+}
+
+.ui-slider__tooltip {
+  position: absolute;
+  inset-block-end: calc(100% + var(--ui-space-2));
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  padding: var(--ui-space-1) var(--ui-space-2);
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-color-text-inverse);
+  background-color: var(--ui-color-text);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--ui-duration) var(--ui-easing);
+
+  [dir='rtl'] & {
+    translate: 50% 0;
+  }
+}
+
+.ui-slider__mark {
+  position: absolute;
+  inline-size: 2px;
+  block-size: 2px;
+  border-radius: 50%;
+  background-color: var(--ui-color-border-strong);
+
+  &.is-active {
+    background-color: var(--ui-color-primary-contrast);
+  }
+
+  .ui-slider--horizontal & {
+    inset-block-start: 50%;
+    translate: -50% -50%;
+  }
+
+  .ui-slider--vertical & {
+    inset-inline-start: 50%;
+    translate: -50% 50%;
+  }
+
+  [dir='rtl'] .ui-slider--horizontal & {
+    translate: 50% -50%;
+  }
+}
+
+.ui-slider__mark-label {
+  position: absolute;
+  color: var(--ui-color-text-muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+
+  .ui-slider--horizontal & {
+    inset-block-start: calc(var(--ui-slider-thumb-size) * 0.9);
+    inset-inline-start: 50%;
+    translate: -50% 0;
+  }
+
+  .ui-slider--vertical & {
+    inset-inline-start: calc(var(--ui-slider-thumb-size) * 0.9);
+    inset-block-start: 50%;
+    translate: 0 -50%;
+  }
+
+  [dir='rtl'] .ui-slider--horizontal & {
+    translate: 50% 0;
+  }
+}
+
+.ui-slider__value {
+  min-inline-size: 3ch;
+  color: var(--ui-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (pointer: coarse) {
+  .ui-slider {
+    --ui-slider-thumb-size: var(--ui-touch-target-min);
+  }
+
+  .ui-slider__thumb {
+    border-width: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-slider__thumb,
+  .ui-slider__tooltip {
+    transition: none;
+  }
+}

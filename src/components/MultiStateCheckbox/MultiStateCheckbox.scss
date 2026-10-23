@@ -1,0 +1,36 @@
+.ui-multi-state-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--ui-control-height-md);
+  min-height: var(--ui-control-height-md);
+  border-radius: var(--ui-radius);
+
+  &.btn-sm {
+    min-inline-size: var(--ui-control-height-sm);
+    min-height: var(--ui-control-height-sm);
+    border-radius: var(--ui-radius-sm);
+  }
+
+  &.btn-lg {
+    min-inline-size: var(--ui-control-height-lg);
+    min-height: var(--ui-control-height-lg);
+    border-radius: var(--ui-radius-lg);
+  }
+
+  &.is-invalid {
+    border-color: var(--ui-color-danger);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-multi-state-checkbox {
+    min-height: var(--ui-touch-target-min);
+    min-inline-size: var(--ui-touch-target-min);
+  }
+}

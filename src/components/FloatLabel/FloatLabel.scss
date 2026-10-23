@@ -1,0 +1,16 @@
+.ui-float-label__group {
+  > .form-control,
+  > .form-select {
+    border-radius: var(--ui-radius);
+  }
+
+  > label {
+    color: var(--ui-color-text-muted);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-float-label__group > label {
+    transition: none;
+  }
+}
