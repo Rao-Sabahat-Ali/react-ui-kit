@@ -1,0 +1,85 @@
+@use 'sass:list';
+
+$intents: primary, secondary, success, danger, warning, info;
+
+.ui-button {
+  --bs-btn-padding-x: var(--ui-control-padding-x);
+  --bs-btn-padding-y: 0;
+  --bs-btn-font-weight: var(--ui-font-weight-medium);
+  --bs-btn-border-radius: var(--ui-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: var(--ui-control-height-md);
+  transition-duration: var(--ui-duration);
+  transition-timing-function: var(--ui-easing);
+
+  &.btn-sm {
+    --bs-btn-padding-x: calc(var(--ui-control-padding-x) * 0.75);
+    --bs-btn-border-radius: var(--ui-radius-sm);
+    min-height: var(--ui-control-height-sm);
+  }
+
+  &.btn-lg {
+    --bs-btn-padding-x: calc(var(--ui-control-padding-x) * 1.5);
+    --bs-btn-border-radius: var(--ui-radius-lg);
+    min-height: var(--ui-control-height-lg);
+  }
+
+  &.rounded-pill {
+    --bs-btn-border-radius: var(--ui-radius-pill);
+  }
+
+  &.btn-link {
+    --bs-btn-color: var(--ui-color-link);
+    --bs-btn-hover-color: var(--ui-color-link-hover);
+    --bs-btn-active-color: var(--ui-color-link-hover);
+  }
+}
+
+.ui-button--icon-only {
+  --bs-btn-padding-x: 0;
+  min-width: var(--ui-control-height-md);
+
+  &.btn-sm {
+    min-width: var(--ui-control-height-sm);
+  }
+
+  &.btn-lg {
+    min-width: var(--ui-control-height-lg);
+  }
+}
+
+.ui-button--loading {
+  cursor: progress;
+}
+
+.ui-button__badge {
+  font-size: 0.75em;
+}
+
+@each $intent in $intents {
+  .ui-button--text-#{$intent} {
+    --bs-btn-color: var(--ui-color-#{$intent}-emphasis);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-color: var(--ui-color-#{$intent}-emphasis);
+    --bs-btn-hover-bg: var(--ui-color-#{$intent}-subtle);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-color: var(--ui-color-#{$intent}-emphasis);
+    --bs-btn-active-bg: var(--ui-color-#{$intent}-subtle);
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-disabled-color: var(--ui-color-text-subtle);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: transparent;
+    --bs-btn-focus-shadow-rgb: var(--ui-color-#{$intent}-rgb);
+  }
+}
+
+// Touch: keep hit area ≥ touch-target-min on coarse pointers.
+@media (pointer: coarse) {
+  .ui-button {
+    min-height: max(var(--ui-control-height-md), var(--ui-touch-target-min));
+  }
+}

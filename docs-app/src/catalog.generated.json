@@ -1,0 +1,1141 @@
+{
+  "version": "0.1.0",
+  "components": [
+    {
+      "name": "Accordion",
+      "slug": "accordion",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Vertically stacked sections that expand/collapse (FAQ, filters, settings groups).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "AppShell",
+      "slug": "app-shell",
+      "category": "layout",
+      "status": "specified",
+      "purpose": "Page-level layout with landmarks and responsive navigation for each profile's shell type.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "AutoComplete",
+      "slug": "auto-complete",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Text input that suggests options as the user types, from local or async sources. Single or multiple (chips) selection.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Avatar",
+      "slug": "avatar",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Represent a user/entity with image, initials or icon. AvatarGroup overlaps several with \"+N\".",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Badge",
+      "slug": "badge",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Small count or status indicator, standalone or overlaid on another element (avatar, icon button).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "BlockUI",
+      "slug": "block-ui",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Block interaction with a region (or full screen) during processing (POS payment).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Breadcrumb",
+      "slug": "breadcrumb",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "Show location in hierarchy and navigate up.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Button",
+      "slug": "button",
+      "category": "button",
+      "status": "implemented",
+      "purpose": "Triggers an action. The most used control; sets the tone for every other control's API.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Card",
+      "slug": "card",
+      "category": "panel",
+      "status": "implemented",
+      "purpose": "Container grouping related content and actions on a surface.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Carousel",
+      "slug": "carousel",
+      "category": "media",
+      "status": "specified",
+      "purpose": "Cycle through items, showing N visible per page with responsive options.",
+      "profiles": [
+        "ecommerce",
+        "landing",
+        "game"
+      ]
+    },
+    {
+      "name": "CascadeSelect",
+      "slug": "cascade-select",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Select a leaf from nested groups (Country → State → City) via cascading sub-panels.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Chart",
+      "slug": "chart",
+      "category": "chart",
+      "status": "specified",
+      "purpose": "In-house SVG charts (no Chart.js/D3): line, area, bar (vertical/horizontal, stacked/grouped), pie, doughnut, sparkline. Responsive via ResizeObserver; themed from `--ui-color-chart-*`.",
+      "profiles": [
+        "dashboard",
+        "admin",
+        "saas",
+        "game"
+      ]
+    },
+    {
+      "name": "Checkbox",
+      "slug": "checkbox",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Binary choice, or one option in a multi-choice group. Supports indeterminate.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Chip",
+      "slug": "chip",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Compact entity (person, filter) with optional image/icon and remove action.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Chips",
+      "slug": "chips",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Free-form multiple value entry (tags, emails). Values become removable chips.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ColorPicker",
+      "slug": "color-picker",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Pick a colour via saturation/value area, hue slider, optional alpha, hex input and preset swatches. `native` mode uses `<input type=\"color\">`.",
+      "profiles": [
+        "cms",
+        "saas",
+        "game",
+        "admin"
+      ]
+    },
+    {
+      "name": "ConfirmDialog",
+      "slug": "confirm-dialog",
+      "category": "overlay",
+      "status": "specified",
+      "purpose": "Ask the user to confirm a consequential action. Promise-based API via provider.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ConfirmPopup",
+      "slug": "confirm-popup",
+      "category": "overlay",
+      "status": "specified",
+      "purpose": "Lightweight confirmation anchored to the triggering element (row delete in a table).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ContextMenu",
+      "slug": "context-menu",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "Menu opened on right-click / long-press / Shift+F10 / ContextMenu key on a target (table rows, tree nodes).",
+      "profiles": [
+        "admin",
+        "cms",
+        "saas"
+      ]
+    },
+    {
+      "name": "DataTable",
+      "slug": "data-table",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "Display, sort, filter, select and paginate tabular records. Flagship data component for admin/dashboard.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "DataView",
+      "slug": "data-view",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Display records as a list or responsive card grid with layout toggle, sorting and pagination. Primary catalogue view for ecommerce and POS.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "DatePicker",
+      "slug": "date-picker",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Select a date, date range, multiple dates, month/year, and optionally time. Inline calendar mode for dashboards/booking. No date library: built on `utils/date.ts` + `Intl.DateTimeFormat`.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "DeferredContent",
+      "slug": "deferred-content",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Mount children only when the placeholder scrolls into view (IntersectionObserver) — lazy heavy widgets/images.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Dialog",
+      "slug": "dialog",
+      "category": "overlay",
+      "status": "implemented",
+      "purpose": "Modal window for focused tasks that must be completed or dismissed before returning to the page.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Divider",
+      "slug": "divider",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Separate content horizontally or vertically, optionally with a label (\"or\").",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Dock",
+      "slug": "dock",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "macOS-style launcher of icon items with magnification on hover (game launchers, desktop-like UIs).",
+      "profiles": [
+        "game",
+        "saas"
+      ]
+    },
+    {
+      "name": "Drawer",
+      "slug": "drawer",
+      "category": "overlay",
+      "status": "specified",
+      "purpose": "Panel sliding from a screen edge: detail view in admin, mini cart in ecommerce, mobile navigation.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Editor",
+      "slug": "editor",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Lightweight rich-text editor without third-party engines (no Quill/TipTap). contentEditable with an internal command layer (Selection/Range API) producing a sanitised HTML subset.",
+      "profiles": [
+        "cms",
+        "saas",
+        "admin"
+      ]
+    },
+    {
+      "name": "EmptyState",
+      "slug": "empty-state",
+      "category": "layout",
+      "status": "specified",
+      "purpose": "Explain why a view is empty and what to do next (no data, no results, first-run, error).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Field",
+      "slug": "field",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Wraps any single form control with label, help text, error and required marker, wiring ids and ARIA automatically through context.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Fieldset",
+      "slug": "fieldset",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Group related controls with a legend; optionally collapsible.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "FileUpload",
+      "slug": "file-upload",
+      "category": "file",
+      "status": "specified",
+      "purpose": "Select or drop files, validate, preview and upload with progress. Upload transport is provided by the app (no HTTP client dependency).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "FloatLabel",
+      "slug": "float-label",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Bootstrap floating-label layout for InputText, InputTextarea, Select (native), Password. Saves vertical space in short forms (login, checkout).",
+      "profiles": [
+        "saas",
+        "ecommerce",
+        "landing"
+      ]
+    },
+    {
+      "name": "FocusTrap",
+      "slug": "focus-trap",
+      "category": "foundation",
+      "status": "implemented",
+      "purpose": "Keep keyboard focus within a container; restore focus on deactivate. `useFocusTrap(ref, { active, initialFocus, restoreFocus })` and `<FocusTrap>` component.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Galleria",
+      "slug": "galleria",
+      "category": "media",
+      "status": "specified",
+      "purpose": "Image gallery with main view, thumbnails, captions, indicators and fullscreen mode (product photos, media libraries).",
+      "profiles": [
+        "ecommerce",
+        "cms",
+        "landing"
+      ]
+    },
+    {
+      "name": "IconField",
+      "slug": "icon-field",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Places an icon inside an input (start or end) without addon borders (search boxes).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Icon",
+      "slug": "icon",
+      "category": "foundation",
+      "status": "implemented",
+      "purpose": "Inline SVG icon from the built-in registry. Zero external icon dependency.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Image",
+      "slug": "image",
+      "category": "media",
+      "status": "specified",
+      "purpose": "Responsive image with lazy loading, placeholder/fallback, aspect ratio box and optional preview (zoom dialog).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Inplace",
+      "slug": "inplace",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Display value that turns into an editor on activation (inline editing of titles, table cells outside DataTable).",
+      "profiles": [
+        "admin",
+        "cms",
+        "saas"
+      ]
+    },
+    {
+      "name": "InputGroup",
+      "slug": "input-group",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Combine controls, addons and buttons into one visual unit (`$` + amount + `.00`, search + button).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "InputMask",
+      "slug": "input-mask",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Formatted input for fixed patterns (phone, postal code, serial). In-house mask engine (`utils/mask.ts`).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "InputNumber",
+      "slug": "input-number",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Numeric entry with locale formatting (decimal, currency, percent), min/max, step and optional stepper buttons.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "InputOtp",
+      "slug": "input-otp",
+      "category": "form",
+      "status": "specified",
+      "purpose": "One-time code entry split into N boxes; also used as POS PIN pad input.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "InputText",
+      "slug": "input-text",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Single-line text input with optional prefix/suffix adornments and clear button.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "InputTextarea",
+      "slug": "input-textarea",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Multi-line plain text with optional auto-resize and character counter.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "KeyFilter",
+      "slug": "key-filter",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Restrict characters typed/pasted into an input. Delivered as a hook `useKeyFilter(pattern)` returning input props and as `keyFilter` prop on InputText.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Knob",
+      "slug": "knob",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Circular SVG dial for a bounded value (volume, gauge input/display).",
+      "profiles": [
+        "game",
+        "dashboard",
+        "saas"
+      ]
+    },
+    {
+      "name": "ListBox",
+      "slug": "list-box",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Always-visible list for single or multiple selection with optional filter, groups and templates. Supports virtualisation for large lists.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "LocaleProvider",
+      "slug": "locale-provider",
+      "category": "foundation",
+      "status": "implemented",
+      "purpose": "Provide locale (BCP 47), direction and UI strings to all components. Defaults to `en` messages and `navigator.language` formatting.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "MegaMenu",
+      "slug": "mega-menu",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "Large multi-column dropdown navigation (category trees, featured content).",
+      "profiles": [
+        "ecommerce",
+        "landing"
+      ]
+    },
+    {
+      "name": "Mention",
+      "slug": "mention",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Textarea that opens suggestions on trigger characters (`@user`, `#tag`).",
+      "profiles": [
+        "cms",
+        "saas"
+      ]
+    },
+    {
+      "name": "Menu",
+      "slug": "menu",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "List of actions or links, inline or as popup from a trigger. Defines the shared `MenuItem` model used by all menu components.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Menubar",
+      "slug": "menubar",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "Horizontal application/site menu with dropdown submenus; collapses to a toggle below a breakpoint.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Message",
+      "slug": "message",
+      "category": "messages",
+      "status": "implemented",
+      "purpose": "Inline contextual message: validation summary, info banners, warnings, errors.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Messages",
+      "slug": "messages",
+      "category": "messages",
+      "status": "specified",
+      "purpose": "Stack of dynamic inline Message items (e.g., server responses at top of a form), managed imperatively.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "MeterGroup",
+      "slug": "meter-group",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Show multiple values as segments of one bar (storage usage by type) with legend.",
+      "profiles": [
+        "dashboard",
+        "admin",
+        "saas"
+      ]
+    },
+    {
+      "name": "MultiSelect",
+      "slug": "multi-select",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Choose multiple options from a popup list with checkboxes, filter and select-all.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "MultiStateCheckbox",
+      "slug": "multi-state-checkbox",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Cycle through N custom states (e.g. Public → Private → Shared) with icon per state.",
+      "profiles": [
+        "admin",
+        "saas"
+      ]
+    },
+    {
+      "name": "OrderList",
+      "slug": "order-list",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Reorder a list via buttons (top/up/down/bottom), keyboard or drag and drop.",
+      "profiles": [
+        "cms",
+        "admin",
+        "saas"
+      ]
+    },
+    {
+      "name": "OrganizationChart",
+      "slug": "organization-chart",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Hierarchical top-down chart of nodes (org structure, decision trees), collapsible, selectable.",
+      "profiles": [
+        "admin",
+        "saas"
+      ]
+    },
+    {
+      "name": "PageHeader",
+      "slug": "page-header",
+      "category": "layout",
+      "status": "specified",
+      "purpose": "Consistent page title area: breadcrumb, title (h1), description, status tag, primary/secondary actions, optional tabs.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Paginator",
+      "slug": "paginator",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "Navigate pages of a data set; optional page-size selector and \"x–y of z\" report.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "PanelMenu",
+      "slug": "panel-menu",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "Accordion-style hierarchical menu (settings navigation, sidebar sections).",
+      "profiles": [
+        "admin",
+        "cms",
+        "saas",
+        "dashboard"
+      ]
+    },
+    {
+      "name": "Panel",
+      "slug": "panel",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Titled container with header actions and optional collapse — dashboard widgets, settings sections.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Password",
+      "slug": "password",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Password input with show/hide toggle and optional strength meter + requirement checklist.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "PickList",
+      "slug": "pick-list",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Move items between source and target lists (assign permissions, choose columns).",
+      "profiles": [
+        "admin",
+        "saas"
+      ]
+    },
+    {
+      "name": "Popover",
+      "slug": "popover",
+      "category": "overlay",
+      "status": "specified",
+      "purpose": "Non-modal floating panel anchored to a trigger with arbitrary content (filters, quick details).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Portal",
+      "slug": "portal",
+      "category": "foundation",
+      "status": "implemented",
+      "purpose": "Render children into `document.body` (or `container`) — SSR-safe; used by every overlay.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ProgressBar",
+      "slug": "progress-bar",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Determinate or indeterminate progress (uploads, HUD health/XP in games).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "RadioButton",
+      "slug": "radio-button",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Single choice among 2–5 visible options.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Rating",
+      "slug": "rating",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Star rating input or read-only display (supports half stars in read-only).",
+      "profiles": [
+        "ecommerce",
+        "game",
+        "saas"
+      ]
+    },
+    {
+      "name": "ScrollPanel",
+      "slug": "scroll-panel",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Scrollable region with themed thin scrollbars (CSS `scrollbar-color`/`scrollbar-width`, `::-webkit-scrollbar`), no JS scrollbars.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ScrollTop",
+      "slug": "scroll-top",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Floating button to return to top after scrolling past a threshold (window or container).",
+      "profiles": [
+        "landing",
+        "cms",
+        "ecommerce"
+      ]
+    },
+    {
+      "name": "SelectButton",
+      "slug": "select-button",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Segmented control for 2–6 options (period 7d/30d/90d, POS categories, view toggles).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Select",
+      "slug": "select",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Choose one option from a list. Two render modes: `native` (real `<select>`, best for mobile/POS/simple lists) and `custom` (popup listbox with filtering, grouping, templates).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "SidebarNav",
+      "slug": "sidebar-nav",
+      "category": "layout",
+      "status": "specified",
+      "purpose": "Primary vertical navigation with sections, nested groups, badges and collapsed icon-rail mode.",
+      "profiles": [
+        "admin",
+        "dashboard",
+        "cms",
+        "saas"
+      ]
+    },
+    {
+      "name": "Skeleton",
+      "slug": "skeleton",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Placeholder shapes while content loads, preserving layout.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Slider",
+      "slug": "slider",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Select a value or range along a track. Custom-rendered (range needs two thumbs); single mode may use native `form-range`.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "SpeedDial",
+      "slug": "speed-dial",
+      "category": "button",
+      "status": "specified",
+      "purpose": "Floating action button that expands into 2–6 related actions (linear, circle, semi-circle, quarter-circle layouts).",
+      "profiles": [
+        "saas",
+        "game",
+        "cms"
+      ]
+    },
+    {
+      "name": "Spinner",
+      "slug": "spinner",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Indeterminate loading indicator for short waits (< 2 s) or inline in buttons.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "SplitButton",
+      "slug": "split-button",
+      "category": "button",
+      "status": "specified",
+      "purpose": "Default action plus a menu of related alternatives (\"Save\" + \"Save as draft\", \"Save and close\").",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Splitter",
+      "slug": "splitter",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Resizable panes (editor/preview, list/detail). Nested splitters supported.",
+      "profiles": [
+        "cms",
+        "admin",
+        "saas"
+      ]
+    },
+    {
+      "name": "StatCard",
+      "slug": "stat-card",
+      "category": "layout",
+      "status": "specified",
+      "purpose": "KPI tile: label, value, delta vs previous period, optional sparkline/icon.",
+      "profiles": [
+        "dashboard",
+        "admin",
+        "saas",
+        "game"
+      ]
+    },
+    {
+      "name": "Stepper",
+      "slug": "stepper",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Guided multi-step process with step panels (onboarding, checkout, wizards). `Steps` is the navigation-only indicator.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Steps",
+      "slug": "steps",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "Progress indicator for a multi-step process (navigation only; panels managed elsewhere, e.g. routed checkout).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Switch",
+      "slug": "switch",
+      "category": "form",
+      "status": "specified",
+      "purpose": "On/off setting that takes effect immediately.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "TabMenu",
+      "slug": "tab-menu",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "Route-level navigation styled as tabs (each tab is a URL). Use Tabs when panels are in-page.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Tabs",
+      "slug": "tabs",
+      "category": "panel",
+      "status": "implemented",
+      "purpose": "Switch between related panels of content within the same context.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Tag",
+      "slug": "tag",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Label categorising or showing status (\"Paid\", \"Draft\", \"Sale\"). Always text, optional icon.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ThemeProvider",
+      "slug": "theme-provider",
+      "category": "foundation",
+      "status": "implemented",
+      "purpose": "Root provider that applies theme (light/dark/system), app profile and density to the document, persists the user's theme choice and exposes `useTheme()`.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ThemeToggle",
+      "slug": "theme-toggle",
+      "category": "misc",
+      "status": "specified",
+      "purpose": "Ready-made control for switching light/dark/system using `useTheme()`.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "TieredMenu",
+      "slug": "tiered-menu",
+      "category": "menu",
+      "status": "specified",
+      "purpose": "Menu with nested flyout submenus.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Timeline",
+      "slug": "timeline",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Chronological sequence of events (order status, activity feed, quests).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Toast",
+      "slug": "toast",
+      "category": "messages",
+      "status": "specified",
+      "purpose": "Brief, non-blocking notification. Imperative API via provider.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ToggleButton",
+      "slug": "toggle-button",
+      "category": "button",
+      "status": "specified",
+      "purpose": "Button with pressed state (bold in toolbar, \"Follow\" button).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Toolbar",
+      "slug": "toolbar",
+      "category": "panel",
+      "status": "specified",
+      "purpose": "Group of controls with start / center / end slots (table actions, editor tools).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Tooltip",
+      "slug": "tooltip",
+      "category": "overlay",
+      "status": "specified",
+      "purpose": "Short supplementary label on hover/focus. Never essential info (not shown on touch).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Topbar",
+      "slug": "topbar",
+      "category": "layout",
+      "status": "specified",
+      "purpose": "Application header: menu toggle, brand, global search, actions (notifications, theme toggle, account menu).",
+      "profiles": [
+        "admin",
+        "dashboard",
+        "cms",
+        "saas",
+        "pos"
+      ]
+    },
+    {
+      "name": "TreeSelect",
+      "slug": "tree-select",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Select one or many nodes from a hierarchical tree in a popup (categories, org units).",
+      "profiles": [
+        "admin",
+        "cms",
+        "saas"
+      ]
+    },
+    {
+      "name": "TreeTable",
+      "slug": "tree-table",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Hierarchical rows with columns (file browser, budget breakdown). Shares column API, sorting and pagination with DataTable.",
+      "profiles": [
+        "admin",
+        "dashboard",
+        "saas"
+      ]
+    },
+    {
+      "name": "Tree",
+      "slug": "tree",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Hierarchical data with expand/collapse, selection (single, multiple, checkbox), filter, lazy loading of children, optional drag and drop.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "TriStateCheckbox",
+      "slug": "tri-state-checkbox",
+      "category": "form",
+      "status": "specified",
+      "purpose": "Checkbox cycling `null` → `true` → `false` → `null` (filters: any / yes / no).",
+      "profiles": [
+        "admin",
+        "saas"
+      ]
+    },
+    {
+      "name": "VirtualScroller",
+      "slug": "virtual-scroller",
+      "category": "data",
+      "status": "specified",
+      "purpose": "Render only visible items of very large lists/grids (fixed item size v1, variable v2). Used internally by ListBox, Select, DataTable.",
+      "profiles": [
+        "all"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "name": "saas",
+      "description": "Baseline profile. General-purpose product UI.",
+      "defaultTheme": "system",
+      "density": "comfortable"
+    },
+    {
+      "name": "admin",
+      "description": "Back-office / internal tools. Dense, neutral, information first.",
+      "defaultTheme": "system",
+      "density": "compact"
+    },
+    {
+      "name": "dashboard",
+      "description": "Analytics and monitoring. Card grids, KPIs, charts; comfortable density, strong chart palette.",
+      "defaultTheme": "system",
+      "density": "comfortable"
+    },
+    {
+      "name": "cms",
+      "description": "Content management and authoring. Readable long-form, editorial serif headings, calm accent.",
+      "defaultTheme": "light",
+      "density": "comfortable"
+    },
+    {
+      "name": "pos",
+      "description": "Point of sale / kiosk. Touch-first, large targets, high contrast, minimal motion.",
+      "defaultTheme": "light",
+      "density": "spacious"
+    },
+    {
+      "name": "game",
+      "description": "Games and playful apps. Dark-first, vivid accent, rounded shapes, expressive motion (respects reduced motion).",
+      "defaultTheme": "dark",
+      "density": "comfortable"
+    },
+    {
+      "name": "ecommerce",
+      "description": "Storefronts and checkout. Product imagery first, strong call-to-action accent, trust signalling.",
+      "defaultTheme": "light",
+      "density": "comfortable"
+    },
+    {
+      "name": "landing",
+      "description": "Marketing and landing pages. Spacious, large type scale, hero sections.",
+      "defaultTheme": "light",
+      "density": "spacious"
+    }
+  ]
+}

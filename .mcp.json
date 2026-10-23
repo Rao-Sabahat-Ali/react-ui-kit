@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "design-system": {
+      "command": "node",
+      "args": ["../design-system-mcp/dist/index.js"],
+      "env": { "REACT_UI_KIT_DIR": "." }
+    }
+  }
+}

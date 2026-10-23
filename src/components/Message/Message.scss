@@ -1,0 +1,35 @@
+.ui-message {
+  --bs-alert-border-radius: var(--ui-radius-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+}
+
+.ui-message__icon {
+  margin-top: 0.125em;
+}
+
+.ui-message__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ui-message__title {
+  font-weight: var(--ui-font-weight-semibold);
+  margin-bottom: var(--ui-space-1);
+}
+
+.ui-message__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-3);
+}
+
+.ui-message--inline {
+  --bs-alert-padding-y: var(--ui-space-1);
+  --bs-alert-padding-x: var(--ui-space-2);
+  --bs-alert-margin-bottom: 0;
+  font-size: var(--ui-font-size-sm);
+  gap: var(--ui-space-2);
+}

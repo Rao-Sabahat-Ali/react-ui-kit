@@ -1,0 +1,187 @@
+// Bridge: drive Bootstrap's runtime variables from --ui-* tokens so every Bootstrap
+// component and utility follows the active theme + profile.
+$ui-intents: primary, secondary, success, danger, warning, info;
+
+:root,
+[data-bs-theme],
+[data-ui-profile],
+[data-ui-density] {
+  --bs-body-font-family: var(--ui-font-family);
+  --bs-body-font-size: var(--ui-font-size-base);
+  --bs-body-bg: var(--ui-color-bg);
+  --bs-body-bg-rgb: var(--ui-color-bg-rgb);
+  --bs-body-color: var(--ui-color-text);
+  --bs-body-color-rgb: var(--ui-color-text-rgb);
+  --bs-emphasis-color: var(--ui-color-text);
+  --bs-secondary-color: var(--ui-color-text-muted);
+  --bs-tertiary-color: var(--ui-color-text-subtle);
+  --bs-secondary-bg: var(--ui-color-surface-sunken);
+  --bs-tertiary-bg: var(--ui-color-bg-subtle);
+  --bs-heading-color: inherit;
+  --bs-border-color: var(--ui-color-border);
+  --bs-border-color-translucent: var(--ui-color-border);
+  --bs-border-radius: var(--ui-radius);
+  --bs-border-radius-sm: var(--ui-radius-sm);
+  --bs-border-radius-lg: var(--ui-radius-lg);
+  --bs-border-radius-pill: var(--ui-radius-pill);
+  --bs-link-color: var(--ui-color-link);
+  --bs-link-color-rgb: var(--ui-color-link-rgb);
+  --bs-link-hover-color: var(--ui-color-link-hover);
+  --bs-link-hover-color-rgb: var(--ui-color-link-hover-rgb);
+  --bs-focus-ring-color: var(--ui-color-focus-ring);
+  --bs-focus-ring-width: var(--ui-focus-ring-width);
+  --bs-box-shadow-sm: var(--ui-shadow-sm);
+  --bs-box-shadow: var(--ui-shadow-md);
+  --bs-box-shadow-lg: var(--ui-shadow-lg);
+
+  @each $intent in $ui-intents {
+    --bs-#{$intent}: var(--ui-color-#{$intent});
+    --bs-#{$intent}-rgb: var(--ui-color-#{$intent}-rgb);
+    --bs-#{$intent}-bg-subtle: var(--ui-color-#{$intent}-subtle);
+    --bs-#{$intent}-text-emphasis: var(--ui-color-#{$intent}-emphasis);
+    --bs-#{$intent}-border-subtle: color-mix(in srgb, var(--ui-color-#{$intent}) 35%, transparent);
+  }
+}
+
+body {
+  font-family: var(--ui-font-family);
+  font-size: var(--ui-font-size-base);
+  background-color: var(--ui-color-bg);
+  color: var(--ui-color-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: var(--ui-font-family-heading);
+}
+
+// Bootstrap compiles these colours at build time; re-point them at tokens.
+@each $intent in $ui-intents {
+  .btn-#{$intent} {
+    --bs-btn-color: var(--ui-color-#{$intent}-contrast);
+    --bs-btn-bg: var(--ui-color-#{$intent});
+    --bs-btn-border-color: var(--ui-color-#{$intent});
+    --bs-btn-hover-color: var(--ui-color-#{$intent}-contrast);
+    --bs-btn-hover-bg: var(--ui-color-#{$intent}-hover);
+    --bs-btn-hover-border-color: var(--ui-color-#{$intent}-hover);
+    --bs-btn-active-color: var(--ui-color-#{$intent}-contrast);
+    --bs-btn-active-bg: var(--ui-color-#{$intent}-active);
+    --bs-btn-active-border-color: var(--ui-color-#{$intent}-active);
+    --bs-btn-disabled-color: var(--ui-color-#{$intent}-contrast);
+    --bs-btn-disabled-bg: var(--ui-color-#{$intent});
+    --bs-btn-disabled-border-color: var(--ui-color-#{$intent});
+    --bs-btn-focus-shadow-rgb: var(--ui-color-#{$intent}-rgb);
+  }
+
+  .btn-outline-#{$intent} {
+    --bs-btn-color: var(--ui-color-#{$intent}-emphasis);
+    --bs-btn-border-color: var(--ui-color-#{$intent});
+    --bs-btn-hover-color: var(--ui-color-#{$intent}-contrast);
+    --bs-btn-hover-bg: var(--ui-color-#{$intent});
+    --bs-btn-hover-border-color: var(--ui-color-#{$intent});
+    --bs-btn-active-color: var(--ui-color-#{$intent}-contrast);
+    --bs-btn-active-bg: var(--ui-color-#{$intent}-active);
+    --bs-btn-active-border-color: var(--ui-color-#{$intent}-active);
+    --bs-btn-disabled-color: var(--ui-color-#{$intent}-emphasis);
+    --bs-btn-disabled-border-color: var(--ui-color-#{$intent});
+    --bs-btn-focus-shadow-rgb: var(--ui-color-#{$intent}-rgb);
+  }
+
+  .text-bg-#{$intent} {
+    color: var(--ui-color-#{$intent}-contrast) !important;
+    background-color: var(--ui-color-#{$intent}) !important;
+  }
+}
+
+.form-control,
+.form-select {
+  background-color: var(--ui-color-surface);
+  border-color: var(--ui-color-border-strong);
+  color: var(--ui-color-text);
+
+  &::placeholder {
+    color: var(--ui-color-text-subtle);
+  }
+
+  &:focus {
+    border-color: var(--ui-color-primary);
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: 2px solid transparent;
+  }
+
+  &:disabled {
+    background-color: var(--ui-color-surface-sunken);
+  }
+}
+
+.form-check-input {
+  &:focus {
+    border-color: var(--ui-color-primary);
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  &:checked {
+    background-color: var(--ui-color-primary);
+    border-color: var(--ui-color-primary);
+  }
+}
+
+.dropdown-menu {
+  --bs-dropdown-bg: var(--ui-color-surface-raised);
+  --bs-dropdown-color: var(--ui-color-text);
+  --bs-dropdown-border-color: var(--ui-color-border);
+  --bs-dropdown-border-radius: var(--ui-radius-lg);
+  --bs-dropdown-box-shadow: var(--ui-shadow-md);
+  --bs-dropdown-link-color: var(--ui-color-text);
+  --bs-dropdown-link-hover-color: var(--ui-color-text);
+  --bs-dropdown-link-hover-bg: var(--ui-color-bg-subtle);
+  --bs-dropdown-link-active-color: var(--ui-color-primary-contrast);
+  --bs-dropdown-link-active-bg: var(--ui-color-primary);
+  --bs-dropdown-header-color: var(--ui-color-text-muted);
+  --bs-dropdown-zindex: var(--ui-z-dropdown);
+  box-shadow: var(--ui-shadow-md);
+}
+
+.list-group {
+  --bs-list-group-active-bg: var(--ui-color-primary);
+  --bs-list-group-active-border-color: var(--ui-color-primary);
+  --bs-list-group-active-color: var(--ui-color-primary-contrast);
+}
+
+.progress,
+.progress-stacked {
+  --bs-progress-bar-bg: var(--ui-color-primary);
+  --bs-progress-bg: var(--ui-color-surface-sunken);
+}
+
+.nav-pills {
+  --bs-nav-pills-link-active-bg: var(--ui-color-primary);
+  --bs-nav-pills-link-active-color: var(--ui-color-primary-contrast);
+}
+
+.btn-close:focus {
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --ui-color-border: var(--ui-color-border-strong);
+    --ui-focus-ring-width: 0.1875rem;
+  }
+}
+
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid CanvasText !important;
+  }
+}

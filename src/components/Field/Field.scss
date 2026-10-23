@@ -1,0 +1,9 @@
+.ui-field__label {
+  font-weight: var(--ui-font-weight-medium);
+  margin-bottom: var(--ui-space-1);
+}
+
+.ui-field--inline .ui-field__help,
+.ui-field--inline .ui-field__error {
+  width: 100%;
+}

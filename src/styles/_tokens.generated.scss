@@ -1,0 +1,743 @@
+/* GENERATED from design-system-mcp/specs/tokens/tokens.json v0.1.0. Do not edit. */
+
+:root {
+  --ui-space-0: 0;
+  --ui-space-1: 0.25rem;
+  --ui-space-2: 0.5rem;
+  --ui-space-3: 0.75rem;
+  --ui-space-4: 1rem;
+  --ui-space-5: 1.25rem;
+  --ui-space-6: 1.5rem;
+  --ui-space-8: 2rem;
+  --ui-space-10: 2.5rem;
+  --ui-space-12: 3rem;
+  --ui-space-16: 4rem;
+  --ui-z-dropdown: 1000;
+  --ui-z-sticky: 1020;
+  --ui-z-fixed: 1030;
+  --ui-z-drawer-backdrop: 1040;
+  --ui-z-drawer: 1045;
+  --ui-z-modal-backdrop: 1050;
+  --ui-z-modal: 1055;
+  --ui-z-popover: 1070;
+  --ui-z-tooltip: 1080;
+  --ui-z-toast: 1090;
+  --ui-motion-duration-fast: 120ms;
+  --ui-motion-duration-normal: 200ms;
+  --ui-motion-duration-slow: 320ms;
+  --ui-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ui-motion-easing-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --ui-motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ui-font-size-xs: 0.75rem;
+  --ui-font-size-sm: 0.875rem;
+  --ui-font-size-md: 1rem;
+  --ui-font-size-lg: 1.125rem;
+  --ui-font-size-xl: 1.25rem;
+  --ui-font-size-2xl: 1.5rem;
+  --ui-font-size-3xl: 1.875rem;
+  --ui-font-size-4xl: 2.25rem;
+  --ui-font-size-5xl: 3rem;
+  --ui-font-weight-regular: 400;
+  --ui-font-weight-medium: 500;
+  --ui-font-weight-semibold: 600;
+  --ui-font-weight-bold: 700;
+  --ui-font-line-height-tight: 1.25;
+  --ui-font-line-height-normal: 1.5;
+  --ui-font-line-height-relaxed: 1.75;
+  --ui-radius-pill: 50rem;
+  --ui-radius-circle: 50%;
+  --ui-font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-font-family-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --ui-font-size-base: 1rem;
+  --ui-radius: 0.375rem;
+  --ui-radius-sm: 0.25rem;
+  --ui-radius-lg: 0.5rem;
+  --ui-control-height-sm: 2rem;
+  --ui-control-height-md: 2.5rem;
+  --ui-control-height-lg: 3rem;
+  --ui-control-padding-x: 0.75rem;
+  --ui-touch-target-min: 2.75rem;
+  --ui-gap: 1rem;
+  --ui-focus-ring-width: 0.25rem;
+  --ui-duration: 200ms;
+  --ui-easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root, [data-bs-theme="light"] {
+  --ui-color-bg: #ffffff;
+  --ui-color-bg-rgb: 255, 255, 255;
+  --ui-color-bg-subtle: #f8fafc;
+  --ui-color-bg-subtle-rgb: 248, 250, 252;
+  --ui-color-surface: #ffffff;
+  --ui-color-surface-rgb: 255, 255, 255;
+  --ui-color-surface-raised: #ffffff;
+  --ui-color-surface-raised-rgb: 255, 255, 255;
+  --ui-color-surface-sunken: #f1f5f9;
+  --ui-color-surface-sunken-rgb: 241, 245, 249;
+  --ui-color-border: #e2e8f0;
+  --ui-color-border-rgb: 226, 232, 240;
+  --ui-color-border-strong: #cbd5e1;
+  --ui-color-border-strong-rgb: 203, 213, 225;
+  --ui-color-text: #0f172a;
+  --ui-color-text-rgb: 15, 23, 42;
+  --ui-color-text-muted: #475569;
+  --ui-color-text-muted-rgb: 71, 85, 105;
+  --ui-color-text-subtle: #64748b;
+  --ui-color-text-subtle-rgb: 100, 116, 139;
+  --ui-color-text-inverse: #ffffff;
+  --ui-color-text-inverse-rgb: 255, 255, 255;
+  --ui-color-link: #2563eb;
+  --ui-color-link-rgb: 37, 99, 235;
+  --ui-color-link-hover: #1e40af;
+  --ui-color-link-hover-rgb: 30, 64, 175;
+  --ui-color-focus-ring: rgb(37 99 235 / 0.4);
+  --ui-color-overlay: rgb(15 23 42 / 0.5);
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #eff6ff;
+  --ui-color-primary-subtle-rgb: 239, 246, 255;
+  --ui-color-primary-emphasis: #1e40af;
+  --ui-color-primary-emphasis-rgb: 30, 64, 175;
+  --ui-color-primary-contrast: #ffffff;
+  --ui-color-primary-contrast-rgb: 255, 255, 255;
+  --ui-color-secondary: #475569;
+  --ui-color-secondary-rgb: 71, 85, 105;
+  --ui-color-secondary-hover: #334155;
+  --ui-color-secondary-hover-rgb: 51, 65, 85;
+  --ui-color-secondary-active: #1e293b;
+  --ui-color-secondary-active-rgb: 30, 41, 59;
+  --ui-color-secondary-subtle: #f1f5f9;
+  --ui-color-secondary-subtle-rgb: 241, 245, 249;
+  --ui-color-secondary-emphasis: #1e293b;
+  --ui-color-secondary-emphasis-rgb: 30, 41, 59;
+  --ui-color-secondary-contrast: #ffffff;
+  --ui-color-secondary-contrast-rgb: 255, 255, 255;
+  --ui-color-success: #15803d;
+  --ui-color-success-rgb: 21, 128, 61;
+  --ui-color-success-hover: #166534;
+  --ui-color-success-hover-rgb: 22, 101, 52;
+  --ui-color-success-active: #14532d;
+  --ui-color-success-active-rgb: 20, 83, 45;
+  --ui-color-success-subtle: #f0fdf4;
+  --ui-color-success-subtle-rgb: 240, 253, 244;
+  --ui-color-success-emphasis: #166534;
+  --ui-color-success-emphasis-rgb: 22, 101, 52;
+  --ui-color-success-contrast: #ffffff;
+  --ui-color-success-contrast-rgb: 255, 255, 255;
+  --ui-color-danger: #dc2626;
+  --ui-color-danger-rgb: 220, 38, 38;
+  --ui-color-danger-hover: #b91c1c;
+  --ui-color-danger-hover-rgb: 185, 28, 28;
+  --ui-color-danger-active: #991b1b;
+  --ui-color-danger-active-rgb: 153, 27, 27;
+  --ui-color-danger-subtle: #fef2f2;
+  --ui-color-danger-subtle-rgb: 254, 242, 242;
+  --ui-color-danger-emphasis: #991b1b;
+  --ui-color-danger-emphasis-rgb: 153, 27, 27;
+  --ui-color-danger-contrast: #ffffff;
+  --ui-color-danger-contrast-rgb: 255, 255, 255;
+  --ui-color-warning: #f59e0b;
+  --ui-color-warning-rgb: 245, 158, 11;
+  --ui-color-warning-hover: #d97706;
+  --ui-color-warning-hover-rgb: 217, 119, 6;
+  --ui-color-warning-active: #b45309;
+  --ui-color-warning-active-rgb: 180, 83, 9;
+  --ui-color-warning-subtle: #fffbeb;
+  --ui-color-warning-subtle-rgb: 255, 251, 235;
+  --ui-color-warning-emphasis: #92400e;
+  --ui-color-warning-emphasis-rgb: 146, 64, 14;
+  --ui-color-warning-contrast: #0f172a;
+  --ui-color-warning-contrast-rgb: 15, 23, 42;
+  --ui-color-info: #0e7490;
+  --ui-color-info-rgb: 14, 116, 144;
+  --ui-color-info-hover: #155e75;
+  --ui-color-info-hover-rgb: 21, 94, 117;
+  --ui-color-info-active: #164e63;
+  --ui-color-info-active-rgb: 22, 78, 99;
+  --ui-color-info-subtle: #ecfeff;
+  --ui-color-info-subtle-rgb: 236, 254, 255;
+  --ui-color-info-emphasis: #155e75;
+  --ui-color-info-emphasis-rgb: 21, 94, 117;
+  --ui-color-info-contrast: #ffffff;
+  --ui-color-info-contrast-rgb: 255, 255, 255;
+  --ui-color-chart-1: #2563eb;
+  --ui-color-chart-1-rgb: 37, 99, 235;
+  --ui-color-chart-2: #0d9488;
+  --ui-color-chart-2-rgb: 13, 148, 136;
+  --ui-color-chart-3: #f59e0b;
+  --ui-color-chart-3-rgb: 245, 158, 11;
+  --ui-color-chart-4: #7c3aed;
+  --ui-color-chart-4-rgb: 124, 58, 237;
+  --ui-color-chart-5: #dc2626;
+  --ui-color-chart-5-rgb: 220, 38, 38;
+  --ui-color-chart-6: #0891b2;
+  --ui-color-chart-6-rgb: 8, 145, 178;
+  --ui-color-chart-7: #ea580c;
+  --ui-color-chart-7-rgb: 234, 88, 12;
+  --ui-color-chart-8: #64748b;
+  --ui-color-chart-8-rgb: 100, 116, 139;
+  --ui-shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  --ui-shadow-md: 0 4px 8px -2px rgb(15 23 42 / 0.10), 0 2px 4px -2px rgb(15 23 42 / 0.06);
+  --ui-shadow-lg: 0 12px 24px -6px rgb(15 23 42 / 0.14), 0 4px 8px -4px rgb(15 23 42 / 0.08);
+  --ui-shadow-xl: 0 24px 48px -12px rgb(15 23 42 / 0.25);
+}
+
+[data-bs-theme="dark"] {
+  --ui-color-bg: #0f172a;
+  --ui-color-bg-rgb: 15, 23, 42;
+  --ui-color-bg-subtle: #0b1222;
+  --ui-color-bg-subtle-rgb: 11, 18, 34;
+  --ui-color-surface: #151f32;
+  --ui-color-surface-rgb: 21, 31, 50;
+  --ui-color-surface-raised: #1e293b;
+  --ui-color-surface-raised-rgb: 30, 41, 59;
+  --ui-color-surface-sunken: #0b1222;
+  --ui-color-surface-sunken-rgb: 11, 18, 34;
+  --ui-color-border: #334155;
+  --ui-color-border-rgb: 51, 65, 85;
+  --ui-color-border-strong: #475569;
+  --ui-color-border-strong-rgb: 71, 85, 105;
+  --ui-color-text: #f1f5f9;
+  --ui-color-text-rgb: 241, 245, 249;
+  --ui-color-text-muted: #94a3b8;
+  --ui-color-text-muted-rgb: 148, 163, 184;
+  --ui-color-text-subtle: #8291a8;
+  --ui-color-text-subtle-rgb: 130, 145, 168;
+  --ui-color-text-inverse: #0f172a;
+  --ui-color-text-inverse-rgb: 15, 23, 42;
+  --ui-color-link: #60a5fa;
+  --ui-color-link-rgb: 96, 165, 250;
+  --ui-color-link-hover: #93c5fd;
+  --ui-color-link-hover-rgb: 147, 197, 253;
+  --ui-color-focus-ring: rgb(96 165 250 / 0.5);
+  --ui-color-overlay: rgb(2 6 23 / 0.7);
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #172554;
+  --ui-color-primary-subtle-rgb: 23, 37, 84;
+  --ui-color-primary-emphasis: #93c5fd;
+  --ui-color-primary-emphasis-rgb: 147, 197, 253;
+  --ui-color-primary-contrast: #ffffff;
+  --ui-color-primary-contrast-rgb: 255, 255, 255;
+  --ui-color-secondary: #475569;
+  --ui-color-secondary-rgb: 71, 85, 105;
+  --ui-color-secondary-hover: #334155;
+  --ui-color-secondary-hover-rgb: 51, 65, 85;
+  --ui-color-secondary-active: #1e293b;
+  --ui-color-secondary-active-rgb: 30, 41, 59;
+  --ui-color-secondary-subtle: #1e293b;
+  --ui-color-secondary-subtle-rgb: 30, 41, 59;
+  --ui-color-secondary-emphasis: #cbd5e1;
+  --ui-color-secondary-emphasis-rgb: 203, 213, 225;
+  --ui-color-secondary-contrast: #ffffff;
+  --ui-color-secondary-contrast-rgb: 255, 255, 255;
+  --ui-color-success: #15803d;
+  --ui-color-success-rgb: 21, 128, 61;
+  --ui-color-success-hover: #166534;
+  --ui-color-success-hover-rgb: 22, 101, 52;
+  --ui-color-success-active: #14532d;
+  --ui-color-success-active-rgb: 20, 83, 45;
+  --ui-color-success-subtle: #052e16;
+  --ui-color-success-subtle-rgb: 5, 46, 22;
+  --ui-color-success-emphasis: #86efac;
+  --ui-color-success-emphasis-rgb: 134, 239, 172;
+  --ui-color-success-contrast: #ffffff;
+  --ui-color-success-contrast-rgb: 255, 255, 255;
+  --ui-color-danger: #dc2626;
+  --ui-color-danger-rgb: 220, 38, 38;
+  --ui-color-danger-hover: #b91c1c;
+  --ui-color-danger-hover-rgb: 185, 28, 28;
+  --ui-color-danger-active: #991b1b;
+  --ui-color-danger-active-rgb: 153, 27, 27;
+  --ui-color-danger-subtle: #450a0a;
+  --ui-color-danger-subtle-rgb: 69, 10, 10;
+  --ui-color-danger-emphasis: #fca5a5;
+  --ui-color-danger-emphasis-rgb: 252, 165, 165;
+  --ui-color-danger-contrast: #ffffff;
+  --ui-color-danger-contrast-rgb: 255, 255, 255;
+  --ui-color-warning: #fbbf24;
+  --ui-color-warning-rgb: 251, 191, 36;
+  --ui-color-warning-hover: #f59e0b;
+  --ui-color-warning-hover-rgb: 245, 158, 11;
+  --ui-color-warning-active: #d97706;
+  --ui-color-warning-active-rgb: 217, 119, 6;
+  --ui-color-warning-subtle: #451a03;
+  --ui-color-warning-subtle-rgb: 69, 26, 3;
+  --ui-color-warning-emphasis: #fcd34d;
+  --ui-color-warning-emphasis-rgb: 252, 211, 77;
+  --ui-color-warning-contrast: #0f172a;
+  --ui-color-warning-contrast-rgb: 15, 23, 42;
+  --ui-color-info: #0e7490;
+  --ui-color-info-rgb: 14, 116, 144;
+  --ui-color-info-hover: #155e75;
+  --ui-color-info-hover-rgb: 21, 94, 117;
+  --ui-color-info-active: #164e63;
+  --ui-color-info-active-rgb: 22, 78, 99;
+  --ui-color-info-subtle: #083344;
+  --ui-color-info-subtle-rgb: 8, 51, 68;
+  --ui-color-info-emphasis: #67e8f9;
+  --ui-color-info-emphasis-rgb: 103, 232, 249;
+  --ui-color-info-contrast: #ffffff;
+  --ui-color-info-contrast-rgb: 255, 255, 255;
+  --ui-color-chart-1: #60a5fa;
+  --ui-color-chart-1-rgb: 96, 165, 250;
+  --ui-color-chart-2: #5eead4;
+  --ui-color-chart-2-rgb: 94, 234, 212;
+  --ui-color-chart-3: #fbbf24;
+  --ui-color-chart-3-rgb: 251, 191, 36;
+  --ui-color-chart-4: #a78bfa;
+  --ui-color-chart-4-rgb: 167, 139, 250;
+  --ui-color-chart-5: #f87171;
+  --ui-color-chart-5-rgb: 248, 113, 113;
+  --ui-color-chart-6: #22d3ee;
+  --ui-color-chart-6-rgb: 34, 211, 238;
+  --ui-color-chart-7: #fdba74;
+  --ui-color-chart-7-rgb: 253, 186, 116;
+  --ui-color-chart-8: #94a3b8;
+  --ui-color-chart-8-rgb: 148, 163, 184;
+  --ui-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --ui-shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.5);
+  --ui-shadow-lg: 0 12px 24px -6px rgb(0 0 0 / 0.55);
+  --ui-shadow-xl: 0 24px 48px -12px rgb(0 0 0 / 0.65);
+}
+
+[data-ui-profile="saas"] {
+  --ui-font-size-base: 1rem;
+  --ui-radius: 0.375rem;
+  --ui-radius-lg: 0.5rem;
+  --ui-font-family-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-touch-target-min: 2.75rem;
+  --ui-duration: 200ms;
+  --ui-radius-sm: 0.25rem;
+  --ui-easing: cubic-bezier(0.2, 0, 0, 1);
+  --ui-control-height-md: 2.5rem;
+  --ui-control-height-lg: 3rem;
+  --ui-control-padding-x: 0.75rem;
+  --ui-gap: 1rem;
+  --ui-control-height-sm: 2rem;
+}
+
+[data-ui-profile="saas"][data-bs-theme="light"], [data-ui-profile="saas"] [data-bs-theme="light"], [data-bs-theme="light"] [data-ui-profile="saas"] {
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #eff6ff;
+  --ui-color-primary-subtle-rgb: 239, 246, 255;
+  --ui-color-primary-emphasis: #1e40af;
+  --ui-color-primary-emphasis-rgb: 30, 64, 175;
+  --ui-color-link: #2563eb;
+  --ui-color-link-rgb: 37, 99, 235;
+}
+
+[data-ui-profile="saas"][data-bs-theme="dark"], [data-ui-profile="saas"] [data-bs-theme="dark"], [data-bs-theme="dark"] [data-ui-profile="saas"] {
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #172554;
+  --ui-color-primary-subtle-rgb: 23, 37, 84;
+  --ui-color-primary-emphasis: #93c5fd;
+  --ui-color-primary-emphasis-rgb: 147, 197, 253;
+  --ui-color-link: #60a5fa;
+  --ui-color-link-rgb: 96, 165, 250;
+  --ui-color-bg: #0f172a;
+  --ui-color-bg-rgb: 15, 23, 42;
+  --ui-color-surface: #151f32;
+  --ui-color-surface-rgb: 21, 31, 50;
+  --ui-color-focus-ring: rgb(96 165 250 / 0.5);
+}
+
+[data-ui-profile="admin"] {
+  --ui-font-size-base: 0.875rem;
+  --ui-radius: 0.25rem;
+  --ui-radius-lg: 0.5rem;
+  --ui-font-family-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-touch-target-min: 2.75rem;
+  --ui-duration: 200ms;
+  --ui-radius-sm: 0.25rem;
+  --ui-easing: cubic-bezier(0.2, 0, 0, 1);
+  --ui-control-height-md: 2.125rem;
+  --ui-control-height-lg: 2.5rem;
+  --ui-control-padding-x: 0.5rem;
+  --ui-gap: 0.75rem;
+  --ui-control-height-sm: 1.75rem;
+}
+
+[data-ui-profile="admin"][data-bs-theme="light"], [data-ui-profile="admin"] [data-bs-theme="light"], [data-bs-theme="light"] [data-ui-profile="admin"] {
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #eff6ff;
+  --ui-color-primary-subtle-rgb: 239, 246, 255;
+  --ui-color-primary-emphasis: #1e40af;
+  --ui-color-primary-emphasis-rgb: 30, 64, 175;
+  --ui-color-link: #2563eb;
+  --ui-color-link-rgb: 37, 99, 235;
+}
+
+[data-ui-profile="admin"][data-bs-theme="dark"], [data-ui-profile="admin"] [data-bs-theme="dark"], [data-bs-theme="dark"] [data-ui-profile="admin"] {
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #172554;
+  --ui-color-primary-subtle-rgb: 23, 37, 84;
+  --ui-color-primary-emphasis: #93c5fd;
+  --ui-color-primary-emphasis-rgb: 147, 197, 253;
+  --ui-color-link: #60a5fa;
+  --ui-color-link-rgb: 96, 165, 250;
+  --ui-color-bg: #0f172a;
+  --ui-color-bg-rgb: 15, 23, 42;
+  --ui-color-surface: #151f32;
+  --ui-color-surface-rgb: 21, 31, 50;
+  --ui-color-focus-ring: rgb(96 165 250 / 0.5);
+}
+
+[data-ui-profile="dashboard"] {
+  --ui-font-size-base: 1rem;
+  --ui-radius: 0.5rem;
+  --ui-radius-lg: 0.75rem;
+  --ui-font-family-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-touch-target-min: 2.75rem;
+  --ui-duration: 200ms;
+  --ui-radius-sm: 0.25rem;
+  --ui-easing: cubic-bezier(0.2, 0, 0, 1);
+  --ui-control-height-md: 2.5rem;
+  --ui-control-height-lg: 3rem;
+  --ui-control-padding-x: 0.75rem;
+  --ui-gap: 1rem;
+  --ui-control-height-sm: 2rem;
+}
+
+[data-ui-profile="dashboard"][data-bs-theme="light"], [data-ui-profile="dashboard"] [data-bs-theme="light"], [data-bs-theme="light"] [data-ui-profile="dashboard"] {
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #eff6ff;
+  --ui-color-primary-subtle-rgb: 239, 246, 255;
+  --ui-color-primary-emphasis: #1e40af;
+  --ui-color-primary-emphasis-rgb: 30, 64, 175;
+  --ui-color-link: #2563eb;
+  --ui-color-link-rgb: 37, 99, 235;
+}
+
+[data-ui-profile="dashboard"][data-bs-theme="dark"], [data-ui-profile="dashboard"] [data-bs-theme="dark"], [data-bs-theme="dark"] [data-ui-profile="dashboard"] {
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #172554;
+  --ui-color-primary-subtle-rgb: 23, 37, 84;
+  --ui-color-primary-emphasis: #93c5fd;
+  --ui-color-primary-emphasis-rgb: 147, 197, 253;
+  --ui-color-link: #60a5fa;
+  --ui-color-link-rgb: 96, 165, 250;
+  --ui-color-bg: #0f172a;
+  --ui-color-bg-rgb: 15, 23, 42;
+  --ui-color-surface: #151f32;
+  --ui-color-surface-rgb: 21, 31, 50;
+  --ui-color-focus-ring: rgb(96 165 250 / 0.5);
+}
+
+[data-ui-profile="cms"] {
+  --ui-font-size-base: 1rem;
+  --ui-radius: 0.375rem;
+  --ui-radius-lg: 0.5rem;
+  --ui-font-family-heading: Georgia, Cambria, "Times New Roman", Times, serif;
+  --ui-touch-target-min: 2.75rem;
+  --ui-duration: 200ms;
+  --ui-radius-sm: 0.25rem;
+  --ui-easing: cubic-bezier(0.2, 0, 0, 1);
+  --ui-control-height-md: 2.5rem;
+  --ui-control-height-lg: 3rem;
+  --ui-control-padding-x: 0.75rem;
+  --ui-gap: 1rem;
+  --ui-control-height-sm: 2rem;
+}
+
+[data-ui-profile="cms"][data-bs-theme="light"], [data-ui-profile="cms"] [data-bs-theme="light"], [data-bs-theme="light"] [data-ui-profile="cms"] {
+  --ui-color-primary: #6d28d9;
+  --ui-color-primary-rgb: 109, 40, 217;
+  --ui-color-primary-hover: #5b21b6;
+  --ui-color-primary-hover-rgb: 91, 33, 182;
+  --ui-color-primary-active: #4c1d95;
+  --ui-color-primary-active-rgb: 76, 29, 149;
+  --ui-color-primary-subtle: #f5f3ff;
+  --ui-color-primary-subtle-rgb: 245, 243, 255;
+  --ui-color-primary-emphasis: #5b21b6;
+  --ui-color-primary-emphasis-rgb: 91, 33, 182;
+  --ui-color-link: #6d28d9;
+  --ui-color-link-rgb: 109, 40, 217;
+}
+
+[data-ui-profile="cms"][data-bs-theme="dark"], [data-ui-profile="cms"] [data-bs-theme="dark"], [data-bs-theme="dark"] [data-ui-profile="cms"] {
+  --ui-color-primary: #7c3aed;
+  --ui-color-primary-rgb: 124, 58, 237;
+  --ui-color-primary-hover: #6d28d9;
+  --ui-color-primary-hover-rgb: 109, 40, 217;
+  --ui-color-primary-active: #5b21b6;
+  --ui-color-primary-active-rgb: 91, 33, 182;
+  --ui-color-primary-subtle: #2e1065;
+  --ui-color-primary-subtle-rgb: 46, 16, 101;
+  --ui-color-primary-emphasis: #c4b5fd;
+  --ui-color-primary-emphasis-rgb: 196, 181, 253;
+  --ui-color-link: #c4b5fd;
+  --ui-color-link-rgb: 196, 181, 253;
+  --ui-color-bg: #0f172a;
+  --ui-color-bg-rgb: 15, 23, 42;
+  --ui-color-surface: #151f32;
+  --ui-color-surface-rgb: 21, 31, 50;
+  --ui-color-focus-ring: rgb(96 165 250 / 0.5);
+}
+
+[data-ui-profile="pos"] {
+  --ui-font-size-base: 1.125rem;
+  --ui-radius: 0.5rem;
+  --ui-radius-lg: 0.5rem;
+  --ui-font-family-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-touch-target-min: 3rem;
+  --ui-duration: 120ms;
+  --ui-radius-sm: 0.25rem;
+  --ui-easing: cubic-bezier(0.2, 0, 0, 1);
+  --ui-control-height-md: 3.5rem;
+  --ui-control-height-lg: 4.5rem;
+  --ui-control-padding-x: 1.25rem;
+  --ui-gap: 1rem;
+  --ui-control-height-sm: 2.75rem;
+}
+
+[data-ui-profile="pos"][data-bs-theme="light"], [data-ui-profile="pos"] [data-bs-theme="light"], [data-bs-theme="light"] [data-ui-profile="pos"] {
+  --ui-color-primary: #0f766e;
+  --ui-color-primary-rgb: 15, 118, 110;
+  --ui-color-primary-hover: #115e59;
+  --ui-color-primary-hover-rgb: 17, 94, 89;
+  --ui-color-primary-active: #115e59;
+  --ui-color-primary-active-rgb: 17, 94, 89;
+  --ui-color-primary-subtle: #f0fdfa;
+  --ui-color-primary-subtle-rgb: 240, 253, 250;
+  --ui-color-primary-emphasis: #115e59;
+  --ui-color-primary-emphasis-rgb: 17, 94, 89;
+  --ui-color-link: #2563eb;
+  --ui-color-link-rgb: 37, 99, 235;
+}
+
+[data-ui-profile="pos"][data-bs-theme="dark"], [data-ui-profile="pos"] [data-bs-theme="dark"], [data-bs-theme="dark"] [data-ui-profile="pos"] {
+  --ui-color-primary: #0f766e;
+  --ui-color-primary-rgb: 15, 118, 110;
+  --ui-color-primary-hover: #115e59;
+  --ui-color-primary-hover-rgb: 17, 94, 89;
+  --ui-color-primary-active: #115e59;
+  --ui-color-primary-active-rgb: 17, 94, 89;
+  --ui-color-primary-subtle: #042f2e;
+  --ui-color-primary-subtle-rgb: 4, 47, 46;
+  --ui-color-primary-emphasis: #5eead4;
+  --ui-color-primary-emphasis-rgb: 94, 234, 212;
+  --ui-color-link: #60a5fa;
+  --ui-color-link-rgb: 96, 165, 250;
+  --ui-color-bg: #0f172a;
+  --ui-color-bg-rgb: 15, 23, 42;
+  --ui-color-surface: #151f32;
+  --ui-color-surface-rgb: 21, 31, 50;
+  --ui-color-focus-ring: rgb(96 165 250 / 0.5);
+}
+
+[data-ui-profile="game"] {
+  --ui-font-size-base: 1rem;
+  --ui-radius: 0.75rem;
+  --ui-radius-lg: 1rem;
+  --ui-font-family-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-touch-target-min: 2.75rem;
+  --ui-duration: 320ms;
+  --ui-radius-sm: 0.5rem;
+  --ui-easing: cubic-bezier(0.3, 0, 0, 1);
+  --ui-control-height-md: 2.5rem;
+  --ui-control-height-lg: 3rem;
+  --ui-control-padding-x: 0.75rem;
+  --ui-gap: 1rem;
+  --ui-control-height-sm: 2rem;
+}
+
+[data-ui-profile="game"][data-bs-theme="light"], [data-ui-profile="game"] [data-bs-theme="light"], [data-bs-theme="light"] [data-ui-profile="game"] {
+  --ui-color-primary: #7c3aed;
+  --ui-color-primary-rgb: 124, 58, 237;
+  --ui-color-primary-hover: #6d28d9;
+  --ui-color-primary-hover-rgb: 109, 40, 217;
+  --ui-color-primary-active: #5b21b6;
+  --ui-color-primary-active-rgb: 91, 33, 182;
+  --ui-color-primary-subtle: #f5f3ff;
+  --ui-color-primary-subtle-rgb: 245, 243, 255;
+  --ui-color-primary-emphasis: #5b21b6;
+  --ui-color-primary-emphasis-rgb: 91, 33, 182;
+  --ui-color-link: #2563eb;
+  --ui-color-link-rgb: 37, 99, 235;
+}
+
+[data-ui-profile="game"][data-bs-theme="dark"], [data-ui-profile="game"] [data-bs-theme="dark"], [data-bs-theme="dark"] [data-ui-profile="game"] {
+  --ui-color-primary: #7c3aed;
+  --ui-color-primary-rgb: 124, 58, 237;
+  --ui-color-primary-hover: #8b5cf6;
+  --ui-color-primary-hover-rgb: 139, 92, 246;
+  --ui-color-primary-active: #6d28d9;
+  --ui-color-primary-active-rgb: 109, 40, 217;
+  --ui-color-primary-subtle: #2e1065;
+  --ui-color-primary-subtle-rgb: 46, 16, 101;
+  --ui-color-primary-emphasis: #c4b5fd;
+  --ui-color-primary-emphasis-rgb: 196, 181, 253;
+  --ui-color-link: #c4b5fd;
+  --ui-color-link-rgb: 196, 181, 253;
+  --ui-color-bg: #020617;
+  --ui-color-bg-rgb: 2, 6, 23;
+  --ui-color-surface: #0e1426;
+  --ui-color-surface-rgb: 14, 20, 38;
+  --ui-color-focus-ring: rgb(167 139 250 / 0.6);
+}
+
+[data-ui-profile="ecommerce"] {
+  --ui-font-size-base: 1rem;
+  --ui-radius: 0.5rem;
+  --ui-radius-lg: 0.5rem;
+  --ui-font-family-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-touch-target-min: 2.75rem;
+  --ui-duration: 200ms;
+  --ui-radius-sm: 0.25rem;
+  --ui-easing: cubic-bezier(0.2, 0, 0, 1);
+  --ui-control-height-md: 2.5rem;
+  --ui-control-height-lg: 3rem;
+  --ui-control-padding-x: 0.75rem;
+  --ui-gap: 1rem;
+  --ui-control-height-sm: 2rem;
+}
+
+[data-ui-profile="ecommerce"][data-bs-theme="light"], [data-ui-profile="ecommerce"] [data-bs-theme="light"], [data-bs-theme="light"] [data-ui-profile="ecommerce"] {
+  --ui-color-primary: #c2410c;
+  --ui-color-primary-rgb: 194, 65, 12;
+  --ui-color-primary-hover: #9a3412;
+  --ui-color-primary-hover-rgb: 154, 52, 18;
+  --ui-color-primary-active: #9a3412;
+  --ui-color-primary-active-rgb: 154, 52, 18;
+  --ui-color-primary-subtle: #fff7ed;
+  --ui-color-primary-subtle-rgb: 255, 247, 237;
+  --ui-color-primary-emphasis: #9a3412;
+  --ui-color-primary-emphasis-rgb: 154, 52, 18;
+  --ui-color-link: #2563eb;
+  --ui-color-link-rgb: 37, 99, 235;
+}
+
+[data-ui-profile="ecommerce"][data-bs-theme="dark"], [data-ui-profile="ecommerce"] [data-bs-theme="dark"], [data-bs-theme="dark"] [data-ui-profile="ecommerce"] {
+  --ui-color-primary: #c2410c;
+  --ui-color-primary-rgb: 194, 65, 12;
+  --ui-color-primary-hover: #9a3412;
+  --ui-color-primary-hover-rgb: 154, 52, 18;
+  --ui-color-primary-active: #9a3412;
+  --ui-color-primary-active-rgb: 154, 52, 18;
+  --ui-color-primary-subtle: #431407;
+  --ui-color-primary-subtle-rgb: 67, 20, 7;
+  --ui-color-primary-emphasis: #fdba74;
+  --ui-color-primary-emphasis-rgb: 253, 186, 116;
+  --ui-color-link: #60a5fa;
+  --ui-color-link-rgb: 96, 165, 250;
+  --ui-color-bg: #0f172a;
+  --ui-color-bg-rgb: 15, 23, 42;
+  --ui-color-surface: #151f32;
+  --ui-color-surface-rgb: 21, 31, 50;
+  --ui-color-focus-ring: rgb(96 165 250 / 0.5);
+}
+
+[data-ui-profile="landing"] {
+  --ui-font-size-base: 1.125rem;
+  --ui-radius: 0.5rem;
+  --ui-radius-lg: 0.5rem;
+  --ui-font-family-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --ui-touch-target-min: 2.75rem;
+  --ui-duration: 200ms;
+  --ui-radius-sm: 0.25rem;
+  --ui-easing: cubic-bezier(0.2, 0, 0, 1);
+  --ui-control-height-md: 3rem;
+  --ui-control-height-lg: 3.5rem;
+  --ui-control-padding-x: 1.25rem;
+  --ui-gap: 1.5rem;
+  --ui-control-height-sm: 2.75rem;
+}
+
+[data-ui-profile="landing"][data-bs-theme="light"], [data-ui-profile="landing"] [data-bs-theme="light"], [data-bs-theme="light"] [data-ui-profile="landing"] {
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #eff6ff;
+  --ui-color-primary-subtle-rgb: 239, 246, 255;
+  --ui-color-primary-emphasis: #1e40af;
+  --ui-color-primary-emphasis-rgb: 30, 64, 175;
+  --ui-color-link: #2563eb;
+  --ui-color-link-rgb: 37, 99, 235;
+}
+
+[data-ui-profile="landing"][data-bs-theme="dark"], [data-ui-profile="landing"] [data-bs-theme="dark"], [data-bs-theme="dark"] [data-ui-profile="landing"] {
+  --ui-color-primary: #2563eb;
+  --ui-color-primary-rgb: 37, 99, 235;
+  --ui-color-primary-hover: #1d4ed8;
+  --ui-color-primary-hover-rgb: 29, 78, 216;
+  --ui-color-primary-active: #1e40af;
+  --ui-color-primary-active-rgb: 30, 64, 175;
+  --ui-color-primary-subtle: #172554;
+  --ui-color-primary-subtle-rgb: 23, 37, 84;
+  --ui-color-primary-emphasis: #93c5fd;
+  --ui-color-primary-emphasis-rgb: 147, 197, 253;
+  --ui-color-link: #60a5fa;
+  --ui-color-link-rgb: 96, 165, 250;
+  --ui-color-bg: #0f172a;
+  --ui-color-bg-rgb: 15, 23, 42;
+  --ui-color-surface: #151f32;
+  --ui-color-surface-rgb: 21, 31, 50;
+  --ui-color-focus-ring: rgb(96 165 250 / 0.5);
+}
+
+[data-ui-density="compact"] {
+  --ui-control-height-sm: 1.75rem;
+  --ui-control-height-md: 2.125rem;
+  --ui-control-height-lg: 2.5rem;
+  --ui-control-padding-x: 0.5rem;
+  --ui-gap: 0.75rem;
+}
+
+[data-ui-density="comfortable"] {
+  --ui-control-height-sm: 2rem;
+  --ui-control-height-md: 2.5rem;
+  --ui-control-height-lg: 3rem;
+  --ui-control-padding-x: 0.75rem;
+  --ui-gap: 1rem;
+}
+
+[data-ui-density="spacious"] {
+  --ui-control-height-sm: 2.75rem;
+  --ui-control-height-md: 3.5rem;
+  --ui-control-height-lg: 4.5rem;
+  --ui-control-padding-x: 1.25rem;
+  --ui-gap: 1rem;
+}

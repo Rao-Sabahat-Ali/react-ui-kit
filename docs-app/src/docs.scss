@@ -1,0 +1,194 @@
+.docs-shell {
+  min-height: 100vh;
+}
+
+.docs-skip {
+  position: absolute;
+  inset-inline-start: var(--ui-space-2);
+  top: var(--ui-space-2);
+  z-index: var(--ui-z-toast);
+  background: var(--ui-color-surface-raised);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  border-radius: var(--ui-radius);
+}
+
+.docs-topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--ui-z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  height: 3.5rem;
+  padding: 0 var(--ui-space-4);
+  background: var(--ui-color-surface);
+  border-bottom: 1px solid var(--ui-color-border);
+}
+
+.docs-brand {
+  font-weight: var(--ui-font-weight-bold);
+  color: var(--ui-color-text);
+  text-decoration: none;
+}
+
+.docs-body {
+  display: flex;
+}
+
+.docs-nav {
+  position: sticky;
+  top: 3.5rem;
+  flex: 0 0 16rem;
+  height: calc(100vh - 3.5rem);
+  overflow-y: auto;
+  padding: var(--ui-space-3) 0;
+  background: var(--ui-color-bg-subtle);
+  border-inline-end: 1px solid var(--ui-color-border);
+}
+
+@media (max-width: 991.98px) {
+  .docs-nav {
+    position: fixed;
+    inset-inline-start: 0;
+    z-index: var(--ui-z-drawer);
+    width: 16rem;
+    transform: translateX(-100%);
+    transition: transform var(--ui-duration) var(--ui-easing);
+    box-shadow: var(--ui-shadow-lg);
+  }
+
+  [dir='rtl'] .docs-nav {
+    transform: translateX(100%);
+  }
+
+  .docs-nav--open {
+    transform: none !important;
+  }
+}
+
+.docs-nav__section {
+  padding: 0 var(--ui-space-2) var(--ui-space-3);
+}
+
+.docs-nav__heading {
+  padding: var(--ui-space-1) var(--ui-space-3);
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ui-color-text-muted);
+}
+
+.docs-nav__link {
+  display: block;
+  padding: var(--ui-space-1) var(--ui-space-3);
+  border-radius: var(--ui-radius);
+  color: var(--ui-color-text);
+  text-decoration: none;
+  font-size: var(--ui-font-size-sm);
+
+  &:hover {
+    background: var(--ui-color-surface-sunken);
+  }
+
+  &.active {
+    background: var(--ui-color-primary-subtle);
+    color: var(--ui-color-primary-emphasis);
+    font-weight: var(--ui-font-weight-semibold);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.docs-nav__link--pending {
+  color: var(--ui-color-text-muted);
+}
+
+.docs-main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--ui-space-6) var(--ui-space-8);
+  max-width: 72rem;
+
+  &:focus {
+    outline: none;
+  }
+
+  @media (max-width: 767.98px) {
+    padding: var(--ui-space-4);
+  }
+}
+
+.docs-page-header {
+  margin-bottom: var(--ui-space-6);
+}
+
+.docs-example {
+  margin-bottom: var(--ui-space-8);
+}
+
+.docs-example__preview {
+  padding: var(--ui-space-5);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface);
+}
+
+.docs-code {
+  position: relative;
+
+  pre {
+    margin: 0;
+    padding: var(--ui-space-4);
+    padding-top: var(--ui-space-8);
+    border-radius: var(--ui-radius-lg);
+    background: var(--ui-color-surface-sunken);
+    border: 1px solid var(--ui-color-border);
+    font-family: var(--ui-font-family-mono);
+    font-size: var(--ui-font-size-sm);
+    color: var(--ui-color-text);
+    overflow-x: auto;
+  }
+}
+
+.docs-code__copy {
+  position: absolute;
+  top: var(--ui-space-1);
+  inset-inline-end: var(--ui-space-1);
+}
+
+.docs-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--ui-space-3);
+}
+
+.docs-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+}
+
+.docs-swatch__chip {
+  height: 3.5rem;
+  border-radius: var(--ui-radius);
+  border: 1px solid var(--ui-color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.docs-space-bar {
+  display: inline-block;
+  height: 0.75rem;
+  background: var(--ui-color-primary);
+  border-radius: var(--ui-radius-sm);
+}
+
+.docs-list li {
+  margin-bottom: var(--ui-space-1);
+}

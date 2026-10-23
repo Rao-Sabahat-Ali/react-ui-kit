@@ -1,0 +1,11 @@
+.ui-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  font-weight: var(--ui-font-weight-medium);
+  border-radius: var(--ui-radius-sm);
+
+  &.rounded-pill {
+    border-radius: var(--ui-radius-pill);
+  }
+}

@@ -1,0 +1,40 @@
+.ui-input-text.form-control {
+  min-height: var(--ui-control-height-md);
+  padding-inline: var(--ui-control-padding-x);
+  border-radius: var(--ui-radius);
+
+  &.form-control-sm {
+    min-height: var(--ui-control-height-sm);
+    border-radius: var(--ui-radius-sm);
+  }
+
+  &.form-control-lg {
+    min-height: var(--ui-control-height-lg);
+    border-radius: var(--ui-radius-lg);
+  }
+}
+
+.ui-input-text__group > .ui-input-text.form-control {
+  border-radius: 0;
+}
+
+.ui-input-text__group > :first-child {
+  border-start-start-radius: var(--ui-radius);
+  border-end-start-radius: var(--ui-radius);
+}
+
+.ui-input-text__group > :last-child {
+  border-start-end-radius: var(--ui-radius);
+  border-end-end-radius: var(--ui-radius);
+}
+
+.ui-input-text__clear {
+  border: var(--bs-border-width) solid var(--ui-color-border);
+  border-inline-start: 0;
+  color: var(--ui-color-text-muted);
+  background: var(--ui-color-surface);
+
+  &:hover {
+    color: var(--ui-color-text);
+  }
+}

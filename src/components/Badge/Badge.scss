@@ -1,0 +1,9 @@
+.ui-badge {
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-badge--dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border: 2px solid var(--ui-color-surface);
+}

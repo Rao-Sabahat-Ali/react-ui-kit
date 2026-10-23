@@ -1,0 +1,9 @@
+.ui-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: -0.125em;
+}
+
+[dir='rtl'] .ui-icon--directional {
+  transform: scaleX(-1);
+}

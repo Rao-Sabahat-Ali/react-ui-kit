@@ -1,0 +1,14 @@
+.ui-spinner {
+  flex-shrink: 0;
+}
+
+.ui-spinner--lg {
+  width: 3rem;
+  height: 3rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-spinner {
+    --bs-spinner-animation-speed: 1.5s;
+  }
+}

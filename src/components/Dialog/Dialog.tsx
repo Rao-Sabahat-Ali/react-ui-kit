@@ -1,0 +1,157 @@
+import { useEffect, useId, useRef, type MouseEvent, type ReactNode, type RefObject } from 'react';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { useScrollLock } from '../../hooks/useScrollLock';
+import { useLocale } from '../../locale/LocaleProvider';
+import { cx } from '../../utils/cx';
+import { Portal } from '../Portal/Portal';
+
+export type DialogCloseReason = 'escape' | 'backdrop' | 'close-button';
+
+export interface DialogProps {
+  open: boolean;
+  onClose: (reason: DialogCloseReason) => void;
+  title?: ReactNode;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+  children?: ReactNode;
+  footer?: ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen';
+  fullscreenBelow?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+  centered?: boolean;
+  scrollable?: boolean;
+  closeOnBackdrop?: boolean;
+  closeOnEscape?: boolean;
+  showClose?: boolean;
+  initialFocus?: RefObject<HTMLElement | null>;
+  appendTo?: HTMLElement | null;
+  className?: string;
+  /** Overlay role. ConfirmDialog uses "alertdialog". */
+  role?: 'dialog' | 'alertdialog';
+}
+
+/** Open overlays, oldest first. Only the last one reacts to Escape and stays interactive. */
+const overlayStack: HTMLElement[] = [];
+const inertByUs = new Set<Element>();
+
+function syncInert() {
+  for (const el of inertByUs) el.removeAttribute('inert');
+  inertByUs.clear();
+  const top = overlayStack[overlayStack.length - 1];
+  if (!top) return;
+  for (const child of Array.from(document.body.children)) {
+    if (child === top || child.contains(top) || child.tagName === 'SCRIPT' || child.hasAttribute('inert')) continue;
+    child.setAttribute('inert', '');
+    inertByUs.add(child);
+  }
+}
+
+const SIZE_CLASS = { sm: 'modal-sm', md: undefined, lg: 'modal-lg', xl: 'modal-xl', fullscreen: 'modal-fullscreen' } as const;
+
+export function Dialog(props: DialogProps) {
+  if (!props.open) return null;
+  return <DialogInner {...props} />;
+}
+
+function DialogInner({
+  onClose,
+  title,
+  children,
+  footer,
+  size = 'md',
+  fullscreenBelow,
+  centered = true,
+  scrollable = true,
+  closeOnBackdrop = true,
+  closeOnEscape = true,
+  showClose = true,
+  initialFocus,
+  appendTo,
+  className,
+  role = 'dialog',
+  ...aria
+}: DialogProps) {
+  const { t } = useLocale();
+  const titleId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const pointerDownOnBackdrop = useRef(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useScrollLock(true);
+  useFocusTrap(contentRef, { active: true, initialFocus, restoreFocus: true });
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    overlayStack.push(root);
+    syncInert();
+    return () => {
+      const index = overlayStack.lastIndexOf(root);
+      if (index !== -1) overlayStack.splice(index, 1);
+      syncInert();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || overlayStack[overlayStack.length - 1] !== rootRef.current) return;
+      if (!closeOnEscape) return;
+      event.stopPropagation();
+      onCloseRef.current('escape');
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [closeOnEscape]);
+
+  const handleBackdropDown = (event: MouseEvent<HTMLDivElement>) => {
+    pointerDownOnBackdrop.current = event.target === event.currentTarget;
+  };
+  const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (closeOnBackdrop && pointerDownOnBackdrop.current && event.target === event.currentTarget) onClose('backdrop');
+    pointerDownOnBackdrop.current = false;
+  };
+
+  return (
+    <Portal container={appendTo}>
+      <div ref={rootRef} className="ui-dialog-root">
+        <div className="modal-backdrop show ui-dialog__backdrop" />
+        <div className={cx('modal d-block ui-dialog', className)} onMouseDown={handleBackdropDown} onClick={handleBackdropClick}>
+          <div
+            className={cx(
+              'modal-dialog ui-dialog__dialog',
+              SIZE_CLASS[size],
+              fullscreenBelow && `modal-fullscreen-${fullscreenBelow}-down`,
+              centered && 'modal-dialog-centered',
+              scrollable && 'modal-dialog-scrollable',
+            )}
+          >
+            <div
+              ref={contentRef}
+              role={role}
+              aria-modal="true"
+              aria-labelledby={title ? titleId : undefined}
+              aria-label={title ? undefined : aria['aria-label']}
+              aria-describedby={aria['aria-describedby']}
+              tabIndex={-1}
+              className="modal-content ui-dialog__content"
+            >
+              {(title || showClose) && (
+                <div className="modal-header ui-dialog__header">
+                  {title && (
+                    <h2 id={titleId} className="modal-title fs-5 ui-dialog__title">
+                      {title}
+                    </h2>
+                  )}
+                  {showClose && <button type="button" className="btn-close" aria-label={t('close')} onClick={() => onClose('close-button')} />}
+                </div>
+              )}
+              <div className="modal-body ui-dialog__body">{children}</div>
+              {footer && <div className="modal-footer ui-dialog__footer">{footer}</div>}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Portal>
+  );
+}

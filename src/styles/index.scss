@@ -1,0 +1,24 @@
+// Entry stylesheet → dist/styles.css. Order matters:
+// 1) Bootstrap compiled with defaults, 2) generated tokens, 3) bridge, 4) components.
+@import 'bootstrap-config';
+@import 'bootstrap/scss/bootstrap';
+@import 'tokens.generated';
+@import 'bridge';
+@import 'utilities';
+
+@import '../components/Icon/Icon';
+@import '../components/Spinner/Spinner';
+@import '../components/Button/Button';
+@import '../components/Field/Field';
+@import '../components/InputText/InputText';
+@import '../components/Checkbox/Checkbox';
+@import '../components/Select/Select';
+@import '../components/Card/Card';
+@import '../components/Badge/Badge';
+@import '../components/Tag/Tag';
+@import '../components/Skeleton/Skeleton';
+@import '../components/Message/Message';
+@import '../components/Dialog/Dialog';
+@import '../components/Tabs/Tabs';
+@import '../components/Paginator/Paginator';
+@import '../components/DataTable/DataTable';

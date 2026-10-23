@@ -1,0 +1,130 @@
+# Tasks — react-ui-kit
+
+Spec-driven: implement only from specs in design-system-mcp (`get_component_spec`). Follow the `spec-driven-workflow` skill.
+Legend: `[ ]` todo · `[~]` in progress · `[x]` done. Each UI task = component + SCSS + tests per AC + examples + exports, reviewed by `reviewer` (+ `a11y-reviewer` for interactive, `security-reviewer` where flagged).
+
+## Done (v0.1.0)
+
+- [x] **OPS-001** Scaffold: Vite library build (ESM + styles.css + d.ts), Vitest + Testing Library, strict TS, docs app, CLAUDE.md, agents, skills.
+- [x] **UI-001** Foundations: generated tokens, Bootstrap bridge, ThemeProvider (+ themeScript), LocaleProvider, hooks (controllable state, focus trap, floating, click outside, scroll lock, media query), utils (cx, position, compare, safeUrl).
+- [x] **UI-002** Core slice: Icon, Spinner, Button, Field, InputText, Checkbox/CheckboxGroup, Select, Card, Badge, Tag, Skeleton, Message, Portal, FocusTrap, Dialog, Tabs, Paginator, DataTable (phase 1), ThemeToggle (toggle mode).
+- [x] **UI-003** Docs app: home, foundations (live tokens), profiles comparison, roadmap, component pages with preview/code, theme + profile switcher.
+
+## Phase 2 — Form controls
+
+Profiles: all. Shared groundwork first (UI-200), then controls in order.
+
+- [ ] **UI-200** Shared: `utils/mask.ts`, `utils/date.ts` (Intl-based calendar maths), `utils/number.ts` (locale parse/format), `useTypeahead`, `useRovingFocus` hooks with tests
+- [ ] **UI-201** Switch — spec `switch.md` — reviews: a11y-reviewer
+- [ ] **UI-202** RadioButton — spec `radio-button.md` — reviews: a11y-reviewer
+- [ ] **UI-203** InputTextarea — spec `input-textarea.md` — reviews: a11y-reviewer
+- [ ] **UI-204** InputGroup — spec `input-group.md` — reviews: a11y-reviewer
+- [ ] **UI-205** IconField — spec `icon-field.md` — reviews: a11y-reviewer
+- [ ] **UI-206** FloatLabel — spec `float-label.md` — reviews: a11y-reviewer
+- [ ] **UI-207** Password — spec `password.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-208** InputNumber — spec `input-number.md` — reviews: a11y-reviewer
+- [ ] **UI-209** SelectButton — spec `select-button.md` — reviews: a11y-reviewer
+- [ ] **UI-210** ToggleButton — spec `toggle-button.md` — reviews: a11y-reviewer
+- [ ] **UI-211** TriStateCheckbox — spec `tri-state-checkbox.md` — reviews: a11y-reviewer
+- [ ] **UI-212** MultiStateCheckbox — spec `multi-state-checkbox.md` — reviews: a11y-reviewer
+- [ ] **UI-213** ListBox — spec `list-box.md` — reviews: a11y-reviewer
+- [ ] **UI-214** MultiSelect — spec `multi-select.md` — reviews: a11y-reviewer
+- [ ] **UI-215** AutoComplete — spec `auto-complete.md` — reviews: a11y-reviewer
+- [ ] **UI-216** Chips — spec `chips.md` — reviews: a11y-reviewer
+- [ ] **UI-217** InputMask — spec `input-mask.md` — reviews: a11y-reviewer
+- [ ] **UI-218** KeyFilter — spec `key-filter.md` — reviews: a11y-reviewer
+- [ ] **UI-219** InputOtp — spec `input-otp.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-220** Slider — spec `slider.md` — reviews: a11y-reviewer
+- [ ] **UI-221** Rating — spec `rating.md` — reviews: a11y-reviewer
+- [ ] **UI-222** DatePicker — spec `date-picker.md` — reviews: a11y-reviewer
+- [ ] **UI-223** CascadeSelect — spec `cascade-select.md` — reviews: a11y-reviewer
+- [ ] **UI-224** TreeSelect — spec `tree-select.md` — reviews: a11y-reviewer
+- [ ] **UI-225** ColorPicker — spec `color-picker.md` — reviews: a11y-reviewer
+- [ ] **UI-226** Knob — spec `knob.md` — reviews: a11y-reviewer
+- [ ] **UI-227** Mention — spec `mention.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-240** `utils/sanitize.ts` allowlist HTML sanitizer + tests (prereq for Editor) — security-reviewer required
+- [ ] **UI-228** Editor — spec `editor.md` — reviews: security-reviewer, a11y-reviewer
+
+## Phase 3 — Overlays, menus, messages
+
+Reuse Dialog overlay stack, useFloating, useFocusTrap.
+
+- [ ] **UI-301** Tooltip — spec `tooltip.md` — reviews: a11y-reviewer
+- [ ] **UI-302** Popover — spec `popover.md` — reviews: a11y-reviewer
+- [ ] **UI-303** Drawer — spec `drawer.md` — reviews: a11y-reviewer
+- [ ] **UI-304** ConfirmDialog — spec `confirm-dialog.md` — reviews: a11y-reviewer
+- [ ] **UI-305** ConfirmPopup — spec `confirm-popup.md` — reviews: a11y-reviewer
+- [ ] **UI-306** Toast — spec `toast.md`
+- [ ] **UI-307** Messages — spec `messages.md`
+- [ ] **UI-308** Menu — spec `menu.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-309** TieredMenu — spec `tiered-menu.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-310** ContextMenu — spec `context-menu.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-311** SplitButton — spec `split-button.md` — reviews: a11y-reviewer
+- [ ] **UI-312** Menubar — spec `menubar.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-313** MegaMenu — spec `mega-menu.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-314** PanelMenu — spec `panel-menu.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-315** Breadcrumb — spec `breadcrumb.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-316** Steps — spec `steps.md` — reviews: a11y-reviewer
+- [ ] **UI-317** TabMenu — spec `tab-menu.md` — reviews: a11y-reviewer
+- [ ] **UI-318** SpeedDial — spec `speed-dial.md` — reviews: a11y-reviewer
+- [ ] **UI-319** Dock — spec `dock.md` — reviews: a11y-reviewer
+- [ ] **UI-320** ThemeToggle `mode="menu"` (light/dark/system) using Menu — closes ThemeToggle AC-2
+
+## Phase 4 — Layout, panels, app shells
+
+Needed by every profile; unlocks real app scaffolds.
+
+- [ ] **UI-401** AppShell — spec `app-shell.md` — reviews: a11y-reviewer
+- [ ] **UI-402** Topbar — spec `topbar.md` — reviews: a11y-reviewer
+- [ ] **UI-403** SidebarNav — spec `sidebar-nav.md` — reviews: a11y-reviewer
+- [ ] **UI-404** PageHeader — spec `page-header.md` — reviews: a11y-reviewer
+- [ ] **UI-405** EmptyState — spec `empty-state.md` — reviews: a11y-reviewer
+- [ ] **UI-406** StatCard — spec `stat-card.md` — reviews: a11y-reviewer
+- [ ] **UI-407** Accordion — spec `accordion.md` — reviews: a11y-reviewer
+- [ ] **UI-408** Panel — spec `panel.md` — reviews: a11y-reviewer
+- [ ] **UI-409** Fieldset — spec `fieldset.md` — reviews: a11y-reviewer
+- [ ] **UI-410** Divider — spec `divider.md` — reviews: a11y-reviewer
+- [ ] **UI-411** Toolbar — spec `toolbar.md` — reviews: a11y-reviewer
+- [ ] **UI-412** Splitter — spec `splitter.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-413** Stepper — spec `stepper.md` — reviews: a11y-reviewer
+- [ ] **UI-414** ScrollPanel — spec `scroll-panel.md` — reviews: a11y-reviewer
+- [ ] **UI-415** DeferredContent — spec `deferred-content.md` — reviews: a11y-reviewer
+
+## Phase 5 — Data
+
+- [ ] **UI-500** DataTable phase 2: column filters, global filter, lazy/server mode, resize/reorder, frozen columns, row expansion, column visibility, CSV export, `stateKey` persistence (after SPEC-013 adds ACs)
+- [ ] **UI-501** DataTable phase 3: inline cell/row editing, virtual scroll, row grouping, grid keyboard navigation, context menu
+- [ ] **UI-502** VirtualScroller — spec `virtual-scroller.md` — reviews: a11y-reviewer
+- [ ] **UI-503** DataView — spec `data-view.md` — reviews: a11y-reviewer
+- [ ] **UI-504** Tree — spec `tree.md` — reviews: a11y-reviewer
+- [ ] **UI-505** TreeTable — spec `tree-table.md` — reviews: a11y-reviewer
+- [ ] **UI-506** OrderList — spec `order-list.md` — reviews: a11y-reviewer
+- [ ] **UI-507** PickList — spec `pick-list.md` — reviews: a11y-reviewer
+- [ ] **UI-508** Timeline — spec `timeline.md` — reviews: a11y-reviewer
+- [ ] **UI-509** OrganizationChart — spec `organization-chart.md` — reviews: a11y-reviewer
+
+## Phase 6 — Charts, media, files, misc
+
+- [ ] **UI-601** ProgressBar — spec `progress-bar.md`
+- [ ] **UI-602** MeterGroup — spec `meter-group.md`
+- [ ] **UI-603** Avatar — spec `avatar.md`
+- [ ] **UI-604** Chip — spec `chip.md`
+- [ ] **UI-605** BlockUI — spec `block-ui.md`
+- [ ] **UI-606** Inplace — spec `inplace.md`
+- [ ] **UI-607** ScrollTop — spec `scroll-top.md`
+- [ ] **UI-608** Image — spec `image.md` — reviews: security-reviewer, a11y-reviewer
+- [ ] **UI-609** Carousel — spec `carousel.md` — reviews: a11y-reviewer
+- [ ] **UI-610** Galleria — spec `galleria.md` — reviews: a11y-reviewer
+- [ ] **UI-611** FileUpload — spec `file-upload.md` — reviews: security-reviewer
+- [ ] **UI-612** Chart — spec `chart.md`
+
+## Ops / quality
+
+- [ ] **OPS-010** GitHub Actions: `npm ci && npm run check && npm run build:docs` on PRs. — reviewer
+- [ ] **OPS-011** Lint: evaluate ESLint (react-hooks, jsx-a11y) as dev deps — needs architect approval + ADR.
+- [ ] **OPS-012** Automated a11y smoke: axe-core (dev-only) over every docs example in jsdom or Playwright. — architect, a11y-reviewer
+- [ ] **OPS-013** Visual regression for light/dark × 3 profiles (Playwright screenshots of docs pages). — architect
+- [ ] **OPS-014** Release flow: semver tags, CHANGELOG.md, `npm pack` smoke test installing into a Vite app; bump submodule in design-system-mcp. — architect
+- [ ] **OPS-015** Docs hosting decision (private repo: Vercel/Netlify with auth, or local only). — architect
+- [ ] **OPS-016** Bundle budget check (fail CI if `dist/index.js` gzip grows > 10% without note).
+- [ ] **OPS-017** Starter templates per profile (`examples/admin`, `examples/pos`, …) once AppShell lands — consumed by MCP `scaffold_app`.

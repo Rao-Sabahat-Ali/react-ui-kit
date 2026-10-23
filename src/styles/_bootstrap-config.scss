@@ -1,0 +1,13 @@
+// Compile-time Bootstrap defaults aligned with the light theme tokens.
+// Runtime theming (dark mode, profiles) happens through CSS custom properties in _bridge.scss.
+$primary: #2563eb;
+$secondary: #475569;
+$success: #15803d;
+$danger: #dc2626;
+$warning: #f59e0b;
+$info: #0e7490;
+$font-family-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', Arial, sans-serif;
+$enable-dark-mode: true;
+$color-mode-type: data;
+$enable-shadows: false;
+$enable-reduced-motion: true;

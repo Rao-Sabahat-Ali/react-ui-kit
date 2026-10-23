@@ -1,0 +1,52 @@
+.ui-dialog {
+  --bs-modal-bg: var(--ui-color-surface-raised);
+  --bs-modal-color: var(--ui-color-text);
+  --bs-modal-border-color: var(--ui-color-border);
+  --bs-modal-border-radius: var(--ui-radius-lg);
+  --bs-modal-inner-border-radius: calc(var(--ui-radius-lg) - 1px);
+  --bs-modal-box-shadow: var(--ui-shadow-lg);
+  --bs-modal-zindex: var(--ui-z-modal);
+  --bs-modal-header-border-color: var(--ui-color-border);
+  --bs-modal-footer-border-color: var(--ui-color-border);
+}
+
+.ui-dialog__backdrop {
+  --bs-backdrop-zindex: var(--ui-z-modal-backdrop);
+  --bs-backdrop-bg: var(--ui-color-overlay);
+  --bs-backdrop-opacity: 1;
+  animation: ui-fade-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+}
+
+.ui-dialog__content {
+  box-shadow: var(--ui-shadow-lg);
+  animation: ui-dialog-in var(--ui-duration) var(--ui-motion-easing-emphasized);
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.ui-dialog__title {
+  font-family: var(--ui-font-family-heading);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+@keyframes ui-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ui-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-dialog__content,
+  .ui-dialog__backdrop {
+    animation-duration: 1ms;
+  }
+}

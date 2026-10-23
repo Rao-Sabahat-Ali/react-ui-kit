@@ -1,0 +1,9 @@
+.ui-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-dim-in-dark {
+  [data-bs-theme='dark'] & {
+    filter: brightness(0.9);
+  }
+}
