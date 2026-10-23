@@ -116,6 +116,8 @@ function TabList({ children, fill = 'none', className, ...rest }: TabListProps) 
   };
 
   return (
+    // Focus lives on the tabs (roving tabindex); the tablist only delegates arrow keys.
+    // eslint-disable-next-line jsx-a11y/interactive-supports-focus
     <div
       ref={listRef}
       role="tablist"

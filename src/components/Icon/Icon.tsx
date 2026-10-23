@@ -2,7 +2,7 @@ import type { SVGProps } from 'react';
 import { cx } from '../../utils/cx';
 import { builtInIcons, type BuiltInIconName, type IconDefinition } from './icons';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// `string & {}` keeps autocomplete for built-in names while allowing registered ones.
 export type IconName = BuiltInIconName | (string & {});
 
 const registry = new Map<string, IconDefinition>(Object.entries(builtInIcons));

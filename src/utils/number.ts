@@ -7,7 +7,7 @@ export function separators(locale: string): { group: string; decimal: string } {
 /** Parse user input like "1 234,5" (sv) or "1,234.5" (en). Returns null for empty/invalid. */
 export function parseNumber(text: string, locale: string): number | null {
   const { group, decimal } = separators(locale);
-  let t = text.trim().replace(/[\s  ]/g, '');
+  let t = text.trim().replace(/[\s\u00a0\u202f]/g, '');
   if (!t) return null;
   if (group.trim()) t = t.split(group).join('');
   t = t.replace(decimal, '.').replace(/[^\d.\-+eE]/g, '');

@@ -54,6 +54,8 @@ function DrawerInner({
   return (
     <Portal>
       <div ref={rootRef} className="ui-drawer-root">
+        {/* Backdrop click is a pointer convenience; keyboard users close with Escape (useOverlay). */}
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
         {modal && <div className="offcanvas-backdrop show ui-drawer__backdrop" onClick={() => closeOnBackdrop && onClose('backdrop')} />}
         <div
           ref={contentRef}

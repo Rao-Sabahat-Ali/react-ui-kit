@@ -36,19 +36,24 @@ export interface OverlayOptions {
 export function useOverlay({ rootRef, contentRef, onEscape, initialFocus, modal = true }: OverlayOptions): void {
   const onEscapeRef = useRef(onEscape);
   onEscapeRef.current = onEscape;
+  // Captured during the first render, before the trap moves focus inside.
+  const previousFocus = useRef<HTMLElement | null>(typeof document === 'undefined' ? null : (document.activeElement as HTMLElement | null));
 
   useScrollLock(modal);
-  useFocusTrap(contentRef, { active: modal, initialFocus, restoreFocus: true });
+  // Focus is restored below, after the background stops being inert — browsers refuse to focus inert elements.
+  useFocusTrap(contentRef, { active: modal, initialFocus, restoreFocus: false });
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+    const restoreTo = previousFocus.current;
     overlayStack.push(root);
     if (modal) syncInert();
     return () => {
       const index = overlayStack.lastIndexOf(root);
       if (index !== -1) overlayStack.splice(index, 1);
       syncInert();
+      if (restoreTo?.isConnected && !restoreTo.closest('[inert]')) restoreTo.focus();
     };
   }, [rootRef, modal]);
 

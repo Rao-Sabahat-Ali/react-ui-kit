@@ -12,6 +12,8 @@ const SAFE_LINK = /^(https?:|mailto:|tel:|\/|#|\.{0,2}\/)/i;
 const SAFE_IMG = /^(https?:|\/|data:image\/(png|jpe?g|gif|webp);base64,)/i;
 
 export function isSafeHref(url: string): boolean {
+  // Strip control characters/whitespace browsers ignore inside schemes (java\tscript:).
+  // eslint-disable-next-line no-control-regex
   const u = url.trim().replace(/[\u0000-\u001f\s]/g, '');
   return SAFE_LINK.test(u) || !/^[a-z][a-z0-9+.-]*:/i.test(u);
 }

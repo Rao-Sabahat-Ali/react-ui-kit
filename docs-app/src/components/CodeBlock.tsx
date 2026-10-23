@@ -17,7 +17,7 @@ export function CodeBlock({ code }: { code: string }) {
       <Button size="sm" appearance="text" variant="secondary" icon={copied ? 'check' : 'copy'} className="docs-code__copy" onClick={copy}>
         {copied ? 'Copied' : 'Copy'}
       </Button>
-      <pre tabIndex={0} aria-label="Example code">
+      <pre tabIndex={0} role="region" aria-label="Example code">
         <code>{code}</code>
       </pre>
     </div>
