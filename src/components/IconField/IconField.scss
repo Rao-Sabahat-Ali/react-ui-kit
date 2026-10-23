@@ -1,0 +1,69 @@
+.ui-icon-field {
+  --ui-icon-field-size: var(--ui-control-height-md);
+
+  &:has(.form-control-sm, .form-select-sm) {
+    --ui-icon-field-size: var(--ui-control-height-sm);
+  }
+
+  &:has(.form-control-lg, .form-select-lg) {
+    --ui-icon-field-size: var(--ui-control-height-lg);
+  }
+}
+
+.ui-icon-field__icon {
+  position: absolute;
+  inset-block: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ui-icon-field-size);
+  color: var(--ui-color-text-muted);
+  pointer-events: none;
+}
+
+.ui-icon-field__icon--button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  border-radius: var(--ui-radius);
+
+  &:hover {
+    color: var(--ui-color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-icon-field--start {
+  > .ui-icon-field__icon {
+    inset-inline-start: 0;
+  }
+
+  > .form-control,
+  > .form-select {
+    padding-inline-start: var(--ui-icon-field-size);
+  }
+}
+
+.ui-icon-field--end {
+  > .ui-icon-field__icon {
+    inset-inline-end: 0;
+  }
+
+  > .form-control,
+  > .form-select {
+    padding-inline-end: var(--ui-icon-field-size);
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-icon-field__icon--button {
+    min-inline-size: var(--ui-touch-target-min);
+    min-block-size: var(--ui-touch-target-min);
+  }
+}
