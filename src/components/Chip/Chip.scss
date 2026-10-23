@@ -1,0 +1,100 @@
+.ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-block-size: var(--ui-control-height-sm);
+  padding-inline: var(--ui-space-3);
+  border: 1px solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-color-surface);
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-sm);
+  line-height: 1;
+  transition: background-color var(--ui-duration) var(--ui-easing), border-color var(--ui-duration) var(--ui-easing);
+}
+
+.ui-chip__main {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-block-size: inherit;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-pill);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+button.ui-chip__main {
+  cursor: pointer;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: 2px solid transparent;
+  }
+}
+
+.ui-chip__image {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  margin-inline-start: calc(var(--ui-space-3) * -0.5);
+  border-radius: var(--ui-radius-circle);
+  object-fit: cover;
+}
+
+.ui-chip--interactive:hover {
+  background: var(--ui-color-bg-subtle);
+}
+
+.ui-chip--selected {
+  border-color: var(--ui-color-primary);
+  background: var(--ui-color-primary-subtle);
+  color: var(--ui-color-primary-emphasis);
+}
+
+.ui-chip--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.ui-chip--removable {
+  padding-inline-end: var(--ui-space-1);
+}
+
+.ui-chip__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-circle);
+  background: transparent;
+  color: var(--ui-color-text-muted);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ui-color-secondary-subtle);
+    color: var(--ui-color-text);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: 2px solid transparent;
+  }
+}
+
+@media (pointer: coarse) {
+  .ui-chip__remove {
+    inline-size: var(--ui-touch-target-min);
+    block-size: var(--ui-touch-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-chip {
+    transition: none;
+  }
+}
