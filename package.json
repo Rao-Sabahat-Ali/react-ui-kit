@@ -39,7 +39,8 @@
     "lint": "eslint .",
     "e2e": "playwright test",
     "e2e:update": "playwright test --update-snapshots",
-    "register": "node scripts/register-components.mjs"
+    "register": "node scripts/register-components.mjs",
+    "create-app": "node scripts/create-app.mjs"
   },
   "peerDependencies": {
     "bootstrap": "^5.3.8",

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>__APP_TITLE__</title>
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('ui:theme') || '__DEFAULT_THEME__';
+          if (t === 'system') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          var d = document.documentElement;
+          d.setAttribute('data-bs-theme', t);
+          d.setAttribute('data-ui-profile', '__PROFILE__');
+          d.style.colorScheme = t;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

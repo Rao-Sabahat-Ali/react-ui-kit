@@ -149,4 +149,4 @@ Needed by every profile; unlocks real app scaffolds.
 - [ ] **OPS-014** Release flow: semver tags, CHANGELOG.md, `npm pack` smoke test installing into a Vite app; bump submodule in design-system-mcp. — architect
 - [x] **OPS-015** Docs deployed on Vercel: https://react-ui-kit-docs.vercel.app (Deployment Protection optional).
 - [x] **OPS-016** Bundle budget check (fail CI if `dist/index.js` gzip grows > 10% without note).
-- [ ] **OPS-017** Starter templates per profile (`examples/admin`, `examples/pos`, …) once AppShell lands — consumed by MCP `scaffold_app`.
+- [x] **OPS-017** Starter template (`templates/starter`) + `npm run create-app <dir> -- --profile <profile>`: AppShell per profile shell, ThemeProvider, toast/confirm providers, CLAUDE.md, tasks.md, test; verified building against the packed kit.
