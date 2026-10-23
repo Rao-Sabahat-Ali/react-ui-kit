@@ -15,7 +15,7 @@
       "name": "AppShell",
       "slug": "app-shell",
       "category": "layout",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Page-level layout with landmarks and responsive navigation for each profile's shell type.",
       "profiles": [
         "all"
@@ -59,6 +59,19 @@
       "purpose": "Block interaction with a region (or full screen) during processing (POS payment).",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "BottomNav",
+      "slug": "bottom-nav",
+      "category": "layout",
+      "status": "implemented",
+      "purpose": "Mobile tab bar with 3–5 primary destinations, fixed to the bottom of the viewport. Used through `AppShell bottomNav` below the mobile breakpoint.",
+      "profiles": [
+        "saas",
+        "pos",
+        "game",
+        "ecommerce"
       ]
     },
     {
@@ -173,7 +186,7 @@
       "name": "ConfirmDialog",
       "slug": "confirm-dialog",
       "category": "overlay",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Ask the user to confirm a consequential action. Promise-based API via provider.",
       "profiles": [
         "all"
@@ -276,7 +289,7 @@
       "name": "Drawer",
       "slug": "drawer",
       "category": "overlay",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Panel sliding from a screen edge: detail view in admin, mini cart in ecommerce, mobile navigation.",
       "profiles": [
         "all"
@@ -298,7 +311,7 @@
       "name": "EmptyState",
       "slug": "empty-state",
       "category": "layout",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Explain why a view is empty and what to do next (no data, no results, first-run, error).",
       "profiles": [
         "all"
@@ -634,7 +647,7 @@
       "name": "PageHeader",
       "slug": "page-header",
       "category": "layout",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Consistent page title area: breadcrumb, title (h1), description, status tag, primary/secondary actions, optional tabs.",
       "profiles": [
         "all"
@@ -718,7 +731,7 @@
       "name": "ProgressBar",
       "slug": "progress-bar",
       "category": "misc",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Determinate or indeterminate progress (uploads, HUD health/XP in games).",
       "profiles": [
         "all"
@@ -728,7 +741,7 @@
       "name": "RadioButton",
       "slug": "radio-button",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Single choice among 2–5 visible options.",
       "profiles": [
         "all"
@@ -772,7 +785,7 @@
       "name": "SelectButton",
       "slug": "select-button",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Segmented control for 2–6 options (period 7d/30d/90d, POS categories, view toggles).",
       "profiles": [
         "all"
@@ -792,7 +805,7 @@
       "name": "SidebarNav",
       "slug": "sidebar-nav",
       "category": "layout",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Primary vertical navigation with sections, nested groups, badges and collapsed icon-rail mode.",
       "profiles": [
         "admin",
@@ -869,7 +882,7 @@
       "name": "StatCard",
       "slug": "stat-card",
       "category": "layout",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "KPI tile: label, value, delta vs previous period, optional sparkline/icon.",
       "profiles": [
         "dashboard",
@@ -902,7 +915,7 @@
       "name": "Switch",
       "slug": "switch",
       "category": "form",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "On/off setting that takes effect immediately.",
       "profiles": [
         "all"
@@ -982,7 +995,7 @@
       "name": "Toast",
       "slug": "toast",
       "category": "messages",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Brief, non-blocking notification. Imperative API via provider.",
       "profiles": [
         "all"
@@ -1022,7 +1035,7 @@
       "name": "Topbar",
       "slug": "topbar",
       "category": "layout",
-      "status": "specified",
+      "status": "implemented",
       "purpose": "Application header: menu toggle, brand, global search, actions (notifications, theme toggle, account menu).",
       "profiles": [
         "admin",

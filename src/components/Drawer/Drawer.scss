@@ -1,0 +1,121 @@
+.ui-drawer {
+  --bs-offcanvas-bg: var(--ui-color-surface-raised);
+  --bs-offcanvas-color: var(--ui-color-text);
+  --bs-offcanvas-border-color: var(--ui-color-border);
+  --bs-offcanvas-box-shadow: var(--ui-shadow-lg);
+  --bs-offcanvas-zindex: var(--ui-z-drawer);
+  box-shadow: var(--ui-shadow-lg);
+  visibility: visible;
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &.offcanvas-start,
+  &.offcanvas-end {
+    animation: ui-drawer-in-x var(--ui-duration) var(--ui-motion-easing-emphasized);
+  }
+
+  &.offcanvas-start {
+    --ui-drawer-from: -100%;
+  }
+
+  &.offcanvas-end {
+    --ui-drawer-from: 100%;
+  }
+
+  &.offcanvas-top,
+  &.offcanvas-bottom {
+    animation: ui-drawer-in-y var(--ui-duration) var(--ui-motion-easing-emphasized);
+  }
+
+  &.offcanvas-top {
+    --ui-drawer-from: -100%;
+  }
+
+  &.offcanvas-bottom {
+    --ui-drawer-from: 100%;
+  }
+}
+
+[dir='rtl'] .ui-drawer.offcanvas-start {
+  --ui-drawer-from: 100%;
+}
+
+[dir='rtl'] .ui-drawer.offcanvas-end {
+  --ui-drawer-from: -100%;
+}
+
+.ui-drawer--sm {
+  --bs-offcanvas-width: 20rem;
+  --bs-offcanvas-height: 30vh;
+}
+
+.ui-drawer--md {
+  --bs-offcanvas-width: 25rem;
+  --bs-offcanvas-height: 50vh;
+}
+
+.ui-drawer--lg {
+  --bs-offcanvas-width: 40rem;
+  --bs-offcanvas-height: 75vh;
+}
+
+.ui-drawer--full {
+  --bs-offcanvas-width: 100vw;
+  --bs-offcanvas-height: 100vh;
+}
+
+.ui-drawer__backdrop {
+  --bs-backdrop-zindex: var(--ui-z-drawer-backdrop);
+  --bs-backdrop-bg: var(--ui-color-overlay);
+  --bs-backdrop-opacity: 1;
+  animation: ui-fade-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+}
+
+.ui-drawer__title {
+  font-family: var(--ui-font-family-heading);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-drawer__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-top: 1px solid var(--ui-color-border);
+}
+
+@keyframes ui-drawer-in-x {
+  from {
+    transform: translateX(var(--ui-drawer-from));
+  }
+}
+
+@keyframes ui-drawer-in-y {
+  from {
+    transform: translateY(var(--ui-drawer-from));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-drawer,
+  .ui-drawer__backdrop {
+    animation-duration: 1ms;
+  }
+}
+
+// Bootstrap's compiled CSS is LTR; map logical edges for RTL.
+[dir='rtl'] .ui-drawer.offcanvas-start {
+  left: auto;
+  right: 0;
+  border-right: 0;
+  border-left: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+}
+
+[dir='rtl'] .ui-drawer.offcanvas-end {
+  right: auto;
+  left: 0;
+  border-left: 0;
+  border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+}

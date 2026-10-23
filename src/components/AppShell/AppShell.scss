@@ -1,0 +1,120 @@
+.ui-app-shell {
+  --ui-sidebar-width: 16rem;
+  --ui-sidebar-collapsed-width: 4.5rem;
+  --ui-topbar-height: 3.5rem;
+  --ui-bottom-nav-height: 4rem;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ui-color-bg);
+}
+
+.ui-app-shell__skip {
+  position: absolute;
+  inset-inline-start: var(--ui-space-2);
+  top: var(--ui-space-2);
+  z-index: var(--ui-z-toast);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface-raised);
+}
+
+.ui-app-shell__body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.ui-app-shell__sidebar {
+  position: sticky;
+  top: var(--ui-topbar-height);
+  flex: 0 0 var(--ui-sidebar-width);
+  width: var(--ui-sidebar-width);
+  height: calc(100vh - var(--ui-topbar-height));
+  overflow-y: auto;
+  background: var(--ui-color-bg-subtle);
+  border-inline-end: 1px solid var(--ui-color-border);
+  transition: width var(--ui-duration) var(--ui-easing), flex-basis var(--ui-duration) var(--ui-easing);
+}
+
+.ui-app-shell--collapsed .ui-app-shell__sidebar {
+  flex-basis: var(--ui-sidebar-collapsed-width);
+  width: var(--ui-sidebar-collapsed-width);
+}
+
+.ui-app-shell__main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--ui-space-6);
+
+  &:focus {
+    outline: none;
+  }
+
+  @media (max-width: 767.98px) {
+    padding: var(--ui-space-4);
+  }
+}
+
+.ui-app-shell--full-bleed .ui-app-shell__main {
+  padding: 0;
+  position: relative;
+}
+
+.ui-app-shell__hud {
+  position: absolute;
+  inset-inline: 0;
+  z-index: var(--ui-z-sticky);
+  padding: var(--ui-space-3);
+
+  &--top {
+    top: 0;
+  }
+
+  &--bottom {
+    bottom: 0;
+  }
+}
+
+.ui-app-shell--with-bottom-nav .ui-app-shell__main {
+  padding-bottom: calc(var(--ui-bottom-nav-height) + var(--ui-space-6) + env(safe-area-inset-bottom, 0));
+}
+
+.ui-app-shell__bottom-nav {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: var(--ui-z-fixed);
+}
+
+.ui-app-shell__footer {
+  padding: var(--ui-space-4) var(--ui-space-6);
+  border-top: 1px solid var(--ui-color-border);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-app-shell--with-bottom-nav .ui-app-shell__footer {
+  padding-bottom: calc(var(--ui-bottom-nav-height) + var(--ui-space-4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-app-shell__sidebar {
+    transition: none;
+  }
+}
+
+// Docs/demo embedding: shell inside a fixed-height frame.
+.ui-app-shell--embedded {
+  min-height: 100%;
+
+  .ui-app-shell__sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .ui-app-shell__bottom-nav {
+    position: sticky;
+  }
+}

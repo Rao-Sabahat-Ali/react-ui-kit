@@ -27,7 +27,7 @@ Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash 
 
 ## Status
 
-Implemented (v0.1.0): ThemeProvider, LocaleProvider, Icon, Button, Spinner, Field, InputText, Checkbox/CheckboxGroup, Select (custom + native), Card, Badge, Tag, Skeleton, Message, Dialog, Tabs, Paginator, DataTable (phase 1), Portal, FocusTrap, ThemeToggle (toggle mode).
+Implemented (v0.2.0): ThemeProvider, LocaleProvider, Icon, Button, Spinner, Field, InputText, Checkbox/CheckboxGroup, RadioGroup, Switch, SelectButton, Select (custom + native), Card, StatCard, Badge, Tag, Skeleton, ProgressBar, Message, Toast, EmptyState, Dialog, ConfirmDialog, Drawer, Tabs, Paginator, DataTable (phase 1), AppShell, Topbar, SidebarNav, BottomNav, PageHeader, Portal, FocusTrap, ThemeToggle (toggle mode).
 Everything else is specified and queued in [tasks.md](tasks.md). Live catalogue: `npm run dev`.
 
 ## Development

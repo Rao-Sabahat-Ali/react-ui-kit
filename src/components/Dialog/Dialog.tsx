@@ -1,6 +1,5 @@
-import { useEffect, useId, useRef, type MouseEvent, type ReactNode, type RefObject } from 'react';
-import { useFocusTrap } from '../../hooks/useFocusTrap';
-import { useScrollLock } from '../../hooks/useScrollLock';
+import { useId, useRef, type MouseEvent, type ReactNode, type RefObject } from 'react';
+import { useOverlay } from '../../hooks/useOverlay';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { Portal } from '../Portal/Portal';
@@ -27,22 +26,6 @@ export interface DialogProps {
   className?: string;
   /** Overlay role. ConfirmDialog uses "alertdialog". */
   role?: 'dialog' | 'alertdialog';
-}
-
-/** Open overlays, oldest first. Only the last one reacts to Escape and stays interactive. */
-const overlayStack: HTMLElement[] = [];
-const inertByUs = new Set<Element>();
-
-function syncInert() {
-  for (const el of inertByUs) el.removeAttribute('inert');
-  inertByUs.clear();
-  const top = overlayStack[overlayStack.length - 1];
-  if (!top) return;
-  for (const child of Array.from(document.body.children)) {
-    if (child === top || child.contains(top) || child.tagName === 'SCRIPT' || child.hasAttribute('inert')) continue;
-    child.setAttribute('inert', '');
-    inertByUs.add(child);
-  }
 }
 
 const SIZE_CLASS = { sm: 'modal-sm', md: undefined, lg: 'modal-lg', xl: 'modal-xl', fullscreen: 'modal-fullscreen' } as const;
@@ -75,34 +58,7 @@ function DialogInner({
   const rootRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const pointerDownOnBackdrop = useRef(false);
-  const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
-
-  useScrollLock(true);
-  useFocusTrap(contentRef, { active: true, initialFocus, restoreFocus: true });
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    overlayStack.push(root);
-    syncInert();
-    return () => {
-      const index = overlayStack.lastIndexOf(root);
-      if (index !== -1) overlayStack.splice(index, 1);
-      syncInert();
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || overlayStack[overlayStack.length - 1] !== rootRef.current) return;
-      if (!closeOnEscape) return;
-      event.stopPropagation();
-      onCloseRef.current('escape');
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [closeOnEscape]);
+  useOverlay({ rootRef, contentRef, initialFocus, onEscape: closeOnEscape ? () => onClose('escape') : undefined });
 
   const handleBackdropDown = (event: MouseEvent<HTMLDivElement>) => {
     pointerDownOnBackdrop.current = event.target === event.currentTarget;

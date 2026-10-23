@@ -10,20 +10,23 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done. Each UI task = component 
 - [x] **UI-002** Core slice: Icon, Spinner, Button, Field, InputText, Checkbox/CheckboxGroup, Select, Card, Badge, Tag, Skeleton, Message, Portal, FocusTrap, Dialog, Tabs, Paginator, DataTable (phase 1), ThemeToggle (toggle mode).
 - [x] **UI-003** Docs app: home, foundations (live tokens), profiles comparison, roadmap, component pages with preview/code, theme + profile switcher.
 
+- [x] **UI-004** (v0.2.0, for svenska-ord) `useOverlay` shared hook; layout + feedback set: AppShell (+`useAppShell`, bottomNav), Topbar, SidebarNav (`onNavigate`), BottomNav (new spec), PageHeader, Drawer, ConfirmDialog (+`useConfirm`), Toast (+`useToast`), ProgressBar, Switch, RadioGroup, SelectButton, EmptyState, StatCard.
+- [ ] **UI-005** BottomNav was added to the spec catalogue in v0.2.0 — keep docs example in sync.
+
 ## Phase 2 — Form controls
 
 Profiles: all. Shared groundwork first (UI-200), then controls in order.
 
 - [ ] **UI-200** Shared: `utils/mask.ts`, `utils/date.ts` (Intl-based calendar maths), `utils/number.ts` (locale parse/format), `useTypeahead`, `useRovingFocus` hooks with tests
-- [ ] **UI-201** Switch — spec `switch.md` — reviews: a11y-reviewer
-- [ ] **UI-202** RadioButton — spec `radio-button.md` — reviews: a11y-reviewer
+- [x] **UI-201** Switch — spec `switch.md` — reviews: a11y-reviewer
+- [x] **UI-202** RadioButton — spec `radio-button.md` — reviews: a11y-reviewer
 - [ ] **UI-203** InputTextarea — spec `input-textarea.md` — reviews: a11y-reviewer
 - [ ] **UI-204** InputGroup — spec `input-group.md` — reviews: a11y-reviewer
 - [ ] **UI-205** IconField — spec `icon-field.md` — reviews: a11y-reviewer
 - [ ] **UI-206** FloatLabel — spec `float-label.md` — reviews: a11y-reviewer
 - [ ] **UI-207** Password — spec `password.md` — reviews: security-reviewer, a11y-reviewer
 - [ ] **UI-208** InputNumber — spec `input-number.md` — reviews: a11y-reviewer
-- [ ] **UI-209** SelectButton — spec `select-button.md` — reviews: a11y-reviewer
+- [x] **UI-209** SelectButton — spec `select-button.md` — reviews: a11y-reviewer
 - [ ] **UI-210** ToggleButton — spec `toggle-button.md` — reviews: a11y-reviewer
 - [ ] **UI-211** TriStateCheckbox — spec `tri-state-checkbox.md` — reviews: a11y-reviewer
 - [ ] **UI-212** MultiStateCheckbox — spec `multi-state-checkbox.md` — reviews: a11y-reviewer
@@ -51,10 +54,10 @@ Reuse Dialog overlay stack, useFloating, useFocusTrap.
 
 - [ ] **UI-301** Tooltip — spec `tooltip.md` — reviews: a11y-reviewer
 - [ ] **UI-302** Popover — spec `popover.md` — reviews: a11y-reviewer
-- [ ] **UI-303** Drawer — spec `drawer.md` — reviews: a11y-reviewer
-- [ ] **UI-304** ConfirmDialog — spec `confirm-dialog.md` — reviews: a11y-reviewer
+- [x] **UI-303** Drawer — spec `drawer.md` — reviews: a11y-reviewer
+- [x] **UI-304** ConfirmDialog — spec `confirm-dialog.md` — reviews: a11y-reviewer
 - [ ] **UI-305** ConfirmPopup — spec `confirm-popup.md` — reviews: a11y-reviewer
-- [ ] **UI-306** Toast — spec `toast.md`
+- [x] **UI-306** Toast — spec `toast.md`
 - [ ] **UI-307** Messages — spec `messages.md`
 - [ ] **UI-308** Menu — spec `menu.md` — reviews: security-reviewer, a11y-reviewer
 - [ ] **UI-309** TieredMenu — spec `tiered-menu.md` — reviews: security-reviewer, a11y-reviewer
@@ -74,12 +77,12 @@ Reuse Dialog overlay stack, useFloating, useFocusTrap.
 
 Needed by every profile; unlocks real app scaffolds.
 
-- [ ] **UI-401** AppShell — spec `app-shell.md` — reviews: a11y-reviewer
-- [ ] **UI-402** Topbar — spec `topbar.md` — reviews: a11y-reviewer
-- [ ] **UI-403** SidebarNav — spec `sidebar-nav.md` — reviews: a11y-reviewer
-- [ ] **UI-404** PageHeader — spec `page-header.md` — reviews: a11y-reviewer
-- [ ] **UI-405** EmptyState — spec `empty-state.md` — reviews: a11y-reviewer
-- [ ] **UI-406** StatCard — spec `stat-card.md` — reviews: a11y-reviewer
+- [x] **UI-401** AppShell — spec `app-shell.md` — reviews: a11y-reviewer
+- [x] **UI-402** Topbar — spec `topbar.md` — reviews: a11y-reviewer
+- [x] **UI-403** SidebarNav — spec `sidebar-nav.md` — reviews: a11y-reviewer
+- [x] **UI-404** PageHeader — spec `page-header.md` — reviews: a11y-reviewer
+- [x] **UI-405** EmptyState — spec `empty-state.md` — reviews: a11y-reviewer
+- [x] **UI-406** StatCard — spec `stat-card.md` — reviews: a11y-reviewer
 - [ ] **UI-407** Accordion — spec `accordion.md` — reviews: a11y-reviewer
 - [ ] **UI-408** Panel — spec `panel.md` — reviews: a11y-reviewer
 - [ ] **UI-409** Fieldset — spec `fieldset.md` — reviews: a11y-reviewer
@@ -105,7 +108,7 @@ Needed by every profile; unlocks real app scaffolds.
 
 ## Phase 6 — Charts, media, files, misc
 
-- [ ] **UI-601** ProgressBar — spec `progress-bar.md`
+- [x] **UI-601** ProgressBar — spec `progress-bar.md`
 - [ ] **UI-602** MeterGroup — spec `meter-group.md`
 - [ ] **UI-603** Avatar — spec `avatar.md`
 - [ ] **UI-604** Chip — spec `chip.md`

@@ -1,0 +1,35 @@
+.ui-switch__input {
+  cursor: pointer;
+  border-color: var(--ui-color-border-strong);
+
+  &:checked {
+    background-color: var(--ui-color-primary);
+    border-color: var(--ui-color-primary);
+  }
+}
+
+.ui-switch__label {
+  cursor: pointer;
+}
+
+.ui-switch--lg {
+  min-height: 2rem;
+  padding-inline-start: 3.25em;
+  display: flex;
+  align-items: center;
+
+  .ui-switch__input {
+    width: 2.75em;
+    height: 1.5em;
+    margin-inline-start: -3.25em;
+    margin-top: 0;
+  }
+
+  &.form-check-reverse {
+    padding-inline: 0 3.25em;
+
+    .ui-switch__input {
+      margin-inline: 0 -3.25em;
+    }
+  }
+}

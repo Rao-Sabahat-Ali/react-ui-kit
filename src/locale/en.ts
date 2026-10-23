@@ -27,6 +27,17 @@ export const en = {
   severitySecondary: 'Note:',
   darkMode: 'Dark mode',
   required: 'required',
+  menu: 'Menu',
+  mainNavigation: 'Main',
+  skipToContent: 'Skip to content',
+  back: 'Back',
+  breadcrumb: 'Breadcrumb',
+  confirm: 'Confirm',
+  cancel: 'Cancel',
+  notifications: 'Notifications',
+  deltaUp: 'Up {value}',
+  deltaDown: 'Down {value}',
+  deltaFlat: 'No change',
 };
 
 export type Messages = typeof en;

@@ -1,0 +1,36 @@
+.ui-select-button {
+  .ui-select-button__label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ui-space-2);
+    min-height: var(--ui-control-height-md);
+    padding-inline: var(--ui-control-padding-x);
+    font-weight: var(--ui-font-weight-medium);
+  }
+
+  &.btn-group-sm .ui-select-button__label {
+    min-height: var(--ui-control-height-sm);
+  }
+
+  &.btn-group-lg .ui-select-button__label {
+    min-height: var(--ui-control-height-lg);
+  }
+
+  // Inputs are wrapped in spans, so restore Bootstrap's joined-border radius rules.
+  .ui-select-button__item:not(:first-child) .btn {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+    margin-inline-start: calc(var(--bs-border-width) * -1);
+  }
+
+  .ui-select-button__item:not(:last-child) .btn {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .btn-check:focus-visible + .btn {
+    z-index: 1;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
