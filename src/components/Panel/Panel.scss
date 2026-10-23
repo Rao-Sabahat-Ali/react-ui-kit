@@ -1,0 +1,56 @@
+.ui-panel {
+  --bs-card-bg: var(--ui-color-surface);
+  --bs-card-border-color: var(--ui-color-border);
+  --bs-card-border-radius: var(--ui-radius-lg);
+  --bs-card-inner-border-radius: calc(var(--ui-radius-lg) - 1px);
+  --bs-card-cap-bg: var(--ui-color-bg-subtle);
+  --bs-card-color: var(--ui-color-text);
+}
+
+.ui-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.ui-panel__title {
+  margin: 0;
+  font-size: var(--ui-font-size-md);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-panel__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  margin-inline-start: auto;
+}
+
+.ui-panel__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--ui-control-height-sm);
+  min-block-size: var(--ui-control-height-sm);
+  border: 0;
+  color: var(--ui-color-text-muted);
+
+  &:hover {
+    color: var(--ui-color-text);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: 2px solid transparent;
+  }
+}
+
+.ui-panel__body[hidden] {
+  display: none;
+}
+
+.ui-panel--collapsed .ui-panel__header {
+  border-block-end: 0;
+  border-radius: var(--bs-card-inner-border-radius);
+}
