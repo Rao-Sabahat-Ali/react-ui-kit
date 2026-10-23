@@ -1,0 +1,135 @@
+.ui-org-chart {
+  --ui-org-chart-gap: 1.5rem;
+  --ui-org-chart-line: 2px solid var(--ui-color-border-strong, var(--ui-color-border));
+  overflow-x: auto;
+  padding: var(--ui-space-3);
+  color: var(--ui-color-text);
+}
+
+.ui-org-chart__tree,
+.ui-org-chart__children {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-org-chart__tree {
+  inline-size: max-content;
+  min-inline-size: 100%;
+}
+
+.ui-org-chart__children {
+  position: relative;
+  padding-block-start: var(--ui-org-chart-gap);
+
+  // Vertical stem from the parent node.
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 50%;
+    block-size: var(--ui-org-chart-gap);
+    border-inline-start: var(--ui-org-chart-line);
+  }
+}
+
+.ui-org-chart__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-inline: var(--ui-space-2);
+  outline: none;
+
+  &:focus-visible > .ui-org-chart__node {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+// Horizontal bars joining siblings (CSS connectors; logical properties mirror in RTL).
+.ui-org-chart__children > .ui-org-chart__item {
+  padding-block-start: var(--ui-org-chart-gap);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inline-size: 50%;
+    block-size: var(--ui-org-chart-gap);
+    border-block-start: var(--ui-org-chart-line);
+  }
+
+  &::before {
+    inset-inline-end: 50%;
+  }
+
+  &::after {
+    inset-inline-start: 50%;
+    border-inline-start: var(--ui-org-chart-line);
+  }
+
+  &:first-child::before,
+  &:last-child::after {
+    border-block-start: 0;
+  }
+
+  &:last-child::before {
+    border-inline-end: var(--ui-org-chart-line);
+    border-end-end-radius: var(--ui-radius);
+  }
+
+  &:first-child::after {
+    border-start-start-radius: var(--ui-radius);
+  }
+
+  &:only-child::before {
+    display: none;
+  }
+
+  &:only-child::after {
+    border-block-start: 0;
+    border-radius: 0;
+  }
+}
+
+.ui-org-chart__node {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-inline-size: 7rem;
+  padding: var(--ui-space-2) var(--ui-space-3);
+  border-color: var(--ui-color-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface);
+  text-align: center;
+}
+
+.ui-org-chart__node--selectable {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ui-color-bg-subtle);
+  }
+}
+
+.ui-org-chart__node--selected {
+  border-color: var(--ui-color-primary);
+  background: var(--ui-color-primary-subtle);
+}
+
+.ui-org-chart__node--disabled {
+  color: var(--ui-color-text-muted);
+  cursor: not-allowed;
+}
+
+.ui-org-chart__toggler {
+  display: inline-flex;
+  color: var(--ui-color-text-muted);
+  cursor: pointer;
+}
