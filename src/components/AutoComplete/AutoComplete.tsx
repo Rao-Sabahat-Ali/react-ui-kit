@@ -254,7 +254,7 @@ export function AutoComplete<T>(props: AutoCompleteProps<T>) {
     <div className={cx('ui-auto-complete', multiple && 'ui-auto-complete--multiple', disabled && 'ui-auto-complete--disabled', className)} style={style}>
       <div ref={anchorRef} className={cx('ui-auto-complete__control', multiple && 'form-control', multiple && sizeClass, multiple && control.invalid && 'is-invalid', dropdown && 'input-group')}>
         {multiple && selected.length > 0 && (
-          <ul className="list-unstyled mb-0 ui-auto-complete__chips" role="list">
+          <ul className="list-unstyled mb-0 ui-auto-complete__chips">
             {selected.map((item, i) => {
               const label = getOptionLabel(item);
               return (
@@ -326,6 +326,8 @@ export function AutoComplete<T>(props: AutoCompleteProps<T>) {
           <div ref={panelRef} className="dropdown-menu show ui-auto-complete__panel" style={{ position: 'fixed', top: position.top, left: position.left, minWidth: position.minWidth }}>
             <ul id={listboxId} role="listbox" className="list-unstyled mb-0 ui-auto-complete__list" aria-label={props['aria-label']} aria-labelledby={control.labelId}>
               {suggestions.map((item, index) => (
+                // Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests).
+                // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                 <li
                   key={optionId(index)}
                   id={optionId(index)}

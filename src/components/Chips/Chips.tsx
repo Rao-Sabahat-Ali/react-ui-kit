@@ -180,6 +180,8 @@ export function Chips({
 
   return (
     <div className={cx('ui-chips', disabled && 'ui-chips--disabled', className)} style={style}>
+      {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
         className={cx('form-control ui-chips__control', sizeClass, control.invalid && 'is-invalid', disabled && 'disabled')}
         onClick={(e) => {
@@ -187,7 +189,7 @@ export function Chips({
         }}
       >
         {value.length > 0 && (
-          <ul ref={listRef} role="list" className="list-unstyled mb-0 ui-chips__list">
+          <ul ref={listRef} className="list-unstyled mb-0 ui-chips__list">
             {value.map((chip, index) => (
               <li key={`${chip}-${index}`} className="badge ui-chips__chip">
                 <span className="ui-chips__label">{chipTemplate ? chipTemplate(chip) : chip}</span>

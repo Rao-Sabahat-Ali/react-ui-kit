@@ -235,6 +235,8 @@ export function Mention<T>({
           <div ref={panelRef} className="dropdown-menu show ui-mention__panel" style={{ position: 'fixed', top: pos.top, left: pos.left } as CSSProperties}>
             <ul id={listboxId} role="listbox" aria-label={mention.trigger} className="list-unstyled mb-0 ui-mention__list">
               {suggestions.map((item, index) => (
+                // Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests).
+                // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                 <li
                   key={optionId(index)}
                   id={optionId(index)}

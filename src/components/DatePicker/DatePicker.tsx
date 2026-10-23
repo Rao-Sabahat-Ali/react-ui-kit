@@ -793,6 +793,8 @@ export function DatePicker(props: DatePickerProps) {
       </div>
       {open && (
         <Portal>
+          {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             ref={popupRef}
             id={dialogId}

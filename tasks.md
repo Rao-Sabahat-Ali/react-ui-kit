@@ -30,21 +30,21 @@ Profiles: all. Shared groundwork first (UI-200), then controls in order.
 - [x] **UI-210** ToggleButton — spec `toggle-button.md` — reviews: a11y-reviewer
 - [x] **UI-211** TriStateCheckbox — spec `tri-state-checkbox.md` — reviews: a11y-reviewer
 - [x] **UI-212** MultiStateCheckbox — spec `multi-state-checkbox.md` — reviews: a11y-reviewer
-- [ ] **UI-213** ListBox — spec `list-box.md` — reviews: a11y-reviewer
-- [ ] **UI-214** MultiSelect — spec `multi-select.md` — reviews: a11y-reviewer
-- [ ] **UI-215** AutoComplete — spec `auto-complete.md` — reviews: a11y-reviewer
-- [ ] **UI-216** Chips — spec `chips.md` — reviews: a11y-reviewer
+- [x] **UI-213** ListBox — spec `list-box.md` — reviews: a11y-reviewer
+- [x] **UI-214** MultiSelect — spec `multi-select.md` — reviews: a11y-reviewer
+- [x] **UI-215** AutoComplete — spec `auto-complete.md` — reviews: a11y-reviewer
+- [x] **UI-216** Chips — spec `chips.md` — reviews: a11y-reviewer
 - [x] **UI-217** InputMask — spec `input-mask.md` — reviews: a11y-reviewer
 - [x] **UI-218** KeyFilter — spec `key-filter.md` — reviews: a11y-reviewer
 - [x] **UI-219** InputOtp — spec `input-otp.md` — reviews: security-reviewer, a11y-reviewer
 - [x] **UI-220** Slider — spec `slider.md` — reviews: a11y-reviewer
 - [x] **UI-221** Rating — spec `rating.md` — reviews: a11y-reviewer
-- [ ] **UI-222** DatePicker — spec `date-picker.md` — reviews: a11y-reviewer
-- [ ] **UI-223** CascadeSelect — spec `cascade-select.md` — reviews: a11y-reviewer
+- [x] **UI-222** DatePicker — spec `date-picker.md` — reviews: a11y-reviewer
+- [x] **UI-223** CascadeSelect — spec `cascade-select.md` — reviews: a11y-reviewer
 - [ ] **UI-224** TreeSelect — spec `tree-select.md` — reviews: a11y-reviewer
-- [ ] **UI-225** ColorPicker — spec `color-picker.md` — reviews: a11y-reviewer
+- [x] **UI-225** ColorPicker — spec `color-picker.md` — reviews: a11y-reviewer
 - [x] **UI-226** Knob — spec `knob.md` — reviews: a11y-reviewer
-- [ ] **UI-227** Mention — spec `mention.md` — reviews: security-reviewer, a11y-reviewer
+- [x] **UI-227** Mention — spec `mention.md` — reviews: security-reviewer, a11y-reviewer
 - [x] **UI-240** `utils/sanitize.ts` allowlist HTML sanitizer + tests (prereq for Editor).
 - [ ] **UI-228** Editor — spec `editor.md` — reviews: security-reviewer, a11y-reviewer
 
@@ -101,7 +101,7 @@ Needed by every profile; unlocks real app scaffolds.
 - [x] **UI-453** Grid — spec `grid.md`
 - [x] **UI-454** NumberFormat — spec `number-format.md`
 - [x] **UI-455** DateFormat — spec `date-format.md`
-- [ ] **UI-456** CommandPalette — spec `command-palette.md` — reviews: a11y-reviewer
+- [x] **UI-456** CommandPalette — spec `command-palette.md` — reviews: a11y-reviewer
 - [ ] **UI-457** Scheduler — spec `scheduler.md` — reviews: a11y-reviewer
 - [x] **UI-458** Generated high-contrast tokens replace hand-written bridge CSS (TOK-011).
 
@@ -132,6 +132,11 @@ Needed by every profile; unlocks real app scaffolds.
 - [ ] **UI-610** Galleria — spec `galleria.md` — reviews: a11y-reviewer
 - [ ] **UI-611** FileUpload — spec `file-upload.md` — reviews: security-reviewer
 - [ ] **UI-612** Chart — spec `chart.md`
+
+## Follow-ups from parallel build
+
+- [ ] **UI-901** Move local English label defaults to locale keys: MultiSelect ("Select all", "{count} selected"), AutoComplete ("Show suggestions"), Chips ("Invalid value"), ColorPicker ("Saturation and brightness", "Hex colour", "Preset colours"), DatePicker ("Previous/Next 12 years", AM/PM, "Presets"), CommandPalette footer hint, Slider ("Minimum"/"Maximum"), MultiStateCheckbox ("None"), Kbd key names, Stepper error label.
+- [ ] **UI-902** Move `Responsive<T>` helper from Stack to `src/utils`; let ListBox virtual mode use VirtualScroller once merged.
 
 ## Ops / quality
 

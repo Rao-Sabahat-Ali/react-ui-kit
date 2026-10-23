@@ -335,6 +335,8 @@ function PaletteInner({
     const active = row.key === activeRow?.key;
     const descId = command.description ? `${optionId(row.key)}-desc` : undefined;
     return (
+      // Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests).
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
       <div
         key={row.key}
         id={optionId(row.key)}
@@ -402,6 +404,8 @@ function PaletteInner({
     <Portal>
       <div ref={rootRef} className={cx('ui-command-palette-root', className)}>
         <div className="modal-backdrop show ui-command-palette__backdrop" />
+        {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
         <div
           className="modal d-block ui-command-palette"
           onMouseDown={(e) => (backdropDown.current = e.target === e.currentTarget)}

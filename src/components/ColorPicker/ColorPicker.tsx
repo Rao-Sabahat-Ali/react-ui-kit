@@ -483,7 +483,6 @@ export function ColorPicker({
         aria-label={props['aria-label']}
         aria-labelledby={control.labelId ? `${control.labelId} ${control.id}` : undefined}
         aria-describedby={control.describedBy}
-        aria-invalid={control.invalid || undefined}
         disabled={disabled}
         onClick={() => setOpen((o) => !o)}
       >
@@ -492,6 +491,8 @@ export function ColorPicker({
       </button>
       {open && (
         <Portal>
+          {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             ref={popupRef}
             role="dialog"

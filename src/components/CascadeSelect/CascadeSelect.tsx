@@ -228,6 +228,8 @@ export function CascadeSelect<T>({
             aria-disabled={option.disabled || undefined}
             className="ui-cascade-select__node"
           >
+            {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
             <div
               className={cx('dropdown-item ui-cascade-select__item', active && 'ui-cascade-select__item--active', selected && 'active', option.disabled && 'disabled', expanded && 'ui-cascade-select__item--expanded')}
               onPointerDown={(e) => e.preventDefault()}

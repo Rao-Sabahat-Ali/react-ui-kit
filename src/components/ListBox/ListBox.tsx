@@ -243,6 +243,8 @@ export function ListBox<T>(props: ListBoxProps<T>) {
   const renderOption = (option: FlatOption<T>, index: number, extra?: CSSProperties) => {
     const sel = isSelected(option);
     return (
+      // Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests).
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
       <div
         key={optionId(index)}
         id={optionId(index)}

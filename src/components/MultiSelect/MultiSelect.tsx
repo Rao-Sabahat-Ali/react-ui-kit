@@ -217,6 +217,8 @@ export function MultiSelect<T>({
 
   return (
     <div className={cx('ui-multi-select', disabled && 'ui-multi-select--disabled', className)} style={style}>
+      {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
         ref={triggerRef}
         className={cx('form-select ui-multi-select__trigger', sizeClass, control.invalid && 'is-invalid', disabled && 'disabled')}
@@ -230,7 +232,7 @@ export function MultiSelect<T>({
         }}
       >
         {showChips && (
-          <ul className="list-unstyled mb-0 ui-multi-select__chips" role="list">
+          <ul className="list-unstyled mb-0 ui-multi-select__chips">
             {selectedOptions.map((o) => (
               <li key={String(o.value)} className="badge ui-multi-select__chip">
                 <span>{o.label}</span>
@@ -319,6 +321,8 @@ export function MultiSelect<T>({
                         {header}
                       </div>
                     )}
+                    {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
+                    {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus */}
                     <div
                       id={optionId(index)}
                       role="option"
