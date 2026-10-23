@@ -34,14 +34,6 @@ export interface ChartLabels {
   category: string;
 }
 
-const DEFAULT_LABELS: ChartLabels = {
-  viewTable: 'View as table',
-  hideTable: 'Hide table',
-  legend: 'Legend',
-  point: '{series}, {label}: {value}',
-  category: 'Category',
-};
-
 export interface ChartProps extends Omit<HTMLAttributes<HTMLElement>, 'title' | 'children'> {
   type: ChartType;
   data: ChartData;
@@ -121,8 +113,8 @@ export function Chart({
   ref,
   ...rest
 }: ChartProps) {
-  const { locale } = useLocale();
-  const L = { ...DEFAULT_LABELS, ...labelsProp };
+  const { locale, t } = useLocale();
+  const L: ChartLabels = { viewTable: t('viewTable'), hideTable: t('hideTable'), legend: t('legend'), point: t('chartPoint'), category: t('category'), ...labelsProp };
   const uid = useId().replace(/:/g, '');
   const containerRef = useRef<HTMLDivElement>(null);
   const width = useContainerWidth(containerRef);

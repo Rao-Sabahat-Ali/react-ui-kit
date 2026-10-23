@@ -21,7 +21,7 @@ import { cx } from '../../utils/cx';
 import { routerLinkHandler } from '../../utils/navigation';
 import { safeUrl } from '../../utils/url';
 import { Icon } from '../Icon/Icon';
-import { isRtl, mergeRefs } from '../Tooltip/shared';
+import { isRtl, mergeRefs } from '../../utils/element';
 import type { FocusRequest, MenuCloseReason, MenuItem, NavigateHandler } from './types';
 
 export const HOVER_OPEN_DELAY = 150;

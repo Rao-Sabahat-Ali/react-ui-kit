@@ -11,7 +11,6 @@ import { Portal } from '../Portal/Portal';
 import { Spinner } from '../Spinner/Spinner';
 
 /** Local English default until a locale key exists (`showSuggestions`). */
-const DEFAULT_SHOW_SUGGESTIONS = 'Show suggestions';
 
 interface AutoCompleteBaseProps<T> {
   suggestions: T[];
@@ -68,7 +67,7 @@ export function AutoComplete<T>(props: AutoCompleteProps<T>) {
     itemTemplate,
     emptyMessage,
     dropdown = false,
-    dropdownLabel = DEFAULT_SHOW_SUGGESTIONS,
+    dropdownLabel: dropdownLabelProp,
     placeholder,
     size = 'md',
     disabled = false,
@@ -78,6 +77,7 @@ export function AutoComplete<T>(props: AutoCompleteProps<T>) {
   } = props;
   const multiple = props.multiple === true;
   const { t, tp } = useLocale();
+  const dropdownLabel = dropdownLabelProp ?? t('showSuggestions');
   const control = useFieldControl({ id: props.id, invalid: props.invalid, required: props.required, 'aria-describedby': props['aria-describedby'] });
   const listboxId = useId();
 

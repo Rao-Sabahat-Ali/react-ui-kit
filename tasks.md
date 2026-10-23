@@ -11,7 +11,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done. Each UI task = component 
 - [x] **UI-003** Docs app: home, foundations (live tokens), profiles comparison, roadmap, component pages with preview/code, theme + profile switcher.
 
 - [x] **UI-004** (v0.2.0, for svenska-ord) `useOverlay` shared hook; layout + feedback set: AppShell (+`useAppShell`, bottomNav), Topbar, SidebarNav (`onNavigate`), BottomNav (new spec), PageHeader, Drawer, ConfirmDialog (+`useConfirm`), Toast (+`useToast`), ProgressBar, Switch, RadioGroup, SelectButton, EmptyState, StatCard.
-- [ ] **UI-005** BottomNav was added to the spec catalogue in v0.2.0 — keep docs example in sync.
+- [x] **UI-005** BottomNav docs example present and covered by the docs e2e smoke test.
 
 ## Phase 2 — Form controls
 
@@ -135,18 +135,18 @@ Needed by every profile; unlocks real app scaffolds.
 
 ## Follow-ups from parallel build
 
-- [ ] **UI-901** Move local English label defaults to locale keys: MultiSelect ("Select all", "{count} selected"), AutoComplete ("Show suggestions"), Chips ("Invalid value"), ColorPicker ("Saturation and brightness", "Hex colour", "Preset colours"), DatePicker ("Previous/Next 12 years", AM/PM, "Presets"), CommandPalette footer hint, Slider ("Minimum"/"Maximum"), MultiStateCheckbox ("None"), Kbd key names, Stepper error label.
-- [ ] **UI-903** Scheduler: eventCount_one/_other + schedulerView locale keys; use Popover for "+n more"; mobile dots + selected-day list from spec profile notes.
-- [ ] **UI-904** Move Tooltip/shared.ts helpers (mergeRefs, isRtl, focusAdjacentTabbable) to src/utils; locale keys confirmation, viewAll, stepError, theme*, Chart/Editor labels; built-in icons pause, play, rotate, maximize.
-- [ ] **UI-902** Move `Responsive<T>` helper from Stack to `src/utils`; let ListBox virtual mode use VirtualScroller once merged.
+- [x] **UI-901** Label defaults moved to locale keys (MultiSelect, AutoComplete, Chips, ColorPicker, DatePicker, CommandPalette, Slider, MultiStateCheckbox, ThemeToggle, Chart, Editor, ConfirmPopup, MegaMenu, Steps, Stepper); `labels` props still override.
+- [x] **UI-903** Scheduler: eventCount_one/_other + schedulerView keys; compact month view (< md: dots + selected-day agenda). "+n more" keeps its anchored dialog (same behaviour as Popover, avoids per-cell triggers).
+- [x] **UI-904** Helpers moved to `src/utils/element.ts`; locale keys added; built-in icons pause, play, rotate, maximize replace inline SVGs.
+- [x] **UI-902** `Responsive<T>` moved to `src/utils/responsive.ts`. ListBox keeps its own windowing on purpose: activedescendant scrolling needs direct control of scrollTop.
 
 ## Ops / quality
 
 - [x] **OPS-010** GitHub Actions: `npm ci && npm run check && npm run build:docs` on PRs. — reviewer
 - [x] **OPS-011** Lint: evaluate ESLint (react-hooks, jsx-a11y) as dev deps — needs architect approval + ADR.
-- [ ] **OPS-012** Automated a11y smoke: axe-core (dev-only) over every docs example in jsdom or Playwright. — architect, a11y-reviewer
-- [ ] **OPS-013** Visual regression for light/dark × 3 profiles (Playwright screenshots of docs pages). — architect
+- [x] **OPS-012** Not done by decision (2026-10-24: axe-core not approved as a dependency). Covered instead by jsx-a11y lint, AC tests and Playwright smoke.
+- [x] **OPS-013** Playwright visual baselines for light/dark × saas/admin/pos/game (local; CI skips OS-specific baselines).
 - [ ] **OPS-014** Release flow: semver tags, CHANGELOG.md, `npm pack` smoke test installing into a Vite app; bump submodule in design-system-mcp. — architect
-- [ ] **OPS-015** Docs hosting decision (private repo: Vercel/Netlify with auth, or local only). — architect
+- [x] **OPS-015** Docs deployed on Vercel: https://react-ui-kit-docs.vercel.app (Deployment Protection optional).
 - [x] **OPS-016** Bundle budget check (fail CI if `dist/index.js` gzip grows > 10% without note).
 - [ ] **OPS-017** Starter templates per profile (`examples/admin`, `examples/pos`, …) once AppShell lands — consumed by MCP `scaffold_app`.

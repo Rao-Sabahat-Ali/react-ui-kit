@@ -9,3 +9,5 @@ export * from './date';
 export { parseNumber, separators, roundToStep, clamp } from './number';
 export { compileMask, applyMask, unmask, type MaskSlot } from './mask';
 export { sanitizeHtml, textToHtml, isSafeHref } from './sanitize';
+export { assignRef, mergeRefs, elementRef, isRtl, focusAdjacentTabbable } from './element';
+export { BREAKPOINTS, responsiveEntries, bpClass, isResponsiveObject, type Breakpoint, type Responsive } from './responsive';

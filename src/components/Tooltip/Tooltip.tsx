@@ -4,7 +4,7 @@ import { cx } from '../../utils/cx';
 import { canUseDOM } from '../../utils/dom';
 import type { Placement } from '../../utils/position';
 import { Portal } from '../Portal/Portal';
-import { elementRef, mergeRefs } from './shared';
+import { elementRef, mergeRefs } from '../../utils/element';
 
 export interface TooltipProps {
   /** Supplementary text. No interactive content (use Popover instead). */

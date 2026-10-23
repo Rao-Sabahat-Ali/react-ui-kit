@@ -42,14 +42,6 @@ const ZOOM_STEP = 0.25;
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 3;
 
-function RotateIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false" className="ui-icon">
-      <path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" />
-    </svg>
-  );
-}
-
 export function Image({
   src,
   alt,
@@ -149,7 +141,7 @@ export function Image({
               <Icon name="plus" />
             </button>
             <button type="button" className="btn btn-sm btn-outline-secondary" aria-label={t('rotate')} onClick={() => setRotation((r) => (r + 90) % 360)}>
-              <RotateIcon />
+              <Icon name="rotate" />
             </button>
           </div>
           <div className="ui-image__stage">

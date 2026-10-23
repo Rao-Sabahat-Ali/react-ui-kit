@@ -7,7 +7,7 @@ import { cx } from '../../utils/cx';
 import { getFocusable } from '../../utils/dom';
 import type { Placement } from '../../utils/position';
 import { Portal } from '../Portal/Portal';
-import { elementRef, focusAdjacentTabbable, mergeRefs } from '../Tooltip/shared';
+import { elementRef, focusAdjacentTabbable, mergeRefs } from '../../utils/element';
 
 export interface PopoverProps {
   open?: boolean;

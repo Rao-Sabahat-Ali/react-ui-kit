@@ -8,7 +8,6 @@ import { Icon, type IconName } from '../Icon/Icon';
 import { Portal } from '../Portal/Portal';
 
 /** Local English default until a locale key exists (`commandPaletteHint`). */
-const DEFAULT_HINT = '↑↓ to navigate · Enter to run · Esc to close';
 
 export interface Command {
   id: string;
@@ -146,7 +145,7 @@ function PaletteInner({
   className,
 }: CommandPaletteProps & { close: () => void }) {
   const { t, tp } = useLocale();
-  const labels: CommandPaletteLabels = { title: t('commandPalette'), recent: t('recent'), loading: t('loading'), hint: DEFAULT_HINT, ...labelsProp };
+  const labels: CommandPaletteLabels = { title: t('commandPalette'), recent: t('recent'), loading: t('loading'), hint: t('commandPaletteHint'), ...labelsProp };
   const apple = useMemo(isApplePlatform, []);
   const baseId = useId();
   const titleId = `${baseId}-title`;

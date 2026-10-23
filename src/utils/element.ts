@@ -1,9 +1,9 @@
 import type { ReactElement, Ref, RefObject } from 'react';
-import { getFocusable } from '../../utils/dom';
+import { getFocusable } from './dom';
 
 /*
  * Small helpers shared by the overlay/menu components (Tooltip, Popover, Menu family, SpeedDial, Dock).
- * Candidates for src/utils once the shared-code owner accepts them.
+ * Moved from Tooltip/shared.ts (UI-904).
  */
 
 export function assignRef<T>(ref: Ref<T> | undefined, value: T | null): void {

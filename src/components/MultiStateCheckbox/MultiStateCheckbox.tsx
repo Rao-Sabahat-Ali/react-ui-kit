@@ -1,5 +1,6 @@
 import type { ButtonHTMLAttributes, MouseEvent, Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
+import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
@@ -28,7 +29,6 @@ export interface MultiStateCheckboxProps<T> extends Omit<ButtonHTMLAttributes<HT
 }
 
 /** Local default; no matching key exists in locale/en.ts. */
-const DEFAULT_EMPTY_LABEL = 'None';
 
 export function MultiStateCheckbox<T>({
   options,
@@ -37,7 +37,7 @@ export function MultiStateCheckbox<T>({
   onChange,
   empty = true,
   label,
-  emptyLabel = DEFAULT_EMPTY_LABEL,
+  emptyLabel: emptyLabelProp,
   size = 'md',
   invalid: invalidProp,
   className,
@@ -46,6 +46,8 @@ export function MultiStateCheckbox<T>({
   ref,
   ...rest
 }: MultiStateCheckboxProps<T>) {
+  const { t } = useLocale();
+  const emptyLabel = emptyLabelProp ?? t('none');
   const control = useFieldControl({ id: idProp, invalid: invalidProp, 'aria-describedby': rest['aria-describedby'] });
   const [value, setValue] = useControllableState<T | null>(valueProp, defaultValue);
 

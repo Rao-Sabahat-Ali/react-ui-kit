@@ -10,7 +10,7 @@ import { useFieldControl } from '../Field/Field';
 import { Portal } from '../Portal/Portal';
 
 /** Local English defaults until locale keys exist (`saturationBrightnessLabel`, `hexColor`, `swatches`). */
-const DEFAULT_LABELS = { area: 'Saturation and brightness', hex: 'Hex colour', swatches: 'Preset colours' };
+export type ColorPickerLabels = Record<'area' | 'hex' | 'swatches', string>;
 
 export type ColorFormat = 'hex' | 'rgb' | 'hsl';
 export type ColorSwatch = string | { value: string; name: string };
@@ -24,7 +24,7 @@ export interface ColorPickerProps {
   swatches?: ColorSwatch[];
   inline?: boolean;
   native?: boolean;
-  labels?: Partial<typeof DEFAULT_LABELS>;
+  labels?: Partial<ColorPickerLabels>;
   size?: Size;
   disabled?: boolean;
   invalid?: boolean;
@@ -154,7 +154,7 @@ export function ColorPicker({
   ...props
 }: ColorPickerProps) {
   const { t } = useLocale();
-  const labels = { ...DEFAULT_LABELS, ...labelsProp };
+  const labels = { area: t('saturationBrightnessArea'), hex: t('hexColour'), swatches: t('presetColours'), ...labelsProp };
   const control = useFieldControl({ id: props.id, invalid: props.invalid, 'aria-describedby': props['aria-describedby'] });
   const [value, setValue] = useControllableState<string>(valueProp, defaultValue, onChange);
   const rgba = parseColor(value) ?? { r: 0, g: 0, b: 0, a: 1 };

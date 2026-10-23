@@ -27,7 +27,7 @@ import { Icon } from '../Icon/Icon';
 import { Portal } from '../Portal/Portal';
 
 /** Local English defaults until locale keys exist (`previousYears`, `nextYears`, `am`, `pm`, `clearDate`, `presets`). */
-const DEFAULT_LABELS = { previousYears: 'Previous 12 years', nextYears: 'Next 12 years', am: 'AM', pm: 'PM', presets: 'Presets', period: 'AM/PM' };
+export type DatePickerLabels = Record<'previousYears' | 'nextYears' | 'am' | 'pm' | 'presets' | 'period', string>;
 
 export type DateRange = [Date, Date | null];
 export type DatePickerValue = Date | DateRange | Date[] | null;
@@ -52,7 +52,7 @@ interface DatePickerBaseProps {
   format?: Intl.DateTimeFormatOptions;
   showButtonBar?: boolean;
   placeholder?: string;
-  labels?: Partial<typeof DEFAULT_LABELS>;
+  labels?: Partial<DatePickerLabels>;
   size?: Size;
   disabled?: boolean;
   invalid?: boolean;
@@ -129,7 +129,7 @@ export function DatePicker(props: DatePickerProps) {
   const ctx = useLocale();
   const { t } = ctx;
   const locale = props.locale ?? ctx.locale;
-  const labels = { ...DEFAULT_LABELS, ...labelsProp };
+  const labels = { previousYears: ctx.t('previousYears'), nextYears: ctx.t('nextYears'), am: ctx.t('am'), pm: ctx.t('pm'), presets: ctx.t('presets'), period: ctx.t('amPm'), ...labelsProp };
   const firstDay = props.firstDayOfWeek ?? localeFirstDay(locale);
   const hourCycle = useHourCycle(locale, props.hourFormat);
   const control = useFieldControl({ id: props.id, invalid: props.invalid, required: props.required, 'aria-describedby': props['aria-describedby'] });

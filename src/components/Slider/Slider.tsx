@@ -1,5 +1,6 @@
 import { useRef, useState, type HTMLAttributes, type KeyboardEvent, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
+import { useLocale } from '../../locale/LocaleProvider';
 import { clamp, roundToStep } from '../../utils/number';
 import { cx } from '../../utils/cx';
 import { useFieldControl } from '../Field/Field';
@@ -33,7 +34,6 @@ export interface SliderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'defau
 }
 
 /** Local defaults for range thumbs (no matching keys in locale/en.ts). */
-const DEFAULT_RANGE_LABELS: [string, string] = ['Minimum', 'Maximum'];
 
 export function Slider({
   value: valueProp,
@@ -54,6 +54,7 @@ export function Slider({
   ref,
   ...rest
 }: SliderProps) {
+  const { t } = useLocale();
   const control = useFieldControl({ 'aria-describedby': rest['aria-describedby'] });
   const fallback: SliderValue = range ? [min, max] : min;
   const [stored, setStored] = useControllableState<SliderValue>(valueProp, defaultValue ?? fallback);
@@ -203,7 +204,7 @@ export function Slider({
   const labelFor = (index: number): { 'aria-label'?: string; 'aria-labelledby'?: string } => {
     const given = Array.isArray(thumbLabels) ? thumbLabels[index] : index === 0 ? thumbLabels : undefined;
     if (given) return { 'aria-label': given };
-    if (range) return { 'aria-label': DEFAULT_RANGE_LABELS[index] };
+    if (range) return { 'aria-label': index === 0 ? t('rangeMinimum') : t('rangeMaximum') };
     if (rest['aria-label']) return { 'aria-label': rest['aria-label'] };
     return control.labelId ? { 'aria-labelledby': control.labelId } : {};
   };

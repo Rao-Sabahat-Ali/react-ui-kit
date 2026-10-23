@@ -1,6 +1,6 @@
 import { Children, type ElementType, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { cx } from '../../utils/cx';
-import { bpClass, responsiveEntries, type Responsive } from '../Stack/responsive';
+import { bpClass, responsiveEntries, type Responsive } from '../../utils/responsive';
 
 export type GridColumns = 1 | 2 | 3 | 4 | 5 | 6 | 'auto';
 export type GridGap = 0 | 1 | 2 | 3 | 4 | 5;

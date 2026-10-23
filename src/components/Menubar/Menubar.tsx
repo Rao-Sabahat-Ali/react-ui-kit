@@ -8,7 +8,7 @@ import { routerLinkHandler } from '../../utils/navigation';
 import { Icon } from '../Icon/Icon';
 import { HOVER_CLOSE_DELAY, HOVER_OPEN_DELAY, linkProps, MenuList } from '../Menu/MenuList';
 import type { FocusRequest, MenuCloseReason, MenuItem, NavigateHandler } from '../Menu/types';
-import { focusAdjacentTabbable, isRtl } from '../Tooltip/shared';
+import { focusAdjacentTabbable, isRtl } from '../../utils/element';
 
 const BREAKPOINTS = { sm: 576, md: 768, lg: 992, xl: 1200 } as const;
 

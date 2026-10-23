@@ -4,7 +4,7 @@ import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import type { Placement } from '../../utils/position';
 import { Button } from '../Button/Button';
-import { elementRef, mergeRefs } from '../Tooltip/shared';
+import { elementRef, mergeRefs } from '../../utils/element';
 import { MenuList } from './MenuList';
 import { MenuPopup } from './MenuPopup';
 import type { FocusRequest, MenuItem, NavigateHandler } from './types';

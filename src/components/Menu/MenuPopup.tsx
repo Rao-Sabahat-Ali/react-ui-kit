@@ -4,7 +4,7 @@ import { useOverlay } from '../../hooks/useOverlay';
 import { cx } from '../../utils/cx';
 import { computePosition, type Placement } from '../../utils/position';
 import { Portal } from '../Portal/Portal';
-import { focusAdjacentTabbable, isRtl, mergeRefs } from '../Tooltip/shared';
+import { focusAdjacentTabbable, isRtl, mergeRefs } from '../../utils/element';
 import { MenuList } from './MenuList';
 import type { FocusRequest, MenuCloseReason, MenuItem, NavigateHandler } from './types';
 

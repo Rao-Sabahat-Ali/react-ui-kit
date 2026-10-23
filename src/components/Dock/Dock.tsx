@@ -5,7 +5,7 @@ import { routerLinkHandler } from '../../utils/navigation';
 import { safeUrl } from '../../utils/url';
 import { Icon, type IconName } from '../Icon/Icon';
 import type { NavigateHandler } from '../Menu/types';
-import { isRtl, mergeRefs } from '../Tooltip/shared';
+import { isRtl, mergeRefs } from '../../utils/element';
 import { Tooltip } from '../Tooltip/Tooltip';
 
 export interface DockItem {

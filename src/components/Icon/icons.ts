@@ -55,6 +55,10 @@ export const builtInIcons = {
   copy: { d: 'M8 8h12v12H8zM16 8V4H4v12h4' },
   star: { d: 'M12 3l2.8 5.8 6.2.9-4.5 4.4 1.1 6.2L12 17.4l-5.6 2.9 1.1-6.2L3 9.7l6.2-.9L12 3z' },
   'star-filled': { d: 'M12 3l2.8 5.8 6.2.9-4.5 4.4 1.1 6.2L12 17.4l-5.6 2.9 1.1-6.2L3 9.7l6.2-.9L12 3z', fill: true },
+  pause: { d: 'M7 5h3v14H7zM14 5h3v14h-3z', fill: true },
+  play: { d: 'M8 5v14l11-7z', fill: true },
+  rotate: { d: 'M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5' },
+  maximize: { d: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5' },
   refresh: { d: 'M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4' },
 } satisfies Record<string, IconDefinition>;
 

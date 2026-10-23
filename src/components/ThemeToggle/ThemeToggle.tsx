@@ -8,7 +8,6 @@ import type { MenuItem } from '../Menu/types';
 import type { Size } from '../../types';
 
 /** TODO: move to locale keys `theme`, `themeLight`, `themeDark`, `themeSystem` (not yet in en.ts). */
-const LABELS = { theme: 'Theme', light: 'Light', dark: 'Dark', system: 'System' } as const;
 
 export interface ThemeToggleProps {
   /** `toggle`: light/dark button (`aria-pressed`). `menu`: menu button with light/dark/system radio items. */
@@ -22,6 +21,7 @@ export interface ThemeToggleProps {
 export function ThemeToggle({ mode = 'toggle', size = 'md', appearance = 'text', className }: ThemeToggleProps) {
   const { theme, resolvedTheme, setTheme, toggleTheme } = useTheme();
   const { t } = useLocale();
+  const LABELS = useMemo(() => ({ theme: t('theme'), light: t('themeLight'), dark: t('themeDark'), system: t('themeSystem') }), [t]);
   const dark = resolvedTheme === 'dark';
 
   const items = useMemo<MenuItem[]>(
@@ -34,7 +34,7 @@ export function ThemeToggle({ mode = 'toggle', size = 'md', appearance = 'text',
         checked: theme === value,
         command: () => setTheme(value),
       })),
-    [theme, setTheme],
+    [theme, setTheme, LABELS],
   );
 
   if (mode === 'menu') {

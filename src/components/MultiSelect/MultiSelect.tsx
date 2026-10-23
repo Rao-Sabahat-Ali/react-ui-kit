@@ -12,7 +12,7 @@ import { Portal } from '../Portal/Portal';
 import type { Option, OptionGroup } from '../Select/Select';
 
 /** Local English defaults until locale keys exist (`multiSelectAll`, `selectedCount`). */
-const DEFAULT_LABELS = { selectAll: 'Select all', selectedCount: '{count} selected' };
+export type MultiSelectLabels = Record<'selectAll' | 'selectedCount', string>;
 
 export interface MultiSelectProps<T> {
   options: (Option<T> | OptionGroup<T>)[];
@@ -27,7 +27,7 @@ export interface MultiSelectProps<T> {
   placeholder?: string;
   optionTemplate?: (option: Option<T>) => ReactNode;
   emptyMessage?: ReactNode;
-  labels?: Partial<typeof DEFAULT_LABELS>;
+  labels?: Partial<MultiSelectLabels>;
   size?: Size;
   disabled?: boolean;
   invalid?: boolean;
@@ -62,7 +62,7 @@ export function MultiSelect<T>({
   ...props
 }: MultiSelectProps<T>) {
   const { t } = useLocale();
-  const labels = { ...DEFAULT_LABELS, ...labelsProp };
+  const labels = { selectAll: t('selectAllOptions'), selectedCount: t('selectedCount'), ...labelsProp };
   const control = useFieldControl({ id: props.id, invalid: props.invalid, required: props.required, 'aria-describedby': props['aria-describedby'] });
   const [value, setValue] = useControllableState<T[]>(valueProp, defaultValue, onChange);
   const all = useMemo(() => flattenOptions(options), [options]);

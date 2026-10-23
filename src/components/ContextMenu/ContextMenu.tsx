@@ -3,7 +3,7 @@ import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { MenuPopup } from '../Menu/MenuPopup';
 import type { FocusRequest, MenuItem, NavigateHandler } from '../Menu/types';
-import { isRtl } from '../Tooltip/shared';
+import { isRtl } from '../../utils/element';
 
 export const LONG_PRESS_MS = 500;
 const LONG_PRESS_TOLERANCE = 10;

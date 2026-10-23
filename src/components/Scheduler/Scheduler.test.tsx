@@ -306,3 +306,22 @@ describe('Scheduler', () => {
     }
   });
 });
+
+describe('Scheduler compact (< md profile note)', () => {
+  it('shows dots in month cells and an agenda for the selected day', async () => {
+    const original = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({ matches: query.includes('max-width'), media: query, addEventListener: vi.fn(), removeEventListener: vi.fn() })) as unknown as typeof window.matchMedia;
+    try {
+      const events: SchedulerEvent[] = [{ id: 'a', title: 'Dentist', start: D(2026, 10, 15, 9), end: D(2026, 10, 15, 10) }];
+      const { container } = setup({ events });
+      expect(container.querySelector('.ui-scheduler--compact')).toBeInTheDocument();
+      expect(container.querySelectorAll('.ui-scheduler__dot').length).toBeGreaterThan(0);
+      const cell = container.querySelector('[data-date="2026-10-15"]') as HTMLElement;
+      await userEvent.click(cell);
+      const agenda = screen.getByRole('region');
+      expect(within(agenda).getByText(/Dentist/)).toBeInTheDocument();
+    } finally {
+      window.matchMedia = original;
+    }
+  });
+});

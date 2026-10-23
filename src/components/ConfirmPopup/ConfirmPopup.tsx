@@ -10,7 +10,6 @@ import { Icon, type IconName } from '../Icon/Icon';
 import { Portal } from '../Portal/Portal';
 
 /** Default accessible name. TODO: move to locale `confirmation` key (not yet in en.ts). */
-const CONFIRMATION_LABEL = 'Confirmation';
 
 export type ConfirmPopupSeverity = 'primary' | 'info' | 'warning' | 'danger';
 
@@ -73,7 +72,7 @@ export function ConfirmPopup({ target, message, acceptLabel, rejectLabel, severi
           ref={contentRef}
           role="alertdialog"
           aria-modal="true"
-          aria-label={CONFIRMATION_LABEL}
+          aria-label={t('confirmation')}
           aria-describedby={messageId}
           data-placement={position.placement}
           className={cx('popover ui-confirm-popup', `bs-popover-${side}`, `ui-confirm-popup--${side}`, `ui-confirm-popup--${severity}`)}

@@ -55,14 +55,6 @@ function useResponsive(numVisible: number, numScroll: number, options: CarouselR
   return { visible: Math.max(1, match?.numVisible ?? numVisible), scroll: Math.max(1, match?.numScroll ?? numScroll) };
 }
 
-function PlayPauseIcon({ playing }: { playing: boolean }) {
-  return (
-    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" className="ui-icon">
-      <path d={playing ? 'M7 5h3v14H7zM14 5h3v14h-3z' : 'M8 5v14l11-7z'} />
-    </svg>
-  );
-}
-
 export function Carousel<T>({
   value,
   itemTemplate,
@@ -177,7 +169,7 @@ export function Carousel<T>({
       <div className="ui-carousel__controls">
         {canAutoplay && (
           <button type="button" className="btn btn-sm ui-carousel__play" aria-label={playing ? t('pauseAutoplay') : t('startAutoplay')} onClick={() => setPlaying((p) => !p)}>
-            <PlayPauseIcon playing={playing} />
+            <Icon name={playing ? 'pause' : 'play'} />
           </button>
         )}
       </div>

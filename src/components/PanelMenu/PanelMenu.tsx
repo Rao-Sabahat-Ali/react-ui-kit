@@ -6,7 +6,7 @@ import { routerLinkHandler } from '../../utils/navigation';
 import { Icon } from '../Icon/Icon';
 import { linkProps } from '../Menu/MenuList';
 import type { MenuItem, NavigateHandler } from '../Menu/types';
-import { mergeRefs } from '../Tooltip/shared';
+import { mergeRefs } from '../../utils/element';
 
 export interface PanelMenuProps {
   items: MenuItem[];

@@ -111,7 +111,7 @@ export function Stepper({ value, defaultValue, onChange, linear = false, orienta
                   {isDone && <span className="visually-hidden"> ({t('completed')})</span>}
                   {optional && <span className="ui-stepper__optional">{t('optional')}</span>}
                   {description && <span className="ui-stepper__description">{description}</span>}
-                  {hasError && <span className="ui-stepper__error">{error === true ? t('severityDanger').replace(/:$/, '') : error}</span>}
+                  {hasError && <span className="ui-stepper__error">{error === true ? t('stepError') : error}</span>}
                 </span>
               </>
             );

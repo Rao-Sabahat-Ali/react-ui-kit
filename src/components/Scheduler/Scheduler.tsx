@@ -2,6 +2,7 @@ import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type Keyb
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useFloating } from '../../hooks/useFloating';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { interpolate, useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { addDays, addMonths, addYears, daysInMonth, isSameDay, isSameMonth, startOfDay, startOfWeek, toIsoDate } from '../../utils/date';
@@ -89,7 +90,7 @@ export function Scheduler({
   views = DEFAULT_VIEWS,
   className,
 }: SchedulerProps) {
-  const { t, locale, dir } = useLocale();
+  const { t, tp, locale, dir } = useLocale();
   const baseId = useId();
   const titleId = `${baseId}-title`;
   const [view, setView] = useControllableState<SchedulerView>(viewProp, defaultView, onViewChange);
@@ -99,6 +100,8 @@ export function Scheduler({
   const fdw = firstDayProp ?? defaultFirstDay(locale);
 
   const [focus, setFocus] = useState<Date>(date);
+  // Spec profile note: below md, month view shows dots and an agenda for the selected day.
+  const compact = useMediaQuery('(max-width: 767.98px)');
   const [focusMinutes, setFocusMinutes] = useState(() => Math.max(dayStartHour, Math.min(scrollToHour, dayEndHour - 1)) * 60);
   const [more, setMore] = useState<{ day: Date } | null>(null);
   const [announcement, setAnnouncement] = useState('');
@@ -366,7 +369,7 @@ export function Scheduler({
     );
   };
 
-  const countLabel = (n: number) => (n === 0 ? L.noEvents : n === 1 ? '1 event' : `${n} events`);
+  const countLabel = (n: number) => (n === 0 ? L.noEvents : tp('eventCount', n));
   const dayName = (d: Date) => fmt.full.format(d);
 
   // ---- Month ----
@@ -411,7 +414,14 @@ export function Scheduler({
                   <span className="ui-scheduler__day-number" aria-hidden="true">
                     {day.getDate()}
                   </span>
-                  <div className="ui-scheduler__day-events">
+                  {compact && list.length > 0 && (
+                    <span className="ui-scheduler__dots" aria-hidden="true">
+                      {list.slice(0, 3).map((ne, i) => (
+                        <span key={i} className={cx('ui-scheduler__dot', `ui-scheduler__dot--${ne.event.variant ?? 'primary'}`)} />
+                      ))}
+                    </span>
+                  )}
+                  <div className="ui-scheduler__day-events" hidden={compact}>
                     {shown.map((ne) => renderEvent(ne, isActive))}
                     {hidden > 0 && (
                       <button
@@ -533,7 +543,7 @@ export function Scheduler({
   const moreEvents = more ? (eventsByDay.get(toIsoDate(more.day)) ?? []) : [];
 
   return (
-    <div className={cx('ui-scheduler', `ui-scheduler--${view}`, className)}>
+    <div className={cx('ui-scheduler', compact && 'ui-scheduler--compact', `ui-scheduler--${view}`, className)}>
       <div className="ui-scheduler__toolbar">
         <div className="ui-scheduler__nav btn-group">
           <Button type="button" variant="secondary" appearance="outline" size="sm" onClick={goToday}>
@@ -549,7 +559,7 @@ export function Scheduler({
           <SelectButton<SchedulerView>
             size="sm"
             variant="secondary"
-            aria-label={`${L.month} / ${L.week}`}
+            aria-label={t('schedulerView')}
             value={view}
             options={views.map((v) => ({ label: v === 'month' ? L.month : L.week, value: v }))}
             onChange={(v) => v && setView(v)}
@@ -566,6 +576,16 @@ export function Scheduler({
         {view === 'month' ? renderMonth() : renderWeek()}
       </div>
       {/* eslint-enable jsx-a11y/interactive-supports-focus */}
+      {compact && view === 'month' && (
+        <section className="ui-scheduler__agenda" aria-label={dayName(focus)}>
+          <h3 className="ui-scheduler__agenda-title">{dayName(focus)}</h3>
+          {(eventsByDay.get(toIsoDate(focus)) ?? []).length === 0 ? (
+            <p className="ui-scheduler__agenda-empty">{L.noEvents}</p>
+          ) : (
+            <div className="ui-scheduler__agenda-list">{(eventsByDay.get(toIsoDate(focus)) ?? []).map((ne) => renderEvent(ne, true))}</div>
+          )}
+        </section>
+      )}
       {more && (
         <Portal>
           {/* Escape handling for the popover; focus is managed programmatically. */}

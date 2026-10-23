@@ -9,7 +9,6 @@ import type { MenuItem, NavigateHandler } from '../Menu/types';
 import { NavLink } from '../Menubar/Menubar';
 
 /** TODO: move to locale key `viewAll` (not yet in en.ts). */
-const VIEW_ALL_LABEL = 'View all';
 
 export interface MegaMenuColumn {
   header?: string;
@@ -41,8 +40,9 @@ export interface MegaMenuProps {
 }
 
 /** Multi-column disclosure navigation (APG Disclosure Navigation, no menu roles). */
-export function MegaMenu({ items, orientation = 'horizontal', ariaLabel, activeHref, onNavigate, openOnHover = false, viewAllLabel = VIEW_ALL_LABEL, id, className, style, ref }: MegaMenuProps) {
+export function MegaMenu({ items, orientation = 'horizontal', ariaLabel, activeHref, onNavigate, openOnHover = false, viewAllLabel: viewAllLabelProp, id, className, style, ref }: MegaMenuProps) {
   const { t } = useLocale();
+  const viewAllLabel = viewAllLabelProp ?? t('viewAll');
   const baseId = useId();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);

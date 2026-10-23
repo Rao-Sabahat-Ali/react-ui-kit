@@ -7,7 +7,6 @@ import { useFieldControl } from '../Field/Field';
 import { Icon } from '../Icon/Icon';
 
 /** Local English default until a locale key exists (`invalidValue`). */
-const DEFAULT_INVALID = 'Invalid value';
 
 export interface ChipsProps {
   value?: string[];
@@ -87,7 +86,7 @@ export function Chips({
       const result = validate?.(v) ?? true;
       if (result !== true) {
         rejected = true;
-        rejection ??= typeof result === 'string' ? result : DEFAULT_INVALID;
+        rejection ??= typeof result === 'string' ? result : t('invalidValue');
         continue;
       }
       next = [...next, v];

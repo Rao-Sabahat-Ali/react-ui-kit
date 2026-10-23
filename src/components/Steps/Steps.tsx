@@ -4,7 +4,6 @@ import { cx } from '../../utils/cx';
 import { Icon } from '../Icon/Icon';
 
 /** TODO: move to locale key `stepError` (not yet in en.ts). */
-const ERROR_LABEL = 'Error';
 
 export type StepStatus = 'complete' | 'current' | 'upcoming' | 'error';
 
@@ -37,7 +36,7 @@ export function Steps({ items, activeIndex = 0, onSelect, readOnly = true, orien
       {items.map((item, index) => {
         const status: StepStatus = item.status ?? (index < activeIndex ? 'complete' : index === activeIndex ? 'current' : 'upcoming');
         const current = index === activeIndex;
-        const statusText = status === 'complete' ? t('completed') : status === 'error' ? ERROR_LABEL : undefined;
+        const statusText = status === 'complete' ? t('completed') : status === 'error' ? t('stepError') : undefined;
         const marker = (
           <span className="ui-steps__marker" aria-hidden="true">
             {status === 'complete' ? <Icon name="check" /> : status === 'error' ? <Icon name="alert-triangle" /> : index + 1}

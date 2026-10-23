@@ -4,7 +4,7 @@ import { useControllableState } from '../../hooks/useControllableState';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { cx } from '../../utils/cx';
 import { Icon, type IconName } from '../Icon/Icon';
-import { focusAdjacentTabbable, mergeRefs } from '../Tooltip/shared';
+import { focusAdjacentTabbable, mergeRefs } from '../../utils/element';
 import { Tooltip } from '../Tooltip/Tooltip';
 
 export interface SpeedDialItem {

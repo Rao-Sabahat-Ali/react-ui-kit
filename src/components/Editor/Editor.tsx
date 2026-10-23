@@ -61,13 +61,6 @@ export interface EditorLabels {
   characterCount: string;
 }
 
-const DEFAULT_LABELS: EditorLabels = {
-  codeBlock: 'Code block',
-  horizontalRule: 'Horizontal rule',
-  image: 'Insert image',
-  characterCount: '{count} of {max} characters',
-};
-
 export interface EditorProps {
   value?: string;
   defaultValue?: string;
@@ -163,7 +156,7 @@ export function Editor({
   ref,
 }: EditorProps) {
   const { t } = useLocale();
-  const L = { ...DEFAULT_LABELS, ...labelsProp };
+  const L: EditorLabels = { codeBlock: t('editorCodeBlock'), horizontalRule: t('editorHorizontalRule'), image: t('editorImage'), characterCount: t('characterCount'), ...labelsProp };
   const field = useFieldControl({ id: idProp, invalid: invalidProp, required: requiredProp, 'aria-describedby': ariaDescribedBy });
   const counterId = useId();
   const linkInputId = useId();

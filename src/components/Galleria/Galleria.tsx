@@ -36,22 +36,6 @@ export interface GalleriaProps extends Omit<HTMLAttributes<HTMLElement>, 'childr
 
 const DEFAULT_INTERVAL = 4000;
 
-function PlayPauseIcon({ playing }: { playing: boolean }) {
-  return (
-    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" className="ui-icon">
-      <path d={playing ? 'M7 5h3v14H7zM14 5h3v14h-3z' : 'M8 5v14l11-7z'} />
-    </svg>
-  );
-}
-
-function ExpandIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false" className="ui-icon">
-      <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
-    </svg>
-  );
-}
-
 export function Galleria({
   value,
   activeIndex,
@@ -174,12 +158,12 @@ export function Galleria({
           <div className="ui-galleria__actions">
             {canAutoplay && (
               <button type="button" className="ui-galleria__action" aria-label={playing ? t('pauseAutoplay') : t('startAutoplay')} onClick={() => setPlaying((p) => !p)}>
-                <PlayPauseIcon playing={playing} />
+                <Icon name={playing ? 'pause' : 'play'} />
               </button>
             )}
             {fullscreen && item && (
               <button type="button" className="ui-galleria__action" aria-label={t('viewLarger', { alt: item.alt || slideLabel })} aria-haspopup="dialog" onClick={() => setFullscreen(true)}>
-                <ExpandIcon />
+                <Icon name="maximize" />
               </button>
             )}
           </div>
