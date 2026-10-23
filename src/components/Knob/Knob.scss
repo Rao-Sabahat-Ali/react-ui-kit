@@ -1,0 +1,62 @@
+$intents: primary, secondary, success, danger, warning, info;
+
+.ui-knob {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  touch-action: none;
+  user-select: none;
+  cursor: pointer;
+
+  &--readonly,
+  &--disabled {
+    cursor: default;
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-knob__svg {
+  display: block;
+}
+
+.ui-knob__track {
+  stroke: var(--ui-color-border);
+}
+
+.ui-knob__value {
+  stroke: var(--ui-color-primary);
+  transition: stroke-dasharray var(--ui-duration) var(--ui-easing);
+}
+
+@each $intent in $intents {
+  .ui-knob--#{$intent} .ui-knob__value {
+    stroke: var(--ui-color-#{$intent});
+  }
+}
+
+.ui-knob__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--ui-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-color-text);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-knob__value {
+    transition: none;
+  }
+}
