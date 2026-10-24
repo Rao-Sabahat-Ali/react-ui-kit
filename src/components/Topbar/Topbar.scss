@@ -18,7 +18,10 @@
   display: flex;
   align-items: center;
   gap: var(--ui-space-2);
-  font-weight: var(--ui-font-weight-bold);
+  font-family: var(--ui-font-family-heading);
+  font-size: var(--ui-font-size-lg);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
   white-space: nowrap;
 
   a {

@@ -69,9 +69,9 @@
 
   &.active,
   &[aria-current='page'] {
-    color: var(--ui-color-primary);
+    color: var(--ui-color-accent);
     font-weight: var(--ui-font-weight-semibold);
-    box-shadow: inset 3px 0 0 var(--ui-color-primary);
+    box-shadow: inset 3px 0 0 var(--ui-color-accent);
   }
 
   &.disabled {
@@ -81,7 +81,7 @@
 }
 
 [dir='rtl'] .ui-panel-menu__link.active {
-  box-shadow: inset -3px 0 0 var(--ui-color-primary);
+  box-shadow: inset -3px 0 0 var(--ui-color-accent);
 }
 
 @media (pointer: coarse) {

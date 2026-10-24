@@ -131,13 +131,13 @@
 
 .ui-date-picker__day--in-range {
   border-radius: 0;
-  background-color: var(--ui-color-primary-subtle);
-  color: var(--ui-color-primary-emphasis);
+  background-color: var(--ui-color-accent-subtle);
+  color: var(--ui-color-accent-emphasis);
 }
 
 .ui-date-picker__day--preview {
   background-color: var(--ui-color-bg-subtle);
-  outline: 1px dashed var(--ui-color-primary);
+  outline: 1px dashed var(--ui-color-accent);
   outline-offset: -1px;
 }
 
@@ -145,8 +145,8 @@
 .ui-date-picker__day--range-edge,
 .ui-date-picker__day--selected:hover {
   border-radius: var(--ui-radius);
-  background-color: var(--ui-color-primary);
-  color: var(--ui-color-primary-contrast);
+  background-color: var(--ui-color-accent);
+  color: var(--ui-color-accent-contrast);
 }
 
 .ui-date-picker__day--disabled {

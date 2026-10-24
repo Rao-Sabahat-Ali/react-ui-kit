@@ -6,7 +6,7 @@
   background: var(--ui-color-surface);
 
   &:focus-within {
-    border-color: var(--ui-color-primary);
+    border-color: var(--ui-color-accent);
     box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
   }
 }
@@ -43,9 +43,9 @@
 
   &.active,
   &[aria-pressed='true'] {
-    background: var(--ui-color-primary-subtle);
-    border-color: var(--ui-color-primary);
-    color: var(--ui-color-primary-emphasis);
+    background: var(--ui-color-accent-subtle);
+    border-color: var(--ui-color-accent);
+    color: var(--ui-color-accent-emphasis);
   }
 
   &:focus-visible {

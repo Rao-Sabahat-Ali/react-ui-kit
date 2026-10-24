@@ -7,8 +7,8 @@
   --bs-nav-tabs-link-active-border-color: var(--ui-color-border) var(--ui-color-border) var(--ui-color-surface);
   --bs-nav-tabs-border-radius: var(--ui-radius);
   --bs-nav-pills-border-radius: var(--ui-radius);
-  --bs-nav-pills-link-active-color: var(--ui-color-primary-contrast);
-  --bs-nav-pills-link-active-bg: var(--ui-color-primary);
+  --bs-nav-pills-link-active-color: var(--ui-color-accent-emphasis);
+  --bs-nav-pills-link-active-bg: var(--ui-color-accent-subtle);
   --bs-nav-underline-link-active-color: var(--ui-color-text);
   margin-bottom: var(--ui-space-4);
 }
@@ -32,7 +32,7 @@
 }
 
 .nav-underline .ui-tabs__tab.active {
-  border-bottom-color: var(--ui-color-primary);
+  border-bottom-color: var(--ui-color-accent);
 }
 
 .ui-tabs__panel:focus-visible {

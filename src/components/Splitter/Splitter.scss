@@ -32,11 +32,11 @@
 
   &:hover,
   &.ui-splitter__gutter--active {
-    background: var(--ui-color-primary);
+    background: var(--ui-color-accent);
   }
 
   &:focus-visible {
-    background: var(--ui-color-primary);
+    background: var(--ui-color-accent);
     box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
     outline: 2px solid transparent;
   }

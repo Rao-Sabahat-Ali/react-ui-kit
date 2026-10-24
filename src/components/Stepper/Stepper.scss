@@ -97,9 +97,9 @@ button.ui-stepper__header {
   }
 
   .ui-stepper__marker {
-    border-color: var(--ui-color-primary);
-    background: var(--ui-color-primary);
-    color: var(--ui-color-primary-contrast);
+    border-color: var(--ui-color-accent);
+    background: var(--ui-color-accent);
+    color: var(--ui-color-accent-contrast);
   }
 }
 

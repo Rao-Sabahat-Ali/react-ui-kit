@@ -5,7 +5,7 @@
   --bs-card-inner-border-radius: calc(var(--ui-radius-lg) - 1px);
   --bs-card-cap-bg: var(--ui-color-bg-subtle);
   --bs-card-color: var(--ui-color-text);
-  transition: box-shadow var(--ui-duration) var(--ui-easing), transform var(--ui-duration) var(--ui-easing);
+  transition: border-color var(--ui-duration) var(--ui-easing);
 }
 
 .ui-card--outline {
@@ -25,9 +25,10 @@
   --bs-card-bg: var(--ui-color-bg-subtle);
 }
 
+// Identity: resting cards stay flat; hover strengthens the outline instead of lifting.
 .ui-card--interactive:hover,
 .ui-card--interactive:focus-within {
-  box-shadow: var(--ui-shadow-md);
+  --bs-card-border-color: var(--ui-color-border-strong);
 }
 
 .ui-card__heading {
@@ -39,8 +40,9 @@
 }
 
 .ui-card__title {
-  font-size: var(--ui-font-size-lg);
-  font-weight: var(--ui-font-weight-semibold);
+  font-size: var(--ui-font-size-xl);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
   margin-bottom: 0;
   font-family: var(--ui-font-family-heading);
 }

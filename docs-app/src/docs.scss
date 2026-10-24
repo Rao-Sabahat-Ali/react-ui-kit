@@ -71,12 +71,12 @@
 }
 
 .docs-nav__heading {
-  padding: var(--ui-space-1) var(--ui-space-3);
+  margin-top: var(--ui-space-3);
+  padding: var(--ui-space-3) var(--ui-space-3) var(--ui-space-1);
+  border-top: 1px solid var(--ui-color-border);
   font-size: var(--ui-font-size-xs);
-  font-weight: var(--ui-font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--ui-color-text-muted);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text-subtle);
 }
 
 .docs-nav__link {

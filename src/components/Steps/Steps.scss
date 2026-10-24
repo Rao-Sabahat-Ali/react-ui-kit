@@ -81,15 +81,15 @@
 }
 
 .ui-steps__item--complete .ui-steps__marker {
-  background-color: var(--ui-color-primary);
-  border-color: var(--ui-color-primary);
-  color: var(--ui-color-primary-contrast);
+  background-color: var(--ui-color-accent);
+  border-color: var(--ui-color-accent);
+  color: var(--ui-color-accent-contrast);
 }
 
 .ui-steps__item--current .ui-steps__marker {
-  border-color: var(--ui-color-primary);
-  color: var(--ui-color-primary);
-  box-shadow: 0 0 0 3px var(--ui-color-primary-subtle);
+  border-color: var(--ui-color-accent);
+  color: var(--ui-color-accent);
+  box-shadow: 0 0 0 3px var(--ui-color-accent-subtle);
 }
 
 .ui-steps__item--error .ui-steps__marker {

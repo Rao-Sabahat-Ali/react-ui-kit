@@ -29,6 +29,9 @@ $ui-intents: primary, secondary, success, danger, warning, info;
   --bs-link-hover-color: var(--ui-color-link-hover);
   --bs-link-hover-color-rgb: var(--ui-color-link-hover-rgb);
   --bs-focus-ring-color: var(--ui-color-focus-ring);
+  --bs-highlight-bg: var(--ui-color-accent-subtle);
+  --bs-code-color: var(--ui-color-accent-emphasis);
+  --bs-highlight-color: var(--ui-color-accent-emphasis);
   --bs-focus-ring-width: var(--ui-focus-ring-width);
   --bs-box-shadow-sm: var(--ui-shadow-sm);
   --bs-box-shadow: var(--ui-shadow-md);
@@ -61,8 +64,34 @@ h6,
 .h3,
 .h4,
 .h5,
-.h6 {
+.h6,
+.display-1,
+.display-2,
+.display-3,
+.display-4,
+.display-5,
+.display-6 {
   font-family: var(--ui-font-family-heading);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
+  font-optical-sizing: auto;
+  text-wrap: balance;
+  color: var(--ui-color-text);
+}
+
+::selection {
+  background-color: var(--ui-color-accent-subtle);
+  color: var(--ui-color-accent-emphasis);
+}
+
+a {
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+hr {
+  border-color: var(--ui-color-border);
+  opacity: 1;
 }
 
 // Bootstrap compiles these colours at build time; re-point them at tokens.
@@ -106,7 +135,7 @@ h6,
 .form-control,
 .form-select {
   background-color: var(--ui-color-surface);
-  border-color: var(--ui-color-border-strong);
+  border-color: var(--ui-color-border-input);
   color: var(--ui-color-text);
 
   &::placeholder {
@@ -114,7 +143,7 @@ h6,
   }
 
   &:focus {
-    border-color: var(--ui-color-primary);
+    border-color: var(--ui-color-accent);
     box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
     outline: 2px solid transparent;
   }
@@ -125,14 +154,18 @@ h6,
 }
 
 .form-check-input {
+  border-color: var(--ui-color-border-input);
+
   &:focus {
-    border-color: var(--ui-color-primary);
+    border-color: var(--ui-color-accent);
     box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
   }
 
-  &:checked {
-    background-color: var(--ui-color-primary);
-    border-color: var(--ui-color-primary);
+  // Selection state carries the accent (identity: accent = selected/focused/linked).
+  &:checked,
+  &[type='checkbox']:indeterminate {
+    background-color: var(--ui-color-accent);
+    border-color: var(--ui-color-accent);
   }
 }
 
@@ -145,28 +178,28 @@ h6,
   --bs-dropdown-link-color: var(--ui-color-text);
   --bs-dropdown-link-hover-color: var(--ui-color-text);
   --bs-dropdown-link-hover-bg: var(--ui-color-bg-subtle);
-  --bs-dropdown-link-active-color: var(--ui-color-primary-contrast);
-  --bs-dropdown-link-active-bg: var(--ui-color-primary);
+  --bs-dropdown-link-active-color: var(--ui-color-accent-emphasis);
+  --bs-dropdown-link-active-bg: var(--ui-color-accent-subtle);
   --bs-dropdown-header-color: var(--ui-color-text-muted);
   --bs-dropdown-zindex: var(--ui-z-dropdown);
   box-shadow: var(--ui-shadow-md);
 }
 
 .list-group {
-  --bs-list-group-active-bg: var(--ui-color-primary);
-  --bs-list-group-active-border-color: var(--ui-color-primary);
-  --bs-list-group-active-color: var(--ui-color-primary-contrast);
+  --bs-list-group-active-bg: var(--ui-color-accent-subtle);
+  --bs-list-group-active-border-color: var(--ui-color-accent);
+  --bs-list-group-active-color: var(--ui-color-accent-emphasis);
 }
 
 .progress,
 .progress-stacked {
-  --bs-progress-bar-bg: var(--ui-color-primary);
+  --bs-progress-bar-bg: var(--ui-color-accent);
   --bs-progress-bg: var(--ui-color-surface-sunken);
 }
 
 .nav-pills {
-  --bs-nav-pills-link-active-bg: var(--ui-color-primary);
-  --bs-nav-pills-link-active-color: var(--ui-color-primary-contrast);
+  --bs-nav-pills-link-active-bg: var(--ui-color-accent-subtle);
+  --bs-nav-pills-link-active-color: var(--ui-color-accent-emphasis);
 }
 
 .btn-close:focus {

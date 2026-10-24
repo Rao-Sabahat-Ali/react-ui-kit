@@ -48,7 +48,7 @@
 .ui-slider__range {
   position: absolute;
   border-radius: inherit;
-  background-color: var(--ui-color-primary);
+  background-color: var(--ui-color-accent);
 
   .ui-slider--horizontal & {
     inset-block: 0;
@@ -65,8 +65,8 @@
   block-size: var(--ui-slider-thumb-size);
   border-radius: 50%;
   background-color: var(--ui-color-surface);
-  border: 2px solid var(--ui-color-primary);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  border: 2px solid var(--ui-color-accent);
+  box-shadow: var(--ui-shadow-sm);
   transition: box-shadow var(--ui-duration) var(--ui-easing);
 
   .ui-slider--horizontal & {
@@ -124,7 +124,7 @@
   background-color: var(--ui-color-border-strong);
 
   &.is-active {
-    background-color: var(--ui-color-primary-contrast);
+    background-color: var(--ui-color-accent-contrast);
   }
 
   .ui-slider--horizontal & {

@@ -4,8 +4,8 @@
 
   &:checked,
   &:indeterminate {
-    background-color: var(--ui-color-primary);
-    border-color: var(--ui-color-primary);
+    background-color: var(--ui-color-accent);
+    border-color: var(--ui-color-accent);
   }
 }
 

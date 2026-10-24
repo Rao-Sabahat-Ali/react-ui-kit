@@ -1,12 +1,18 @@
 // Compile-time Bootstrap defaults aligned with the light theme tokens.
 // Runtime theming (dark mode, profiles) happens through CSS custom properties in _bridge.scss.
-$primary: #2563eb;
-$secondary: #475569;
-$success: #15803d;
-$danger: #dc2626;
-$warning: #f59e0b;
-$info: #0e7490;
-$font-family-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', Arial, sans-serif;
+$primary: #1b1a17;
+$secondary: #5e574c;
+$success: #2d6a40;
+$danger: #b03a2b;
+$warning: #d9a441;
+$info: #3a6788;
+// Compile-time fallbacks for SVG icons Bootstrap bakes into CSS (switch knob, select chevron).
+$body-color: #1b1a17;
+$component-active-bg: #1f4d3a;
+$input-focus-border-color: #1f4d3a;
+$headings-font-weight: 600;
+$btn-font-weight: 500;
+$font-family-sans-serif: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 $enable-dark-mode: true;
 $color-mode-type: data;
 $enable-shadows: false;

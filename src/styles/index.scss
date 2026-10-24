@@ -1,5 +1,6 @@
 // Entry stylesheet → dist/styles.css. Order matters:
 // 1) Bootstrap compiled with defaults, 2) generated tokens, 3) bridge, 4) components.
+@import 'fonts';
 @import 'bootstrap-config';
 @import 'bootstrap/scss/bootstrap';
 @import 'tokens.generated';

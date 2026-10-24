@@ -22,8 +22,8 @@
 
   &:hover:not(:disabled),
   &--active {
-    border-color: var(--ui-color-primary);
-    background: var(--ui-color-primary-subtle);
+    border-color: var(--ui-color-accent);
+    background: var(--ui-color-accent-subtle);
   }
 
   &:focus-visible {
@@ -38,7 +38,7 @@
 }
 
 .ui-file-upload__dropzone-icon {
-  color: var(--ui-color-primary);
+  color: var(--ui-color-accent);
 }
 
 .ui-file-upload__dropzone-title {

@@ -132,7 +132,7 @@
   }
 
   &--active::before {
-    background: var(--ui-color-primary);
+    background: var(--ui-color-accent);
   }
 
   &:focus-visible {

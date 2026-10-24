@@ -6,12 +6,17 @@
 }
 
 .ui-sidebar-nav__section {
+  margin-top: var(--ui-space-3);
   padding: var(--ui-space-3) var(--ui-space-3) var(--ui-space-1);
+  border-top: 1px solid var(--ui-color-border);
   font-size: var(--ui-font-size-xs);
-  font-weight: var(--ui-font-weight-semibold);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ui-color-text-muted);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text-subtle);
+}
+
+.ui-sidebar-nav__section:first-child {
+  margin-top: 0;
+  border-top: 0;
 }
 
 .ui-sidebar-nav__link {
@@ -29,15 +34,33 @@
   font-weight: var(--ui-font-weight-medium);
   text-align: start;
 
+  position: relative;
+  color: var(--ui-color-text-muted);
+
   &:hover {
     background: var(--ui-color-surface-sunken);
     color: var(--ui-color-text);
   }
 
+  // Active: ink text plus a pine bar on the leading edge, not a filled pill.
   &.active {
-    background: var(--ui-color-primary-subtle);
-    color: var(--ui-color-primary-emphasis);
+    background: none;
+    color: var(--ui-color-text);
     font-weight: var(--ui-font-weight-semibold);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-block: var(--ui-space-2);
+      inset-inline-start: calc(var(--ui-space-2) * -1);
+      width: 2px;
+      border-radius: var(--ui-radius-sm);
+      background: var(--ui-color-accent);
+    }
+
+    .ui-sidebar-nav__icon {
+      color: var(--ui-color-accent);
+    }
   }
 
   &:focus-visible {

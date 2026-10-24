@@ -2,6 +2,12 @@
   margin-bottom: var(--ui-space-6);
 }
 
+// Editorial rule under the title block (tabs draw their own line).
+.ui-page-header:not(:has(.ui-page-header__tabs)) {
+  padding-bottom: var(--ui-space-5);
+  border-bottom: 1px solid var(--ui-color-border);
+}
+
 .ui-page-header__breadcrumb {
   --bs-breadcrumb-margin-bottom: var(--ui-space-2);
   --bs-breadcrumb-item-active-color: var(--ui-color-text-muted);
@@ -40,9 +46,10 @@
 }
 
 .ui-page-header__title {
-  font-size: var(--ui-font-size-3xl);
-  font-weight: var(--ui-font-weight-bold);
-  line-height: var(--ui-font-line-height-tight);
+  font-size: var(--ui-font-size-4xl);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
+  line-height: 1.1;
   margin: 0;
 }
 
@@ -71,6 +78,6 @@
 
 @media (max-width: 575.98px) {
   .ui-page-header__title {
-    font-size: var(--ui-font-size-2xl);
+    font-size: var(--ui-font-size-3xl);
   }
 }

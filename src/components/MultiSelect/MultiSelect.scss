@@ -55,8 +55,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-1);
-  background-color: var(--ui-color-primary-subtle);
-  color: var(--ui-color-primary-emphasis);
+  background-color: var(--ui-color-accent-subtle);
+  color: var(--ui-color-accent-emphasis);
   border-radius: var(--ui-radius-pill);
   font-weight: var(--ui-font-weight-medium);
 }
@@ -133,9 +133,9 @@
 }
 
 .ui-multi-select__check--on {
-  background-color: var(--ui-color-primary);
-  border-color: var(--ui-color-primary);
-  color: var(--ui-color-primary-contrast);
+  background-color: var(--ui-color-accent);
+  border-color: var(--ui-color-accent);
+  color: var(--ui-color-accent-contrast);
 }
 
 @media (prefers-reduced-motion: reduce) {

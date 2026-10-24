@@ -11,31 +11,27 @@
   padding: var(--ui-space-6) var(--ui-space-3);
 }
 
+// A plain glyph, not a tinted circle (identity).
 .ui-empty-state__icon {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: var(--ui-radius-circle);
-  background: var(--ui-color-surface-sunken);
-  color: var(--ui-color-text-muted);
-  margin-bottom: var(--ui-space-2);
+  font-size: 2rem;
+  color: var(--ui-color-text-subtle);
+  margin-bottom: var(--ui-space-1);
 }
 
 .ui-empty-state--error .ui-empty-state__icon {
-  background: var(--ui-color-danger-subtle);
-  color: var(--ui-color-danger-emphasis);
+  color: var(--ui-color-danger);
 }
 
 .ui-empty-state--first-run .ui-empty-state__icon {
-  background: var(--ui-color-primary-subtle);
-  color: var(--ui-color-primary-emphasis);
+  color: var(--ui-color-accent);
 }
 
 .ui-empty-state__title {
-  font-size: var(--ui-font-size-lg);
-  font-weight: var(--ui-font-weight-semibold);
+  font-family: var(--ui-font-family-heading);
+  font-size: var(--ui-font-size-xl);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
   color: var(--ui-color-text);
   margin: 0;
 }

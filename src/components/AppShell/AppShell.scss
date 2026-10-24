@@ -46,10 +46,14 @@
 .ui-app-shell__main {
   flex: 1;
   min-width: 0;
-  padding: var(--ui-space-6);
+  padding: var(--ui-space-8) var(--ui-space-8) var(--ui-space-10);
 
   &:focus {
-    outline: none;
+    outline-color: transparent;
+  }
+
+  @media (max-width: 1199.98px) {
+    padding: var(--ui-space-6);
   }
 
   @media (max-width: 767.98px) {

@@ -33,7 +33,7 @@ $intents: primary, secondary, success, danger, warning, info;
 }
 
 .ui-knob__value {
-  stroke: var(--ui-color-primary);
+  stroke: var(--ui-color-accent);
   transition: stroke-dasharray var(--ui-duration) var(--ui-easing);
 }
 

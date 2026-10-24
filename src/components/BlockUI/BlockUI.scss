@@ -9,8 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(var(--ui-color-bg-rgb), 0.7);
-  backdrop-filter: blur(1px);
+  background: rgba(var(--ui-color-bg-rgb), 0.75);
   cursor: progress;
 
   &:focus {

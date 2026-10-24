@@ -48,9 +48,9 @@ button.ui-chip__main {
 }
 
 .ui-chip--selected {
-  border-color: var(--ui-color-primary);
-  background: var(--ui-color-primary-subtle);
-  color: var(--ui-color-primary-emphasis);
+  border-color: var(--ui-color-accent);
+  background: var(--ui-color-accent-subtle);
+  color: var(--ui-color-accent-emphasis);
 }
 
 .ui-chip--disabled {

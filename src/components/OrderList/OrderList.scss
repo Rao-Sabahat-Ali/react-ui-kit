@@ -56,7 +56,7 @@
   color: var(--ui-color-text);
 
   &.active {
-    background: var(--ui-color-primary-subtle);
+    background: var(--ui-color-accent-subtle);
     border-color: var(--ui-color-border);
     color: var(--ui-color-text);
   }
@@ -82,7 +82,7 @@
   position: absolute;
   inset-inline: 0;
   block-size: 2px;
-  background: var(--ui-color-primary);
+  background: var(--ui-color-accent);
 }
 
 .ui-item-listbox__option--drop-before::before {

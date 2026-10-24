@@ -19,6 +19,8 @@ export interface StatCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'tit
   loading?: boolean;
   href?: string;
   footer?: ReactNode;
+  /** `card` (default) is a bordered tile; `plain` drops the chrome so numbers sit in a ruled `.ui-stat-group` row. */
+  variant?: 'card' | 'plain';
 }
 
 function Sparkline({ values }: { values: number[] }) {
@@ -34,7 +36,7 @@ function Sparkline({ values }: { values: number[] }) {
   );
 }
 
-export function StatCard({ label, value, format, delta, deltaLabel, invertDelta = false, icon, sparkline, loading = false, href, footer, className, ...rest }: StatCardProps) {
+export function StatCard({ label, value, format, delta, deltaLabel, invertDelta = false, icon, sparkline, loading = false, href, footer, variant = 'card', className, ...rest }: StatCardProps) {
   const { t, locale } = useLocale();
   const display = typeof value === 'number' ? new Intl.NumberFormat(locale, format).format(value) : value;
   const link = safeUrl(href);
@@ -56,8 +58,8 @@ export function StatCard({ label, value, format, delta, deltaLabel, invertDelta 
   }
 
   return (
-    <div className={cx('card ui-stat-card', link && 'ui-stat-card--interactive', className)} {...rest}>
-      <div className="card-body">
+    <div className={cx('ui-stat-card', variant === 'card' ? 'card' : 'ui-stat-card--plain', link && 'ui-stat-card--interactive', className)} {...rest}>
+      <div className={variant === 'card' ? 'card-body' : 'ui-stat-card__body'}>
         <div className="ui-stat-card__header">
           <span className="ui-stat-card__label">
             {link ? (

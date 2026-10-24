@@ -138,7 +138,7 @@
   transition: transform var(--ui-duration) var(--ui-easing);
 
   &[aria-checked='true'] {
-    box-shadow: 0 0 0 2px var(--ui-color-surface), 0 0 0 4px var(--ui-color-primary);
+    box-shadow: 0 0 0 2px var(--ui-color-surface), 0 0 0 4px var(--ui-color-accent);
   }
 
   &:focus-visible {

@@ -21,9 +21,9 @@
   transition: background-color var(--ui-duration) var(--ui-easing), border-color var(--ui-duration) var(--ui-easing);
 
   &.is-checked {
-    color: var(--ui-color-primary-contrast);
-    background-color: var(--ui-color-primary);
-    border-color: var(--ui-color-primary);
+    color: var(--ui-color-accent-contrast);
+    background-color: var(--ui-color-accent);
+    border-color: var(--ui-color-accent);
   }
 
   &.is-unchecked {

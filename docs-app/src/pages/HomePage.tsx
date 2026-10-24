@@ -1,4 +1,4 @@
-import { Card, Tag } from '@sabahat/react-ui-kit';
+import { StatCard, Tag } from '@sabahat/react-ui-kit';
 import { href } from '../router';
 import { components, isImplemented, profiles, specVersion } from '../registry';
 import { CodeBlock } from '../components/CodeBlock';
@@ -13,11 +13,11 @@ export function HomePage() {
           React 19 + Bootstrap 5.3 components implementing the personal design system. Specs live in <code>design-system-mcp</code> (spec v{specVersion}) and are served to agents over MCP.
         </p>
       </header>
-      <div className="row g-3 mb-4">
-        <div className="col-sm-6 col-lg-3"><Card title={`${implemented}`} subtitle="Components implemented" /></div>
-        <div className="col-sm-6 col-lg-3"><Card title={`${components.length}`} subtitle="Components specified" href={href('roadmap')} /></div>
-        <div className="col-sm-6 col-lg-3"><Card title={`${profiles.length}`} subtitle="App profiles" href={href('profiles')} /></div>
-        <div className="col-sm-6 col-lg-3"><Card title="2" subtitle="Themes (light / dark)" href={href('foundations')} /></div>
+      <div className="ui-stat-group mb-5">
+        <StatCard variant="plain" label="Components implemented" value={implemented} />
+        <StatCard variant="plain" label="Components specified" value={components.length} href={href('roadmap')} />
+        <StatCard variant="plain" label="App profiles" value={profiles.length} href={href('profiles')} />
+        <StatCard variant="plain" label="Themes (light, dark)" value={2} href={href('foundations')} />
       </div>
       <h2 className="h4">Use in an app</h2>
       <CodeBlock

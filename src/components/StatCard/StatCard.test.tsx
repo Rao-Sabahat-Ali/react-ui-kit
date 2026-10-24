@@ -20,4 +20,17 @@ describe('StatCard', () => {
     expect(container.querySelector('.ui-skeleton')).toBeInTheDocument();
     expect(screen.queryByText('10')).toBeNull();
   });
+
+  it('AC-4: plain variant renders without card chrome', () => {
+    const { container } = render(<StatCard label="Streak" value={12} variant="plain" />);
+    const root = container.firstElementChild!;
+    expect(root).toHaveClass('ui-stat-card--plain');
+    expect(root).not.toHaveClass('card');
+    expect(screen.getByText('12')).toHaveClass('ui-stat-card__value');
+  });
+
+  it('AC-5: default variant stays a card', () => {
+    const { container } = render(<StatCard label="Users" value={3} />);
+    expect(container.firstElementChild).toHaveClass('card', 'ui-stat-card');
+  });
 });

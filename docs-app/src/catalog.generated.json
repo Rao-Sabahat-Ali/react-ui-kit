@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.4.0",
   "components": [
     {
       "name": "Accordion",
@@ -1190,49 +1190,49 @@
   "profiles": [
     {
       "name": "saas",
-      "description": "Baseline profile. General-purpose product UI.",
+      "description": "Baseline profile: Nordic editorial. Warm paper surfaces, ink primary actions, pine accent for links, focus and selection, serif headings over a grotesk body. General-purpose product UI.",
       "defaultTheme": "system",
       "density": "comfortable"
     },
     {
       "name": "admin",
-      "description": "Back-office / internal tools. Dense, neutral, information first.",
+      "description": "Back-office / internal tools. Dense and quiet: grotesk headings, tight 2px corners, information first, accent only for state.",
       "defaultTheme": "system",
       "density": "compact"
     },
     {
       "name": "dashboard",
-      "description": "Analytics and monitoring. Card grids, KPIs, charts; comfortable density, strong chart palette.",
+      "description": "Analytics and monitoring. Grotesk headings, numbers set large and tabular, ruled sections over boxed cards, earthy chart palette.",
       "defaultTheme": "system",
       "density": "comfortable"
     },
     {
       "name": "cms",
-      "description": "Content management and authoring. Readable long-form, editorial serif headings, calm accent.",
+      "description": "Content management and authoring. Long-form reading: serif headings, generous measure, oxblood accent like an editor's pen.",
       "defaultTheme": "light",
       "density": "comfortable"
     },
     {
       "name": "pos",
-      "description": "Point of sale / kiosk. Touch-first, large targets, high contrast, minimal motion.",
+      "description": "Point of sale / kiosk. Touch-first, large targets, high contrast, minimal motion; the main action is solid pine so it reads at arm's length.",
       "defaultTheme": "light",
       "density": "spacious"
     },
     {
       "name": "game",
-      "description": "Games and playful apps. Dark-first, vivid accent, rounded shapes, expressive motion (respects reduced motion).",
+      "description": "Games and playful apps. Dark-first near-black, saffron accent, rounded shapes, expressive motion (respects reduced motion).",
       "defaultTheme": "dark",
       "density": "comfortable"
     },
     {
       "name": "ecommerce",
-      "description": "Storefronts and checkout. Product imagery first, strong call-to-action accent, trust signalling.",
+      "description": "Storefronts and checkout. Product imagery first, clay call-to-action that stands apart from the pine links, trust signalling.",
       "defaultTheme": "light",
       "density": "comfortable"
     },
     {
       "name": "landing",
-      "description": "Marketing and landing pages. Spacious, large type scale, hero sections.",
+      "description": "Marketing and landing pages. Spacious, serif display type at large sizes, ruled sections, one accent.",
       "defaultTheme": "light",
       "density": "spacious"
     }

@@ -119,8 +119,8 @@
 }
 
 .ui-org-chart__node--selected {
-  border-color: var(--ui-color-primary);
-  background: var(--ui-color-primary-subtle);
+  border-color: var(--ui-color-accent);
+  background: var(--ui-color-accent-subtle);
 }
 
 .ui-org-chart__node--disabled {
