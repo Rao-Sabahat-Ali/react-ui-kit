@@ -4,31 +4,39 @@ React 19 + Bootstrap 5.3 component library for the personal design system — Pr
 
 Specs, tokens and rules: [`design-system-mcp`](https://github.com/Rao-Sabahat-Ali/design-system-mcp) (also an MCP server for coding agents).
 
-## Use in an app
+## Install
 
 ```bash
-npm install react@^19 react-dom@^19
-npm install github:Rao-Sabahat-Ali/react-ui-kit#main   # private: uses your git credentials; pin a tag for production
+npm install @sabahat/react-ui-kit react react-dom
 ```
+
+Requires React 19. Bootstrap is compiled into the stylesheet; install `bootstrap` only if you import the SCSS (`@sabahat/react-ui-kit/scss/*`).
 
 ```tsx
 import '@sabahat/react-ui-kit/styles.css';
-import { ThemeProvider, Button, Field, InputText } from '@sabahat/react-ui-kit';
+import { ThemeProvider, PageHeader, Section, IndexList, IndexItem, Button } from '@sabahat/react-ui-kit';
 
 createRoot(root).render(
-  <ThemeProvider profile="admin">
-    <Field label="Email"><InputText type="email" /></Field>
-    <Button>Save changes</Button>
+  <ThemeProvider profile="saas">
+    <PageHeader title="Today" actions={<Button>Start</Button>} />
+    <Section title="Next steps">
+      <IndexList>
+        <IndexItem title="Review" description="8 words are waiting." action={<Button appearance="outline">Start</Button>} />
+      </IndexList>
+    </Section>
   </ThemeProvider>
 );
 ```
 
-Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash of the wrong theme.
+Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash of the wrong theme. Fonts (Fraunces, Instrument Sans) ship in the package and load from your own origin.
+
+## Design contract
+
+The look is the "Nordic editorial" identity: paper surfaces, an ink primary action, a pine accent, serif headings, rules instead of boxes. Build screens from `PageHeader`, `Section`, `IndexList`, `StatGroup` and `DataTable`. Specs, tokens, patterns and the consistency rules live in [design-system-mcp](https://github.com/Rao-Sabahat-Ali/design-system-mcp) (an MCP server for coding agents).
 
 ## Status
 
-Implemented (v0.2.0): ThemeProvider, LocaleProvider, Icon, Button, Spinner, Field, InputText, Checkbox/CheckboxGroup, RadioGroup, Switch, SelectButton, Select (custom + native), Card, StatCard, Badge, Tag, Skeleton, ProgressBar, Message, Toast, EmptyState, Dialog, ConfirmDialog, Drawer, Tabs, Paginator, DataTable (phase 1), AppShell, Topbar, SidebarNav, BottomNav, PageHeader, Portal, FocusTrap, ThemeToggle (toggle mode).
-Everything else is specified and queued in [tasks.md](tasks.md). Live catalogue: `npm run dev`.
+All specified components are implemented (see the [live catalogue](https://react-ui-kit-docs.vercel.app) and [CHANGELOG](CHANGELOG.md)). Every component ships with WCAG 2.2 AA keyboard and screen-reader support, light/dark themes and eight app profiles.
 
 ## Development
 

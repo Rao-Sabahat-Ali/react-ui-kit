@@ -2,6 +2,9 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## 1.2.1 — 2026-10-24
+First npm release (`npm install @sabahat/react-ui-kit`): MIT license, package metadata, README for external use, `prepublishOnly` gate. No code changes since 1.2.0.
+
 ## 1.2.0 — 2026-10-24
 Layout primitives for cross-screen consistency (design-system-mcp 0.5.0, `rules/consistency`).
 

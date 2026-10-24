@@ -1,9 +1,8 @@
 {
   "name": "@sabahat/react-ui-kit",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "React 19 + Bootstrap 5.3 component library implementing the personal design system (specs served by design-system-mcp).",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -23,7 +22,9 @@
   "files": [
     "dist",
     "src/styles",
-    "src/fonts"
+    "src/fonts",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "dev": "vite --config vite.docs.config.ts",
@@ -41,7 +42,8 @@
     "e2e": "playwright test",
     "e2e:update": "playwright test --update-snapshots",
     "register": "node scripts/register-components.mjs",
-    "create-app": "node scripts/create-app.mjs"
+    "create-app": "node scripts/create-app.mjs",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm test && npm run build && node scripts/check-bundle.mjs"
   },
   "peerDependencies": {
     "bootstrap": "^5.3.8",
@@ -76,5 +78,31 @@
     "bootstrap": {
       "optional": true
     }
+  },
+  "author": "Rao Sabahat Ali <raosabahat@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rao-Sabahat-Ali/react-ui-kit.git"
+  },
+  "homepage": "https://react-ui-kit-docs.vercel.app",
+  "bugs": {
+    "url": "https://github.com/Rao-Sabahat-Ali/react-ui-kit/issues"
+  },
+  "keywords": [
+    "react",
+    "react-19",
+    "bootstrap",
+    "ui-kit",
+    "components",
+    "design-system",
+    "dark-mode",
+    "accessible",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
