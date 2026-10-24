@@ -1,0 +1,57 @@
+// The box owns the border; the control inside is borderless so label and value read as one field.
+.ui-ifta__box {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ui-color-surface);
+  border: var(--bs-border-width) solid var(--ui-color-border-input);
+  border-radius: var(--ui-radius);
+
+  &:focus-within {
+    border-color: var(--ui-color-accent);
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  &--invalid,
+  &--invalid:focus-within {
+    border-color: var(--ui-color-danger);
+  }
+
+  &--disabled {
+    background-color: var(--ui-color-surface-sunken);
+  }
+
+  .form-control,
+  .form-select,
+  .ui-select__trigger {
+    min-height: 0;
+    border: 0;
+    border-radius: 0 0 var(--ui-radius) var(--ui-radius);
+    background-color: transparent;
+    box-shadow: none;
+    padding-top: var(--ui-space-1);
+    padding-bottom: var(--ui-space-2);
+  }
+
+  .ui-input-text.form-control,
+  .ui-select--native.form-select {
+    min-height: 0;
+    padding-inline: var(--ui-control-padding-x);
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border: 0;
+    box-shadow: none;
+  }
+
+  .ui-select__trigger {
+    min-height: 0;
+  }
+}
+
+.ui-ifta__label {
+  padding: var(--ui-space-2) var(--ui-control-padding-x) 0;
+  font-size: var(--ui-font-size-sm);
+  line-height: 1.2;
+  color: var(--ui-color-text-muted);
+}

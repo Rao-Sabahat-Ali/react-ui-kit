@@ -2,6 +2,7 @@ import type React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ThemeProvider } from '../../theme';
 import { BottomNav } from '../BottomNav/BottomNav';
 import { SidebarNav } from '../SidebarNav/SidebarNav';
 import { Topbar } from '../Topbar/Topbar';
@@ -78,6 +79,38 @@ describe('AppShell', () => {
     const mobile = renderShell();
     expect(mobile.container.querySelector('.ui-bottom-nav')).toBeInTheDocument();
     expect(mobile.container.firstChild).toHaveClass('ui-app-shell--with-bottom-nav');
+  });
+
+  it('AC-4: default variant is derived from the active profile', () => {
+    setViewport(true);
+    const cases = [['admin', 'sidebar'], ['ecommerce', 'top-nav'], ['pos', 'full-bleed']] as const;
+    for (const [profile, variant] of cases) {
+      const { container, unmount } = render(
+        <ThemeProvider profile={profile} storageKey={null}>
+          <AppShell topbar={<Topbar brand="S" />} sidebar={nav}>x</AppShell>
+        </ThemeProvider>,
+      );
+      expect(container.querySelector('.ui-app-shell')).toHaveClass(`ui-app-shell--${variant}`);
+      unmount();
+    }
+    const bare = render(<AppShell sidebar={nav}>x</AppShell>);
+    expect(bare.container.firstChild).toHaveClass('ui-app-shell--sidebar');
+    bare.unmount();
+    const explicit = render(
+      <ThemeProvider profile="pos" storageKey={null}>
+        <AppShell variant="sidebar" sidebar={nav}>x</AppShell>
+      </ThemeProvider>,
+    );
+    expect(explicit.container.querySelector('.ui-app-shell')).toHaveClass('ui-app-shell--sidebar');
+  });
+
+  it('AC-7: header is an alias of topbar (topbar wins when both are set)', () => {
+    setViewport(true);
+    const { rerender } = render(<AppShell variant="top-nav" header={<header>Site header</header>}>x</AppShell>);
+    expect(screen.getByText('Site header')).toBeInTheDocument();
+    rerender(<AppShell variant="top-nav" topbar={<header>Top</header>} header={<header>Alias</header>}>x</AppShell>);
+    expect(screen.getByText('Top')).toBeInTheDocument();
+    expect(screen.queryByText('Alias')).toBeNull();
   });
 
   it('navigating from the mobile drawer closes it', async () => {

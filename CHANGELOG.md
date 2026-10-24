@@ -2,6 +2,32 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## 1.4.0 — 2026-10-24
+Finishes the spec: every specified component now has code, tests and a live docs example, and the last PrimeReact gaps are closed.
+
+### Added
+- `IftaLabel` — label inside the control's border, above the value; works with InputText, InputTextarea and Select (custom and native) through the Field control contract (`help`, `error`, `required`).
+- `ImageCompare` — before/after slider (`role="slider"`, pointer and keyboard: arrows, Page Up/Down, Home/End, `aria-valuenow`/`aria-valuetext`), corner labels, controlled or uncontrolled, RTL-aware clipping, no transition under reduced motion.
+- `AnimateOnScroll` — reveals content once (or repeatedly with `once={false}`) when it scrolls into view via IntersectionObserver; `fade` and `slide-up` presets using only opacity and transform; visible immediately without IntersectionObserver, under reduced motion and in server output.
+- `Terminal` — command console: labelled input, `onCommand` returning text or ReactNode (sync or async), ArrowUp/ArrowDown history, built-in `clear`, `role="log"` output that is announced and keyboard-scrollable.
+- `Tabs` `scrollable`: horizontal scrolling tab row with previous/next buttons that exist only while the tabs overflow (real, labelled buttons kept out of the tab order; arrow keys and selection scroll the active tab into view; RTL-aware; instant under reduced motion).
+- `Drawer` `responsive` (`'md' | 'lg' | 'xl'`): inline `complementary` panel from the breakpoint up, normal drawer below it.
+- `AppShell` `header` prop (alias of `topbar`); the default `variant` now follows the active ThemeProvider profile (`sidebar`, `top-nav` for ecommerce/landing, `full-bleed` for pos/game).
+- Docs examples for ThemeProvider (profile, theme, density and contrast switching), LocaleProvider (message overrides, number/date formatting, RTL), FocusTrap and Portal; the docs registry also discovers `src/theme/*.examples.tsx` and `src/locale/*.examples.tsx`, so all 121 specs show as implemented.
+- Locale keys: `tabsScrollBack`, `tabsScrollForward`, `imageCompare*`, `terminal*`.
+- RTL detection for `sd`, `ug` and `ckb` in LocaleProvider.
+
+### Changed
+- `create-app` starters (and the dashboard/admin blueprint starters) use the style plugin by default: `vite.config.ts` has `uiKitStyles({ include: [...] })` from `@sabahat/react-ui-kit/vite`, `main.tsx` imports `virtual:ui-kit-styles`, and `src/vite-env.d.ts` declares the module. Pass-through lists of Bootstrap classes live in `scripts/profile-shells.mjs` and are checked against the generated sources by `test/create-app.test.ts`.
+- The Settings blueprint uses `Tabs scrollable` instead of utility classes.
+- Blueprint shells and the AppShell example pass `variant="sidebar"` explicitly.
+
+### Fixed
+- `Drawer` reduced motion: the per-edge animation rule outranked the reduced-motion rule, so the slide still ran; it is now disabled.
+
+### Tests
+- Added the previously missing AC tests: Drawer AC-4..AC-11, LocaleProvider AC-1/AC-2, AppShell AC-4, Portal AC-2, Toast AC-5; a registry test that every spec has docs examples; the e2e docs test now visits every component page and rejects "Not implemented yet". Test helper `test/scss.ts` compiles component SCSS to assert rules jsdom cannot evaluate (media queries).
+
 ## 1.3.0 — 2026-10-24
 Blueprints: complete, runnable screens built only from kit components and the design contract, so every personal app looks and behaves the same without re-explaining the design.
 

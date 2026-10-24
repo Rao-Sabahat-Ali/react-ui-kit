@@ -170,7 +170,7 @@ export function importedComponents(text, fileName, components) {
   const sf = ts.createSourceFile(fileName, text, ts.ScriptTarget.Latest, true);
   for (const st of sf.statements) {
     if (!ts.isImportDeclaration(st) || !ts.isStringLiteral(st.moduleSpecifier) || !st.importClause || st.importClause.isTypeOnly) continue;
-    const m = /^\.\.\/(?:\.\.\/components\/)?([A-Z][A-Za-z0-9]*)(?:\/|$)/.exec(st.moduleSpecifier.text);
+    const m = /^\.\.\/(?:(?:\.\.\/)?components\/)?([A-Z][A-Za-z0-9]*)(?:\/|$)/.exec(st.moduleSpecifier.text);
     if (!m || !components.includes(m[1])) continue;
     const bindings = st.importClause.namedBindings;
     const names = [];

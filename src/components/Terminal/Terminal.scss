@@ -1,0 +1,83 @@
+.ui-terminal {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface-sunken);
+  color: var(--ui-color-text);
+  font-family: var(--ui-font-family-mono);
+  font-size: var(--ui-font-size-sm);
+  line-height: 1.5;
+  cursor: text;
+
+  // The input has no border of its own; focus shows on the whole console.
+  &:focus-within {
+    border-color: var(--ui-color-accent);
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-terminal--disabled {
+  cursor: default;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-terminal__log {
+  overflow-y: auto;
+  padding: var(--ui-space-3) var(--ui-space-4) 0;
+
+  &:focus-visible {
+    outline: 2px solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
+  }
+}
+
+.ui-terminal__welcome,
+.ui-terminal__entry {
+  margin-bottom: var(--ui-space-2);
+}
+
+.ui-terminal__prompt {
+  color: var(--ui-color-accent);
+  user-select: none;
+}
+
+.ui-terminal__output {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--ui-color-text-muted);
+
+  &--error {
+    color: var(--ui-color-danger);
+  }
+
+  &--running {
+    font-style: italic;
+  }
+}
+
+.ui-terminal__form {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) var(--ui-space-4) var(--ui-space-3);
+}
+
+.ui-terminal__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+
+  &:focus,
+  &:focus-visible {
+    outline: 2px solid transparent;
+  }
+
+  &::placeholder {
+    color: var(--ui-color-text-subtle);
+  }
+}

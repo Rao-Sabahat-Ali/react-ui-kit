@@ -1,0 +1,155 @@
+.ui-image-compare {
+  --ui-image-compare-position: 50%;
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface-sunken);
+  touch-action: pan-y;
+  user-select: none;
+  cursor: ew-resize;
+}
+
+.ui-image-compare--disabled {
+  cursor: default;
+}
+
+.ui-image-compare--1x1 {
+  aspect-ratio: 1 / 1;
+}
+
+.ui-image-compare--4x3 {
+  aspect-ratio: 4 / 3;
+}
+
+.ui-image-compare--16x9 {
+  aspect-ratio: 16 / 9;
+}
+
+.ui-image-compare--21x9 {
+  aspect-ratio: 21 / 9;
+}
+
+.ui-image-compare__after,
+.ui-image-compare__before {
+  display: block;
+  width: 100%;
+  pointer-events: none;
+}
+
+.ui-image-compare--ratio img {
+  height: 100%;
+  object-fit: cover;
+}
+
+// The before image covers the after image and is clipped at the divider. clip-path has no logical
+// properties, so the before side flips to the right edge in RTL.
+.ui-image-compare__before {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: cover;
+  clip-path: inset(0 calc(100% - var(--ui-image-compare-position)) 0 0);
+  transition: clip-path var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+}
+
+[dir='rtl'] .ui-image-compare__before {
+  clip-path: inset(0 0 0 calc(100% - var(--ui-image-compare-position)));
+}
+
+.ui-image-compare__handle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--ui-image-compare-position);
+  width: 2px;
+  margin-inline-start: -1px;
+  background: var(--ui-color-surface);
+  transition: inset-inline-start var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+
+  // Wider pointer/keyboard target than the 2px line.
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: -12px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    background: var(--ui-color-accent);
+  }
+
+  &:focus-visible .ui-image-compare__grip {
+    outline: 2px solid var(--ui-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.ui-image-compare__grip {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 50%;
+  width: 2rem;
+  height: 2rem;
+  margin-block-start: -1rem;
+  margin-inline-start: -1rem;
+  border: 2px solid var(--ui-color-surface);
+  border-radius: var(--ui-radius-circle);
+  background: var(--ui-color-text);
+
+  // A pair of chevrons made from borders, one on each side of centre (symmetric, so identical in RTL).
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-top: -0.2rem;
+    border: solid var(--ui-color-surface);
+    border-width: 0 0 2px 2px;
+  }
+
+  &::before {
+    inset-inline-start: 0.45rem;
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    inset-inline-end: 0.45rem;
+    transform: rotate(-135deg);
+  }
+}
+
+.ui-image-compare--dragging .ui-image-compare__before,
+.ui-image-compare--dragging .ui-image-compare__handle {
+  transition: none;
+}
+
+.ui-image-compare__label {
+  position: absolute;
+  top: var(--ui-space-3);
+  padding: var(--ui-space-1) var(--ui-space-2);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-color-surface);
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-sm);
+  line-height: 1.2;
+  pointer-events: none;
+
+  &--before {
+    inset-inline-start: var(--ui-space-3);
+  }
+
+  &--after {
+    inset-inline-end: var(--ui-space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-image-compare__before,
+  .ui-image-compare__handle {
+    transition: none;
+  }
+}

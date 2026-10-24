@@ -12,6 +12,19 @@
       ]
     },
     {
+      "name": "AnimateOnScroll",
+      "slug": "animate-on-scroll",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Reveal a block with a small opacity/transform transition the first time it scrolls into view (landing sections, feature lists). Content is always in the DOM and readable; only its presentation is delayed.",
+      "profiles": [
+        "landing",
+        "ecommerce",
+        "cms",
+        "saas"
+      ]
+    },
+    {
       "name": "AppShell",
       "slug": "app-shell",
       "category": "layout",
@@ -442,6 +455,32 @@
       "purpose": "Inline SVG icon from the built-in registry. Zero external icon dependency.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "IftaLabel",
+      "slug": "ifta-label",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Inside-field-top-aligned label: the label sits at the top **inside** the control's border and the value below it, so the field keeps a permanent, always-visible label without FloatLabel's animation and without Field's extra vertical space. Suited to dense but readable forms (profile, checkout, settings).",
+      "profiles": [
+        "saas",
+        "ecommerce",
+        "landing",
+        "cms"
+      ]
+    },
+    {
+      "name": "ImageCompare",
+      "slug": "image-compare",
+      "category": "media",
+      "status": "implemented",
+      "purpose": "Before/after comparison of two images of the same size with a draggable divider (retouching, redesigns, map or chart revisions).",
+      "profiles": [
+        "ecommerce",
+        "cms",
+        "landing",
+        "saas"
       ]
     },
     {
@@ -1075,6 +1114,18 @@
       "purpose": "Label categorising or showing status (\"Paid\", \"Draft\", \"Sale\"). Always text, optional icon.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "Terminal",
+      "slug": "terminal",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "A command console: one input line, a scrolling log of the commands run and what they returned. For admin consoles, REPL-style tools and demos. The app supplies the commands; the component handles input, history and accessibility.",
+      "profiles": [
+        "admin",
+        "dashboard",
+        "cms"
       ]
     },
     {

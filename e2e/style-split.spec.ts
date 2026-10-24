@@ -44,7 +44,8 @@ test.describe('split styles render identically @split', () => {
   for (const mode of ['shell', 'isolated'] as const) {
     for (const c of catalog.components.filter((x) => x.status !== 'specified')) {
       test(`${c.name} page (${mode})`, async ({ browser, baseURL }) => {
-      const examples = join(root, 'src/components', c.name, `${c.name}.examples.tsx`);
+      // Foundation providers keep their examples next to the code (src/theme, src/locale).
+      const examples = [join(root, 'src/components', c.name, `${c.name}.examples.tsx`), join(root, 'src/theme', `${c.name}.examples.tsx`), join(root, 'src/locale', `${c.name}.examples.tsx`)].find((f) => existsSync(f)) ?? join(root, 'src/components', c.name, `${c.name}.examples.tsx`);
       const imported = existsSync(examples) ? [...importedComponents(readFileSync(examples, 'utf8'), examples, componentNames)] : [];
       // Bootstrap classes the example code itself uses (`d-flex gap-3`) are the app's direct usage: `include`.
       const direct = existsSync(examples) ? [...collectClassTokens(readFileSync(examples, 'utf8'), examples).exact] : [];

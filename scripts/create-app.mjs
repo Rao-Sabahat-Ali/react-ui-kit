@@ -1,9 +1,10 @@
 // OPS-017: create a new app from templates/starter for a design-system profile.
 // Usage: node scripts/create-app.mjs <target-dir> --profile <saas|admin|dashboard|cms|pos|game|ecommerce|landing> [--title "My app"] [--description "..."] [--blank]
+// Generated apps load only the styles they use (uiKitStyles in vite.config.ts, `virtual:ui-kit-styles` in main.tsx).
 // The dashboard and admin profiles start from a runnable blueprint (templates/blueprints) as the home screen; pass --blank for the empty starter page.
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { BLUEPRINT_HOMES, PROFILES_SHELL } from './profile-shells.mjs';
+import { BLUEPRINT_HOMES, PROFILES_SHELL, STARTER_INCLUDE } from './profile-shells.mjs';
 
 const args = process.argv.slice(2);
 const target = args[0];
@@ -44,6 +45,7 @@ const replacements = {
   __DEFAULT_THEME__: shell.defaultTheme,
   __SHELL_VARIANT__: `variant="${shell.variant}"`,
   __BOTTOM_NAV__: String(shell.bottomNav),
+  __STYLE_INCLUDE__: `[${(home?.include ?? STARTER_INCLUDE).map((c) => `'${c}'`).join(', ')}]`,
   __KIT_DEP__: `^${kitVersion}`,
 };
 

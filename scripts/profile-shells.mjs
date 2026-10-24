@@ -12,6 +12,10 @@ export const PROFILES_SHELL = {
 
 // Profiles whose starter home screen is a blueprint (files live in templates/blueprints and are shown in the docs "Blueprints" pages).
 export const BLUEPRINT_HOMES = {
-  dashboard: { screen: 'AnalyticsDashboard', heading: 'Overview', files: ['AnalyticsDashboard.tsx', 'AnalyticsDashboard.data.ts', 'shared.tsx'] },
-  admin: { screen: 'AdminListDetail', heading: 'Invoices', files: ['AdminListDetail.tsx', 'AdminListDetail.data.ts', 'shared.tsx'] },
+  dashboard: { screen: 'AnalyticsDashboard', heading: 'Overview', files: ['AnalyticsDashboard.tsx', 'AnalyticsDashboard.data.ts', 'shared.tsx'], include: ['col-12', 'col-xl-4', 'col-xl-8', 'd-md-block', 'd-none', 'gx-3', 'gx-lg-5', 'mb-0', 'mt-2', 'row', 'text-body-secondary', 'text-nowrap'] },
+  admin: { screen: 'AdminListDetail', heading: 'Invoices', files: ['AdminListDetail.tsx', 'AdminListDetail.data.ts', 'shared.tsx'], include: ['align-items-center', 'col', 'col-sm-4', 'col-sm-8', 'd-flex', 'd-md-block', 'd-none', 'flex-wrap', 'fw-normal', 'fw-semibold', 'gap-2', 'gx-0', 'mb-0', 'mb-3', 'mb-4', 'me-auto', 'pe-3', 'ps-3', 'row', 'table', 'table-responsive', 'table-sm', 'text-body-secondary', 'text-end', 'text-nowrap'] },
 };
+
+// Bootstrap classes written directly in the generated app's source (the style plugin cannot see them; kit-rendered classes are covered by
+// the manifest). test/create-app.test.ts checks these lists against the classes the generated sources actually use.
+export const STARTER_INCLUDE = ['col-md-6', 'g-3', 'row'];

@@ -8,7 +8,8 @@
   visibility: visible;
 
   &:focus-visible {
-    outline: none;
+    // The panel is focused programmatically as a fallback; it is a container, not a control.
+    outline: 2px solid transparent;
   }
 
   &.offcanvas-start,
@@ -98,11 +99,31 @@
   }
 }
 
+// Same specificity as the per-edge animation rules above, declared later, so reduced motion really wins.
 @media (prefers-reduced-motion: reduce) {
-  .ui-drawer,
+  .ui-drawer.offcanvas,
   .ui-drawer__backdrop {
-    animation-duration: 1ms;
+    animation: none;
   }
+}
+
+// responsive: inline panel above the breakpoint, flat and in the page flow.
+.ui-drawer--inline {
+  width: var(--bs-offcanvas-width);
+  max-width: 100%;
+  flex-shrink: 0;
+  background: var(--ui-color-surface);
+  color: var(--ui-color-text);
+  border-inline-end: 1px solid var(--ui-color-border);
+  box-shadow: none;
+}
+
+.ui-drawer--inline .ui-drawer__header {
+  padding: var(--ui-space-3) var(--ui-space-4);
+}
+
+.ui-drawer--inline .ui-drawer__body {
+  padding: var(--ui-space-4);
 }
 
 // Bootstrap's compiled CSS is LTR; map logical edges for RTL.

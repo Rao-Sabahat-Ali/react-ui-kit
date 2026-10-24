@@ -1,9 +1,12 @@
 import { useId, useRef, type ReactNode, type RefObject } from 'react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useOverlay } from '../../hooks/useOverlay';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { Portal } from '../Portal/Portal';
 import type { DialogCloseReason } from '../Dialog/Dialog';
+
+const BREAKPOINTS = { md: 768, lg: 992, xl: 1200 } as const;
 
 export interface DrawerProps {
   open: boolean;
@@ -19,14 +22,36 @@ export interface DrawerProps {
   closeOnBackdrop?: boolean;
   closeOnEscape?: boolean;
   showClose?: boolean;
+  /** From this breakpoint up the drawer is an inline `complementary` panel (always shown, no overlay behaviour); below it, a normal drawer. */
+  responsive?: keyof typeof BREAKPOINTS;
   initialFocus?: RefObject<HTMLElement | null>;
   className?: string;
   id?: string;
 }
 
 export function Drawer(props: DrawerProps) {
+  // 'not all' never matches, so without `responsive` the drawer is never inline.
+  const inline = useMediaQuery(props.responsive ? `(min-width: ${BREAKPOINTS[props.responsive]}px)` : 'not all', false);
+  if (props.responsive && inline) return <DrawerInline {...props} />;
   if (!props.open) return null;
   return <DrawerInner {...props} />;
+}
+
+function DrawerInline({ title, children, footer, size = 'md', className, id, ...aria }: DrawerProps) {
+  const titleId = useId();
+  return (
+    <aside id={id} aria-labelledby={title ? titleId : undefined} aria-label={title ? undefined : aria['aria-label']} className={cx('ui-drawer ui-drawer--inline', `ui-drawer--${size}`, className)}>
+      {title && (
+        <div className="ui-drawer__header">
+          <h2 id={titleId} className="fs-5 ui-drawer__title">
+            {title}
+          </h2>
+        </div>
+      )}
+      <div className="ui-drawer__body">{children}</div>
+      {footer && <div className="ui-drawer__footer">{footer}</div>}
+    </aside>
+  );
 }
 
 function DrawerInner({
@@ -41,6 +66,7 @@ function DrawerInner({
   closeOnEscape = true,
   showClose = true,
   initialFocus,
+  responsive: _responsive,
   className,
   id,
   ...aria

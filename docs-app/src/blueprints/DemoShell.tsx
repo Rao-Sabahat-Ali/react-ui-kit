@@ -27,6 +27,7 @@ export function DemoShell({
 }) {
   return (
     <AppShell
+      variant="sidebar"
       className="ui-app-shell--embedded"
       topbar={<Topbar brand={brand} sticky={false} actions={<ThemeToggle size="sm" />} />}
       sidebar={<SidebarNav items={nav} activeHref={active} onNavigate={(href) => onNavigate(href)} />}

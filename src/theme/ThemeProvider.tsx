@@ -92,6 +92,11 @@ export function useTheme(): ThemeContextValue {
   return ctx;
 }
 
+/** Like `useTheme` but returns null outside a provider (for components that adapt to the profile when one exists). */
+export function useOptionalTheme(): ThemeContextValue | null {
+  return useContext(ThemeContext);
+}
+
 /**
  * Inline <head> script source that applies the stored theme before first paint
  * (prevents a flash of the wrong theme). Paste the returned string into a <script> tag.

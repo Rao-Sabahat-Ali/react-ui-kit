@@ -189,9 +189,9 @@ export function Settings({ defaultSection = 'profile' }: SettingsProps) {
   return (
     <>
       <PageHeader title="Settings" description="Manage your profile, notifications and workspace." />
-      <Tabs orientation={wide ? 'vertical' : 'horizontal'} variant="pills" value={section} onChange={goTo}>
-        {/* Below lg the tabs scroll sideways instead of wrapping onto a second line. */}
-        <Tabs.List aria-label="Settings sections" className={wide ? undefined : 'flex-nowrap overflow-x-auto text-nowrap pb-2'}>
+      <Tabs orientation={wide ? 'vertical' : 'horizontal'} variant="pills" scrollable value={section} onChange={goTo}>
+        {/* Below lg the tabs scroll sideways (with prev/next buttons) instead of wrapping onto a second line. */}
+        <Tabs.List aria-label="Settings sections">
           {SECTIONS.map((item) => (
             <Tabs.Tab key={item.value} value={item.value} className={wide ? 'text-start' : undefined}>
               {item.label}
