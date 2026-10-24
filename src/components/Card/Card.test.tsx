@@ -10,6 +10,8 @@ describe('Card', () => {
     expect(screen.getByRole('heading', { level: 3, name: 'Revenue' })).toBeInTheDocument();
     rerender(<Card title="Revenue" titleAs="h2" />);
     expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();
+    rerender(<Card title="Sign in" titleAs="h1" />);
+    expect(screen.getByRole('heading', { level: 1, name: 'Sign in' })).toBeInTheDocument();
   });
 
   it('AC-2: slots render', () => {

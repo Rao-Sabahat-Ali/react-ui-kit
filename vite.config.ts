@@ -52,6 +52,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./test/setup.ts'],
     css: false,
-    include: ['src/**/*.test.{ts,tsx}', 'test/**/*.test.{ts,tsx}'],
+    include: ['src/**/*.test.{ts,tsx}', 'test/**/*.test.{ts,tsx}', 'docs-app/src/**/*.test.{ts,tsx}'],
+    alias: { '@sabahat/react-ui-kit': resolve(import.meta.dirname, 'src/index.ts') },
   },
 });

@@ -5,7 +5,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'docs-dist', 'coverage', 'node_modules', '**/*.generated.*', 'templates/**', 'test-results/**'] },
+  { ignores: ['dist', 'docs-dist', 'coverage', 'node_modules', '**/*.generated.*', 'templates/starter/**', 'templates/blueprint-home/**', 'test-results/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   jsxA11y.flatConfigs.recommended,

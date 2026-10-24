@@ -25,6 +25,16 @@ createRoot(root).render(
 
 Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash of the wrong theme.
 
+## Start from a blueprint
+
+The docs app has a **Blueprints** section: complete, runnable screens (analytics dashboard, admin list to detail, overview and index page, settings, sign in, article/detail) built only from kit components and the design contract. Their source is `templates/blueprints/`.
+
+```bash
+npm run create-app -- ../my-dashboard --profile dashboard   # home screen = Analytics dashboard blueprint
+npm run create-app -- ../my-backoffice --profile admin      # home screen = Admin list to detail blueprint
+npm run create-app -- ../my-app --profile dashboard --blank # empty starter page instead
+```
+
 ## Status
 
 Implemented (v0.2.0): ThemeProvider, LocaleProvider, Icon, Button, Spinner, Field, InputText, Checkbox/CheckboxGroup, RadioGroup, Switch, SelectButton, Select (custom + native), Card, StatCard, Badge, Tag, Skeleton, ProgressBar, Message, Toast, EmptyState, Dialog, ConfirmDialog, Drawer, Tabs, Paginator, DataTable (phase 1), AppShell, Topbar, SidebarNav, BottomNav, PageHeader, Portal, FocusTrap, ThemeToggle (toggle mode).
