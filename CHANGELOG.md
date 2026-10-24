@@ -2,8 +2,12 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
-## 1.6.1 (unreleased)
-### Security
+## 1.4.0 — 2026-10-24
+
+One release bundling: spec completion (Tabs scrollable, IftaLabel, ImageCompare, AnimateOnScroll, Terminal), QRCode and Barcode, eight everyday components (CopyButton, Countdown, DescriptionList, Sparkline, ProgressCircle, TableOfContents, Highlight, Tour), the payment suite and the fixes from its security review. Install with `npm install @sabahat/react-ui-kit@1.4.0`.
+
+### Security review fixes
+#### Security
 - `PaymentCardForm` raw mode: the number, expiry, security code (and name/postal code) inputs are now uncontrolled, so React no longer mirrors card data into the DOM `value` attribute (readable by CSS attribute selectors, session replay and MutationObserver tools). React state holds only brand, error codes and last4. Tests assert `getAttribute('value')` is empty after typing and pasting and that `outerHTML` contains neither the PAN nor the CVC. The inputs are emptied on submit and on unmount.
 - `PaymentCardForm` never lets its submit reach a parent `onSubmit` (`stopPropagation`) and no longer renders a nested `<form>`: inside an ancestor form it renders `div role="group"` and handles Enter and Pay itself. Avoid nesting it.
 - Raw `onSubmit` may return a promise; fields are cleared even when it throws or rejects (new `onError`, otherwise rethrown), and the fieldset is disabled while submitting.
@@ -15,10 +19,10 @@ All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https:/
 - `CopyButton`: documented that card data and secrets must never be copied; new `sensitive` prop calls `onCopy()` without the text.
 - `uiKitStyles` (Vite plugin) emits JSON-escaped specifiers and rejects manifest entries that are not plain relative `.css` paths (falls back to the full stylesheet). `create-app` escapes `--title` and `--description` for JSON, HTML, JSX attributes and Markdown. The Checkout blueprint email check no longer accepts whitespace or several `@`.
 
-## 1.6.0 (unreleased)
+### Payments
 Payments: UI for paying, never the payment itself. The kit never talks to a payment provider and never stores card data.
 
-### Added
+#### Added
 - `PaymentMethodSelector` — payment methods as ruled rows in a native-radio radiogroup (one tab stop, arrow keys, accent marker on the selected row). Each method takes `label`, `description`, `icon` (name or your own node, no brand logos ship), `badge`, `disabled` with an announced `disabledReason`, and `children` revealed only while selected (for example the card form).
 - `PaymentCardForm` — `mode="hosted"` (default, recommended) renders labelled `HostedField` slots for a provider's iframes (`onReady`, `onFocusRequest`, provider state `focused/invalid/complete/empty/error`, error summary on submit). `mode="raw"` for tokenisation APIs and tests: brand grouping, Luhn, expiry `MM / YY` with an injectable `now`, CVC length by brand, optional holder name and postal code, `cc-*` autocomplete, `inputMode="numeric"`, paste sanitising, caret kept while formatting. `onChange` carries only `{ brand, complete, errors, last4 }`; `onSubmit(values)` is the only place raw values leave; values are cleared after submit (`clearOnSubmit`) and on unmount; no console, storage, cookie, URL or DOM-attribute writes (all tested). `PAYMENT_RAW_MODE_NOTICE` documents the PCI scope.
 - `HostedField`, `paymentFieldStyle()` (resolves the theme to concrete values in the shape Stripe/Adyen style objects accept), `PAYMENT_FIELD_VARIABLES` and the `--ui-payment-field-*` custom properties.
@@ -29,14 +33,14 @@ Payments: UI for paying, never the payment itself. The kit never talks to a paym
 - Locale keys for all of the above (`payment*`, `order*`).
 - Tests per acceptance criterion, including the security requirements; blueprint smoke and interaction tests; Playwright visits the new blueprint at 1280 px and 390 px.
 
-### Notes
+#### Notes
 - Raw card entry puts your site in a larger PCI DSS scope (SAQ A-EP or D): prefer hosted fields. Tokenisation, idempotency keys, amounts, 3-D Secure and confirmation by webhook are server-side.
 - `create-app --profile ecommerce` is unchanged: a checkout is not a home screen.
 
-## 1.5.0 (unreleased)
+### New components
 Eight everyday components that were missing from the kit.
 
-### Added
+#### Added
 - `CopyButton` — copies text with the Clipboard API (hidden-textarea fallback), swaps label and icon to a copied or failed state, announces it in a polite live region, icon-only variant, `timeout`, `onCopy`/`onError`; never renders or logs the value. `copyToClipboard()` is exported from utils.
 - `Countdown` — `role="timer"` that is silent by default (optional polite announcements at thresholds), `target` or `duration`, `elapsed` count-up mode, `dd:hh:mm:ss` / `hh:mm:ss` / `mm:ss` / locale-aware `words` formats, pausable, tabular numerals, stops ticking while the tab is hidden, `onComplete` and `completedContent`.
 - `DescriptionList` and `DescriptionItem` — a real `<dl>`; `columns` 1-3, `layout` stacked or inline, `ruled`, `span`, `copyable` values (CopyButton), empty-value placeholder, long-token wrapping.
@@ -47,13 +51,13 @@ Eight everyday components that were missing from the kit.
 - `Tour` — non-modal guided product tour: ordered steps anchored by selector, ref or function, popover (title, body, step counter, Previous/Next/Skip/Done), flat highlight ring, focus moves to the panel and is restored on close, Escape closes, Tab continues to the page, target scrolled into view (reduced-motion aware), missing targets skipped with a dev-only warning. Built on `useFloating` and `useOverlay`.
 - Locale keys: `copy`, `copied`, `copyFailed`, `copyLabel`, `countdownRemaining`, `countdownElapsed`, `countdownComplete`, `sparklineSummary`, `onThisPage`, `tour`, `tourNext`, `tourPrevious`, `tourDone`, `tourSkip`.
 
-### Notes
+#### Notes
 - Calendar and date-range selection already exist: `DatePicker` with `inline` and `selectionMode="range"`.
 
-## 1.4.0 — 2026-10-24
+### Spec completion
 Finishes the spec: every specified component now has code, tests and a live docs example, and the last PrimeReact gaps are closed.
 
-### Added
+#### Added
 - `IftaLabel` — label inside the control's border, above the value; works with InputText, InputTextarea and Select (custom and native) through the Field control contract (`help`, `error`, `required`).
 - `ImageCompare` — before/after slider (`role="slider"`, pointer and keyboard: arrows, Page Up/Down, Home/End, `aria-valuenow`/`aria-valuetext`), corner labels, controlled or uncontrolled, RTL-aware clipping, no transition under reduced motion.
 - `AnimateOnScroll` — reveals content once (or repeatedly with `once={false}`) when it scrolls into view via IntersectionObserver; `fade` and `slide-up` presets using only opacity and transform; visible immediately without IntersectionObserver, under reduced motion and in server output.
@@ -65,19 +69,19 @@ Finishes the spec: every specified component now has code, tests and a live docs
 - Locale keys: `tabsScrollBack`, `tabsScrollForward`, `imageCompare*`, `terminal*`.
 - RTL detection for `sd`, `ug` and `ckb` in LocaleProvider.
 
-### Changed
+#### Changed
 - `create-app` starters (and the dashboard/admin blueprint starters) use the style plugin by default: `vite.config.ts` has `uiKitStyles({ include: [...] })` from `@sabahat/react-ui-kit/vite`, `main.tsx` imports `virtual:ui-kit-styles`, and `src/vite-env.d.ts` declares the module. Pass-through lists of Bootstrap classes live in `scripts/profile-shells.mjs` and are checked against the generated sources by `test/create-app.test.ts`.
 - The Settings blueprint uses `Tabs scrollable` instead of utility classes.
 - Blueprint shells and the AppShell example pass `variant="sidebar"` explicitly.
 
-### Fixed
+#### Fixed
 - `Drawer` reduced motion: the per-edge animation rule outranked the reduced-motion rule, so the slide still ran; it is now disabled.
 
-### Tests
+#### Tests
 - Added the previously missing AC tests: Drawer AC-4..AC-11, LocaleProvider AC-1/AC-2, AppShell AC-4, Portal AC-2, Toast AC-5; a registry test that every spec has docs examples; the e2e docs test now visits every component page and rejects "Not implemented yet". Test helper `test/scss.ts` compiles component SCSS to assert rules jsdom cannot evaluate (media queries).
 
-## 1.5.0 (unreleased)
-### Added
+### New components
+#### Added
 - `QRCode` — scannable QR codes from an in-house, dependency-free encoder (`encodeQr`, `qrCapacity`, `QrError` are exported): numeric, alphanumeric and UTF-8 byte modes chosen automatically, versions 1-40, error correction L/M/Q/H, Reed-Solomon over GF(256), all eight masks with the standard penalty selection. Module shapes (`square`, `rounded`, `dots`, `diamond`; timing, alignment and format modules always stay square), finder shapes and eye shapes, colours from the new always-dark-on-light QR tokens, logo from image (through `safeImageSrc`), kit `Icon` or text with shape/size/padding/excavate (level H is forced, size clamped to 0.1-0.3 and the version bumped so the logo never covers a finder), `renderAs="svg" | "canvas"`, `caption`, `bordered`, `describedValue`. Dynamic by design: memoised encoding, in-place SVG updates, `status` (`loading` Skeleton + Spinner, `expired` with a Refresh button, `scanned`), `expiresAt` / `onExpire` with timer cleanup and a polite live region, a typed error state with `onError`, and a ref handle with `toDataURL`, `toBlob` and `download` (PNG or SVG, sanitised file names, resolved colours). Dev builds warn about < 4:1 contrast, inverted codes, a quiet zone below 4 modules and risky finder mixes (circle with another shape, or any ring/eye mix under dot modules).
 - `Barcode` — dependency-free SVG barcodes: Code 128 (sets A/B/C with automatic switching), EAN-13, EAN-8, UPC-A (automatic check digits, verified when supplied), Code 39 and Interleaved 2 of 5, with validation, `displayValue` text with tabular numerals and EAN/UPC grouping, guard bars, per-format quiet zones, an invalid-value error state and `onError`.
 - `getIconDefinition(name)` (from `Icon`) returns the registered path data, used to draw icon logos into exports.
@@ -87,7 +91,7 @@ Finishes the spec: every specified component now has code, tests and a live docs
 - Docs: rich galleries for both components (shapes, finders, colours, sizes, logo variants, error-correction comparison, live typing, auto-refreshing and expiring codes with countdown, status states, PNG/SVG download and copy image, ticket and payment cards, dark theme; Barcode formats, live check digit, invalid values, POS receipt).
 - Tests: 21 encoder tests (known answers from ISO/IEC 18004 Annex I, textbook "HELLO WORLD", RS generators, format/version information, capacity table, mask selection, golden matrices), 32 `QRCode` and 16 `Barcode` tests, one per acceptance criterion.
 
-### Changed
+#### Changed
 - Bundle budget raised (`dist/index.js` 140129 to 158679 bytes, `dist/styles.css` 57699 to 60605) for the encoders, renderers and regenerated tokens; apps import components individually and tree-shake them.
 
 ## 1.3.0 — 2026-10-24
@@ -194,3 +198,4 @@ First stable release: every component specified in design-system-mcp (110) is im
 ## 0.2.0 — 2026-10-23
 
 Core slice: tokens bridge, theming (light/dark, profiles, density, contrast), AppShell, Topbar, SidebarNav, BottomNav, Button, Card, Checkbox, ConfirmDialog, DataTable (phase 1), Dialog, Drawer, EmptyState, Field, Icon, InputText, Message, PageHeader, Paginator, ProgressBar, RadioButton, Select, SelectButton, Skeleton, Spinner, StatCard, Switch, Tabs, Tag, ThemeToggle, Toast, docs app.
+
