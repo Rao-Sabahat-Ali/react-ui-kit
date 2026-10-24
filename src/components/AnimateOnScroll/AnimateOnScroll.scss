@@ -1,0 +1,24 @@
+// Only opacity and transform change, so revealing never shifts layout. The pending state exists only once
+// the component has armed itself on the client, so server and no-JS output is fully visible.
+.ui-animate {
+  transition-property: opacity, transform;
+  transition-duration: var(--ui-motion-duration-slow);
+  transition-timing-function: var(--ui-motion-easing-emphasized);
+}
+
+.ui-animate--pending {
+  opacity: 0;
+}
+
+.ui-animate--slide-up.ui-animate--pending {
+  transform: translateY(var(--ui-space-6));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-animate,
+  .ui-animate.ui-animate--pending {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -17,6 +17,7 @@ export const examples = [
     render: () => (
       <div style={{ height: 360, overflow: 'auto', border: '1px solid var(--ui-color-border)', borderRadius: 'var(--ui-radius-lg)' }}>
         <AppShell
+          variant="sidebar"
           className="ui-app-shell--embedded"
           topbar={<Topbar brand="Svenska ord" sticky={false} searchShortcut={null} />}
           sidebar={<SidebarNav items={items} activeHref="#home" />}

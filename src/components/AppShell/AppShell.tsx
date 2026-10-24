@@ -1,10 +1,24 @@
 import { createContext, useCallback, useContext, useEffect, useId, useMemo, useState, type ReactNode } from 'react';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useLocale } from '../../locale/LocaleProvider';
+import { useOptionalTheme } from '../../theme/ThemeProvider';
+import type { Profile } from '../../theme/profiles.generated';
 import { cx } from '../../utils/cx';
 import { Drawer } from '../Drawer/Drawer';
 
 const BREAKPOINTS = { md: 768, lg: 992, xl: 1200 } as const;
+
+/** Shell type of each app profile (spec: Variants). */
+const PROFILE_SHELL: Record<Profile, 'sidebar' | 'top-nav' | 'full-bleed'> = {
+  saas: 'sidebar',
+  admin: 'sidebar',
+  dashboard: 'sidebar',
+  cms: 'sidebar',
+  ecommerce: 'top-nav',
+  landing: 'top-nav',
+  pos: 'full-bleed',
+  game: 'full-bleed',
+};
 
 export interface AppShellContextValue {
   isMobile: boolean;
@@ -26,8 +40,11 @@ export function useAppShell(): AppShellContextValue | null {
 }
 
 export interface AppShellProps {
+  /** Defaults to the shell type of the active ThemeProvider profile, or `sidebar` without one. */
   variant?: 'sidebar' | 'top-nav' | 'full-bleed';
   topbar?: ReactNode;
+  /** Alias of `topbar` (the top-nav shell's banner is usually called a header). `topbar` wins when both are set. */
+  header?: ReactNode;
   sidebar?: ReactNode;
   footer?: ReactNode;
   bottomNav?: ReactNode;
@@ -54,8 +71,9 @@ function readCollapsed(key: string | undefined): boolean | null {
 }
 
 export function AppShell({
-  variant = 'sidebar',
-  topbar,
+  variant: variantProp,
+  topbar: topbarProp,
+  header,
   sidebar,
   footer,
   bottomNav,
@@ -71,6 +89,9 @@ export function AppShell({
   children,
 }: AppShellProps) {
   const { t } = useLocale();
+  const profile = useOptionalTheme()?.profile;
+  const variant = variantProp ?? (profile ? PROFILE_SHELL[profile] : 'sidebar');
+  const topbar = topbarProp ?? header;
   const navId = useId();
   const isMobile = !useMediaQuery(`(min-width: ${BREAKPOINTS[mobileBreakpoint]}px)`, true);
   const [internalCollapsed, setInternalCollapsed] = useState(() => readCollapsed(stateKey) ?? defaultSidebarCollapsed);

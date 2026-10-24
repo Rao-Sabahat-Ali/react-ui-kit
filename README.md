@@ -44,6 +44,8 @@ npm run create-app -- ../my-backoffice --profile admin      # home screen = Admi
 npm run create-app -- ../my-app --profile dashboard --blank # empty starter page instead
 ```
 
+Generated apps load only the styles they use: `vite.config.ts` registers `uiKitStyles({ include: [...] })` from `@sabahat/react-ui-kit/vite`, `main.tsx` imports `virtual:ui-kit-styles` and `src/vite-env.d.ts` declares that module (see "Loading only the styles you use" below). When you write a new Bootstrap class yourself (`className="d-flex gap-3"`), add it to `include`.
+
 ## Loading only the styles you use
 
 `@sabahat/react-ui-kit/styles.css` is everything (about 58 KB gzip, 430 KB raw) and keeps working unchanged. Pages that only use a few components can load just their CSS with the Vite plugin `@sabahat/react-ui-kit/vite`:

@@ -173,6 +173,7 @@ export function AnalyticsDashboard({ appName = 'Nordic Tools', previewState, emb
   return (
     <div data-ui-density={density}>
       <AppShell
+        variant="sidebar"
         className={embedded ? 'ui-app-shell--embedded' : undefined}
         topbar={
           <Topbar

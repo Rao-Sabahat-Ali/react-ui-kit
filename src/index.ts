@@ -9,6 +9,7 @@ export * from './types';
 
 // Components (alphabetical)
 export * from './components/Accordion';
+export * from './components/AnimateOnScroll';
 export * from './components/AppShell';
 export * from './components/AutoComplete';
 export * from './components/Avatar';
@@ -50,7 +51,9 @@ export * from './components/Galleria';
 export * from './components/Grid';
 export * from './components/Icon';
 export * from './components/IconField';
+export * from './components/IftaLabel';
 export * from './components/Image';
+export * from './components/ImageCompare';
 export * from './components/IndexList';
 export * from './components/Inplace';
 export * from './components/InputGroup';
@@ -109,6 +112,7 @@ export * from './components/Switch';
 export * from './components/TabMenu';
 export * from './components/Tabs';
 export * from './components/Tag';
+export * from './components/Terminal';
 export * from './components/ThemeToggle';
 export * from './components/TieredMenu';
 export * from './components/Timeline';

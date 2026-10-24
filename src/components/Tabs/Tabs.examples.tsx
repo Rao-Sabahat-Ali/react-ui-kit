@@ -35,4 +35,17 @@ export const examples = [
       );
     },
   },
+  {
+    title: 'Scrollable',
+    description: 'One row that scrolls sideways. Previous/next buttons appear only when the tabs overflow; arrow keys keep the focused tab in view.',
+    code: `<Tabs variant="underline" scrollable items={items} aria-label="Sections" />`,
+    render: () => {
+      const items = ['Overview', 'Activity', 'Members', 'Billing', 'Integrations', 'Security', 'Audit log', 'Webhooks', 'Danger zone'].map((t) => ({ value: t.toLowerCase(), label: t, content: sample(t) }));
+      return (
+        <div style={{ maxWidth: 420 }}>
+          <Tabs variant="underline" scrollable items={items} aria-label="Sections" />
+        </div>
+      );
+    },
+  },
 ];

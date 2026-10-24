@@ -1,14 +1,15 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ToastProvider, useToast, type ToastApi } from './Toast';
+import { compileScss, mediaBlock } from '../../../test/scss';
+import { ToastProvider, useToast, type ToastApi, type ToastPosition } from './Toast';
 
 let api: ToastApi;
 function Capture() {
   api = useToast();
   return null;
 }
-const setup = (max?: number) => render(<ToastProvider max={max}><Capture /></ToastProvider>);
+const setup = (max?: number, position?: ToastPosition) => render(<ToastProvider max={max} position={position}><Capture /></ToastProvider>);
 
 afterEach(() => vi.useRealTimers());
 
@@ -65,5 +66,20 @@ describe('Toast', () => {
     vi.useRealTimers();
     await userEvent.click(screen.getByRole('button', { name: 'Dismiss' }));
     expect(screen.queryByText('Broken')).toBeNull();
+  });
+
+  it('AC-5: position prop selects the corner; reduced motion disables the slide', () => {
+    const positions: ToastPosition[] = ['top-start', 'top-center', 'top-end', 'bottom-start', 'bottom-center', 'bottom-end'];
+    for (const position of positions) {
+      const [vertical, horizontal] = position.split('-');
+      const { container, unmount } = setup(undefined, position);
+      const region = container.ownerDocument.querySelector('.ui-toast-container')!;
+      expect(region).toHaveClass(`ui-toast-container--${vertical}`, `ui-toast-container--${horizontal}`);
+      unmount();
+    }
+    const css = compileScss('src/components/Toast/Toast.scss');
+    expect(css).toMatch(/\.ui-toast-container--start\s*\{[^}]*inset-inline-start/);
+    expect(css).toMatch(/\.ui-toast-container--end\s*\{[^}]*inset-inline-end/);
+    expect(mediaBlock(css, '(prefers-reduced-motion: reduce)')).toMatch(/\.ui-toast\s*\{[^}]*animation:\s*none/);
   });
 });

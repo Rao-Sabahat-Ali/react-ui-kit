@@ -151,6 +151,7 @@ export function AdminListDetail({ appName = 'Back office', previewState, embedde
   return (
     <>
       <AppShell
+        variant="sidebar"
         className={embedded ? 'ui-app-shell--embedded' : undefined}
         topbar={
           <Topbar

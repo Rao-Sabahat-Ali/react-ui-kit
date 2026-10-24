@@ -24,11 +24,12 @@ export interface CatalogProfile {
   density: string;
 }
 
-const modules = import.meta.glob<{ examples: Example[] }>('../../src/components/*/*.examples.tsx', { eager: true });
+// Components live in src/components/<Name>/, the foundation providers in src/theme and src/locale.
+const modules = import.meta.glob<{ examples: Example[] }>(['../../src/components/*/*.examples.tsx', '../../src/theme/*.examples.tsx', '../../src/locale/*.examples.tsx'], { eager: true });
 
-/** Examples keyed by component folder name (matches spec `name`). */
+/** Examples keyed by the name in the file (`<Name>.examples.tsx`), which matches the spec `name`. */
 export const examplesByName = new Map<string, Example[]>(
-  Object.entries(modules).map(([path, mod]) => [path.split('/').at(-2)!, mod.examples]),
+  Object.entries(modules).map(([path, mod]) => [path.split('/').at(-1)!.replace(/\.examples\.tsx$/, ''), mod.examples]),
 );
 
 export const components: CatalogComponent[] = catalog.components;

@@ -16,12 +16,15 @@ test('home renders with landmarks @mobile', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test('every implemented component page renders without errors', async ({ page }) => {
-  test.setTimeout(180_000);
+test('every component page renders live examples without errors', async ({ page }) => {
+  test.setTimeout(240_000);
   const errors = errorsOn(page);
-  for (const c of catalog.components.filter((x) => x.status !== 'specified')) {
+  // All specs, including the foundation providers (ThemeProvider, LocaleProvider, FocusTrap, Portal): none may show "not implemented".
+  for (const c of catalog.components) {
     await page.goto(`/#/components/${c.slug}`);
     await expect(page.getByRole('heading', { level: 1, name: c.name })).toBeVisible();
+    await expect(page.getByText('Not implemented yet'), `${c.name} has no docs examples`).toHaveCount(0);
+    await expect(page.getByRole('heading', { level: 3 }).first(), `${c.name} shows no example`).toBeVisible();
   }
   expect(errors).toEqual([]);
 });

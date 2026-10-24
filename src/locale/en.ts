@@ -248,6 +248,17 @@ export const en = {
   itemsLoaded_one: '{count} item loaded',
   itemsLoaded_other: '{count} items loaded',
   endOfList: 'End of list',
+  // Tabs scrollable, ImageCompare, Terminal (1.4.0).
+  tabsScrollBack: 'Scroll tabs back',
+  tabsScrollForward: 'Scroll tabs forward',
+  imageCompare: 'Compare images',
+  imageCompareBefore: 'Before',
+  imageCompareAfter: 'After',
+  imageCompareValue: '{before}% {beforeLabel}, {after}% {afterLabel}',
+  terminal: 'Terminal',
+  terminalInput: 'Command',
+  terminalRunning: 'Running…',
+  terminalError: 'The command failed',
 };
 
 export type Messages = typeof en;

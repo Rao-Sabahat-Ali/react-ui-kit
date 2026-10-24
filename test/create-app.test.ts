@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 // @ts-expect-error — plain .mjs script module
-import { BLUEPRINT_HOMES, PROFILES_SHELL } from '../scripts/profile-shells.mjs';
+import { BLUEPRINT_HOMES, PROFILES_SHELL, STARTER_INCLUDE } from '../scripts/profile-shells.mjs';
 
 const root = join(import.meta.dirname, '..');
 const base = mkdtempSync(join(tmpdir(), 'kit-starter-'));
@@ -18,6 +18,52 @@ describe('create-app (OPS-017)', () => {
     for (const file of walk(dir)) expect(readFileSync(file, 'utf8'), file).not.toMatch(/__[A-Z_]+__/);
     expect(readFileSync(join(dir, 'src/App.tsx'), 'utf8')).toContain(`profile="${profile}"`);
     expect(readFileSync(join(dir, 'index.html'), 'utf8')).toContain(`'${profile}'`);
+  });
+
+  it.each(Object.keys(PROFILES_SHELL))('%s starter loads only the styles it uses (style plugin)', (profile) => {
+    const dir = join(base, `${profile}-styles`);
+    execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', profile]);
+    const config = readFileSync(join(dir, 'vite.config.ts'), 'utf8');
+    expect(config).toContain("import { uiKitStyles } from '@sabahat/react-ui-kit/vite'");
+    expect(config).toMatch(/plugins: \[react\(\), uiKitStyles\(\{ include: \[[^\]]*\] \}\)\]/);
+    const main = readFileSync(join(dir, 'src/main.tsx'), 'utf8');
+    expect(main).toContain("import 'virtual:ui-kit-styles';");
+    expect(main).not.toContain('styles.css');
+    expect(readFileSync(join(dir, 'src/vite-env.d.ts'), 'utf8')).toContain("declare module 'virtual:ui-kit-styles'");
+    const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dependencies: Record<string, string> };
+    expect(pkg.dependencies['@sabahat/react-ui-kit']).toBe(`^${(JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as { version: string }).version}`);
+  });
+
+  // Every Bootstrap class the generated source writes itself must be in `include`, because the plugin cannot see app class names.
+  describe.skipIf(!existsSync(join(root, 'dist/styles/manifest.json')))('style plugin include lists cover the generated source', () => {
+    const manifest = JSON.parse(readFileSync(join(root, 'dist/styles/manifest.json'), 'utf8')) as {
+      bootstrap: Record<string, { classes: string[] }>;
+      utilities: Record<string, { classes: string[] }>;
+    };
+    const known = new Set([...Object.values(manifest.bootstrap), ...Object.values(manifest.utilities)].flatMap((p) => p.classes));
+    const stem = (c: string) => c.replace(/-(sm|md|lg|xl|xxl)(?=-|$)/, '');
+    const used = (dir: string) => {
+      const classes = new Set<string>();
+      for (const file of walk(join(dir, 'src')).filter((f) => /\.tsx?$/.test(f) && !/\.test\./.test(f))) {
+        for (const literal of readFileSync(file, 'utf8').matchAll(/(['"`])((?:(?!\1)[^\\\n]|\\.)*)\1/g)) {
+          for (const token of (literal[2] ?? '').split(/\s+/)) if (/^[a-z][a-z0-9-]*$/.test(token) && (known.has(token) || known.has(stem(token)))) classes.add(token);
+        }
+      }
+      return classes;
+    };
+    const listed = (dir: string) => {
+      const match = /include: \[([^\]]*)\]/.exec(readFileSync(join(dir, 'vite.config.ts'), 'utf8'));
+      return new Set((match?.[1] ?? '').split(',').map((c) => c.trim().replace(/'/g, '')).filter(Boolean));
+    };
+
+    it.each([...Object.keys(BLUEPRINT_HOMES), 'saas'])('%s', (profile) => {
+      const dir = join(base, `${profile}-include`);
+      execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', profile]);
+      const include = listed(dir);
+      const missing = [...used(dir)].filter((c) => !include.has(c));
+      expect(missing, `classes used by the ${profile} starter but not in uiKitStyles include`).toEqual([]);
+      if (profile === 'saas') expect([...include]).toEqual(STARTER_INCLUDE);
+    });
   });
 
   it.each(Object.keys(BLUEPRINT_HOMES))('starts the %s profile from its blueprint instead of the empty page', (profile) => {

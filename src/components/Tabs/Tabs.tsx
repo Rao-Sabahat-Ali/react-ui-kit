@@ -1,4 +1,5 @@
-import { createContext, useContext, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useLocale } from '../../locale';
 import { useControllableState } from '../../hooks/useControllableState';
 import { cx } from '../../utils/cx';
 import { Icon, type IconName } from '../Icon/Icon';
@@ -11,6 +12,7 @@ interface TabsContextValue {
   orientation: 'horizontal' | 'vertical';
   activation: 'auto' | 'manual';
   lazy: boolean;
+  scrollable: boolean;
   visited: Set<string>;
 }
 
@@ -43,20 +45,22 @@ export interface TabsProps {
   activation?: 'auto' | 'manual';
   fill?: 'none' | 'fill' | 'justified';
   lazy?: boolean;
+  /** Horizontal scroll with prev/next buttons when the tabs overflow (horizontal orientation only). */
+  scrollable?: boolean;
   items?: TabItem[];
   className?: string;
   children?: ReactNode;
   'aria-label'?: string;
 }
 
-export function Tabs({ value: valueProp, defaultValue, onChange, variant = 'tabs', orientation = 'horizontal', activation = 'auto', fill = 'none', lazy = true, items, className, children, ...rest }: TabsProps) {
+export function Tabs({ value: valueProp, defaultValue, onChange, variant = 'tabs', orientation = 'horizontal', activation = 'auto', fill = 'none', lazy = true, scrollable = false, items, className, children, ...rest }: TabsProps) {
   const baseId = useId();
   const firstEnabled = items?.find((i) => !i.disabled)?.value;
   const [value, setValue] = useControllableState<string | undefined>(valueProp, defaultValue ?? firstEnabled, onChange as ((v: string | undefined) => void) | undefined);
   const [visited] = useState(() => new Set<string>());
   if (value !== undefined) visited.add(value);
 
-  const ctx: TabsContextValue = { value, select: (v) => setValue(v), baseId, variant, orientation, activation, lazy, visited };
+  const ctx: TabsContextValue = { value, select: (v) => setValue(v), baseId, variant, orientation, activation, lazy, scrollable: scrollable && orientation === 'horizontal', visited };
 
   const body = items ? (
     <>
@@ -91,10 +95,65 @@ export interface TabListProps {
   'aria-label'?: string;
 }
 
+const prefersReducedMotion = () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 function TabList({ children, fill = 'none', className, ...rest }: TabListProps) {
   const ctx = useTabs('Tabs.List');
+  const { t } = useLocale();
   const listRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const vertical = ctx.orientation === 'vertical';
+  const scrollable = ctx.scrollable;
+  const [edges, setEdges] = useState<{ overflow: boolean; atStart: boolean; atEnd: boolean }>({ overflow: false, atStart: true, atEnd: true });
+
+  const measure = useCallback(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    // scrollLeft is 0 at the inline start and negative in RTL, so work with its magnitude.
+    const offset = Math.abs(el.scrollLeft);
+    const overflow = el.scrollWidth > el.clientWidth + 1;
+    const next = { overflow, atStart: offset <= 1, atEnd: offset + el.clientWidth >= el.scrollWidth - 1 };
+    setEdges((prev) => (prev.overflow === next.overflow && prev.atStart === next.atStart && prev.atEnd === next.atEnd ? prev : next));
+  }, []);
+
+  const reveal = useCallback((tab: Element | null | undefined) => {
+    const viewport = viewportRef.current;
+    if (!viewport || !tab) return;
+    const v = viewport.getBoundingClientRect();
+    const r = tab.getBoundingClientRect();
+    // Physical rects, so the delta is right in both directions; leave room for the scroll buttons.
+    const pad = 4;
+    const delta = r.left < v.left + pad ? r.left - v.left - pad : r.right > v.right - pad ? r.right - v.right + pad : 0;
+    if (delta !== 0) viewport.scrollBy?.({ left: delta, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!scrollable || !viewport) return;
+    measure();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    observer?.observe(viewport);
+    if (listRef.current) observer?.observe(listRef.current);
+    window.addEventListener('resize', measure);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [scrollable, measure, children]);
+
+  // Keep the selected tab visible (selection by click, key or controlled value).
+  useEffect(() => {
+    if (!scrollable) return;
+    reveal(listRef.current?.querySelector('[role="tab"][aria-selected="true"]'));
+  }, [scrollable, ctx.value, reveal]);
+
+  const scrollByPage = (direction: -1 | 1) => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const rtl = getComputedStyle(viewport).direction === 'rtl';
+    const amount = viewport.clientWidth * 0.75 * direction * (rtl ? -1 : 1);
+    viewport.scrollBy?.({ left: amount, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const tabs = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]:not([disabled])') ?? []);
@@ -112,10 +171,11 @@ function TabList({ children, fill = 'none', className, ...rest }: TabListProps) 
     event.preventDefault();
     const tab = tabs[target]!;
     tab.focus();
+    if (scrollable) reveal(tab);
     if (ctx.activation === 'auto') ctx.select(tab.dataset.value!);
   };
 
-  return (
+  const list = (
     // Focus lives on the tabs (roving tabindex); the tablist only delegates arrow keys.
     // eslint-disable-next-line jsx-a11y/interactive-supports-focus
     <div
@@ -128,12 +188,36 @@ function TabList({ children, fill = 'none', className, ...rest }: TabListProps) 
         vertical && 'flex-column',
         fill === 'fill' && 'nav-fill',
         fill === 'justified' && 'nav-justified',
+        scrollable && 'ui-tabs__list--scrollable',
         className,
       )}
       onKeyDown={handleKeyDown}
+      onFocus={scrollable ? (event) => reveal((event.target as Element).closest('[role="tab"]')) : undefined}
       {...rest}
     >
       {children}
+    </div>
+  );
+
+  if (!scrollable) return list;
+
+  // The buttons are a pointer/touch affordance. Keyboard users move with the arrow keys (which scroll the focused
+  // tab into view), so the buttons stay out of the tab order instead of adding two redundant stops.
+  return (
+    <div className={cx('ui-tabs__scroller', edges.overflow && 'ui-tabs__scroller--overflow')}>
+      {edges.overflow && (
+        <button type="button" tabIndex={-1} className="ui-tabs__scroll ui-tabs__scroll--start" aria-label={t('tabsScrollBack')} disabled={edges.atStart} onClick={() => scrollByPage(-1)}>
+          <Icon name="chevron-left" />
+        </button>
+      )}
+      <div ref={viewportRef} className="ui-tabs__viewport" onScroll={measure}>
+        {list}
+      </div>
+      {edges.overflow && (
+        <button type="button" tabIndex={-1} className="ui-tabs__scroll ui-tabs__scroll--end" aria-label={t('tabsScrollForward')} disabled={edges.atEnd} onClick={() => scrollByPage(1)}>
+          <Icon name="chevron-right" />
+        </button>
+      )}
     </div>
   );
 }
