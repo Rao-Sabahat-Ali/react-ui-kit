@@ -57,10 +57,16 @@ if (home) {
   cpSync(join(root, 'templates', 'blueprint-home', 'App.tsx'), join(dir, 'src', 'App.tsx'));
   cpSync(join(root, 'templates', 'blueprint-home', 'App.test.tsx'), join(dir, 'src', 'App.test.tsx'));
 }
+// User text (--title, --description) is untrusted input: escape it for the file it lands in.
+const USER_TEXT = new Set(['__APP_TITLE__', '__APP_DESCRIPTION__']);
+const htmlEscape = (v) => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+const jsonEscape = (v) => JSON.stringify(v).slice(1, -1);
+// JSON files get JSON string escaping; everything else (HTML, JSX attributes, Markdown) gets HTML entities, which all three decode or render literally.
+const escapeFor = (file, key, value) => (!USER_TEXT.has(key) ? value : file.endsWith('.json') ? jsonEscape(value) : htmlEscape(value));
 const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
 for (const file of walk(dir)) {
   let text = readFileSync(file, 'utf8');
-  for (const [k, v] of Object.entries(replacements)) text = text.split(k).join(v);
+  for (const [k, v] of Object.entries(replacements)) text = text.split(k).join(escapeFor(file, k, v));
   writeFileSync(file, text);
 }
 console.log(`Created ${dir} (profile ${profile}${home ? `, home screen: ${home.screen} blueprint` : ''}). Next: cd ${target} && npm install && npm run dev`);

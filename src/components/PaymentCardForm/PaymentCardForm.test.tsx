@@ -1,5 +1,6 @@
-import { createRef, useState } from 'react';
-import { act, render, screen, within } from '@testing-library/react';
+import { createPortal } from 'react-dom';
+import { StrictMode, createRef, useState } from 'react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PaymentCardForm, type CardFormState, type CardFormValues, type HostedSlot } from './PaymentCardForm';
@@ -298,36 +299,69 @@ describe('PaymentCardForm security (AC-11, AC-12)', () => {
     cookie.mockRestore();
   });
 
-  it('AC-11: values appear in no DOM attribute except the inputs, and never in text', async () => {
+  it('AC-11: card inputs are uncontrolled: no DOM attribute (inputs included) ever holds the values, typed or pasted', async () => {
     const user = userEvent.setup();
-    const { container } = render(<Raw />);
+    const { container } = render(<Raw collectPostalCode />);
+    const number = screen.getByLabelText(/Card number/) as HTMLInputElement;
+    const expiry = screen.getByLabelText(/Expiry date/) as HTMLInputElement;
+    const cvc = screen.getByLabelText(/Security code/) as HTMLInputElement;
+    const holder = screen.getByLabelText(/Name on card/) as HTMLInputElement;
+    const postal = screen.getByLabelText(/Postal code/) as HTMLInputElement;
     await fill(user, VISA);
-    await user.click(screen.getByLabelText(/Name on card/));
+    await user.type(postal, '111 22');
+    await user.click(holder);
     await user.tab();
+    // The live values are really there (so the attribute checks below are not vacuous) ...
+    expect([number.value, expiry.value, cvc.value, holder.value, postal.value]).toEqual([VISA, '12 / 30', CVC, 'Ada Lovelace', '111 22']);
+    // ... but only as DOM properties.
+    for (const input of [number, expiry, cvc, holder, postal]) expect(input.getAttribute('value'), input.id).toBeNull();
+    // Paste path too.
+    await user.clear(number);
+    await user.click(number);
+    await user.paste(AMEX);
+    await user.clear(cvc);
+    await user.click(cvc);
+    await user.paste('9876');
+    expect(number.value).toBe(AMEX);
+    expect(cvc.value).toBe('9876');
+    for (const input of [number, expiry, cvc]) expect(input.getAttribute('value'), `${input.id} after paste`).toBeNull();
+    // No attribute on any element (INPUT included) and no text contains a secret.
     for (const el of container.querySelectorAll('*')) {
-      if (el.tagName === 'INPUT') continue;
       for (const attr of el.getAttributeNames()) {
         for (const secret of sensitive) expect(el.getAttribute(attr), `${el.tagName}[${attr}]`).not.toContain(secret);
       }
     }
     for (const secret of sensitive) expect(container.textContent).not.toContain(secret);
-    // The inputs themselves hold the values and nothing else repeats them.
-    expect(container.querySelectorAll('input[value*="4242"]')).toHaveLength(1);
+    for (const secret of ['3782822463', '3782 822463', '9876', '4242', CVC, '12 / 30']) expect(container.outerHTML).not.toContain(secret);
+    expect(container.querySelectorAll('input[value]')).toHaveLength(0);
   });
 
-  it('AC-12: values are cleared after submit by default and on unmount', async () => {
+  it('AC-12: values are cleared in the still-mounted inputs after submit by default', async () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn();
-    const { unmount, container } = render(<Raw onSubmit={onSubmit} />);
+    render(<Raw onSubmit={onSubmit} />);
+    const inputs = [/Card number/, /Expiry date/, /Security code/, /Name on card/].map((label) => screen.getByLabelText(label) as HTMLInputElement);
     await fill(user, VISA);
+    expect(inputs.map((i) => i.value)).toEqual([VISA, '12 / 30', CVC, 'Ada Lovelace']);
     await user.click(screen.getByRole('button', { name: 'Pay' }));
     expect(onSubmit).toHaveBeenCalledTimes(1);
-    for (const label of [/Card number/, /Expiry date/, /Security code/, /Name on card/]) expect(screen.getByLabelText(label)).toHaveValue('');
+    expect(onSubmit.mock.calls[0]![0].number).toBe('4242424242424242');
+    expect(inputs.map((i) => i.value)).toEqual(['', '', '', '']);
     expect(screen.queryByRole('alert')).toBeNull();
+    // Nothing is retained: typing again starts from scratch and the formatter has no memory of the old expiry.
+    await user.type(inputs[1]!, '4');
+    expect(inputs[1]!.value).toBe('04 / ');
+  });
 
-    await user.type(screen.getByLabelText(/Card number/), VISA);
+  it('AC-12: an input is emptied when the form unmounts', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<Raw />);
+    const inputs = [/Card number/, /Expiry date/, /Security code/, /Name on card/].map((label) => screen.getByLabelText(label) as HTMLInputElement);
+    await fill(user, VISA);
+    expect(inputs[0]!.value).toBe(VISA);
     unmount();
-    expect(container.querySelectorAll('input')).toHaveLength(0);
+    // The detached elements are still referenced here: their values must already be gone.
+    expect(inputs.map((i) => i.value)).toEqual(['', '', '', '']);
     expect(document.body.innerHTML).not.toContain('4242');
     render(<Raw />);
     expect(screen.getByLabelText(/Card number/)).toHaveValue('');
@@ -343,15 +377,183 @@ describe('PaymentCardForm security (AC-11, AC-12)', () => {
 
   it('AC-11: submit is always intercepted so nothing is posted natively', async () => {
     const user = userEvent.setup();
-    const submitEvents: boolean[] = [];
-    const { container } = render(<Raw onSubmit={noop} />);
-    document.addEventListener('submit', (e) => submitEvents.push(e.defaultPrevented));
+    const onSubmit = vi.fn();
+    const { container } = render(<Raw onSubmit={onSubmit} />);
+    const form = container.querySelector('form')!;
+    expect(form).toHaveAttribute('method', 'post');
     await fill(user, VISA);
-    await act(async () => {
+    // fireEvent returns false when the default action was prevented.
+    expect(fireEvent.submit(form)).toBe(false);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('PaymentCardForm submit isolation (AC-15, AC-16)', () => {
+  let errors: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+  afterEach(() => errors.mockRestore());
+
+  const complete = { number: { complete: true }, expiry: { complete: true }, cvc: { complete: true } };
+
+  it('AC-15: a submit never reaches a parent onSubmit through the React tree (portal) and renders a real form', async () => {
+    const user = userEvent.setup();
+    const parent = vi.fn((e: React.FormEvent) => e.preventDefault());
+    const own = vi.fn();
+    render(
+      <form onSubmit={parent}>
+        {createPortal(<PaymentCardForm onSubmit={own} fields={complete} />, document.body)}
+      </form>,
+    );
+    expect(document.body.querySelector('form form')).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Pay' }));
+    expect(own).toHaveBeenCalledTimes(1);
+    expect(parent).not.toHaveBeenCalled();
+  });
+
+  it('AC-15: inside an ancestor <form> hosted mode renders no nested form, Pay triggers its own onSubmit and the parent is untouched', async () => {
+    const user = userEvent.setup();
+    const parent = vi.fn((e: React.FormEvent) => e.preventDefault());
+    const own = vi.fn();
+    const { container } = render(
+      <form onSubmit={parent}>
+        <PaymentCardForm onSubmit={own} fields={complete} />
+      </form>,
+    );
+    expect(container.querySelectorAll('form')).toHaveLength(1);
+    expect(container.querySelector('div[role="group"][aria-label="Card details"]')).not.toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Pay' }));
+    expect(own).toHaveBeenCalledTimes(1);
+    expect(parent).not.toHaveBeenCalled();
+    expect(errors).not.toHaveBeenCalled();
+  });
+
+  it('AC-15: inside an ancestor <form> raw mode submits on Enter and on Pay without submitting the parent', async () => {
+    const user = userEvent.setup();
+    const parent = vi.fn((e: React.FormEvent) => e.preventDefault());
+    const own = vi.fn();
+    const { container } = render(
+      <form onSubmit={parent}>
+        <PaymentCardForm mode="raw" now={NOW} onSubmit={own} clearOnSubmit={false} />
+      </form>,
+    );
+    expect(container.querySelectorAll('form')).toHaveLength(1);
+    await fill(user, VISA);
+    await user.type(screen.getByLabelText(/Name on card/), '{Enter}');
+    expect(own).toHaveBeenCalledTimes(1);
+    expect(own.mock.calls[0]![0].number).toBe('4242424242424242');
+    await user.click(screen.getByRole('button', { name: 'Pay' }));
+    expect(own).toHaveBeenCalledTimes(2);
+    expect(parent).not.toHaveBeenCalled();
+    expect(errors).not.toHaveBeenCalled();
+  });
+
+  it('AC-15: Enter in a raw-mode field of a standalone form submits once', async () => {
+    const user = userEvent.setup();
+    const own = vi.fn();
+    render(<PaymentCardForm mode="raw" now={NOW} onSubmit={own} />);
+    await fill(user, VISA);
+    await user.type(screen.getByLabelText(/Name on card/), '{Enter}');
+    expect(own).toHaveBeenCalledTimes(1);
+  });
+
+  it('AC-16: onSubmit that throws still clears the fields and the error reaches onError', async () => {
+    const user = userEvent.setup();
+    const boom = new Error('boom');
+    const onError = vi.fn();
+    render(<Raw onSubmit={() => { throw boom; }} onError={onError} />);
+    const inputs = [/Card number/, /Expiry date/, /Security code/, /Name on card/].map((label) => screen.getByLabelText(label) as HTMLInputElement);
+    await fill(user, VISA);
+    await user.click(screen.getByRole('button', { name: 'Pay' }));
+    expect(onError).toHaveBeenCalledWith(boom);
+    expect(inputs.map((i) => i.value)).toEqual(['', '', '', '']);
+  });
+
+  it('AC-16: without onError a thrown error is rethrown, not swallowed, and the fields are still cleared', async () => {
+    const user = userEvent.setup();
+    const seen: unknown[] = [];
+    const listener = (e: ErrorEvent) => {
+      seen.push(e.error);
+      e.preventDefault();
+    };
+    window.addEventListener('error', listener);
+    try {
+      render(<Raw onSubmit={() => { throw new Error('boom'); }} />);
+      await fill(user, VISA);
       await user.click(screen.getByRole('button', { name: 'Pay' }));
-    });
-    expect(submitEvents).toEqual([true]);
-    expect(container.querySelector('form')).toHaveAttribute('method', 'post');
+    } finally {
+      window.removeEventListener('error', listener);
+    }
+    expect(seen.map((e) => (e as Error).message)).toContain('boom');
+    expect(screen.getByLabelText(/Card number/)).toHaveValue('');
+  });
+
+  it('AC-16: an async onSubmit disables the fields while in flight, then clears them even when it rejects', async () => {
+    const user = userEvent.setup();
+    let reject!: (e: unknown) => void;
+    const onError = vi.fn();
+    const { container } = render(<Raw onSubmit={() => new Promise<void>((_, r) => { reject = r; })} onError={onError} />);
+    const number = screen.getByLabelText(/Card number/) as HTMLInputElement;
+    await fill(user, VISA);
+    await user.click(screen.getByRole('button', { name: 'Pay' }));
+    expect(container.querySelector('fieldset')).toBeDisabled();
+    expect(number).toBeDisabled();
+    expect(number.value).toBe(VISA);
+    await act(async () => reject(new Error('declined')));
+    expect(onError).toHaveBeenCalledTimes(1);
+    expect(number).toBeEnabled();
+    expect(number.value).toBe('');
+  });
+
+  it('AC-16: the fieldset is disabled while the submitting prop is set (hosted and raw)', () => {
+    const { container, rerender } = render(<PaymentCardForm onSubmit={noop} submitting />);
+    expect(container.querySelector('fieldset')).toBeDisabled();
+    rerender(<PaymentCardForm mode="raw" onSubmit={noop} submitting />);
+    expect(container.querySelector('fieldset')).toBeDisabled();
+  });
+});
+
+describe('PaymentCardForm hosted lifecycle and focus (AC-17, AC-18)', () => {
+  it('AC-17: under StrictMode onReady fires once per slot when there is no onDestroy', () => {
+    const onReady = vi.fn();
+    render(
+      <StrictMode>
+        <PaymentCardForm onReady={onReady} />
+      </StrictMode>,
+    );
+    expect(onReady.mock.calls.map((c) => c[0])).toEqual(['number', 'expiry', 'cvc']);
+  });
+
+  it('AC-17: onDestroy pairs with onReady (StrictMode remount, then unmount) and receives the same element', () => {
+    const live = new Set<HTMLDivElement>();
+    const onReady = vi.fn((_f: HostedSlot, el: HTMLDivElement) => live.add(el));
+    const onDestroy = vi.fn((_f: HostedSlot, el: HTMLDivElement) => live.delete(el));
+    const { unmount } = render(
+      <StrictMode>
+        <PaymentCardForm onReady={onReady} onDestroy={onDestroy} />
+      </StrictMode>,
+    );
+    expect(live.size).toBe(3);
+    expect(onReady.mock.calls.length - onDestroy.mock.calls.length).toBe(3);
+    unmount();
+    expect(live.size).toBe(0);
+    expect(onDestroy.mock.calls.length).toBe(onReady.mock.calls.length);
+    for (const [, el] of onDestroy.mock.calls) expect(el).toBeInstanceOf(HTMLDivElement);
+  });
+
+  it('AC-18: error summary links and label clicks focus the slot container when onFocusRequest is omitted', async () => {
+    const user = userEvent.setup();
+    render(<PaymentCardForm onSubmit={noop} fields={{ number: { complete: true }, expiry: { complete: true }, cvc: { empty: true } }} />);
+    await user.click(screen.getByRole('button', { name: 'Pay' }));
+    const slot = screen.getByRole('group', { name: 'Security code' });
+    expect(slot).toHaveAttribute('tabindex', '-1');
+    expect(slot).toHaveFocus();
+    (screen.getByRole('group', { name: 'Card number' }) as HTMLElement).focus();
+    await user.click(within(screen.getByRole('alert')).getByRole('link'));
+    expect(slot).toHaveFocus();
+    await user.click(screen.getByText('Expiry date'));
+    expect(screen.getByRole('group', { name: 'Expiry date' })).toHaveFocus();
   });
 });
 

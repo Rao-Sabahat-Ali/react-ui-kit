@@ -68,9 +68,10 @@ export function PaymentMethodSelector({
       aria-describedby={errorId}
     >
       {legendText !== undefined && <legend className={cx('form-label fs-6 ui-payment-methods__legend', legendHidden && 'visually-hidden')}>{legendText}</legend>}
-      {methods.map((method) => {
+      {methods.map((method, index) => {
         const selected = value === method.id;
-        const inputId = `${uid}-${method.id}`;
+        // `method.id` may contain spaces or other characters that break id references (aria-controls/describedby); the index keeps slugs unique.
+        const inputId = `${uid}-${index}-${method.id.replace(/[^A-Za-z0-9_-]/g, '-')}`;
         const descriptionId = method.description ? `${inputId}-desc` : undefined;
         const reasonId = method.disabled && method.disabledReason ? `${inputId}-reason` : undefined;
         const panelId = `${inputId}-panel`;

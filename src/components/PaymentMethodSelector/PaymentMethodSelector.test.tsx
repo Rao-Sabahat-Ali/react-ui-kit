@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { PaymentCardForm } from '../PaymentCardForm/PaymentCardForm';
 import { PaymentMethodSelector, type PaymentMethod } from './PaymentMethodSelector';
 
 const methods: PaymentMethod[] = [
@@ -111,5 +112,45 @@ describe('PaymentMethodSelector', () => {
     render(<PaymentMethodSelector methods={methods} disabled />);
     for (const radio of screen.getAllByRole('radio')) expect(radio).toBeDisabled();
     expect(document.querySelectorAll('img')).toHaveLength(0);
+  });
+
+  it('AC-8: method ids with spaces or other characters still produce valid, unique id references', () => {
+    render(
+      <PaymentMethodSelector
+        methods={[
+          { id: 'apple pay', label: 'Apple Pay', description: 'Fast checkout', children: <p>Wallet panel</p> },
+          { id: 'apple-pay', label: 'Apple Pay (2)', description: 'Other' },
+        ]}
+        defaultValue="apple pay"
+      />,
+    );
+    const radio = screen.getAllByRole('radio')[0]!;
+    expect(radio.id).not.toMatch(/\s/);
+    expect(radio).toHaveAccessibleDescription('Fast checkout');
+    const panelId = radio.getAttribute('aria-controls')!;
+    expect(panelId).not.toMatch(/\s/);
+    expect(document.getElementById(panelId)).toHaveTextContent('Wallet panel');
+    const ids = Array.from(document.querySelectorAll('[id]')).map((el) => el.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('AC-4: switching away unmounts a hosted card form and calls onDestroy with the same element', async () => {
+    const user = userEvent.setup();
+    const onReady = vi.fn();
+    const onDestroy = vi.fn();
+    render(
+      <PaymentMethodSelector
+        defaultValue="card"
+        methods={[
+          { id: 'card', label: 'Card', children: <PaymentCardForm onReady={onReady} onDestroy={onDestroy} /> },
+          { id: 'invoice', label: 'Invoice' },
+        ]}
+      />,
+    );
+    expect(onReady).toHaveBeenCalledTimes(3);
+    expect(onDestroy).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('radio', { name: 'Invoice' }));
+    expect(onDestroy).toHaveBeenCalledTimes(3);
+    expect(onDestroy.mock.calls.map((c) => c[1])).toEqual(onReady.mock.calls.map((c) => c[1]));
   });
 });

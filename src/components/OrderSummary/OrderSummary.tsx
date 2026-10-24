@@ -30,7 +30,7 @@ export interface OrderSummaryProps extends Omit<HTMLAttributes<HTMLElement>, 'ti
   subtotal?: number;
   /** `0` reads "Free", `null` reads "Calculated at next step", `undefined` hides the row. */
   shipping?: number | null;
-  /** Positive amount; shown as a deduction. */
+  /** Amount >= 0, shown as a deduction. A negative or non-finite value is ignored (row hidden, not subtracted). */
   discount?: number;
   discountLabel?: ReactNode;
   tax?: number;
@@ -47,11 +47,119 @@ export interface OrderSummaryProps extends Omit<HTMLAttributes<HTMLElement>, 'ti
   titleAs?: 'h2' | 'h3' | 'h4';
 }
 
-const minorDigits = (currency: string, locale: string): number => new Intl.NumberFormat(locale, { style: 'currency', currency }).resolvedOptions().maximumFractionDigits ?? 2;
+const FALLBACK_DIGITS = 2;
 
-/** Formats a major-unit amount with `Intl` (for example `formatMoney(86.4, 'SEK', 'sv-SE')` gives "86,40 kr"). */
+/** Fraction digits of the currency (0 for JPY, 3 for BHD). Falls back to 2 for an unknown or malformed ISO code. */
+export function currencyFractionDigits(currency: string, locale = 'en'): number {
+  try {
+    return new Intl.NumberFormat(locale, { style: 'currency', currency }).resolvedOptions().maximumFractionDigits ?? FALLBACK_DIGITS;
+  } catch {
+    return FALLBACK_DIGITS;
+  }
+}
+
+/**
+ * Converts a major-unit amount to integer minor units by rounding the DECIMAL representation half away from zero, not
+ * `n * 10 ** digits` (which gives `1.005 * 100 === 100.49999999999999`). `toMinorUnits(1.005, 2)` is 101,
+ * `toMinorUnits(0.145, 2)` is 15. Returns `NaN` for a non-finite input.
+ */
+export function toMinorUnits(amount: number, digits: number): number {
+  if (!Number.isFinite(amount)) return NaN;
+  const match = /^(-?)(\d+)(?:\.(\d+))?(?:e([+-]?\d+))?$/i.exec(String(amount));
+  if (!match) return NaN;
+  const [, sign, whole, fraction = '', exponent = '0'] = match;
+  const all = whole! + fraction;
+  const point = whole!.length + Number(exponent) + digits; // position of the decimal point in `all` once scaled
+  let integer: bigint;
+  let roundUp: boolean;
+  if (point <= 0) {
+    integer = 0n;
+    roundUp = point === 0 && all[0]! >= '5';
+  } else {
+    const head = all.length >= point ? all.slice(0, point) : all.padEnd(point, '0');
+    integer = BigInt(head);
+    roundUp = all.length > point && all[point]! >= '5';
+  }
+  const rounded = Number(roundUp ? integer + 1n : integer);
+  return sign ? -rounded : rounded;
+}
+
+/** Formats a major-unit amount with `Intl` (for example `formatMoney(86.4, 'SEK', 'sv-SE')` gives "86,40 kr"). An invalid currency code or locale falls back to a plain number plus the code instead of throwing. */
 export function formatMoney(amount: number, currency: string, locale = 'en'): string {
-  return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount);
+  const safe = Number.isFinite(amount) ? amount : 0;
+  try {
+    return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(safe);
+  } catch {
+    return `${safe.toFixed(FALLBACK_DIGITS)} ${String(currency).slice(0, 8)}`.trim();
+  }
+}
+
+const isAmount = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n) && n >= 0;
+const isQuantity = (n: unknown): n is number => typeof n === 'number' && Number.isInteger(n) && n >= 0;
+
+const warned = new Set<string>();
+function warnOnce(message: string) {
+  if (!import.meta.env?.DEV || warned.has(message)) return;
+  warned.add(message);
+  console.warn(`[react-ui-kit] OrderSummary: ${message}`);
+}
+
+type TotalsInput = Pick<OrderSummaryProps, 'lines' | 'currency' | 'locale' | 'subtotal' | 'shipping' | 'discount' | 'tax' | 'taxIncluded' | 'total'>;
+
+/** Everything `OrderSummary` shows, in integer minor units. `OrderSummary` and your pay button must use this one calculation. */
+export interface OrderTotals {
+  digits: number;
+  lineMinor: number[];
+  subtotal: number;
+  /** `null` when shipping is pending or absent or invalid. */
+  shipping: number | null;
+  /** `0` hides the discount row and is not part of the maths. */
+  discount: number;
+  /** `null` hides the tax row. */
+  tax: number | null;
+  /** Never negative. */
+  total: number;
+}
+
+/**
+ * Validates and sums an order in integer minor units. Invalid input never produces NaN or a negative total: a
+ * non-integer or negative `quantity` counts as 0, a non-finite or negative amount is ignored (its row is hidden),
+ * and the total is clamped at 0. The discount row is shown if and only if it is part of the total.
+ */
+export function calculateOrderTotals({ lines = [], currency, locale = 'en', subtotal: subtotalProp, shipping, discount, tax, taxIncluded = false, total: totalProp }: TotalsInput): OrderTotals {
+  const digits = currencyFractionDigits(currency, locale);
+  const toMinor = (n: number) => toMinorUnits(n, digits);
+  const quantityOf = (line: OrderLine) => {
+    if (isQuantity(line.quantity)) return line.quantity;
+    warnOnce(`line "${line.id}" has an invalid quantity (must be a whole number >= 0); counted as 0.`);
+    return 0;
+  };
+  const unitOf = (line: OrderLine) => {
+    if (isAmount(line.unitPrice)) return toMinor(line.unitPrice);
+    warnOnce(`line "${line.id}" has an invalid unitPrice (must be a finite number >= 0); counted as 0.`);
+    return 0;
+  };
+  const lineMinor = lines.map((line) => {
+    if (line.total !== undefined) {
+      if (isAmount(line.total)) return toMinor(line.total);
+      warnOnce(`line "${line.id}" has an invalid total; computed from quantity and unitPrice instead.`);
+    }
+    return unitOf(line) * quantityOf(line);
+  });
+  const checked = (name: string, value: number | undefined): number | undefined => {
+    if (value === undefined) return undefined;
+    if (isAmount(value)) return toMinor(value);
+    warnOnce(`${name} must be a finite number >= 0; ignored.`);
+    return undefined;
+  };
+  const subtotalOverride = checked('subtotal', subtotalProp);
+  const subtotal = subtotalOverride ?? lineMinor.reduce((a, b) => a + b, 0);
+  const shippingMinor = shipping === null ? null : (checked('shipping', shipping) ?? null);
+  const discountMinor = checked('discount', discount) ?? 0;
+  const taxMinor = checked('tax', tax) ?? null;
+  const totalOverride = checked('total', totalProp);
+  const computed = subtotal + (shippingMinor ?? 0) - discountMinor + (taxIncluded ? 0 : (taxMinor ?? 0));
+  return { digits, lineMinor, subtotal, shipping: shippingMinor, discount: discountMinor, tax: taxMinor, total: Math.max(0, totalOverride ?? computed) };
 }
 
 /**
@@ -85,17 +193,10 @@ export function OrderSummary({
   const wide = useMediaQuery('(min-width: 992px)');
   const [expanded, setExpanded] = useState(defaultExpanded);
 
-  const digits = minorDigits(currency, locale);
-  const scale = 10 ** digits;
-  const toMinor = (n: number) => Math.round(n * scale);
-  const fmt = (minor: number) => formatMoney(minor / scale, currency, locale);
-
-  const lineMinor = lines.map((line) => (line.total !== undefined ? toMinor(line.total) : toMinor(line.unitPrice) * line.quantity));
-  const subtotal = subtotalProp !== undefined ? toMinor(subtotalProp) : lineMinor.reduce((a, b) => a + b, 0);
-  const shippingMinor = typeof shipping === 'number' ? toMinor(shipping) : 0;
-  const discountMinor = discount ? toMinor(discount) : 0;
-  const taxMinor = tax !== undefined ? toMinor(tax) : 0;
-  const total = totalProp !== undefined ? toMinor(totalProp) : subtotal + shippingMinor - discountMinor + (taxIncluded ? 0 : taxMinor);
+  const totals = calculateOrderTotals({ lines, currency, locale, subtotal: subtotalProp, shipping, discount, tax, taxIncluded, total: totalProp });
+  const { digits, lineMinor, subtotal, discount: discountMinor, total } = totals;
+  const toMinor = (n: number) => toMinorUnits(isAmount(n) ? n : 0, digits);
+  const fmt = (minor: number) => formatMoney(minor / 10 ** digits, currency, locale);
   const totalText = fmt(total);
 
   // Announce changes to the total (never the first render).
@@ -137,6 +238,7 @@ export function OrderSummary({
         <tbody>
           {lines.map((line, i) => {
             const discounted = line.originalUnitPrice !== undefined && toMinor(line.originalUnitPrice) > toMinor(line.unitPrice);
+            const quantity = isQuantity(line.quantity) ? line.quantity : 0;
             const unit = fmt(toMinor(line.unitPrice));
             return (
               <tr key={line.id} className="ui-order-summary__line">
@@ -152,11 +254,11 @@ export function OrderSummary({
                             <del className="ui-order-summary__was" aria-hidden="true">
                               {fmt(toMinor(line.originalUnitPrice!))}
                             </del>{' '}
-                            {t('orderQuantityEach', { quantity: line.quantity, price: unit })}
+                            {t('orderQuantityEach', { quantity, price: unit })}
                             <span className="visually-hidden"> ({t('orderWasNow', { was: fmt(toMinor(line.originalUnitPrice!)), now: unit })})</span>
                           </>
                         ) : (
-                          t('orderQuantityEach', { quantity: line.quantity, price: unit })
+                          t('orderQuantityEach', { quantity, price: unit })
                         )}
                       </span>
                     </span>
@@ -173,22 +275,22 @@ export function OrderSummary({
             <th scope="row">{t('orderSubtotal')}</th>
             <td className="ui-order-summary__amount">{fmt(subtotal)}</td>
           </tr>
-          {shipping !== undefined && (
+          {(shipping === null || totals.shipping !== null) && (
             <tr className="ui-order-summary__row">
               <th scope="row">{t('orderShipping')}</th>
-              <td className="ui-order-summary__amount">{shipping === null ? <span className="ui-order-summary__pending">{t('orderShippingPending')}</span> : shippingMinor === 0 ? t('orderFree') : fmt(shippingMinor)}</td>
+              <td className="ui-order-summary__amount">{totals.shipping === null ? <span className="ui-order-summary__pending">{t('orderShippingPending')}</span> : totals.shipping === 0 ? t('orderFree') : fmt(totals.shipping)}</td>
             </tr>
           )}
-          {discount !== undefined && discount > 0 && (
+          {discountMinor > 0 && (
             <tr className="ui-order-summary__row">
               <th scope="row">{discountLabel ?? t('orderDiscount')}</th>
               <td className="ui-order-summary__amount">{`−${fmt(discountMinor)}`}</td>
             </tr>
           )}
-          {tax !== undefined && (
+          {totals.tax !== null && (
             <tr className="ui-order-summary__row">
               <th scope="row">{taxIncluded ? t('orderTaxIncluded') : t('orderTax')}</th>
-              <td className="ui-order-summary__amount">{fmt(taxMinor)}</td>
+              <td className="ui-order-summary__amount">{fmt(totals.tax)}</td>
             </tr>
           )}
           {promo && (

@@ -82,6 +82,10 @@ describe('card utilities', () => {
     expect(maskCardNumber('4242 4242 4242 4242').replace(/\D/g, '')).toBe('4242');
     expect(maskCardNumber('4242').replace(/\d/g, '')).toBe('••••');
     expect(maskCardNumber('')).toBe('');
+    // Not a complete length: nothing is revealed (consistent with getCardLast4).
+    expect(maskCardNumber('4242 4242 4242 42')).toBe('•••• •••• •••• ••');
+    expect(maskCardNumber('424242424242424242424')).not.toMatch(/\d/);
+    expect(maskCardNumber('4242 4242 4242 4242 99')).not.toMatch(/\d/);
   });
 
   it('AC-14: getCardLast4 only reports a complete number', () => {
@@ -110,6 +114,14 @@ describe('card utilities', () => {
       expect(validateExpiry('13 / 30', now).reason).toBe('month');
       expect(validateExpiry('00 / 30', now).reason).toBe('month');
       expect(validateExpiry('01 / 60', now).reason).toBe('far');
+    });
+    it('AC-14: rejects trailing digits and non-digit junk instead of truncating', () => {
+      expect(validateExpiry('12/20301', now)).toMatchObject({ valid: false, reason: 'format' });
+      expect(validateExpiry('1230999', now).valid).toBe(false);
+      expect(validateExpiry('12/30abc', now)).toMatchObject({ valid: false, reason: 'format' });
+      expect(validateExpiry('12/30<script>', now).valid).toBe(false);
+      expect(validateExpiry('12/2030', now).valid).toBe(true);
+      expect(validateExpiry('12 - 30', now).valid).toBe(true);
     });
   });
 

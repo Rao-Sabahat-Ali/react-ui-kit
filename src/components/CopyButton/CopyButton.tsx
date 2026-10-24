@@ -6,7 +6,11 @@ import { Button, type ButtonAppearance, type ButtonVariant } from '../Button/But
 import type { Size } from '../../types';
 
 export interface CopyButtonProps {
-  /** Text to copy. A function is evaluated on click. Never rendered or logged. */
+  /**
+   * Text to copy. A function is evaluated on click. Never rendered or logged.
+   * Never use this for card data, passwords or other secrets: the clipboard is readable by other apps and clipboard
+   * managers, and the component does not (and cannot) clear it afterwards.
+   */
   value: string | (() => string);
   /** Idle label; the accessible name when `iconOnly`. */
   label?: string;
@@ -15,7 +19,13 @@ export interface CopyButtonProps {
   /** ms until the idle state returns; `0` keeps the state until the next click. */
   timeout?: number;
   iconOnly?: boolean;
+  /** Receives the copied text. With `sensitive` it is called with no argument. */
   onCopy?: (value: string) => void;
+  /**
+   * The text is a one-time token or similar: `onCopy` is called WITHOUT the text and the component keeps no reference
+   * to it after the copy call. This does not make clipboard use safe for secrets (see `value`). Default `false`.
+   */
+  sensitive?: boolean;
   onError?: (error: unknown) => void;
   variant?: ButtonVariant;
   appearance?: ButtonAppearance;
@@ -35,6 +45,7 @@ export function CopyButton({
   timeout = 2000,
   iconOnly = false,
   onCopy,
+  sensitive = false,
   onError,
   variant = 'secondary',
   appearance = 'text',
@@ -72,10 +83,14 @@ export function CopyButton({
     }
     if (!mounted.current) return;
     setStatus(next);
-    if (next === 'copied') onCopy?.(text);
-    else onError?.(error);
+    if (next === 'copied') {
+      if (sensitive) {
+        text = '';
+        (onCopy as (() => void) | undefined)?.();
+      } else onCopy?.(text);
+    } else onError?.(error);
     if (timeout > 0) timer.current = window.setTimeout(() => mounted.current && setStatus('idle'), timeout);
-  }, [value, timeout, onCopy, onError]);
+  }, [value, timeout, onCopy, onError, sensitive]);
 
   const text = status === 'copied' ? done : status === 'failed' ? failed : idle;
   const icon = status === 'copied' ? 'check' : status === 'failed' ? 'alert-circle' : 'copy';

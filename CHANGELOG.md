@@ -2,6 +2,19 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## 1.6.1 (unreleased)
+### Security
+- `PaymentCardForm` raw mode: the number, expiry, security code (and name/postal code) inputs are now uncontrolled, so React no longer mirrors card data into the DOM `value` attribute (readable by CSS attribute selectors, session replay and MutationObserver tools). React state holds only brand, error codes and last4. Tests assert `getAttribute('value')` is empty after typing and pasting and that `outerHTML` contains neither the PAN nor the CVC. The inputs are emptied on submit and on unmount.
+- `PaymentCardForm` never lets its submit reach a parent `onSubmit` (`stopPropagation`) and no longer renders a nested `<form>`: inside an ancestor form it renders `div role="group"` and handles Enter and Pay itself. Avoid nesting it.
+- Raw `onSubmit` may return a promise; fields are cleared even when it throws or rejects (new `onError`, otherwise rethrown), and the fieldset is disabled while submitting.
+- `HostedField` / `PaymentCardForm`: new `onDestroy(field, element)` (unmount your provider element there) and `onReady` is no longer repeated for the same element under StrictMode. Hosted error-summary links and label clicks focus the slot container when `onFocusRequest` is omitted.
+- `OrderSummary` validates input (NaN/Infinity/negative amounts, non-integer quantities, negative discount) and clamps the total at 0; the discount row shows if and only if it is subtracted; an invalid currency code no longer throws. Minor units are rounded from the decimal value (`1.005` is 101, `0.145` is 15). New exports `calculateOrderTotals`, `toMinorUnits`, `currencyFractionDigits`; the Checkout blueprint takes its "Place order" amount from the same calculation.
+- `validateExpiry` rejects trailing digits and junk (`12/20301`); `maskCardNumber` reveals the last four only for a complete-length number.
+- `PaymentMethodSelector` slugifies method ids used in `aria-controls`/`aria-describedby`.
+- `TableOfContents` survives invalid `from`/`headings` selectors and tracks scanned headings by element (DOM clobbering). `Tour` closes with the new reason `missing` (not `done`) when no step has a target.
+- `CopyButton`: documented that card data and secrets must never be copied; new `sensitive` prop calls `onCopy()` without the text.
+- `uiKitStyles` (Vite plugin) emits JSON-escaped specifiers and rejects manifest entries that are not plain relative `.css` paths (falls back to the full stylesheet). `create-app` escapes `--title` and `--description` for JSON, HTML, JSX attributes and Markdown. The Checkout blueprint email check no longer accepts whitespace or several `@`.
+
 ## 1.6.0 (unreleased)
 Payments: UI for paying, never the payment itself. The kit never talks to a payment provider and never stores card data.
 

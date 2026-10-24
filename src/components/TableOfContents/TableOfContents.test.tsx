@@ -165,4 +165,37 @@ describe('TableOfContents', () => {
     expect(document.querySelector('[aria-current]')).toBeNull();
     fireEvent.click(screen.getByRole('link', { name: 'A' }));
   });
+
+  it('AC-9: an invalid `from` or `headings` selector renders an empty nav instead of throwing', () => {
+    const { rerender } = render(<Article><TableOfContents from="###[[" /></Article>);
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.queryAllByRole('link')).toHaveLength(0);
+    rerender(<Article><TableOfContents from="#article" headings=">>> nope" /></Article>);
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.queryAllByRole('link')).toHaveLength(0);
+    rerender(<Article><TableOfContents from="#article" /></Article>);
+    expect(screen.getAllByRole('link').length).toBeGreaterThan(0);
+  });
+
+  it('AC-9: scanned headings are tracked by element, not looked up through document.getElementById (DOM clobbering)', () => {
+    render(
+      <>
+        <article id="real">
+          <h2 id="one">One</h2>
+          <h2 id="two">Two</h2>
+        </article>
+        <TableOfContents from="#real" />
+      </>,
+    );
+    const decoy = document.createElement('div');
+    document.body.append(decoy);
+    // Simulates a clobbered/shadowed lookup: every id resolves to the decoy.
+    vi.spyOn(document, 'getElementById').mockImplementation(() => decoy);
+    fireEvent.click(screen.getByRole('link', { name: 'Two' }));
+    expect(document.getElementById('two')).toBe(decoy); // the mock is active
+    expect(screen.getByRole('heading', { name: 'Two' })).toHaveFocus();
+    expect(decoy).not.toHaveFocus();
+    expect(scrollIntoView.mock.contexts.at(-1)).toBe(screen.getByRole('heading', { name: 'Two' }));
+    decoy.remove();
+  });
 });

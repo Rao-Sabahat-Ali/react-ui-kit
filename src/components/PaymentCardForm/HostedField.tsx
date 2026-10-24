@@ -17,8 +17,14 @@ export interface HostedFieldProps extends HostedFieldState {
   id?: string;
   help?: ReactNode;
   disabled?: boolean;
-  /** Called once with the empty container; mount the provider's iframe or element inside it. */
+  /** Called with the empty container; mount the provider's iframe or element inside it. Not repeated for the same element (StrictMode safe). */
   onReady?: (element: HTMLDivElement) => void;
+  /**
+   * Called when the field unmounts (for example when PaymentMethodSelector removes the panel): unmount your provider
+   * element here, or it stays attached to a detached container. If you pass it, `onReady` runs again after a StrictMode
+   * remount so the two always pair up.
+   */
+  onDestroy?: (element: HTMLDivElement) => void;
   /** The label was clicked: call the provider's `focus()`. */
   onLabelClick?: () => void;
   className?: string;
@@ -30,7 +36,7 @@ export interface HostedFieldProps extends HostedFieldState {
  * A labelled, styled mount point for a payment provider's hosted field. The kit renders no inputs here, so card data
  * never enters this page. Give the provider element an accessible name (for example the same label text).
  */
-export function HostedField({ label, id: idProp, help, disabled = false, focused, invalid, complete, empty, error, onReady, onLabelClick, className, ref }: HostedFieldProps) {
+export function HostedField({ label, id: idProp, help, disabled = false, focused, invalid, complete, empty, error, onReady, onDestroy, onLabelClick, className, ref }: HostedFieldProps) {
   const autoId = useId();
   const id = idProp ?? autoId;
   const labelId = `${id}-label`;
@@ -39,9 +45,23 @@ export function HostedField({ label, id: idProp, help, disabled = false, focused
   const elementRef = useRef<HTMLDivElement | null>(null);
   const readyRef = useRef(onReady);
   readyRef.current = onReady;
+  const destroyRef = useRef(onDestroy);
+  destroyRef.current = onDestroy;
+  const readyFor = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (elementRef.current) readyRef.current?.(elementRef.current);
+    const element = elementRef.current;
+    if (!element) return;
+    // Idempotent per element: StrictMode's simulated remount reuses the element and must not mount a second provider.
+    if (readyFor.current !== element) {
+      readyFor.current = element;
+      readyRef.current?.(element);
+    }
+    return () => {
+      if (!destroyRef.current) return;
+      readyFor.current = null;
+      destroyRef.current(element);
+    };
   }, []);
 
   const setRefs = (node: HTMLDivElement | null) => {
@@ -66,7 +86,7 @@ export function HostedField({ label, id: idProp, help, disabled = false, focused
       <span id={labelId} className="form-label ui-field__label ui-hosted-field__label" onClick={onLabelClick}>
         {label}
       </span>
-      <div ref={setRefs} id={id} role="group" aria-labelledby={labelId} aria-describedby={describedBy} className="ui-hosted-field__control" />
+      <div ref={setRefs} id={id} role="group" tabIndex={-1} aria-labelledby={labelId} aria-describedby={describedBy} className="ui-hosted-field__control" />
       {help && (
         <div id={helpId} className="form-text ui-field__help">
           {help}

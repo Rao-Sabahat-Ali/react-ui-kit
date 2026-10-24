@@ -40,15 +40,35 @@ const slugify = (s: string) =>
 
 function resolveContainer(from: TableOfContentsProps['from']): HTMLElement | null {
   if (!from || typeof document === 'undefined') return null;
-  if (typeof from === 'string') return document.querySelector<HTMLElement>(from);
+  if (typeof from === 'string') {
+    try {
+      return document.querySelector<HTMLElement>(from);
+    } catch {
+      // Invalid selector: treated as no container.
+      return null;
+    }
+  }
   if (from instanceof HTMLElement) return from;
   return from.current;
 }
 
-function scan(container: HTMLElement, selector: string): TocItem[] {
+/** The tree plus the heading elements found by the scan (ids can be shadowed by DOM clobbering, elements cannot). */
+interface Scan {
+  items: TocItem[];
+  elements: Map<string, HTMLElement>;
+}
+
+function scan(container: HTMLElement, selector: string): Scan {
   const roots: TocItem[] = [];
+  const elements = new Map<string, HTMLElement>();
   const stack: { level: number; item: TocItem }[] = [];
-  container.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+  let found: HTMLElement[] = [];
+  try {
+    found = Array.from(container.querySelectorAll<HTMLElement>(selector));
+  } catch {
+    // Invalid selector: no headings.
+  }
+  found.forEach((el) => {
     const text = el.textContent?.trim() ?? '';
     if (!text) return;
     if (!el.id) {
@@ -59,6 +79,7 @@ function scan(container: HTMLElement, selector: string): TocItem[] {
     }
     const match = /^H([1-6])$/.exec(el.tagName);
     const level = match ? Number(match[1]) : Number(el.getAttribute('aria-level')) || 2;
+    elements.set(el.id, el);
     const item: TocItem = { id: el.id, label: text };
     while (stack.length && stack[stack.length - 1]!.level >= level) stack.pop();
     const parent = stack[stack.length - 1];
@@ -66,7 +87,7 @@ function scan(container: HTMLElement, selector: string): TocItem[] {
     else roots.push(item);
     stack.push({ level, item });
   });
-  return roots;
+  return { items: roots, elements };
 }
 
 const flatten = (items: TocItem[]): string[] => items.flatMap((i) => [i.id, ...flatten(i.children ?? [])]);
@@ -78,6 +99,9 @@ export function TableOfContents({ items, from, headings = 'h2, h3', label, hideT
   const [scanned, setScanned] = useState<TocItem[]>([]);
   const [active, setActive] = useState<string | null>(null);
   const list = items ?? scanned;
+  // Heading elements found by the scan, so neither the scrollspy nor click handling goes through `getElementById` for them.
+  const scannedElements = useRef(new Map<string, HTMLElement>());
+  const lookup = useCallback((id: string): HTMLElement | null => scannedElements.current.get(id) ?? document.getElementById(id), []);
   const ids = useMemo(() => flatten(list), [list]);
   const idKey = ids.join('\u0000');
 
@@ -86,11 +110,14 @@ export function TableOfContents({ items, from, headings = 'h2, h3', label, hideT
     if (items) return;
     const container = resolveContainer(from);
     if (!container) {
+      scannedElements.current = new Map();
       setScanned([]);
       return;
     }
     const run = () => {
-      const next = scan(container, headings);
+      const result = scan(container, headings);
+      scannedElements.current = result.elements;
+      const next = result.items;
       setScanned((prev) => (JSON.stringify(prev) === JSON.stringify(next) ? prev : next));
     };
     run();
@@ -109,7 +136,7 @@ export function TableOfContents({ items, from, headings = 'h2, h3', label, hideT
 
   // Scrollspy: the current section is the last heading above the offset line.
   useEffect(() => {
-    const els = idKey ? idKey.split('\u0000').map((id) => document.getElementById(id)).filter((e): e is HTMLElement => !!e) : [];
+    const els = idKey ? idKey.split('\u0000').map((id) => lookup(id)).filter((e): e is HTMLElement => !!e) : [];
     if (els.length === 0 || typeof IntersectionObserver === 'undefined') {
       setActive(null);
       return;
@@ -130,7 +157,7 @@ export function TableOfContents({ items, from, headings = 'h2, h3', label, hideT
     els.forEach((el) => observer.observe(el));
     compute();
     return () => observer.disconnect();
-  }, [idKey, offset]);
+  }, [idKey, offset, lookup]);
 
   const activeRef = useRef(onActiveChange);
   activeRef.current = onActiveChange;
@@ -144,7 +171,7 @@ export function TableOfContents({ items, from, headings = 'h2, h3', label, hideT
   const handleClick = useCallback(
     (event: MouseEvent<HTMLAnchorElement>, id: string) => {
       if (!isPlainClick(event)) return;
-      const target = document.getElementById(id);
+      const target = lookup(id);
       if (!target) return;
       event.preventDefault();
       target.style.scrollMarginBlockStart = `${offset}px`;
@@ -159,7 +186,7 @@ export function TableOfContents({ items, from, headings = 'h2, h3', label, hideT
       else window.history.pushState(null, '', href);
       setActive(id);
     },
-    [offset, onNavigate, reduced],
+    [offset, onNavigate, reduced, lookup],
   );
 
   const render = (nodes: TocItem[], depth: number): ReactNode => (

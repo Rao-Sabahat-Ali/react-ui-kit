@@ -167,7 +167,7 @@ describe('Tour', () => {
     expect(scrollIntoView).toHaveBeenCalledWith({ block: 'center', inline: 'nearest', behavior: 'auto' });
   });
 
-  it('AC-7: a missing target is skipped with a dev-only warning; no targets closes the tour', () => {
+  it('AC-7, AC-11: a missing target is skipped with a dev-only warning; no targets closes the tour with reason missing', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const onStepChange = vi.fn();
     const onClose = vi.fn();
@@ -186,7 +186,9 @@ describe('Tour', () => {
     warn.mockClear();
     render(<Page><Tour defaultOpen steps={[{ target: '#nope', content: 'x' }, { target: '.also-nope', content: 'y' }]} onClose={onClose} /></Page>);
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(onClose).toHaveBeenCalledWith('done');
+    // Nothing was shown, so this is not a completed tour.
+    expect(onClose).toHaveBeenCalledWith('missing');
+    expect(onClose).not.toHaveBeenCalledWith('done');
     expect(warn).toHaveBeenCalled();
   });
 

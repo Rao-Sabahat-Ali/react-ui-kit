@@ -397,6 +397,22 @@ describe('checkout', () => {
     expect(screen.getByRole('textbox', { name: /Email/ })).toHaveFocus();
   });
 
+  it('rejects emails with whitespace or several @ signs and accepts a plain address', async () => {
+    const user = userEvent.setup();
+    renderCheckout();
+    const email = screen.getByRole('textbox', { name: /Email/ });
+    for (const bad of ['a b@example.com', 'a@@example.com', 'a@b@example.com', 'ada@example', 'ada@.']) {
+      await user.clear(email);
+      await user.type(email, bad);
+      await user.click(screen.getByRole('button', { name: 'Continue as guest' }));
+      expect(screen.getByText('Enter an email like name@example.com'), bad).toBeInTheDocument();
+    }
+    await user.clear(email);
+    await user.type(email, 'ada@example.com');
+    await user.click(screen.getByRole('button', { name: 'Continue as guest' }));
+    expect(screen.queryByText('Enter an email like name@example.com')).toBeNull();
+  });
+
   it('walks contact, delivery, payment and review, updates the total and places the order', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
