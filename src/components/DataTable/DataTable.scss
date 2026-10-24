@@ -128,3 +128,285 @@
 .ui-tabular {
   font-variant-numeric: tabular-nums;
 }
+
+// ── Phase 2 ────────────────────────────────────────────────────────────────
+
+.ui-data-table__toolbar-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2);
+  margin-inline-start: auto;
+}
+
+.ui-data-table__global-filter {
+  min-inline-size: 12rem;
+}
+
+.ui-data-table__head th,
+.ui-data-table__head [role='columnheader'] {
+  position: relative;
+}
+
+.ui-data-table__th-content {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  justify-content: inherit;
+}
+
+.ui-data-table__header-button,
+.ui-data-table__filter-button,
+.ui-data-table__expander-button,
+.ui-data-table__group-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    border-radius: var(--ui-radius-sm);
+  }
+}
+
+.ui-data-table__header-button {
+  cursor: grab;
+}
+
+.ui-data-table__filter-button,
+.ui-data-table__expander-button {
+  justify-content: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-color-text-muted);
+
+  &:hover {
+    background: var(--ui-color-bg-subtle);
+    color: var(--ui-color-text);
+  }
+}
+
+.ui-data-table__filter--active {
+  color: var(--ui-color-primary);
+  background: var(--ui-color-primary-subtle);
+}
+
+.ui-data-table__filter-menu {
+  min-inline-size: 16rem;
+}
+
+.ui-data-table__filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+}
+
+.ui-data-table__filter-range {
+  display: flex;
+  gap: var(--ui-space-2);
+}
+
+.ui-data-table__filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  max-block-size: 14rem;
+  overflow-y: auto;
+}
+
+.ui-data-table__filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+}
+
+.ui-data-table__filter-row > * {
+  background: var(--ui-color-surface);
+  padding-block: var(--ui-space-2);
+}
+
+.ui-data-table__resizer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: 0.5rem;
+  cursor: col-resize;
+  touch-action: none;
+  z-index: 2;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block: 25%;
+    inset-inline-end: 0;
+    inline-size: 2px;
+    background: var(--ui-color-border);
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    background: var(--ui-color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  @media (pointer: coarse) {
+    inline-size: 1.5rem;
+    inset-inline-end: -0.5rem;
+  }
+}
+
+.ui-data-table--resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.ui-data-table__table--fixed {
+  table-layout: fixed;
+
+  th,
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.ui-data-table__cell--frozen {
+  position: sticky;
+  inset-inline-start: var(--ui-data-table-frozen-offset, 0);
+  z-index: 1;
+  background: var(--ui-color-surface);
+}
+
+.ui-data-table__head .ui-data-table__cell--frozen {
+  z-index: 3;
+  background: var(--ui-color-bg-subtle);
+}
+
+.ui-data-table__expander {
+  inline-size: 3rem;
+  text-align: center;
+}
+
+.ui-data-table__expander-icon {
+  transition: transform var(--ui-duration) var(--ui-easing);
+
+  [aria-expanded='true'] > & {
+    transform: rotate(90deg);
+  }
+
+  [dir='rtl'] & {
+    transform: scaleX(-1);
+  }
+
+  [dir='rtl'] [aria-expanded='true'] > & {
+    transform: rotate(90deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.ui-data-table__expansion > td {
+  background: var(--ui-color-bg-subtle);
+  padding-block: var(--ui-space-3);
+}
+
+// ── Phase 3 ────────────────────────────────────────────────────────────────
+
+.ui-data-table__cell--editable {
+  cursor: text;
+
+  &:focus-visible {
+    outline: 2px solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
+  }
+}
+
+.ui-data-table__cell--editing {
+  padding-block: var(--ui-space-1);
+}
+
+.ui-data-table__row-editor {
+  inline-size: 6rem;
+  white-space: nowrap;
+}
+
+.ui-data-table__row-editor-buttons {
+  display: inline-flex;
+  gap: var(--ui-space-1);
+}
+
+.ui-data-table__group-header > th {
+  background: var(--ui-color-bg-subtle);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-data-table__group-footer > td {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-data-table__row--context > * {
+  box-shadow: inset 0 0 0 9999px var(--ui-color-primary-subtle);
+}
+
+.ui-data-table [role='grid'] [tabindex='0']:focus-visible,
+.ui-data-table table[role='grid'] td:focus-visible,
+.ui-data-table table[role='grid'] th:focus-visible {
+  outline: 2px solid var(--ui-color-focus-ring);
+  outline-offset: -2px;
+}
+
+// Virtual scroll: ARIA table of divs laid out with CSS grid (rows have a fixed height).
+.ui-data-table__wrapper--virtual {
+  overflow-x: auto;
+}
+
+.ui-data-table__grid {
+  display: block;
+
+  [role='row'] {
+    display: grid;
+    grid-template-columns: var(--ui-data-table-columns);
+    align-items: center;
+    border-block-end: 1px solid var(--ui-color-border);
+    block-size: 100%;
+  }
+
+  [role='row'] > * {
+    padding: var(--ui-space-2) var(--ui-space-4);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ui-data-table__head [role='row'] > * {
+    background: var(--ui-color-bg-subtle);
+    color: var(--ui-color-text-muted);
+    font-size: var(--ui-font-size-sm);
+    font-weight: var(--ui-font-weight-semibold);
+  }
+
+  .ui-data-table__row--selected > * {
+    background: var(--ui-color-primary-subtle);
+  }
+}
+
+.ui-data-table__viewport {
+  border-radius: 0;
+}
