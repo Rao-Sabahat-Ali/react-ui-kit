@@ -687,6 +687,11 @@ export function DataTable<T>(props: DataTableProps<T>) {
         onDragStart={
           reorderable
             ? (e: DragEvent<HTMLElement>) => {
+                // A pointer resize in progress must not start a header drag.
+                if (document.body.classList.contains('ui-data-table--resizing')) {
+                  e.preventDefault();
+                  return;
+                }
                 dragId.current = id;
                 e.dataTransfer?.setData('text/plain', id);
                 if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';

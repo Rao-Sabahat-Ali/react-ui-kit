@@ -214,7 +214,8 @@ export function ColumnFilterRow<T>({ column, label, constraint, onChange, msg, l
   const update = (value: unknown) => {
     setDraft(value);
     const next = { matchMode, value };
-    const text = column.filterType === undefined || column.filterType === 'text';
+    // Typed editors (text, number) are debounced; pickers apply immediately.
+    const text = column.filterType === undefined || column.filterType === 'text' || column.filterType === 'number';
     const emit = () => {
       setSynced(isFilterActive(next, column.filterType) ? value : undefined);
       onChange(isFilterActive(next, column.filterType) || (column.filterFn && value !== null && value !== '') ? next : undefined);
