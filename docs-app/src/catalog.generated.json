@@ -228,6 +228,16 @@
       ]
     },
     {
+      "name": "DataScroller",
+      "slug": "data-scroller",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "An endless list of rows that loads in chunks. The parent owns the data; DataScroller asks for the next chunk with `loadMore` when the end nears the viewport (scrolling inside a box or the window) and always offers a keyboard-reachable \"Load more\" button, so loading never depends on scrolling. Covers feeds, activity logs, search results and notifications.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "DataTable",
       "slug": "data-table",
       "category": "data",
@@ -1093,6 +1103,16 @@
       "category": "menu",
       "status": "implemented",
       "purpose": "Menu with nested flyout submenus.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "TimePicker",
+      "slug": "time-picker",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Time-of-day input as a segmented group of spinbuttons (hours, minutes, optional seconds, AM/PM). Value is a plain `'HH:mm'` string (or `'HH:mm:ss'`), always 24-hour regardless of display, so it serialises and sorts without a date library. 12 or 24-hour display follows the locale unless set. For a date together with a time use `DatePicker showTime`.",
       "profiles": [
         "all"
       ]

@@ -36,7 +36,7 @@ const replacements = {
   __DEFAULT_THEME__: shell.defaultTheme,
   __SHELL_VARIANT__: `variant="${shell.variant}"`,
   __BOTTOM_NAV__: String(shell.bottomNav),
-  __KIT_DEP__: `github:Rao-Sabahat-Ali/react-ui-kit#v${kitVersion}`,
+  __KIT_DEP__: `^${kitVersion}`,
 };
 
 cpSync(join(root, 'templates', 'starter'), dir, { recursive: true });

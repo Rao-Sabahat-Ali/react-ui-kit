@@ -239,6 +239,15 @@ export const en = {
   cancelEditN: 'Cancel editing row {index}',
   rowActions: 'Actions',
   rowMenu: 'Row actions',
+  // TimePicker, DataScroller (1.3.0).
+  emptyValue: 'Empty',
+  loadMore: 'Load more',
+  loadingMore: 'Loading more…',
+  loadFailed: 'Could not load more items',
+  retry: 'Retry',
+  itemsLoaded_one: '{count} item loaded',
+  itemsLoaded_other: '{count} items loaded',
+  endOfList: 'End of list',
 };
 
 export type Messages = typeof en;

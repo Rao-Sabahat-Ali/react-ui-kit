@@ -2,6 +2,13 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## 1.3.0 (unreleased)
+
+### Added
+- `TimePicker` — time-of-day input as a segmented spinbutton group (hours, minutes, optional seconds, AM/PM). 12/24-hour by locale, `step`, `min`/`max`, `'HH:mm'` string value, typing + arrow/Page/Home/End keys, Field integration, RTL, hidden form input.
+- `DataScroller` — infinite list loaded in chunks via `loadMore`. Inline scroll box or window, auto (IntersectionObserver) or manual loading, always-present keyboard "Load more" button, loading/empty/error-with-retry states, live-region announcements.
+- Locale keys: `emptyValue`, `loadMore`, `loadingMore`, `loadFailed`, `retry`, `itemsLoaded_one/_other`, `endOfList`.
+
 ## 1.2.1 — 2026-10-24
 First npm release (`npm install @sabahat/react-ui-kit`): MIT license, package metadata, README for external use, `prepublishOnly` gate. No code changes since 1.2.0.
 
