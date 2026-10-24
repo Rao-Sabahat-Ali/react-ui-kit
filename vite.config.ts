@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import react from '@vitejs/plugin-react';
 import type { DeprecationOrId } from 'sass';
 import { defineConfig, type Plugin } from 'vite';
+import { writeStyleSplit } from './scripts/build-style-split.mjs';
 
 // Library mode inlines every url() asset as base64 (1 MB of fonts in styles.css, no unicode-range
 // laziness). The lib build points font urls at a placeholder, then this plugin ships the woff2 files
@@ -24,6 +25,18 @@ function shipFonts(): Plugin {
   };
 }
 
+// Besides the unchanged dist/styles.css, emit dist/styles/** (base, Bootstrap partials, utilities, one file per
+// component, manifest.json) for apps that load only the styles they use (see `@sabahat/react-ui-kit/vite`).
+function splitStyles(): Plugin {
+  return {
+    name: 'ui-split-styles',
+    apply: 'build',
+    closeBundle() {
+      writeStyleSplit({ root: import.meta.dirname, outDir: resolve(import.meta.dirname, 'dist/styles') });
+    },
+  };
+}
+
 export const scssOptions = {
   loadPaths: [resolve(import.meta.dirname, 'node_modules')],
   quietDeps: true,
@@ -32,20 +45,20 @@ export const scssOptions = {
 };
 
 export default defineConfig({
-  plugins: [react(), shipFonts()],
+  plugins: [react(), shipFonts(), splitStyles()],
   css: { preprocessorOptions: { scss: { ...scssOptions, additionalData: `$ui-font-path: '${FONT_PLACEHOLDER}';\n` } } },
   build: {
     outDir: 'dist',
     sourcemap: true,
     emptyOutDir: true,
     lib: {
-      entry: resolve(import.meta.dirname, 'src/index.ts'),
+      entry: { index: resolve(import.meta.dirname, 'src/index.ts'), vite: resolve(import.meta.dirname, 'src/vite/index.ts') },
       formats: ['es'],
-      fileName: () => 'index.js',
+      fileName: (_format, entry) => `${entry}.js`,
       cssFileName: 'styles',
     },
     rolldownOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client', 'vite', /^node:/],
     },
   },
   test: {

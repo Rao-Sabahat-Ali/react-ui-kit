@@ -2,6 +2,29 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## 1.3.0 — 2026-10-24
+Load only the CSS of the components an app uses. `@sabahat/react-ui-kit/styles.css` is unchanged (byte-identical output), so nothing breaks for apps that want everything.
+
+### Added
+- `dist/styles/**`: the stylesheet split into `base.css` (fonts, tokens, Bootstrap root/reboot/type/helpers, bridge, reduced motion), `bootstrap/<partial>.css`, `utilities/<key>[@<bp>].css` (Bootstrap emits every key's base rules before any breakpoint block; the pieces keep that order), `components/<Name>.css`, and `manifest.json` (per component: css file, Bootstrap partials, utilities, other components needed, derived at build time from TSX imports and class usage; exported names; cascade order; sizes). Exposed as `@sabahat/react-ui-kit/styles/*`.
+- `@sabahat/react-ui-kit/vite`: dependency-free ESM Vite plugin. `import 'virtual:ui-kit-styles'` resolves to imports of only `base.css` + the partials, utilities and components the app source imports from the kit (plus `include` for Bootstrap classes the app uses directly, `components`, `exclude`, `scan`). Works in dev, falls back to `styles.css` when it cannot analyse the imports or the manifest is missing. See the README section "Loading only the styles you use".
+- `scripts/build-style-split.mjs` (run by `npm run build`) and `scripts/measure-style-split.mjs`.
+- Tests: manifest generator and plugin (source imports -> expected css list and order), a partition test (the pieces contain exactly the rules of the full stylesheet, including selectors Sass merged through `@extend`), a build-output test, and an e2e check that renders every docs page with only the pieces it needs and compares computed styles with the full stylesheet.
+
+### Changed
+- `src/styles/_bridge.scss` is now a set of mixins in `_bridge-parts.scss` so each Bootstrap override ships with the partial it overrides; `_bridge.scss` emits them in the original order (`dist/styles.css` is byte-identical to 1.2.0).
+- Package `exports` gains `./vite` and `./styles/*`; `package.json` version 1.3.0.
+
+### Measured
+Render-blocking CSS (all pieces concatenated, as an app bundle ships them) for an app using PageHeader, Section, IndexList, StatCard, StatGroup, Button, Tag, SelectButton, InputText, Tabs, Toast, ProgressBar, EmptyState, Skeleton, ThemeToggle, AppShell, Topbar, SidebarNav, BottomNav, ConfirmDialog, Dialog, DataTable and Message (37 components with their needs):
+
+| | raw | gzip | brotli |
+|---|---|---|---|
+| `styles.css` (everything) | 430.7 KB | 58.3 KB | 43.9 KB |
+| `virtual:ui-kit-styles` | 256.7 KB | 36.6 KB | 28.1 KB |
+
+That is 37% less gzip; a Button-only app loads 15.1 KB gzip (11.9 KB brotli). The remaining floor is `base.css` (9.8 KB gzip, mostly the tokens of all eight profiles) and the Bootstrap partials the kit renders (about 16 KB gzip).
+
 ## 1.2.0 — 2026-10-24
 Layout primitives for cross-screen consistency (design-system-mcp 0.5.0, `rules/consistency`).
 
