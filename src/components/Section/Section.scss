@@ -1,0 +1,40 @@
+.ui-section {
+  margin-block-end: var(--ui-space-8);
+}
+
+.ui-section--separated {
+  padding-block-start: var(--ui-space-6);
+  border-block-start: 1px solid var(--ui-color-border);
+}
+
+.ui-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  margin-block-end: var(--ui-space-3);
+}
+
+.ui-section__heading {
+  min-width: 0;
+  flex: 1 1 16rem;
+}
+
+.ui-section__title {
+  margin: 0;
+  font-size: var(--ui-font-size-2xl);
+  line-height: 1.2;
+}
+
+.ui-section__description {
+  margin: var(--ui-space-1) 0 0;
+  max-width: 70ch;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-section__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+}

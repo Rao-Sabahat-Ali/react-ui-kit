@@ -34,6 +34,13 @@ Use the `spec-driven-workflow` skill. Agents in `.claude/agents/`:
 | `a11y-reviewer` | sonnet | APG/WCAG verification of interactive components |
 | `security-reviewer` | opus | HTML/URL/file/secret/storage handling, releases |
 | `docs-writer` | haiku | Examples and docs |
+| `design-reviewer` | sonnet | Identity and cross-screen consistency review |
+
+## Model tiers (token budget)
+- **opus** — critical decisions only: `architect` (architecture, data/storage model, dependencies, ADRs) and `security-reviewer`. Invoke deliberately, not by default.
+- **sonnet** — everything that writes or reviews code, browses or tests: main session, builders, `reviewer`, `a11y-reviewer`, `design-reviewer`, content reviewers, `spec-writer`.
+- **haiku** — prose-only docs: `docs-writer` (examples, CHANGELOG, README, ADR text, tasks.md).
+When delegating with the Agent tool, pass `model` explicitly to match this table.
 
 Skills: `spec-driven-workflow`, `implement-component`, `write-component-tests`, `add-docs-example`, `theming-and-tokens`. Also useful: `code-review`, `security-review`, `vercel:react-best-practices`.
 

@@ -445,6 +445,16 @@
       ]
     },
     {
+      "name": "IndexList",
+      "slug": "index-list",
+      "category": "layout",
+      "status": "implemented",
+      "purpose": "A ruled list of things the user opens or acts on: practice modes, topics, tests, settings groups, results. A serif title, a muted description and a trailing action per row, separated by hairlines. It replaces grids of equal cards and gives every screen the same list rhythm (see `rules/consistency`).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "Inplace",
       "slug": "inplace",
       "category": "misc",
@@ -858,6 +868,16 @@
       ]
     },
     {
+      "name": "Section",
+      "slug": "section",
+      "category": "layout",
+      "status": "implemented",
+      "purpose": "A titled part of a page: heading, optional description and actions, then content. It is the one way to structure a screen into parts, so every screen has the same heading levels, spacing and landmark naming (see `rules/consistency`). Use it instead of a `Card` whose only job is to show a title.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "SelectButton",
       "slug": "select-button",
       "category": "form",
@@ -975,6 +995,16 @@
         "admin",
         "saas",
         "game"
+      ]
+    },
+    {
+      "name": "StatGroup",
+      "slug": "stat-group",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "A ruled row of 2–5 headline numbers, set as typography rather than as separate boxes. It makes overview screens look the same across apps and removes the icon-tile KPI pattern (see `rules/consistency`).",
+      "profiles": [
+        "all"
       ]
     },
     {

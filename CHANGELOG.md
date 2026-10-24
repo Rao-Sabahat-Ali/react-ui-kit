@@ -2,6 +2,15 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## 1.2.0 — 2026-10-24
+Layout primitives for cross-screen consistency (design-system-mcp 0.5.0, `rules/consistency`).
+
+### Added
+- `Section` — titled part of a page (heading, description, actions, optional hairline), labelled region.
+- `IndexList` / `IndexItem` — ruled list of things to open or act on; replaces grids of equal cards. Supports whole-row links, trailing actions, compact multi-column indexes.
+- `StatGroup` — ruled row of headline numbers; `StatCard` inside it renders plain automatically.
+- Docs examples for all three; `StatCard` `variant` is now optional (`plain` inside a group).
+
 ## 1.1.1 — 2026-10-24
 ### Changed
 - Fraunces ships as the `wght` variable file (37 KB latin instead of 67 KB with the optical-size axis) so the first screen paints faster on slow connections.

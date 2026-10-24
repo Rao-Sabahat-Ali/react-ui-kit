@@ -4,6 +4,7 @@ import { cx } from '../../utils/cx';
 import { safeUrl } from '../../utils/url';
 import { Icon, type IconName } from '../Icon/Icon';
 import { Skeleton } from '../Skeleton/Skeleton';
+import { useInStatGroup } from '../StatGroup/StatGroup';
 
 export interface StatCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   label: string;
@@ -36,7 +37,9 @@ function Sparkline({ values }: { values: number[] }) {
   );
 }
 
-export function StatCard({ label, value, format, delta, deltaLabel, invertDelta = false, icon, sparkline, loading = false, href, footer, variant = 'card', className, ...rest }: StatCardProps) {
+export function StatCard({ label, value, format, delta, deltaLabel, invertDelta = false, icon, sparkline, loading = false, href, footer, variant: variantProp, className, ...rest }: StatCardProps) {
+  const inGroup = useInStatGroup();
+  const variant = variantProp ?? (inGroup ? 'plain' : 'card');
   const { t, locale } = useLocale();
   const display = typeof value === 'number' ? new Intl.NumberFormat(locale, format).format(value) : value;
   const link = safeUrl(href);

@@ -1,4 +1,4 @@
-import { StatCard, Tag } from '@sabahat/react-ui-kit';
+import { StatCard, StatGroup, Tag } from '@sabahat/react-ui-kit';
 import { href } from '../router';
 import { components, isImplemented, profiles, specVersion } from '../registry';
 import { CodeBlock } from '../components/CodeBlock';
@@ -13,12 +13,12 @@ export function HomePage() {
           React 19 + Bootstrap 5.3 components implementing the personal design system. Specs live in <code>design-system-mcp</code> (spec v{specVersion}) and are served to agents over MCP.
         </p>
       </header>
-      <div className="ui-stat-group mb-5">
-        <StatCard variant="plain" label="Components implemented" value={implemented} />
-        <StatCard variant="plain" label="Components specified" value={components.length} href={href('roadmap')} />
-        <StatCard variant="plain" label="App profiles" value={profiles.length} href={href('profiles')} />
-        <StatCard variant="plain" label="Themes (light, dark)" value={2} href={href('foundations')} />
-      </div>
+      <StatGroup aria-label="Library at a glance" className="mb-5">
+        <StatCard label="Components implemented" value={implemented} />
+        <StatCard label="Components specified" value={components.length} href={href('roadmap')} />
+        <StatCard label="App profiles" value={profiles.length} href={href('profiles')} />
+        <StatCard label="Themes (light, dark)" value={2} href={href('foundations')} />
+      </StatGroup>
       <h2 className="h4">Use in an app</h2>
       <CodeBlock
         code={`npm install github:Rao-Sabahat-Ali/react-ui-kit#main\n\n// main.tsx\nimport '@sabahat/react-ui-kit/styles.css';\nimport { ThemeProvider } from '@sabahat/react-ui-kit';\n\n<ThemeProvider profile="admin">\n  <App />\n</ThemeProvider>`}
