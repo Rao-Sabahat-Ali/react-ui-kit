@@ -12,6 +12,19 @@
       ]
     },
     {
+      "name": "AnimateOnScroll",
+      "slug": "animate-on-scroll",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Reveal a block with a small opacity/transform transition the first time it scrolls into view (landing sections, feature lists). Content is always in the DOM and readable; only its presentation is delayed.",
+      "profiles": [
+        "landing",
+        "ecommerce",
+        "cms",
+        "saas"
+      ]
+    },
+    {
       "name": "AppShell",
       "slug": "app-shell",
       "category": "layout",
@@ -47,6 +60,16 @@
       "category": "misc",
       "status": "implemented",
       "purpose": "Small count or status indicator, standalone or overlaid on another element (avatar, icon button).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Barcode",
+      "slug": "barcode",
+      "category": "media",
+      "status": "implemented",
+      "purpose": "Dependency-free 1D barcodes rendered as SVG: Code 128, EAN-13, EAN-8, UPC-A, Code 39 and Interleaved 2 of 5, with validation, automatic check digits for EAN/UPC, optional human-readable text and the same always-dark-on-light colour tokens as `QRCode`. For product labels, receipts, tickets and inventory.",
       "profiles": [
         "all"
       ]
@@ -228,6 +251,26 @@
       ]
     },
     {
+      "name": "CopyButton",
+      "slug": "copy-button",
+      "category": "button",
+      "status": "implemented",
+      "purpose": "Copies a piece of text (token, id, URL, code snippet) to the clipboard and confirms it to everyone, including screen-reader users, with a short-lived \"Copied\" state.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Countdown",
+      "slug": "countdown",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Shows the time left until a moment (sale end, session expiry, exam, OTP resend) or, in `elapsed` mode, the time since one, without chatty screen-reader output.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "DataScroller",
       "slug": "data-scroller",
       "category": "data",
@@ -285,6 +328,20 @@
       "purpose": "Mount children only when the placeholder scrolls into view (IntersectionObserver) — lazy heavy widgets/images.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "DescriptionList",
+      "slug": "description-list",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "Key/value details of one record as a real `<dl>`: the standard way to show an order, user, article or invoice on admin and article pages.",
+      "profiles": [
+        "admin",
+        "cms",
+        "saas",
+        "dashboard",
+        "ecommerce"
       ]
     },
     {
@@ -425,6 +482,16 @@
       ]
     },
     {
+      "name": "Highlight",
+      "slug": "highlight",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Marks the parts of a text that match one or more search terms, for search results, dictionary lookups and filtered lists.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "IconField",
       "slug": "icon-field",
       "category": "form",
@@ -442,6 +509,32 @@
       "purpose": "Inline SVG icon from the built-in registry. Zero external icon dependency.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "IftaLabel",
+      "slug": "ifta-label",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Inside-field-top-aligned label: the label sits at the top **inside** the control's border and the value below it, so the field keeps a permanent, always-visible label without FloatLabel's animation and without Field's extra vertical space. Suited to dense but readable forms (profile, checkout, settings).",
+      "profiles": [
+        "saas",
+        "ecommerce",
+        "landing",
+        "cms"
+      ]
+    },
+    {
+      "name": "ImageCompare",
+      "slug": "image-compare",
+      "category": "media",
+      "status": "implemented",
+      "purpose": "Before/after comparison of two images of the same size with a draggable divider (retouching, redesigns, map or chart revisions).",
+      "profiles": [
+        "ecommerce",
+        "cms",
+        "landing",
+        "saas"
       ]
     },
     {
@@ -716,6 +809,18 @@
       ]
     },
     {
+      "name": "OrderSummary",
+      "slug": "order-summary",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "Line items and totals for an order or invoice: subtotal, shipping, discount, tax and total, formatted with `Intl` for a currency and locale. Always visible on every checkout step; collapsible below `lg`.",
+      "profiles": [
+        "ecommerce",
+        "saas",
+        "pos"
+      ]
+    },
+    {
       "name": "OrganizationChart",
       "slug": "organization-chart",
       "category": "data",
@@ -780,6 +885,42 @@
       ]
     },
     {
+      "name": "PaymentCardForm",
+      "slug": "payment-card-form",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Card details for a payment. UI only: the kit never talks to a payment provider and never stores card data. Two modes:",
+      "profiles": [
+        "ecommerce",
+        "saas",
+        "pos"
+      ]
+    },
+    {
+      "name": "PaymentMethodSelector",
+      "slug": "payment-method-selector",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Choose how to pay: a single-choice list of payment methods drawn as ruled rows (hairlines, not cards). The selected row carries the accent marker and can reveal content below it, typically [PaymentCardForm](payment-card-form.md) under \"Card\". UI only: the component never talks to a payment provider.",
+      "profiles": [
+        "ecommerce",
+        "saas",
+        "pos"
+      ]
+    },
+    {
+      "name": "PaymentStatus",
+      "slug": "payment-status",
+      "category": "messages",
+      "status": "implemented",
+      "purpose": "The result of a payment attempt, laid out like `EmptyState` (plain glyph, serif title, one action): `processing`, `requires_action` (for example 3-D Secure / SCA), `succeeded`, `failed` and `canceled`. The kit only displays the state your server confirmed; it never decides that a payment succeeded.",
+      "profiles": [
+        "ecommerce",
+        "saas",
+        "pos"
+      ]
+    },
+    {
       "name": "PickList",
       "slug": "pick-list",
       "category": "data",
@@ -816,6 +957,26 @@
       "category": "misc",
       "status": "implemented",
       "purpose": "Determinate or indeterminate progress (uploads, HUD health/XP in games).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "ProgressCircle",
+      "slug": "progress-circle",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Circular progress or gauge (completion, quota, score) with room for a value or icon in the centre. Read-only; for input use `Knob`.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "QRCode",
+      "slug": "qr-code",
+      "category": "media",
+      "status": "implemented",
+      "purpose": "Scannable QR codes generated entirely in the browser with an in-house encoder (no dependency, nothing leaves the device): numeric, alphanumeric and UTF-8 byte modes chosen automatically, versions 1–40, error correction L/M/Q/H, all eight masks with the standard penalty selection. Covers links, Wi-Fi/vCard payloads, tickets and payment hand-offs, login-by-QR with expiry, and branded codes with a logo. The value may change at any moment (live typing, rotating tokens) and the code re-renders without flicker.",
       "profiles": [
         "all"
       ]
@@ -941,6 +1102,19 @@
       ]
     },
     {
+      "name": "Sparkline",
+      "slug": "sparkline",
+      "category": "chart",
+      "status": "implemented",
+      "purpose": "A tiny axis-free chart showing the shape of a series inline (in a stat, table cell or list row). Extracted from `StatCard` for reuse.",
+      "profiles": [
+        "dashboard",
+        "admin",
+        "saas",
+        "game"
+      ]
+    },
+    {
       "name": "SpeedDial",
       "slug": "speed-dial",
       "category": "button",
@@ -1058,6 +1232,19 @@
       ]
     },
     {
+      "name": "TableOfContents",
+      "slug": "table-of-contents",
+      "category": "menu",
+      "status": "implemented",
+      "purpose": "\"On this page\" navigation built from headings (or given items) with a scrollspy that marks the section being read.",
+      "profiles": [
+        "cms",
+        "saas",
+        "admin",
+        "landing"
+      ]
+    },
+    {
       "name": "Tabs",
       "slug": "tabs",
       "category": "panel",
@@ -1075,6 +1262,18 @@
       "purpose": "Label categorising or showing status (\"Paid\", \"Draft\", \"Sale\"). Always text, optional icon.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "Terminal",
+      "slug": "terminal",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "A command console: one input line, a scrolling log of the commands run and what they returned. For admin consoles, REPL-style tools and demos. The app supplies the commands; the component handles input, history and accessibility.",
+      "profiles": [
+        "admin",
+        "dashboard",
+        "cms"
       ]
     },
     {
@@ -1179,6 +1378,19 @@
         "cms",
         "saas",
         "pos"
+      ]
+    },
+    {
+      "name": "Tour",
+      "slug": "tour",
+      "category": "overlay",
+      "status": "implemented",
+      "purpose": "A guided product tour: an ordered series of steps, each anchored to an element on the page, shown in a popover with a highlight ring around the target.",
+      "profiles": [
+        "saas",
+        "admin",
+        "dashboard",
+        "cms"
       ]
     },
     {

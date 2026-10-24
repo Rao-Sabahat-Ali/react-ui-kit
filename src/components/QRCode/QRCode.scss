@@ -1,0 +1,131 @@
+// QR codes are always dark on light (tokens do not follow the dark theme): scanners cannot read inverted codes.
+.ui-qr {
+  --ui-qr-gap: var(--ui-space-2);
+
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-qr-gap);
+  margin: 0;
+  max-inline-size: 100%;
+}
+
+.ui-qr__frame {
+  position: relative;
+  inline-size: var(--ui-qr-size, 10rem);
+  max-inline-size: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--ui-qr-bg);
+  border-radius: var(--ui-radius);
+}
+
+.ui-qr--bordered .ui-qr__frame {
+  border: 1px solid var(--ui-color-border);
+}
+
+.ui-qr__code {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.ui-qr__fg {
+  fill: var(--ui-qr-fg);
+}
+
+.ui-qr__bg {
+  fill: var(--ui-qr-bg);
+}
+
+.ui-qr__stroke {
+  stroke: var(--ui-qr-fg);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ui-qr__logo-text {
+  fill: var(--ui-qr-fg);
+  font-family: var(--ui-font-family-heading);
+  font-weight: 600;
+}
+
+// Expired and scanned codes are faded to near-invisibility so a stale code cannot be scanned.
+.ui-qr--faded .ui-qr__code {
+  opacity: 0.08;
+}
+
+.ui-qr__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-space-3);
+}
+
+.ui-qr__skeleton {
+  position: absolute;
+  inset: 0;
+
+  .ui-skeleton__item {
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: 0;
+  }
+}
+
+.ui-qr__spinner {
+  position: relative;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-qr__status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-2);
+  max-inline-size: 100%;
+  padding: var(--ui-space-3);
+  color: var(--ui-color-text);
+  text-align: center;
+  background: var(--ui-color-surface);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius);
+}
+
+.ui-qr__status--success {
+  color: var(--ui-color-success-emphasis);
+  background: var(--ui-color-success-subtle);
+  border-color: var(--ui-color-success);
+}
+
+.ui-qr__status-text,
+.ui-qr__error-text {
+  margin: 0;
+  font-size: var(--ui-font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+.ui-qr__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  inline-size: 100%;
+  block-size: 100%;
+  padding: var(--ui-space-3);
+  color: var(--ui-color-text-muted);
+  text-align: center;
+  background: var(--ui-color-surface-sunken);
+}
+
+.ui-qr__caption {
+  max-inline-size: 100%;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+  text-align: center;
+  overflow-wrap: anywhere;
+}

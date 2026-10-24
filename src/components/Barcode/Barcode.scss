@@ -1,0 +1,47 @@
+// Barcodes are always dark on light (same tokens as QRCode): scanners need the contrast in both themes.
+.ui-barcode {
+  display: inline-block;
+  max-inline-size: 100%;
+  vertical-align: top;
+}
+
+.ui-barcode__svg {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+.ui-barcode__bg {
+  fill: var(--ui-qr-bg);
+}
+
+.ui-barcode__bar {
+  fill: var(--ui-qr-fg);
+}
+
+.ui-barcode__text {
+  fill: var(--ui-qr-fg);
+  font-family: var(--ui-font-family);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.ui-barcode__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  inline-size: min(100%, 20rem);
+  padding: var(--ui-space-3);
+  color: var(--ui-color-text-muted);
+  text-align: center;
+  background: var(--ui-color-surface-sunken);
+  border-radius: var(--ui-radius);
+}
+
+.ui-barcode__error-text {
+  margin: 0;
+  font-size: var(--ui-font-size-sm);
+  overflow-wrap: anywhere;
+}
