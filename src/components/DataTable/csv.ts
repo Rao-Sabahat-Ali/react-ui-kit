@@ -24,7 +24,7 @@ export function nodeText(node: unknown): string {
 
 export function toCsv<T>(rows: T[], columns: Column<T>[], headerTexts?: string[]): string {
   const cols = columns.filter((c) => c.exportable !== false);
-  const header = cols.map((c, i) => escapeCsvValue(headerTexts?.[columns.indexOf(c)] ?? nodeText(c.header) ?? String(i)));
+  const header = cols.map((c) => escapeCsvValue(headerTexts?.[columns.indexOf(c)] ?? nodeText(c.header)));
   const lines = rows.map((row) => cols.map((c) => escapeCsvValue(c.exportValue ? c.exportValue(row) : c.field ? getByPath(row, c.field) : '')).join(','));
   return [header.join(','), ...lines].join('\r\n');
 }
