@@ -13,6 +13,7 @@ import {
   RadioGroup,
   Select,
   Stepper,
+  calculateOrderTotals,
   cardDigits,
   detectCardBrand,
   formatCardNumber,
@@ -61,7 +62,10 @@ registerIcons({
 type StepValue = 'contact' | 'delivery' | 'payment' | 'review';
 type Phase = 'editing' | 'processing' | 'requires_action' | 'failed' | 'succeeded';
 
-const isEmail = (v: string) => /^\S+@\S+\.\S+$/.test(v.trim());
+const isEmail = (v: string) => {
+  const value = v.trim();
+  return !/\s/.test(value) && /^[^@]+@[^@]+\.[^@]+$/.test(value);
+};
 const MEASURE = { maxWidth: '36rem' } as const;
 
 /* ------------------------------------------------------------------------------ simulated provider */
@@ -178,8 +182,9 @@ export function Checkout({ appName = 'Nordic Tools', previewState, onContinueSho
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const chosen = DELIVERY_METHODS.find((d) => d.value === delivery) ?? DELIVERY_METHODS[0]!;
-  const subtotal = CART_LINES.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0);
-  const total = Math.round((subtotal + chosen.price + TAX) * 100) / 100;
+  // The pay button amount comes from the same calculation as <OrderSummary>, never from a second sum.
+  const totals = calculateOrderTotals({ lines: CART_LINES, currency: CURRENCY, locale: LOCALE, shipping: chosen.price, tax: TAX });
+  const total = totals.total / 10 ** totals.digits;
   const money = (n: number) => formatMoney(n, CURRENCY, LOCALE);
   const loadingTotals = demo === 'loading';
 

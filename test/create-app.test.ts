@@ -83,6 +83,25 @@ describe('create-app (OPS-017)', () => {
     expect(readFileSync(join(dir, 'CLAUDE.md'), 'utf8')).toContain(`\`${screen}\` blueprint`);
   });
 
+  it('escapes --title and --description: quotes and <script> cannot break out of JSON, HTML, JSX or Markdown', () => {
+    const dir = join(base, 'evil-text');
+    const title = `Bad "title" </title><script>alert(1)</script> & 'x'`;
+    const description = `Say "hi" \\ <img src=x onerror=alert(2)> {\n}`;
+    execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', 'saas', '--title', title, '--description', description]);
+    const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { description: string };
+    expect(pkg.description).toBe(description);
+    const html = readFileSync(join(dir, 'index.html'), 'utf8');
+    expect(html).toContain('<title>Bad &quot;title&quot; &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt; &amp; &#39;x&#39;</title>');
+    expect(html).not.toContain('<script>alert');
+    for (const file of ['src/App.tsx', 'CLAUDE.md', 'tasks.md', 'index.html']) {
+      const text = readFileSync(join(dir, file), 'utf8');
+      expect(text, file).not.toContain('<script>alert');
+      expect(text, file).not.toContain('<img src=x');
+    }
+    // The JSX attribute still holds an escaped literal that JSX decodes back to the original text.
+    expect(readFileSync(join(dir, 'src/App.tsx'), 'utf8')).toContain('brand="Bad &quot;title&quot;');
+  });
+
   it('keeps the empty starter page for profiles without a blueprint and with --blank', () => {
     const saas = join(base, 'saas-plain');
     execFileSync('node', [join(root, 'scripts/create-app.mjs'), saas, '--profile', 'saas']);

@@ -22,7 +22,8 @@ export interface TourStep {
   placement?: Placement;
 }
 
-export type TourCloseReason = 'done' | 'skip' | 'escape';
+/** `missing`: no step has a target in the page, so the tour could not be shown at all (it did not finish). */
+export type TourCloseReason = 'done' | 'skip' | 'escape' | 'missing';
 
 export interface TourProps {
   steps: TourStep[];
@@ -138,7 +139,7 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
     const dir = direction.current;
     let next = scan(index + dir, dir);
     if (next === -1) next = scan(index - dir, (dir * -1) as 1 | -1);
-    if (next === -1) close('done');
+    if (next === -1) close('missing');
     else goTo(next);
     // The step (and its target) is the only trigger.
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { scanDirectories, scanKitImports, selectStyleFiles, uiKitStyles, virtualModuleCode, type StyleManifest } from './index';
+import { isSafeStyleFile, scanDirectories, scanKitImports, selectStyleFiles, uiKitStyles, virtualModuleCode, type StyleManifest } from './index';
 
 const manifest: StyleManifest = {
   schema: 1,
@@ -127,8 +127,22 @@ describe('selectStyleFiles', () => {
 
   it('emits one import per file through the package exports', () => {
     expect(virtualModuleCode('@sabahat/react-ui-kit', ['base.css', 'components/Icon.css'])).toBe(
-      "import '@sabahat/react-ui-kit/styles/base.css';\nimport '@sabahat/react-ui-kit/styles/components/Icon.css';\n",
+      'import "@sabahat/react-ui-kit/styles/base.css";\nimport "@sabahat/react-ui-kit/styles/components/Icon.css";\n',
     );
+  });
+});
+
+describe('style file safety', () => {
+  it('accepts plain relative css paths and rejects everything else', () => {
+    for (const ok of ['base.css', 'components/Icon.css', 'utilities/display@md.css', 'bootstrap/button-group.css']) expect(isSafeStyleFile(ok), ok).toBe(true);
+    for (const bad of ["x';alert(1);//.css", '../secret.css', 'a/../b.css', '/etc/passwd.css', 'a//b.css', 'a b.css', 'x.js', 'x.css\n', 'a"b.css', 'a`b.css', '', 42, null]) expect(isSafeStyleFile(bad), String(bad)).toBe(false);
+  });
+
+  it('virtualModuleCode emits JSON string literals and throws on an unsafe file name', () => {
+    const code = virtualModuleCode("pkg'\"; evil();//", ['base.css']);
+    expect(code).toBe('import "pkg\'\\"; evil();///styles/base.css";\n');
+    expect(() => virtualModuleCode('pkg', ["x';alert(1);//.css"])).toThrow(/unsafe/);
+    expect(() => virtualModuleCode('pkg', ['../x.css'])).toThrow(/unsafe/);
   });
 });
 
@@ -175,7 +189,7 @@ describe('uiKitStyles plugin', () => {
         'components/InputText.css',
         'components/Spinner.css',
       ]
-        .map((f) => `import '@sabahat/react-ui-kit/styles/${f}';`)
+        .map((f) => `import "@sabahat/react-ui-kit/styles/${f}";`)
         .join('\n') + '\n',
     );
     expect(load('other')).toBeNull();
@@ -190,17 +204,30 @@ describe('uiKitStyles plugin', () => {
     expect(code).not.toContain('Button.css');
   });
 
+  it('falls back to the full stylesheet (never imports) when the manifest lists an unsafe file', () => {
+    for (const evil of ["x';alert(1);//.css", '../../etc/x.css', '/abs/x.css']) {
+      const dir = project({ 'src/main.tsx': `import { Button } from '@sabahat/react-ui-kit';` });
+      const bad = { ...manifest, order: [...manifest.order, evil], components: { ...manifest.components, Button: { ...manifest.components.Button!, css: evil } } };
+      writeFileSync(join(dir, 'manifest.json'), JSON.stringify(bad));
+      const { resolveId, load, warnings } = setup(dir);
+      const code = load(resolveId('virtual:ui-kit-styles') as string) as string;
+      expect(code).toBe('import "@sabahat/react-ui-kit/styles.css";\n');
+      expect(code).not.toContain('alert');
+      expect(warnings[0]).toMatch(/unsafe style file/);
+    }
+  });
+
   it('falls back to the full stylesheet when the manifest is missing', () => {
     const dir = project({ 'src/main.tsx': `import { Button } from '@sabahat/react-ui-kit';` });
     const { resolveId, load, warnings } = setup(dir, {}, false);
-    expect(load(resolveId('virtual:ui-kit-styles') as string)).toBe("import '@sabahat/react-ui-kit/styles.css';\n");
+    expect(load(resolveId('virtual:ui-kit-styles') as string)).toBe('import "@sabahat/react-ui-kit/styles.css";\n');
     expect(warnings[0]).toMatch(/falling back/);
   });
 
   it('falls back to the full stylesheet for namespace imports', () => {
     const dir = project({ 'src/main.tsx': `import * as UI from '@sabahat/react-ui-kit';` });
     const { resolveId, load, warnings } = setup(dir);
-    expect(load(resolveId('virtual:ui-kit-styles') as string)).toBe("import '@sabahat/react-ui-kit/styles.css';\n");
+    expect(load(resolveId('virtual:ui-kit-styles') as string)).toBe('import "@sabahat/react-ui-kit/styles.css";\n');
     expect(warnings[0]).toMatch(/cannot be analysed/);
   });
 

@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { OrderSummary, formatMoney, type OrderLine } from './OrderSummary';
+import { OrderSummary, calculateOrderTotals, formatMoney, toMinorUnits, type OrderLine } from './OrderSummary';
 
 const lines: OrderLine[] = [
   { id: 'mug', name: 'Stoneware mug', quantity: 2, unitPrice: 21, description: 'Sand' },
@@ -116,5 +116,79 @@ describe('OrderSummary', () => {
     const row = screen.getByRole('row', { name: /Mug/ });
     expect(row.querySelector('del')).toHaveTextContent('$24.00');
     expect(row).toHaveTextContent('was $24.00, now $21.00');
+  });
+
+  const value = (name: string) => screen.getByRole('rowheader', { name }).closest('tr')!.querySelector('td')!;
+
+  it('AC-9: a negative or non-finite discount is ignored: no row and no change to the total', () => {
+    for (const bad of [-10, Number.NaN, Number.POSITIVE_INFINITY]) {
+      const { unmount } = render(<OrderSummary currency="USD" locale="en-US" lines={lines} discount={bad} />);
+      expect(screen.queryByText('Discount')).toBeNull();
+      expect(value('Total')).toHaveTextContent('$78.00');
+      unmount();
+    }
+    // The row is shown exactly when it is subtracted.
+    render(<OrderSummary currency="USD" locale="en-US" lines={lines} discount={8} />);
+    expect(value('Discount')).toHaveTextContent('−$8.00');
+    expect(value('Total')).toHaveTextContent('$70.00');
+  });
+
+  it('AC-9: invalid quantities (NaN, Infinity, negative, fractional) count as 0 and never render NaN', () => {
+    const bad: OrderLine[] = [
+      { id: 'a', name: 'Item A', quantity: Number.NaN, unitPrice: 10 },
+      { id: 'b', name: 'Item B', quantity: Number.POSITIVE_INFINITY, unitPrice: 10 },
+      { id: 'c', name: 'Item C', quantity: -3, unitPrice: 10 },
+      { id: 'd', name: 'Item D', quantity: 1.5, unitPrice: 10 },
+      { id: 'e', name: 'Item E', quantity: 2, unitPrice: 10 },
+      { id: 'f', name: 'Item F', quantity: 1, unitPrice: Number.NaN },
+    ];
+    const { container } = render(<OrderSummary currency="USD" locale="en-US" lines={bad} shipping={Number.NaN} tax={-1} />);
+    expect(container.textContent).not.toMatch(/NaN|Infinity/);
+    expect(value('Subtotal')).toHaveTextContent('$20.00');
+    expect(value('Total')).toHaveTextContent('$20.00');
+    expect(screen.queryByText('Shipping')).toBeNull();
+    expect(screen.queryByText('Tax')).toBeNull();
+  });
+
+  it('AC-9: the total never goes negative', () => {
+    render(<OrderSummary currency="USD" locale="en-US" lines={lines} discount={500} />);
+    expect(value('Total')).toHaveTextContent('$0.00');
+    expect(calculateOrderTotals({ lines, currency: 'USD', discount: 500 }).total).toBe(0);
+  });
+
+  it('AC-9: an invalid currency code does not crash and renders a plain-number fallback', () => {
+    for (const code of ['SEKK', 'XX', '', '12$']) {
+      const { container, unmount } = render(<OrderSummary currency={code} locale="en-US" lines={lines} />);
+      expect(value('Total').textContent).toMatch(/^78\.00/);
+      expect(container.textContent).not.toMatch(/NaN/);
+      unmount();
+    }
+    expect(formatMoney(5, 'nope')).toBe('5.00 nope');
+    expect(formatMoney(Number.NaN, 'USD', 'en-US')).toBe('$0.00');
+  });
+
+  it('AC-10: decimal rounding of minor units (halves are not mis-rounded by binary floats)', () => {
+    expect(toMinorUnits(1.005, 2)).toBe(101);
+    expect(toMinorUnits(0.145, 2)).toBe(15);
+    expect(toMinorUnits(8.345, 2)).toBe(835);
+    expect(toMinorUnits(-1.005, 2)).toBe(-101);
+    expect(toMinorUnits(0.004, 2)).toBe(0);
+    expect(toMinorUnits(0.005, 2)).toBe(1);
+    expect(toMinorUnits(1e-7, 2)).toBe(0);
+    expect(toMinorUnits(1.5e21, 2)).toBe(1.5e23);
+    expect(toMinorUnits(1234, 0)).toBe(1234);
+    expect(toMinorUnits(1234.5, 0)).toBe(1235);
+    expect(toMinorUnits(1.2345, 3)).toBe(1235);
+    expect(toMinorUnits(Number.NaN, 2)).toBeNaN();
+  });
+
+  it('AC-10: totals honour the currency fraction digits (JPY 0, BHD 3) and half cents round up', () => {
+    const { rerender } = render(<OrderSummary currency="JPY" locale="en-US" lines={[{ id: 'a', name: 'Ramen', quantity: 3, unitPrice: 1200.5 }]} />);
+    expect(value('Total')).toHaveTextContent('¥3,603');
+    rerender(<OrderSummary currency="BHD" locale="en-US" lines={[{ id: 'a', name: 'Tea', quantity: 2, unitPrice: 1.2345 }]} />);
+    expect(value('Total').textContent).toMatch(/2\.470/);
+    rerender(<OrderSummary currency="USD" locale="en-US" lines={[{ id: 'a', name: 'Pen', quantity: 1, unitPrice: 1.005 }]} />);
+    expect(value('Total')).toHaveTextContent('$1.01');
+    expect(calculateOrderTotals({ lines: [{ id: 'a', name: 'x', quantity: 3, unitPrice: 0.145 }], currency: 'USD' }).total).toBe(45);
   });
 });

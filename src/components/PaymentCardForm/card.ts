@@ -120,10 +120,10 @@ export function formatCardNumber(value: string, brand: CardBrand = detectCardBra
   return out;
 }
 
-/** Hides every digit except the last four ("•••• •••• •••• 4242"). Four digits or fewer are hidden entirely. */
+/** Hides every digit except the last four ("•••• •••• •••• 4242"). Only a number of a valid length shows its last four, like `getCardLast4`; partial entries are hidden entirely. */
 export function maskCardNumber(value: string, brand: CardBrand = detectCardBrand(value)): string {
   const d = cardDigits(value);
-  const keep = d.length > 4 ? 4 : 0;
+  const keep = isValidCardLength(brand, d.length) ? 4 : 0;
   const formatted = formatCardNumber(d, brand);
   let seen = 0;
   let out = '';
@@ -153,18 +153,20 @@ export interface ExpiryResult {
   valid: boolean;
   month: number | null;
   year: number | null;
-  reason?: 'empty' | 'incomplete' | 'month' | 'expired' | 'far';
+  reason?: 'empty' | 'incomplete' | 'month' | 'expired' | 'far' | 'format';
 }
 
 const FAR_YEARS = 20;
 
 /**
  * Validates `MM / YY`, `MM/YY`, `MMYY` or `MM/YYYY`. A card is valid through the end of its expiry month.
+ * Anything else (letters, more than six digits such as "12/20301") is rejected with reason `format`.
  * Pass `now` for deterministic tests.
  */
 export function validateExpiry(value: string, now: Date = new Date()): ExpiryResult {
   const d = cardDigits(value);
   if (!d) return { valid: false, month: null, year: null, reason: 'empty' };
+  if (d.length > 6 || /[^\d\s/.-]/.test(value)) return { valid: false, month: null, year: null, reason: 'format' };
   if (d.length < 4 || d.length === 5) return { valid: false, month: null, year: null, reason: 'incomplete' };
   const month = Number(d.slice(0, 2));
   const rest = d.slice(2);

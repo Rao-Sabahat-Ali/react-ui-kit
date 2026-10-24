@@ -136,4 +136,24 @@ describe('CopyButton', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Kopiera' }));
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Kopierat'));
   });
+
+  it('AC-9: sensitive calls onCopy without the text, never renders it, and still writes it to the clipboard', async () => {
+    const onCopy = vi.fn();
+    const logs = (['log', 'info', 'warn', 'error', 'debug'] as const).map((m) => vi.spyOn(console, m).mockImplementation(() => {}));
+    const { container } = render(<CopyButton value="s3cret-token" sensitive onCopy={onCopy} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
+    await waitFor(() => expect(onCopy).toHaveBeenCalledTimes(1));
+    expect(onCopy).toHaveBeenCalledWith();
+    expect(onCopy.mock.calls[0]).toHaveLength(0);
+    expect(writeText).toHaveBeenCalledWith('s3cret-token');
+    expect(container.outerHTML).not.toContain('s3cret-token');
+    for (const spy of logs) expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('AC-9: without sensitive, onCopy still receives the text (signature unchanged)', async () => {
+    const onCopy = vi.fn();
+    render(<CopyButton value="plain" onCopy={onCopy} />);
+    fireEvent.click(screen.getByRole('button'));
+    await waitFor(() => expect(onCopy).toHaveBeenCalledWith('plain'));
+  });
 });

@@ -204,12 +204,35 @@ export function selectStyleFiles(
   };
 }
 
-/** Source of the virtual module for a selection. */
-export function virtualModuleCode(packageName: string, files: string[]): string {
-  return `${files.map((f) => `import '${packageName}/styles/${f}';`).join('\n')}\n`;
+const SAFE_STYLE_FILE = /^[\w@.\-/]+\.css$/;
+
+/** A manifest css path that is safe to turn into an import specifier: plain relative `.css`, no `..`, no absolute path. */
+export function isSafeStyleFile(file: unknown): file is string {
+  return typeof file === 'string' && SAFE_STYLE_FILE.test(file) && !file.startsWith('/') && !file.split('/').includes('..') && !file.includes('//');
 }
 
-const FALLBACK = (packageName: string) => `import '${packageName}/styles.css';\n`;
+/** Every css path a manifest can make the plugin import. */
+function manifestFiles(manifest: StyleManifest): unknown[] {
+  return [
+    manifest.base,
+    ...(manifest.order ?? []),
+    ...Object.values(manifest.bootstrap ?? {}).map((b) => b.css),
+    ...Object.values(manifest.utilities ?? {}).flatMap((u) => u.files),
+    ...Object.values(manifest.components ?? {}).map((c) => c.css).filter((css) => css !== null),
+  ];
+}
+
+/** Source of the virtual module for a selection. Every specifier is a JSON string literal; unsafe file names throw. */
+export function virtualModuleCode(packageName: string, files: string[]): string {
+  return `${files
+    .map((f) => {
+      if (!isSafeStyleFile(f)) throw new Error(`[ui-kit-styles] refusing to import unsafe style file ${JSON.stringify(f)}`);
+      return `import ${JSON.stringify(`${packageName}/styles/${f}`)};`;
+    })
+    .join('\n')}\n`;
+}
+
+const FALLBACK = (packageName: string) => `import ${JSON.stringify(`${packageName}/styles.css`)};\n`;
 
 function defaultManifestPath(): string {
   return join(dirname(fileURLToPath(import.meta.url)), 'styles', 'manifest.json');
@@ -248,7 +271,11 @@ export function uiKitStyles(options: UiKitStylesOptions = {}): Plugin {
       const path = options.manifest ? resolve(root, options.manifest) : defaultManifestPath();
       if (existsSync(path)) {
         manifest = JSON.parse(readFileSync(path, 'utf8')) as StyleManifest;
-        packageName = options.packageName ?? manifest.package;
+        const unsafe = manifestFiles(manifest).find((f) => !isSafeStyleFile(f));
+        if (unsafe !== undefined) {
+          config.logger.warn(`[ui-kit-styles] ${path} lists an unsafe style file ${JSON.stringify(unsafe)}; falling back to the full styles.css`);
+          manifest = null;
+        } else packageName = options.packageName ?? manifest.package;
       } else {
         config.logger.warn(`[ui-kit-styles] ${path} not found; falling back to the full styles.css`);
       }

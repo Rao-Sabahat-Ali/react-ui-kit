@@ -52,6 +52,8 @@ Generated apps load only the styles they use: `vite.config.ts` registers `uiKitS
 
 `mode="raw"` renders real inputs (brand grouping, Luhn, expiry, CVC) for tokenisation APIs and tests. It puts card data through your page's JavaScript and widens your PCI DSS scope (SAQ A-EP or D): `PAYMENT_RAW_MODE_NOTICE` repeats this. Its `onChange` never carries the number, expiry or CVC (only `{ brand, complete, errors, last4 }`), nothing is logged, stored or put in attributes, and values are cleared after submit and on unmount.
 
+Security notes: raw-mode card inputs are uncontrolled (values never appear in DOM attributes); do not nest `PaymentCardForm` in another `<form>`; unmount provider elements in `onDestroy`; never put card data or secrets on the clipboard (`CopyButton` is for non-secret text; `sensitive` only withholds the text from `onCopy`, the clipboard is not cleared).
+
 Always server-side: create the payment, derive provider idempotency keys, recompute amounts, handle 3-D Secure and confirm the result by webhook; never mark an order paid from the client. Docs and tests use published test numbers only (4242 4242 4242 4242, 5555 5555 5555 4444, 3782 822463 10005). No card-scheme logos ship; pass your own licensed `icon`. See the Checkout blueprint and design-system-mcp `rules/security.md` ("Payments").
 
 ## Loading only the styles you use
