@@ -60,7 +60,17 @@ test.describe('split styles render identically @split', () => {
           await page.goto(`/#/components/${c.slug}`);
           await expect(page.getByRole('heading', { level: 1, name: c.name })).toBeVisible();
           await page.evaluate(() => document.fonts.ready);
-          await page.waitForTimeout(300);
+          // Wait for images and async rendering: the page must be settled before computed styles are compared.
+          await page.evaluate(() =>
+            Promise.all([...document.images].map((img) => (img.complete ? null : new Promise((resolve) => { img.onload = img.onerror = resolve; })))),
+          );
+          let previous = '';
+          for (let i = 0; i < 20; i++) {
+            const signature = await page.evaluate(() => `${document.querySelectorAll('body *').length}:${document.documentElement.scrollHeight}`);
+            if (signature === previous) break;
+            previous = signature;
+            await page.waitForTimeout(250);
+          }
           const scope = mode === 'shell' ? 'body *' : '.docs-example__preview *';
           return await page.evaluate((selector) => {
             return [...document.querySelectorAll(selector)].map((el) => {
