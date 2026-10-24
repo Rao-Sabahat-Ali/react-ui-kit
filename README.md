@@ -36,7 +36,7 @@ The look is the "Nordic editorial" identity: paper surfaces, an ink primary acti
 
 ## Start from a blueprint
 
-The docs app has a **Blueprints** section: complete, runnable screens (analytics dashboard, admin list to detail, overview and index page, settings, sign in, article/detail) built only from kit components and the design contract. Their source is `templates/blueprints/`.
+The docs app has a **Blueprints** section: complete, runnable screens (analytics dashboard, admin list to detail, overview and index page, settings, sign in, article/detail, checkout) built only from kit components and the design contract. Their source is `templates/blueprints/`.
 
 ```bash
 npm run create-app -- ../my-dashboard --profile dashboard   # home screen = Analytics dashboard blueprint
@@ -45,6 +45,14 @@ npm run create-app -- ../my-app --profile dashboard --blank # empty starter page
 ```
 
 Generated apps load only the styles they use: `vite.config.ts` registers `uiKitStyles({ include: [...] })` from `@sabahat/react-ui-kit/vite`, `main.tsx` imports `virtual:ui-kit-styles` and `src/vite-env.d.ts` declares that module (see "Loading only the styles you use" below). When you write a new Bootstrap class yourself (`className="d-flex gap-3"`), add it to `include`.
+
+## Payments and PCI scope
+
+`PaymentMethodSelector`, `PaymentCardForm`, `OrderSummary` and `PaymentStatus` are UI only: the kit never talks to a payment provider and never stores card data. Use `PaymentCardForm` in its default **hosted** mode and mount your provider's hosted fields (Stripe Elements, Adyen, ...) into the slots it gives you (`onReady(field, element)`); card data then never enters your page (smallest PCI scope, SAQ A). Pass `paymentFieldStyle(element)` to the provider so its iframes match the theme.
+
+`mode="raw"` renders real inputs (brand grouping, Luhn, expiry, CVC) for tokenisation APIs and tests. It puts card data through your page's JavaScript and widens your PCI DSS scope (SAQ A-EP or D): `PAYMENT_RAW_MODE_NOTICE` repeats this. Its `onChange` never carries the number, expiry or CVC (only `{ brand, complete, errors, last4 }`), nothing is logged, stored or put in attributes, and values are cleared after submit and on unmount.
+
+Always server-side: create the payment, derive provider idempotency keys, recompute amounts, handle 3-D Secure and confirm the result by webhook; never mark an order paid from the client. Docs and tests use published test numbers only (4242 4242 4242 4242, 5555 5555 5555 4444, 3782 822463 10005). No card-scheme logos ship; pass your own licensed `icon`. See the Checkout blueprint and design-system-mcp `rules/security.md` ("Payments").
 
 ## Loading only the styles you use
 

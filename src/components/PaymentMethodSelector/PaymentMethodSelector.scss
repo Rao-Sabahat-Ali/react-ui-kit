@@ -1,0 +1,114 @@
+// Ruled rows, not cards: one hairline between methods, an accent rule and filled marker on the selected one.
+.ui-payment-methods {
+  min-inline-size: 0;
+  margin: 0 0 var(--ui-space-4);
+  padding: 0;
+  border: 0;
+  border-block-start: var(--bs-border-width) solid var(--ui-color-border);
+}
+
+.ui-payment-methods__legend {
+  float: none;
+  inline-size: auto;
+  margin-block-end: var(--ui-space-3);
+  padding: 0;
+  font-family: var(--ui-font-family-heading);
+  font-size: var(--ui-font-size-lg);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
+}
+
+.ui-payment-methods__item {
+  position: relative;
+  border-block-end: var(--bs-border-width) solid var(--ui-color-border);
+}
+
+.ui-payment-methods__item--selected::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 2px;
+  background: var(--ui-color-accent);
+}
+
+.ui-payment-methods__row {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-block-size: var(--ui-touch-target-min, 44px);
+  padding: var(--ui-space-3) var(--ui-space-3) var(--ui-space-3) var(--ui-space-4);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ui-color-bg-subtle);
+  }
+
+  &:has(:focus-visible) {
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
+  }
+}
+
+.ui-payment-methods__item--disabled .ui-payment-methods__row {
+  cursor: not-allowed;
+  color: var(--ui-color-text-muted);
+
+  &:hover {
+    background: transparent;
+  }
+}
+
+.ui-payment-methods__input {
+  flex: none;
+  margin: 0;
+  border-color: var(--ui-color-border-strong);
+
+  &:checked {
+    background-color: var(--ui-color-accent);
+    border-color: var(--ui-color-accent);
+  }
+}
+
+.ui-payment-methods__icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-payment-methods__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.ui-payment-methods__label {
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-payment-methods__description {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-payment-methods__badge {
+  flex: none;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-payment-methods__reason {
+  margin: 0;
+  padding: 0 var(--ui-space-4) var(--ui-space-3);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-payment-methods__panel {
+  padding: var(--ui-space-2) var(--ui-space-4) var(--ui-space-4);
+}
+
+.ui-payment-methods__error {
+  margin-block-start: var(--ui-space-2);
+}

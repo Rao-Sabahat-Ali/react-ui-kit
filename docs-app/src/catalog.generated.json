@@ -799,6 +799,18 @@
       ]
     },
     {
+      "name": "OrderSummary",
+      "slug": "order-summary",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "Line items and totals for an order or invoice: subtotal, shipping, discount, tax and total, formatted with `Intl` for a currency and locale. Always visible on every checkout step; collapsible below `lg`.",
+      "profiles": [
+        "ecommerce",
+        "saas",
+        "pos"
+      ]
+    },
+    {
       "name": "OrganizationChart",
       "slug": "organization-chart",
       "category": "data",
@@ -860,6 +872,42 @@
       "purpose": "Password input with show/hide toggle and optional strength meter + requirement checklist.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "PaymentCardForm",
+      "slug": "payment-card-form",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Card details for a payment. UI only: the kit never talks to a payment provider and never stores card data. Two modes:",
+      "profiles": [
+        "ecommerce",
+        "saas",
+        "pos"
+      ]
+    },
+    {
+      "name": "PaymentMethodSelector",
+      "slug": "payment-method-selector",
+      "category": "form",
+      "status": "implemented",
+      "purpose": "Choose how to pay: a single-choice list of payment methods drawn as ruled rows (hairlines, not cards). The selected row carries the accent marker and can reveal content below it, typically [PaymentCardForm](payment-card-form.md) under \"Card\". UI only: the component never talks to a payment provider.",
+      "profiles": [
+        "ecommerce",
+        "saas",
+        "pos"
+      ]
+    },
+    {
+      "name": "PaymentStatus",
+      "slug": "payment-status",
+      "category": "messages",
+      "status": "implemented",
+      "purpose": "The result of a payment attempt, laid out like `EmptyState` (plain glyph, serif title, one action): `processing`, `requires_action` (for example 3-D Secure / SCA), `succeeded`, `failed` and `canceled`. The kit only displays the state your server confirmed; it never decides that a payment succeeded.",
+      "profiles": [
+        "ecommerce",
+        "saas",
+        "pos"
       ]
     },
     {

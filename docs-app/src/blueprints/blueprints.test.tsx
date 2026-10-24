@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ThemeProvider, ToastProvider, type Profile } from '@sabahat/react-ui-kit';
 import { AdminListDetail } from '../../../templates/blueprints/AdminListDetail';
+import { Checkout } from '../../../templates/blueprints/Checkout';
 import { AnalyticsDashboard } from '../../../templates/blueprints/AnalyticsDashboard';
 import { OrderDetail } from '../../../templates/blueprints/OrderDetail';
 import { Overview } from '../../../templates/blueprints/Overview';
@@ -355,5 +356,137 @@ describe('article / detail page', () => {
     rerender(inMain(<OrderDetail state="not-found" />));
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.getByRole('heading', { level: 2, name: 'We could not find that order' })).toBeInTheDocument();
+  });
+});
+
+describe('checkout', () => {
+  const renderCheckout = (props = {}) => render(wrap(<Checkout {...props} />, 'ecommerce'));
+  const CARD = '4242424242424242'; // published TEST number
+
+  async function toPayment(user: ReturnType<typeof userEvent.setup>) {
+    await user.type(screen.getByRole('textbox', { name: /Email/ }), 'ada@example.com');
+    await user.click(screen.getByRole('button', { name: 'Continue as guest' }));
+    await user.type(screen.getByRole('textbox', { name: /Full name/ }), 'Ada Lovelace');
+    await user.type(screen.getByRole('textbox', { name: /^Address/ }), 'Storgatan 1');
+    await user.type(screen.getByRole('textbox', { name: /Postcode/ }), '11122');
+    await user.type(screen.getByRole('textbox', { name: /City/ }), 'Stockholm');
+    await user.click(screen.getByRole('button', { name: 'Continue to payment' }));
+  }
+  async function payWithCard(user: ReturnType<typeof userEvent.setup>) {
+    await user.type(screen.getByRole('textbox', { name: 'Card number' }), CARD);
+    await user.type(screen.getByRole('textbox', { name: 'Expiry date' }), '1230');
+    await user.type(screen.getByRole('textbox', { name: 'Security code' }), '123');
+    await user.click(screen.getByRole('button', { name: 'Review order' }));
+  }
+
+  it('has a minimal header, a linear stepper with four steps and the summary on every step', () => {
+    renderCheckout();
+    expect(screen.getByText('Secure checkout')).toBeInTheDocument();
+    const steps = document.querySelectorAll('.ui-stepper__step');
+    expect(steps).toHaveLength(4);
+    expect(screen.getByRole('listitem', { current: 'step' })).toHaveTextContent('Contact');
+    expect(screen.getByRole('table', { name: 'Order summary' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Continue as guest' })).toHaveClass('btn-primary');
+  });
+
+  it('validates the contact step and focuses the first invalid field', async () => {
+    const user = userEvent.setup();
+    renderCheckout();
+    await user.click(screen.getByRole('button', { name: 'Continue as guest' }));
+    expect(screen.getByText('Enter an email like name@example.com')).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /Email/ })).toHaveFocus();
+  });
+
+  it('walks contact, delivery, payment and review, updates the total and places the order', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    renderCheckout();
+    await toPayment(user);
+    expect(screen.getByRole('radiogroup', { name: 'Payment method' })).toBeInTheDocument();
+    // Card is preselected: its hosted slots are mounted, and the page holds no card inputs of its own.
+    expect(screen.getByRole('group', { name: 'Card number' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Review order' }));
+    expect(screen.getAllByText(/incomplete|Enter/).length).toBeGreaterThan(0);
+    await payWithCard(user);
+    expect(screen.getByRole('button', { name: /Place order · 86,40/ })).toHaveClass('btn-primary');
+    expect(screen.getAllByRole('button', { name: /^Edit / })).toHaveLength(3);
+    await user.click(screen.getByRole('button', { name: /Place order · 86,40/ }));
+    expect(screen.getByRole('status', { busy: true })).toHaveTextContent('Processing your payment');
+    await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+    expect(screen.getByRole('heading', { level: 1, name: 'Order confirmed' })).toBeInTheDocument();
+    expect(screen.getByText('ORD-48213')).toBeInTheDocument();
+    expectOrderedHeadings();
+    vi.useRealTimers();
+  });
+
+  it('shows the amount for the chosen delivery method and announces the new total', async () => {
+    const user = userEvent.setup();
+    renderCheckout();
+    await user.type(screen.getByRole('textbox', { name: /Email/ }), 'ada@example.com');
+    await user.click(screen.getByRole('button', { name: 'Continue as guest' }));
+    expect(within(screen.getByRole('table')).getByRole('rowheader', { name: 'Shipping' }).closest('tr')).toHaveTextContent('4,00');
+    await user.click(screen.getByRole('radio', { name: /Express/ }));
+    expect(within(screen.getByRole('table')).getByRole('rowheader', { name: 'Total' }).closest('tr')).toHaveTextContent('91,40');
+    expect(screen.getByText(/Total updated to 91,40/)).toBeInTheDocument();
+  });
+
+  it('reveals the card form only for Card and never renders raw card inputs', async () => {
+    const user = userEvent.setup();
+    renderCheckout();
+    await toPayment(user);
+    expect(document.querySelector('[autocomplete="cc-number"]')?.closest('.ui-hosted-field__control')).not.toBeNull();
+    await user.click(screen.getByRole('radio', { name: /Digital wallet/ }));
+    expect(screen.queryByRole('group', { name: 'Card number' })).toBeNull();
+    expect(screen.getByText(/wallet app after you place the order/)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Review order' }));
+    expect(screen.getByRole('button', { name: /Place order/ })).toBeInTheDocument();
+  });
+
+  it('keeps the entered data when the first payment is declined and lets you retry or change method', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    renderCheckout({ previewState: { state: 'failed' } });
+    await toPayment(user);
+    await payWithCard(user);
+    await user.click(screen.getByRole('button', { name: /Place order/ }));
+    await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+    expect(screen.getByRole('heading', { name: 'Payment failed' }).closest('[role="alert"]')).not.toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Use another method' }));
+    expect(screen.getByRole('radiogroup', { name: 'Payment method' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Review order' }));
+    await user.click(screen.getByRole('button', { name: /Place order/ }));
+    await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+    expect(screen.getByRole('heading', { level: 1, name: 'Order confirmed' })).toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
+  it('asks for 3-D Secure confirmation before succeeding', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    renderCheckout({ previewState: { state: 'requires-action' } });
+    await toPayment(user);
+    await user.click(screen.getByRole('radio', { name: /Invoice/ }));
+    await user.click(screen.getByRole('button', { name: 'Review order' }));
+    await user.click(screen.getByRole('button', { name: /Place order/ }));
+    await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+    expect(screen.getByRole('heading', { name: 'Confirm your payment' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Confirm payment' }));
+    await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+    expect(screen.getByText('ORD-48213')).toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
+  it('shows skeleton totals while loading and writes no card data anywhere', async () => {
+    const user = userEvent.setup();
+    const setItem = vi.spyOn(Storage.prototype, 'setItem');
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    renderCheckout({ previewState: { state: 'loading' } });
+    expect(screen.getAllByRole('status').some((s) => s.textContent === 'Loading order summary')).toBe(true);
+    expect(screen.queryByRole('table')).toBeNull();
+    await user.type(screen.getByRole('textbox', { name: /Email/ }), 'ada@example.com');
+    expect(setItem).not.toHaveBeenCalled();
+    expect(log).not.toHaveBeenCalled();
+    setItem.mockRestore();
+    log.mockRestore();
   });
 });

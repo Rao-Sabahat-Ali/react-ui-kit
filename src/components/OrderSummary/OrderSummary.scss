@@ -1,0 +1,129 @@
+.ui-order-summary__title {
+  margin: 0 0 var(--ui-space-3);
+  font-family: var(--ui-font-family-heading);
+  font-size: var(--ui-font-size-xl);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
+}
+
+// Collapsed bar below lg: one ruled row, label and total.
+.ui-order-summary__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  inline-size: 100%;
+  min-block-size: var(--ui-touch-target-min, 44px);
+  padding: var(--ui-space-2) 0;
+  border: 0;
+  border-block: var(--bs-border-width) solid var(--ui-color-border);
+  background: transparent;
+  color: var(--ui-color-link);
+  font: inherit;
+  text-align: start;
+
+  &:focus-visible {
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.ui-order-summary__toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.ui-order-summary__toggle-total {
+  color: var(--ui-color-text);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-order-summary--collapsible .ui-order-summary__body {
+  padding-block-start: var(--ui-space-3);
+}
+
+.ui-order-summary__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: var(--ui-space-2) 0;
+    font-weight: inherit;
+    text-align: start;
+    vertical-align: top;
+  }
+}
+
+.ui-order-summary__line > * {
+  padding-block: var(--ui-space-3);
+  border-block-end: var(--bs-border-width) solid var(--ui-color-border);
+}
+
+.ui-order-summary__item {
+  display: flex;
+  gap: var(--ui-space-3);
+}
+
+.ui-order-summary__image {
+  flex: none;
+}
+
+.ui-order-summary__text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.ui-order-summary__name {
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-order-summary__meta {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-order-summary__was {
+  text-decoration: line-through;
+}
+
+.ui-order-summary__table td.ui-order-summary__amount {
+  padding-inline-start: var(--ui-space-4);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  white-space: nowrap;
+}
+
+.ui-order-summary__row > th {
+  color: var(--ui-color-text-muted);
+}
+
+.ui-order-summary__pending {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+  white-space: normal;
+}
+
+.ui-order-summary__table td.ui-order-summary__promo {
+  padding-block: var(--ui-space-3);
+}
+
+// The total is emphasised by weight, size and one rule, not a box.
+.ui-order-summary__total-row {
+  th,
+  td {
+    padding-block-start: var(--ui-space-3);
+    border-block-start: var(--bs-border-width) solid var(--ui-color-border-strong);
+    color: var(--ui-color-text);
+    font-size: var(--ui-font-size-lg);
+    font-weight: var(--ui-font-weight-semibold);
+  }
+
+  td.ui-order-summary__amount {
+    font-family: var(--ui-font-family-heading);
+  }
+}

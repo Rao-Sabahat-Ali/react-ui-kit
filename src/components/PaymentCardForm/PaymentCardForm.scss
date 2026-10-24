@@ -1,0 +1,117 @@
+// Theme values a payment provider's hosted field should match. Provider iframes cannot read CSS variables:
+// resolve them with paymentFieldStyle() and pass the result to the provider.
+.ui-hosted-field {
+  --ui-payment-field-color: var(--ui-color-text);
+  --ui-payment-field-placeholder: var(--ui-color-text-subtle);
+  --ui-payment-field-invalid: var(--ui-color-danger);
+  --ui-payment-field-font-family: var(--ui-font-family);
+  --ui-payment-field-font-size: var(--ui-font-size-md);
+  --ui-payment-field-line-height: var(--ui-font-line-height-normal);
+}
+
+.ui-hosted-field__control {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--ui-control-height-md);
+  padding-inline: var(--ui-control-padding-x);
+  border: var(--bs-border-width) solid var(--ui-color-border-input);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface);
+  color: var(--ui-payment-field-color);
+  font-family: var(--ui-font-family);
+  font-size: var(--ui-payment-field-font-size);
+  transition: border-color var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+
+  // Provider elements fill the container.
+  > * {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
+  &:focus-within {
+    border-color: var(--ui-color-accent);
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+}
+
+.ui-hosted-field[data-focused] .ui-hosted-field__control {
+  border-color: var(--ui-color-accent);
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+}
+
+.ui-hosted-field[data-invalid] .ui-hosted-field__control {
+  border-color: var(--ui-color-danger);
+}
+
+.ui-hosted-field--disabled .ui-hosted-field__control {
+  background: var(--ui-color-bg-subtle);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-payment-card__fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ui-payment-card__legend {
+  float: none;
+  inline-size: auto;
+  padding: 0;
+  font-family: var(--ui-font-family-heading);
+  font-size: var(--ui-font-size-lg);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
+}
+
+.ui-payment-card__summary {
+  margin-block-end: var(--ui-space-4);
+}
+
+.ui-payment-card__note {
+  margin-block: var(--ui-space-1) var(--ui-space-4);
+}
+
+.ui-payment-card__submit {
+  margin-block-start: var(--ui-space-2);
+}
+
+// Card digits read as digits, not prose.
+.ui-payment-card .ui-input-text {
+  font-variant-numeric: tabular-nums;
+}
+
+// The brand name is plain text beside the number. The addon is always rendered (so the input never remounts and loses
+// focus when the brand appears) and hidden while empty.
+.ui-payment-card .input-group-text:has(> .ui-payment-card__brand:empty) {
+  display: none;
+}
+
+.ui-payment-card__brand {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+  white-space: nowrap;
+}
+
+// A plain input that fills the control. For providers that mount a native input, and for the simulated provider in the
+// docs. The control shows the focus ring (:focus-within), so the input's own outline stays transparent.
+.ui-hosted-field__input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+
+  &::placeholder {
+    color: var(--ui-payment-field-placeholder);
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: 2px solid transparent;
+  }
+}

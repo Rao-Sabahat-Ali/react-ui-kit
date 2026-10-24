@@ -1,0 +1,39 @@
+// Layout, glyph and title come from EmptyState; this only tones the glyph per state.
+.ui-payment-status--succeeded .ui-empty-state__icon {
+  color: var(--ui-color-success);
+}
+
+.ui-payment-status--requires-action .ui-empty-state__icon {
+  color: var(--ui-color-accent);
+}
+
+.ui-payment-status__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ui-space-2);
+}
+
+.ui-payment-status__reference {
+  display: block;
+  margin-block-start: var(--ui-space-2);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-payment-status__reference-value {
+  color: var(--ui-color-text);
+  font-variant-numeric: tabular-nums;
+  user-select: all;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ui-payment-status--processing .ui-empty-state__icon {
+    animation: ui-payment-status-spin 1.4s linear infinite;
+  }
+}
+
+@keyframes ui-payment-status-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
