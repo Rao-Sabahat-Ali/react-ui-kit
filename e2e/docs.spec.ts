@@ -26,7 +26,7 @@ test('every implemented component page renders without errors', async ({ page })
   expect(errors).toEqual([]);
 });
 
-const BLUEPRINTS = ['analytics-dashboard', 'admin-list-detail', 'overview-index', 'settings', 'sign-in', 'article-detail'];
+const BLUEPRINTS = ['analytics-dashboard', 'admin-list-detail', 'overview-index', 'settings', 'sign-in', 'article-detail', 'checkout'];
 
 test.describe('blueprints', () => {
   for (const slug of BLUEPRINTS) {
@@ -51,7 +51,7 @@ test.describe('blueprints', () => {
   test('listed in the docs navigation and reachable from the index', async ({ page }) => {
     await page.goto('/#/blueprints');
     await expect(page.getByRole('heading', { level: 1, name: 'Blueprints' })).toBeVisible();
-    for (const title of ['Analytics dashboard', 'Admin list to detail', 'Overview and index page', 'Settings page', 'Sign in and reset', 'Article and detail page']) {
+    for (const title of ['Analytics dashboard', 'Admin list to detail', 'Overview and index page', 'Settings page', 'Sign in and reset', 'Article and detail page', 'Checkout']) {
       await expect(page.getByRole('link', { name: new RegExp(title) }).first()).toBeVisible();
     }
     await page.getByRole('link', { name: /Analytics dashboard/ }).first().click();

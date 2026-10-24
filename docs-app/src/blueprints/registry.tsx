@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import type { Profile } from '@sabahat/react-ui-kit';
 import { useToast } from '@sabahat/react-ui-kit';
 import { AdminListDetail } from '../../../templates/blueprints/AdminListDetail';
+import { Checkout, type CheckoutState } from '../../../templates/blueprints/Checkout';
 import { AnalyticsDashboard, DASHBOARD_WIDGETS } from '../../../templates/blueprints/AnalyticsDashboard';
 import { OVERVIEW_WIDGETS, Overview } from '../../../templates/blueprints/Overview';
 import { OrderDetail, type OrderDetailState } from '../../../templates/blueprints/OrderDetail';
@@ -172,6 +173,31 @@ export const blueprints: Blueprint[] = [
     ],
     tryIt: 'Clear the name and press Save changes, edit a field and switch tab, or open the Account tab.',
     render: () => <SettingsDemo />,
+  },
+  {
+    slug: 'checkout',
+    title: 'Checkout',
+    summary: 'A guest-first, four-step checkout with hosted card fields, an order summary on every step and a payment result.',
+    profile: 'ecommerce',
+    patterns: ['checkout'],
+    files: ['Checkout.tsx', 'Checkout.data.ts'],
+    highlights: [
+      'Linear Stepper with four steps (contact, delivery, payment, review) and a confirmation that is not a step; guest first, each step keeps its data when you go back.',
+      'PaymentMethodSelector with Card, Digital wallet, Bank transfer and Invoice as ruled rows; choosing Card reveals PaymentCardForm in hosted mode, with a simulated provider so no card data ever reaches the page.',
+      'OrderSummary on every step: a real table in the right column from lg, a "Show summary 86,40 kr" bar below; the total change is announced and the final button carries the amount.',
+      'PaymentStatus for processing, 3-D Secure (requires action), declined (keeps your details, Try again or Use another method) and the confirmation with a tabular order reference.',
+      'UI only: the server creates the payment, recomputes amounts, handles 3-D Secure and confirms by webhook. Test data only.',
+    ],
+    tryIt: 'Use any email, a test card 4242 4242 4242 4242 with any future date and any 3 digits, then Place order. Switch the preview to try loading totals, a declined first attempt or 3-D Secure.',
+    preview: {
+      states: [
+        { value: 'ready', label: 'Ready' },
+        { value: 'loading', label: 'Loading totals' },
+        { value: 'failed', label: 'Declined' },
+        { value: 'requires-action', label: '3-D Secure' },
+      ],
+    },
+    render: (p) => <Checkout previewState={{ state: p.state as CheckoutState }} />,
   },
   {
     slug: 'sign-in',

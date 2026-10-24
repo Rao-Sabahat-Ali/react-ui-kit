@@ -2,6 +2,24 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## 1.6.0 (unreleased)
+Payments: UI for paying, never the payment itself. The kit never talks to a payment provider and never stores card data.
+
+### Added
+- `PaymentMethodSelector` — payment methods as ruled rows in a native-radio radiogroup (one tab stop, arrow keys, accent marker on the selected row). Each method takes `label`, `description`, `icon` (name or your own node, no brand logos ship), `badge`, `disabled` with an announced `disabledReason`, and `children` revealed only while selected (for example the card form).
+- `PaymentCardForm` — `mode="hosted"` (default, recommended) renders labelled `HostedField` slots for a provider's iframes (`onReady`, `onFocusRequest`, provider state `focused/invalid/complete/empty/error`, error summary on submit). `mode="raw"` for tokenisation APIs and tests: brand grouping, Luhn, expiry `MM / YY` with an injectable `now`, CVC length by brand, optional holder name and postal code, `cc-*` autocomplete, `inputMode="numeric"`, paste sanitising, caret kept while formatting. `onChange` carries only `{ brand, complete, errors, last4 }`; `onSubmit(values)` is the only place raw values leave; values are cleared after submit (`clearOnSubmit`) and on unmount; no console, storage, cookie, URL or DOM-attribute writes (all tested). `PAYMENT_RAW_MODE_NOTICE` documents the PCI scope.
+- `HostedField`, `paymentFieldStyle()` (resolves the theme to concrete values in the shape Stripe/Adyen style objects accept), `PAYMENT_FIELD_VARIABLES` and the `--ui-payment-field-*` custom properties.
+- Utilities with published test vectors: `luhnCheck`, `detectCardBrand` (visa, mastercard incl. 2-series, amex, discover, diners, jcb, unionpay, maestro), `formatCardNumber`, `maskCardNumber` (last four only), `getCardLast4`, `validateExpiry`, `formatExpiry`, `cvcLengthFor`, `isValidCardLength`, `cardDigits`, `CARD_BRAND_LABELS`, `TEST_CARD_NUMBERS`.
+- `OrderSummary` (+ `formatMoney`) — a real table with caption (items, then subtotal, shipping, discount, tax and a total set apart by weight and one rule), `Intl` currency and locale, integer minor-unit sums, tabular figures, promo slot, `collapsible="below-lg"` disclosure ("Show summary 86,40 kr"), skeleton, empty state, struck prices spoken as "was … now …", polite "Total updated" announcement.
+- `PaymentStatus` — `processing | requires_action | succeeded | failed | canceled` in the EmptyState layout; failed announces assertively, the rest politely; Try again, Use another method, Confirm payment; tabular `reference`.
+- **Checkout blueprint** (`templates/blueprints/Checkout.tsx`, `Checkout.data.ts`; docs `#/blueprints/checkout`, profile `ecommerce`, pattern `checkout`): guest-first, four steps in a linear Stepper, Card/Digital wallet/Bank transfer/Invoice, a simulated hosted provider, summary on every step, "Place order · 86,40 kr", confirmation; preview toggles for loading totals, a declined first attempt and 3-D Secure.
+- Locale keys for all of the above (`payment*`, `order*`).
+- Tests per acceptance criterion, including the security requirements; blueprint smoke and interaction tests; Playwright visits the new blueprint at 1280 px and 390 px.
+
+### Notes
+- Raw card entry puts your site in a larger PCI DSS scope (SAQ A-EP or D): prefer hosted fields. Tokenisation, idempotency keys, amounts, 3-D Secure and confirmation by webhook are server-side.
+- `create-app --profile ecommerce` is unchanged: a checkout is not a home screen.
+
 ## 1.3.0 — 2026-10-24
 Blueprints: complete, runnable screens built only from kit components and the design contract, so every personal app looks and behaves the same without re-explaining the design.
 
