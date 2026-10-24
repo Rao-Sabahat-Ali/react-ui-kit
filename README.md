@@ -34,6 +34,16 @@ Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash 
 
 The look is the "Nordic editorial" identity: paper surfaces, an ink primary action, a pine accent, serif headings, rules instead of boxes. Build screens from `PageHeader`, `Section`, `IndexList`, `StatGroup` and `DataTable`. Specs, tokens, patterns and the consistency rules live in [design-system-mcp](https://github.com/Rao-Sabahat-Ali/design-system-mcp) (an MCP server for coding agents).
 
+## Start from a blueprint
+
+The docs app has a **Blueprints** section: complete, runnable screens (analytics dashboard, admin list to detail, overview and index page, settings, sign in, article/detail) built only from kit components and the design contract. Their source is `templates/blueprints/`.
+
+```bash
+npm run create-app -- ../my-dashboard --profile dashboard   # home screen = Analytics dashboard blueprint
+npm run create-app -- ../my-backoffice --profile admin      # home screen = Admin list to detail blueprint
+npm run create-app -- ../my-app --profile dashboard --blank # empty starter page instead
+```
+
 ## Status
 
 All specified components are implemented (see the [live catalogue](https://react-ui-kit-docs.vercel.app) and [CHANGELOG](CHANGELOG.md)). Every component ships with WCAG 2.2 AA keyboard and screen-reader support, light/dark themes and eight app profiles.

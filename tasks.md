@@ -152,3 +152,4 @@ Needed by every profile; unlocks real app scaffolds.
 - [x] **OPS-015** Docs deployed on Vercel: https://react-ui-kit-docs.vercel.app (Deployment Protection optional).
 - [x] **OPS-016** Bundle budget check (fail CI if `dist/index.js` gzip grows > 10% without note).
 - [x] **OPS-017** Starter template (`templates/starter`) + `npm run create-app <dir> -- --profile <profile>`: AppShell per profile shell, ThemeProvider, toast/confirm providers, CLAUDE.md, tasks.md, test; verified building against the packed kit.
+- [x] **OPS-018** Blueprints: six live example screens in the docs (`templates/blueprints`, shared with `create-app --profile dashboard|admin`), smoke + interaction tests, e2e at 1280 and 390 px.

@@ -9,3 +9,9 @@ export const PROFILES_SHELL = {
   ecommerce: { variant: 'top-nav', defaultTheme: 'light', bottomNav: true },
   landing: { variant: 'top-nav', defaultTheme: 'light', bottomNav: false },
 };
+
+// Profiles whose starter home screen is a blueprint (files live in templates/blueprints and are shown in the docs "Blueprints" pages).
+export const BLUEPRINT_HOMES = {
+  dashboard: { screen: 'AnalyticsDashboard', heading: 'Overview', files: ['AnalyticsDashboard.tsx', 'AnalyticsDashboard.data.ts', 'shared.tsx'] },
+  admin: { screen: 'AdminListDetail', heading: 'Invoices', files: ['AdminListDetail.tsx', 'AdminListDetail.data.ts', 'shared.tsx'] },
+};

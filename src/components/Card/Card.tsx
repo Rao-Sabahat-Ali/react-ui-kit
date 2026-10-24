@@ -4,7 +4,7 @@ import { safeUrl } from '../../utils/url';
 
 export interface CardProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   title?: ReactNode;
-  titleAs?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  titleAs?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   subtitle?: ReactNode;
   header?: ReactNode;
   footer?: ReactNode;

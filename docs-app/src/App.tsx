@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Button, Icon, InputText, Select, ThemeProvider, ThemeToggle, type Profile } from '@sabahat/react-ui-kit';
+import { BlueprintPage } from './pages/BlueprintPage';
+import { BlueprintsPage } from './pages/BlueprintsPage';
+import { findBlueprint, blueprints } from './blueprints/registry';
 import { ComponentPage } from './pages/ComponentPage';
 import { FoundationsPage } from './pages/FoundationsPage';
 import { HomePage } from './pages/HomePage';
@@ -57,7 +60,10 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
     return Object.keys(CATEGORY_LABELS).filter((k) => map.has(k)).map((k) => [k, map.get(k)!] as const);
   }, [query]);
 
+  const blueprint = route[0] === 'blueprints' ? findBlueprint(route[1]) : undefined;
   const page =
+    blueprint ? <BlueprintPage slug={blueprint.slug} onProfileChange={onProfileChange} /> :
+    route[0] === 'blueprints' ? <BlueprintsPage /> :
     route[0] === 'components' && route[1] ? <ComponentPage slug={route[1]} /> :
     route[0] === 'foundations' ? <FoundationsPage /> :
     route[0] === 'profiles' ? <ProfilesPage /> :
@@ -71,12 +77,12 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
   );
 
   return (
-    <div className="docs-shell">
+    <div className={`docs-shell ${blueprint ? 'docs-shell--wide' : ''}`}>
       <a href="#main" className="visually-hidden-focusable docs-skip" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }}>
         Skip to content
       </a>
       <header className="docs-topbar">
-        <Button className="d-lg-none" appearance="text" variant="secondary" icon="menu" aria-label="Navigation" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)} />
+        <Button className={blueprint ? '' : 'd-lg-none'} appearance="text" variant="secondary" icon="menu" aria-label="Navigation" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)} />
         <a href={href()} className="docs-brand">react-ui-kit</a>
         <div className="ms-auto d-flex align-items-center gap-2">
           <span className="small text-body-secondary d-none d-sm-inline">Profile</span>
@@ -92,10 +98,15 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
             {navLink('', 'Overview')}
             {navLink('foundations', 'Foundations')}
             {navLink('profiles', 'App profiles')}
+            {navLink('blueprints', 'Blueprints')}
             {navLink('roadmap', 'Roadmap')}
           </div>
           <div className="px-3 pb-2">
             <InputText size="sm" type="search" aria-label="Filter components" placeholder="Filter components…" prefix={<Icon name="search" />} value={query} onChange={setQuery} />
+          </div>
+          <div className="docs-nav__section">
+            <div className="docs-nav__heading">Blueprints</div>
+            {blueprints.map((b) => navLink(`blueprints/${b.slug}`, b.title))}
           </div>
           {groups.map(([category, list]) => (
             <div key={category} className="docs-nav__section">
@@ -104,9 +115,14 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
             </div>
           ))}
         </nav>
-        <main id="main" tabIndex={-1} className="docs-main">
-          {page}
-        </main>
+        {blueprint ? (
+          // Blueprints bring their own app shell, and with it the page's single main landmark.
+          <div className="docs-main docs-main--blueprint">{page}</div>
+        ) : (
+          <main id="main" tabIndex={-1} className="docs-main">
+            {page}
+          </main>
+        )}
       </div>
     </div>
   );

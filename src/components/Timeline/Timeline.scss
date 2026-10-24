@@ -16,6 +16,8 @@
   flex: 1 1 0;
   min-inline-size: 0;
   padding: var(--ui-space-2) var(--ui-space-3);
+  // Long tokens (emails, tracking numbers) wrap instead of widening the page (rules/ux-checklist).
+  overflow-wrap: anywhere;
 }
 
 .ui-timeline__opposite {

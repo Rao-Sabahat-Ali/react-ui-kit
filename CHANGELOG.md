@@ -3,11 +3,28 @@
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
 ## 1.3.0 (unreleased)
+Blueprints: complete, runnable screens built only from kit components and the design contract, so every personal app looks and behaves the same without re-explaining the design.
 
 ### Added
 - `TimePicker` — time-of-day input as a segmented spinbutton group (hours, minutes, optional seconds, AM/PM). 12/24-hour by locale, `step`, `min`/`max`, `'HH:mm'` string value, typing + arrow/Page/Home/End keys, Field integration, RTL, hidden form input.
 - `DataScroller` — infinite list loaded in chunks via `loadMore`. Inline scroll box or window, auto (IntersectionObserver) or manual loading, always-present keyboard "Load more" button, loading/empty/error-with-retry states, live-region announcements.
 - Locale keys: `emptyValue`, `loadMore`, `loadingMore`, `loadFailed`, `retry`, `itemsLoaded_one/_other`, `endOfList`.
+
+- **Blueprints** section in the docs app (`#/blueprints`, listed in the docs navigation) with six live, deterministic example screens, each with a "Pattern" note (MCP pattern slugs), the highlights and a "Copy source" block:
+  - **Analytics dashboard** (profile `dashboard`): AppShell, Topbar and SidebarNav; PageHeader with a date-range Select and one ink action; StatGroup of four KPIs with deltas and sparklines; line chart (current against previous period) and bar chart, each with a text summary and table fallback; sortable, filterable, paginated DataTable of orders with Tag statuses and an identical overflow menu per row; activity Timeline; per-widget Skeleton, empty and error states with Retry; light and dark, comfortable and compact density.
+  - **Admin list to detail** (profile `admin`): DataTable with search, status filter, selection and pagination; row click opens a Drawer; bulk Toolbar; ConfirmDialog that names the object; New invoice form in a Drawer with an error summary.
+  - **Overview and index page** (profile `saas`): the `overview` and `index-page` patterns.
+  - **Settings page**: vertical Tabs (scrollable row below lg), Sections, Fields, instant Switches, explicit Save with validation, discard prompt, danger zone.
+  - **Sign in and reset**: the `auth` pattern (generic errors, autocomplete, password requirements).
+  - **Article and detail page**: the `article-detail` pattern with loading and not-found states.
+- Blueprint sources live in `templates/blueprints/` (one file per screen plus `*.data.ts`), shared by the docs and the starters.
+- `create-app --profile dashboard` and `--profile admin` scaffold the Analytics dashboard / Admin list-detail blueprint as the home screen (`src/screens/`, copied from `templates/blueprints`); `--blank` keeps the empty starter page. Generated apps are type-checked in `test/create-app.test.ts`.
+- Tests: a vitest smoke suite per blueprint (one h1, ordered headings, one main landmark, no console errors, states) plus interaction tests; Playwright visits every blueprint at 1280 px and 390 px (no horizontal scroll). `E2E_PORT` overrides the e2e preview port.
+
+### Changed
+- `Card` accepts `titleAs="h1"` (the auth pattern uses the card title as the page heading).
+- `Timeline` wraps long words (`overflow-wrap: anywhere`) so emails and tracking numbers never widen the page.
+- Docs: `CodeBlock` takes `label` and `tall`; the docs navigation becomes a drawer on blueprint pages so the frame gets the full width.
 
 ## 1.2.1 — 2026-10-24
 First npm release (`npm install @sabahat/react-ui-kit`): MIT license, package metadata, README for external use, `prepublishOnly` gate. No code changes since 1.2.0.

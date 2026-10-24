@@ -16,5 +16,5 @@
     "resolveJsonModule": true,
     "types": ["vite/client", "node", "@testing-library/jest-dom/vitest"]
   },
-  "include": ["src", "docs-app/src", "test", "vite.config.ts", "vite.docs.config.ts"]
+  "include": ["src", "docs-app/src", "templates/blueprints", "test", "vite.config.ts", "vite.docs.config.ts"]
 }
