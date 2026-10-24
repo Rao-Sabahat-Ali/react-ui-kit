@@ -148,7 +148,7 @@ Needed by every profile; unlocks real app scaffolds.
 - [x] **OPS-011** Lint: evaluate ESLint (react-hooks, jsx-a11y) as dev deps — needs architect approval + ADR.
 - [x] **OPS-012** Not done by decision (2026-10-24: axe-core not approved as a dependency). Covered instead by jsx-a11y lint, AC tests and Playwright smoke.
 - [x] **OPS-013** Playwright visual baselines for light/dark × saas/admin/pos/game (local; CI skips OS-specific baselines).
-- [ ] **OPS-014** Release flow: semver tags, CHANGELOG.md, `npm pack` smoke test installing into a Vite app; bump submodule in design-system-mcp. — architect
+- [x] **OPS-014** Release flow: semver tags, CHANGELOG.md, `npm pack` smoke test installing into a Vite app; bump submodule in design-system-mcp. — architect
 - [x] **OPS-015** Docs deployed on Vercel: https://react-ui-kit-docs.vercel.app (Deployment Protection optional).
 - [x] **OPS-016** Bundle budget check (fail CI if `dist/index.js` gzip grows > 10% without note).
 - [x] **OPS-017** Starter template (`templates/starter`) + `npm run create-app <dir> -- --profile <profile>`: AppShell per profile shell, ThemeProvider, toast/confirm providers, CLAUDE.md, tasks.md, test; verified building against the packed kit.

@@ -1,6 +1,6 @@
 {
   "name": "@sabahat/react-ui-kit",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "React 19 + Bootstrap 5.3 component library implementing the personal design system (specs served by design-system-mcp).",
   "private": true,
   "license": "UNLICENSED",
@@ -28,7 +28,7 @@
     "dev": "vite --config vite.docs.config.ts",
     "build": "npm run build:lib && npm run build:types",
     "build:lib": "vite build",
-    "build:types": "tsc -p tsconfig.build.json",
+    "build:types": "tsc -p tsconfig.build.json && node scripts/clean-types.mjs",
     "build:docs": "vite build --config vite.docs.config.ts",
     "preview:docs": "vite preview --config vite.docs.config.ts",
     "test": "vitest run",
