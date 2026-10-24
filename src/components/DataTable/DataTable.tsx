@@ -27,7 +27,7 @@ import { InputText } from '../InputText/InputText';
 import type { MenuItem } from '../Menu/types';
 import { Paginator } from '../Paginator/Paginator';
 import { Skeleton } from '../Skeleton/Skeleton';
-import { isRtl } from '../Tooltip/shared';
+import { isRtl } from '../../utils/element';
 import { VirtualScroller, type VirtualRange } from '../VirtualScroller/VirtualScroller';
 import { CellEditor } from './CellEditor';
 import { ColumnFilterMenu, ColumnFilterRow } from './ColumnFilter';

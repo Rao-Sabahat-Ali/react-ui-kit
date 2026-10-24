@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
-import { isRtl } from '../Tooltip/shared';
+import { isRtl } from '../../utils/element';
 import { measureWidth, RESIZE_STEP, RESIZE_STEP_LARGE } from './useColumnResize';
 
 interface ResizeHandleProps {

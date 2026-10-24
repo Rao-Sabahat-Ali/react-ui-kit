@@ -228,6 +228,17 @@ export const en = {
   eventCount_one: '{count} event',
   eventCount_other: '{count} events',
   schedulerView: 'Calendar view',
+  matchIn: 'Is one of',
+  matchMode: 'Match mode',
+  filterFrom: 'From',
+  filterTo: 'To',
+  filterValue: 'Value',
+  editorLabel: '{header}, row {index}',
+  editRowN: 'Edit row {index}',
+  saveRowN: 'Save row {index}',
+  cancelEditN: 'Cancel editing row {index}',
+  rowActions: 'Actions',
+  rowMenu: 'Row actions',
 };
 
 export type Messages = typeof en;

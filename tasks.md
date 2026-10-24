@@ -107,8 +107,8 @@ Needed by every profile; unlocks real app scaffolds.
 
 ## Phase 5 — Data
 
-- [ ] **UI-500** DataTable phase 2: column filters, global filter, lazy/server mode, resize/reorder, frozen columns, row expansion, column visibility, CSV export, `stateKey` persistence (after SPEC-013 adds ACs)
-- [ ] **UI-501** DataTable phase 3: inline cell/row editing, virtual scroll, row grouping, grid keyboard navigation, context menu
+- [x] **UI-500** DataTable phase 2: column filters, global filter, lazy/server mode, resize/reorder, frozen columns, row expansion, column visibility, CSV export, `stateKey` persistence (after SPEC-013 adds ACs)
+- [x] **UI-501** DataTable phase 3: inline cell/row editing, virtual scroll, row grouping, grid keyboard navigation, context menu
 - [x] **UI-502** VirtualScroller — spec `virtual-scroller.md` — reviews: a11y-reviewer
 - [x] **UI-503** DataView — spec `data-view.md` — reviews: a11y-reviewer
 - [x] **UI-504** Tree — spec `tree.md` — reviews: a11y-reviewer
