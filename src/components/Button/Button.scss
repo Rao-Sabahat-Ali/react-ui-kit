@@ -82,4 +82,7 @@ $intents: primary, secondary, success, danger, warning, info;
   .ui-button {
     min-height: max(var(--ui-control-height-md), var(--ui-touch-target-min));
   }
+  .ui-button--icon-only {
+    min-width: var(--ui-touch-target-min);
+  }
 }

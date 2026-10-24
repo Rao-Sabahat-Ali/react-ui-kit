@@ -9,7 +9,7 @@ interface CellEditorProps<T> {
   initialValue: unknown;
   render: (ctx: CellEditorContext<T>) => ReactNode;
   /** Return false when the value was rejected (editor stays open, invalid). */
-  onCommit: (value: unknown) => boolean;
+  onCommit: (value: unknown, viaBlur?: boolean) => boolean;
   onCancel: () => void;
   /** Commit and move to the next (or previous) editable cell. */
   onTab: (value: unknown, backwards: boolean) => boolean;
@@ -44,9 +44,9 @@ export function CellEditor<T>({ row, label, initialValue, render, onCommit, onCa
     else el.removeAttribute('aria-invalid');
   }, [invalid]);
 
-  const commit = (next: unknown = valueRef.current): boolean => {
+  const commit = (next: unknown = valueRef.current, viaBlur = false): boolean => {
     if (done.current) return true;
-    const ok = onCommit(next);
+    const ok = onCommit(next, viaBlur);
     if (ok) done.current = true;
     else {
       setInvalid(true);
@@ -62,6 +62,10 @@ export function CellEditor<T>({ row, label, initialValue, render, onCommit, onCa
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.nativeEvent.isComposing) {
+      e.stopPropagation();
+      return;
+    }
     if (e.key === 'Enter' && !(e.target instanceof HTMLTextAreaElement) && !(e.target instanceof HTMLButtonElement)) {
       e.preventDefault();
       e.stopPropagation();
@@ -88,7 +92,7 @@ export function CellEditor<T>({ row, label, initialValue, render, onCommit, onCa
     // Focus moved into a popup opened by the editor (e.g. a date picker) — not a blur outside.
     if (next instanceof Element && next.closest('.ui-popover-root, [role="listbox"], [role="dialog"]')) return;
     if (!rootRef.current?.isConnected) return;
-    commit();
+    commit(valueRef.current, true);
   };
 
   return (

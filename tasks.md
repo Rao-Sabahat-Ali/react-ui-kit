@@ -109,6 +109,8 @@ Needed by every profile; unlocks real app scaffolds.
 
 - [x] **UI-500** DataTable phase 2: column filters, global filter, lazy/server mode, resize/reorder, frozen columns, row expansion, column visibility, CSV export, `stateKey` persistence (after SPEC-013 adds ACs)
 - [x] **UI-501** DataTable phase 3: inline cell/row editing, virtual scroll, row grouping, grid keyboard navigation, context menu
+- [ ] **UI-502** DataTable follow-ups from review: virtual scroll + grid navigation needs a VirtualScroller scroll-to-index API (Ctrl+End/PageDown stop at rendered rows); keyboard activation of onRowClick in cell-navigation mode; column kept when leaving a group header row; resize handle 24px hit area (WCAG 2.5.7); clear reorder live region; cancel resize listeners on unmount; aria-sort for groupBy column; resetState calls onPageChange when controlled.
+- [ ] **UI-503** a11y follow-ups from svenska-ord review: `Message` live region rendered persistently so content changes announce reliably.
 - [x] **UI-502** VirtualScroller — spec `virtual-scroller.md` — reviews: a11y-reviewer
 - [x] **UI-503** DataView — spec `data-view.md` — reviews: a11y-reviewer
 - [x] **UI-504** Tree — spec `tree.md` — reviews: a11y-reviewer

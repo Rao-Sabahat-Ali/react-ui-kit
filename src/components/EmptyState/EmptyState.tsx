@@ -5,7 +5,8 @@ import { Icon, type IconName } from '../Icon/Icon';
 export interface EmptyStateProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   icon?: IconName;
   title: ReactNode;
-  titleAs?: 'h2' | 'h3' | 'h4';
+  /** Use `'h1'` when the empty state is the whole page. */
+  titleAs?: 'h1' | 'h2' | 'h3' | 'h4';
   description?: ReactNode;
   action?: ReactNode;
   variant?: 'empty' | 'no-results' | 'error' | 'first-run';

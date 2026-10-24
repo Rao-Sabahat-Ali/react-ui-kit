@@ -7,3 +7,16 @@
     filter: brightness(0.9);
   }
 }
+
+// WCAG 2.3.3: kit transitions and animations collapse under reduced motion.
+// Spinners keep turning (slowed by their own rule) so loading stays visible.
+@media (prefers-reduced-motion: reduce) {
+  [class*='ui-']:not(.ui-spinner, .ui-spinner *),
+  [class*='ui-']::before,
+  [class*='ui-']::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

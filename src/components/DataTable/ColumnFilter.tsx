@@ -83,7 +83,7 @@ function FilterMenuContent<T>({
 
   const apply = () => {
     const next = { matchMode, value };
-    onApply(isFilterActive(next, type) || column.filterFn ? next : undefined);
+    onApply(isFilterActive(next, type) || (column.filterFn && value !== null && value !== undefined && value !== '') ? next : undefined);
   };
 
   const changeMode = (mode: MatchMode | null) => {

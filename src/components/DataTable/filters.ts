@@ -30,7 +30,9 @@ const toNumber = (v: unknown): number | null => {
 const toDate = (v: unknown): Date | null => {
   if (v instanceof Date) return Number.isNaN(v.getTime()) ? null : v;
   if (typeof v === 'string' || typeof v === 'number') {
-    const d = new Date(v);
+    // Date-only ISO strings (`2024-03-05`) are calendar days in the display time zone, not UTC midnight.
+    const dateOnly = typeof v === 'string' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(v) : null;
+    const d = dateOnly ? new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3])) : new Date(v);
     return Number.isNaN(d.getTime()) ? null : d;
   }
   return null;

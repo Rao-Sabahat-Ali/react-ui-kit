@@ -125,6 +125,15 @@
   }
 }
 
+// Bootstrap's text-start / text-end are physical (left / right); the table must follow the writing direction.
+.ui-data-table .text-start {
+  text-align: start !important;
+}
+
+.ui-data-table .text-end {
+  text-align: end !important;
+}
+
 .ui-tabular {
   font-variant-numeric: tabular-nums;
 }
@@ -173,6 +182,13 @@
     box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
     border-radius: var(--ui-radius-sm);
   }
+}
+
+// WCAG 2.5.8: pointer targets of at least 24px.
+.ui-data-table__sort,
+.ui-data-table__header-button,
+.ui-data-table__group-toggle {
+  min-block-size: 1.5rem;
 }
 
 .ui-data-table__header-button {
@@ -267,6 +283,13 @@
     inline-size: 1.5rem;
     inset-inline-end: -0.5rem;
   }
+
+  // Backgrounds are dropped in forced-colors mode; keep the separator line visible.
+  @media (forced-colors: active) {
+    &::after {
+      background: ButtonText;
+    }
+  }
 }
 
 .ui-data-table--resizing {
@@ -291,7 +314,9 @@
   background: var(--ui-color-surface);
 }
 
+// Re-assert sticky: `.ui-data-table__head th { position: relative }` has higher specificity than the base rule.
 .ui-data-table__head .ui-data-table__cell--frozen {
+  position: sticky;
   z-index: 3;
   background: var(--ui-color-bg-subtle);
 }

@@ -16,6 +16,14 @@
   margin-bottom: var(--ui-space-2);
   font-size: var(--ui-font-size-sm);
   text-decoration: none;
+  // WCAG 2.5.8: at least 24px tall everywhere, the full touch target on coarse pointers.
+  min-block-size: 1.5rem;
+}
+
+@media (pointer: coarse) {
+  .ui-page-header__back {
+    min-block-size: var(--ui-touch-target-min);
+  }
 }
 
 .ui-page-header__row {

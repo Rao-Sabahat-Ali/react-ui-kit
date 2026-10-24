@@ -360,7 +360,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const moveByKeyboard = (entry: Entry<T>, direction: 1 | -1) => {
     const index = visible.indexOf(entry);
     const target = visible[index + direction];
-    if (!target || !moveColumn(entry.id, target.id)) return;
+    if (!target || target.column.reorderable === false || !moveColumn(entry.id, target.id)) return;
     focusHeader.current = entry.id;
     setAnnouncement(t('columnMoved', { header: entry.label, position: index + direction + 1, total: visible.length }));
   };
@@ -402,16 +402,17 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const isEditable = (column: Column<T>, row: T) =>
     Boolean(editMode && column.editor) && (typeof column.editable === 'function' ? column.editable(row) : column.editable !== false);
 
-  const closeEditor = (key: RowKey, col: string) => {
+  const closeEditor = (key: RowKey, col: string, restoreFocus = true) => {
     setEditing(null);
-    focusCell.current = cellKey(key, col);
+    // A blur-commit must not pull focus back from whatever the user just moved to.
+    focusCell.current = restoreFocus ? cellKey(key, col) : null;
   };
 
-  const commitCell = (row: T, entry: Entry<T>, rowIndex: number, newValue: unknown): boolean => {
+  const commitCell = (row: T, entry: Entry<T>, rowIndex: number, newValue: unknown, restoreFocus = true): boolean => {
     const field = entry.column.field ?? entry.id;
     const value = entry.column.field ? getByPath(row, entry.column.field) : undefined;
     if (onCellEditComplete?.({ row, field, value, newValue, rowIndex }) === false) return false;
-    closeEditor(keyOf(row), entry.id);
+    closeEditor(keyOf(row), entry.id, restoreFocus);
     return true;
   };
 
@@ -428,9 +429,15 @@ export function DataTable<T>(props: DataTableProps<T>) {
     return true;
   };
 
-  const startRowEdit = (row: T) => setRowDrafts(new Map(rowDrafts).set(keyOf(row), row));
+  // Row mode swaps the Edit button for Save/Cancel (and back); focus follows so it is never dropped to <body>.
+  const focusRowAction = useRef<{ key: RowKey; to: 'editor' | 'edit-button' } | null>(null);
+  const startRowEdit = (row: T) => {
+    focusRowAction.current = { key: keyOf(row), to: 'editor' };
+    setRowDrafts(new Map(rowDrafts).set(keyOf(row), row));
+  };
   const endRowEdit = (row: T, save: boolean) => {
     const key = keyOf(row);
+    focusRowAction.current = { key, to: 'edit-button' };
     const newRow = rowDrafts.get(key) ?? row;
     const next = new Map(rowDrafts);
     next.delete(key);
@@ -475,6 +482,16 @@ export function DataTable<T>(props: DataTableProps<T>) {
       const th = Array.from(tableRef.current?.querySelectorAll<HTMLElement>('[data-column-header]') ?? []).find((el) => el.dataset.columnHeader === focusHeader.current);
       focusHeader.current = null;
       th?.querySelector<HTMLElement>('.ui-data-table__sort, .ui-data-table__header-button')?.focus();
+    }
+    if (focusRowAction.current) {
+      const { key, to } = focusRowAction.current;
+      focusRowAction.current = null;
+      const rowEl = Array.from(tableRef.current?.querySelectorAll<HTMLElement>('[data-row-key]') ?? []).find((el) => el.dataset.rowKey === String(key));
+      const target =
+        to === 'edit-button'
+          ? rowEl?.querySelector<HTMLElement>('.ui-data-table__row-editor button')
+          : Array.from(rowEl?.querySelectorAll<HTMLElement>('[data-col] input, [data-col] select, [data-col] textarea, [data-col] [tabindex="0"], [data-col] button') ?? []).find((el) => !el.hasAttribute('disabled'));
+      target?.focus();
     }
     if (focusCell.current) {
       const cell = findCell(focusCell.current);
@@ -528,6 +545,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
       }
       return;
     }
+    // Alt/Meta + Arrow are browser history shortcuts; Ctrl/Meta only extend Home/End.
+    if (e.altKey || ((e.ctrlKey || e.metaKey) && e.key !== 'Home' && e.key !== 'End' && e.key !== ' ' && e.key !== 'Enter')) return;
     const pos = positionOf(root, cell) ?? active.current;
     const next = nextPosition(root, pos, { key: e.key, ctrl: e.ctrlKey || e.metaKey, rtl: isRtl(root), pageRows: visibleRowCount(viewportRef.current, cell.parentElement) });
     if (next) {
@@ -538,15 +557,16 @@ export function DataTable<T>(props: DataTableProps<T>) {
     const rowKey = cell.parentElement?.dataset.rowKey;
     const row = rowKey === undefined ? undefined : rowsByKey.get(rowKey);
     if (e.key === 'Enter' || e.key === 'F2') {
-      e.preventDefault();
       const col = cell.dataset.col;
       const entry = visible.find((v) => v.id === col);
       if (row !== undefined && entry && editMode === 'cell' && isEditable(entry.column, row)) {
+        e.preventDefault();
         setEditing({ key: keyOf(row), col: entry.id });
         return;
       }
       const child = firstInteractive(cell);
       if (child) {
+        e.preventDefault();
         entered.current = cell;
         syncRovingTabindex(root, pos, cell);
         child.focus();
@@ -753,7 +773,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
           label={editorLabel}
           initialValue={column.field ? getByPath(row, column.field) : undefined}
           render={column.editor!}
-          onCommit={(v) => commitCell(row, entry, rowIndex, v)}
+          onCommit={(v, viaBlur) => commitCell(row, entry, rowIndex, v, !viaBlur)}
           onCancel={() => {
             onCellEditCancel?.({ row, field: column.field ?? id });
             closeEditor(key, id);
@@ -1015,7 +1035,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
     role: cellNavigation ? 'grid' : virtual ? 'table' : undefined,
     'aria-busy': loading || undefined,
     'aria-label': caption ? undefined : props['aria-label'],
-    'aria-multiselectable': selectionMode === 'multiple' || undefined,
+    'aria-multiselectable': (cellNavigation && selectionMode === 'multiple') || undefined,
     'aria-rowcount': virtual ? total + headerRows : undefined,
     'aria-colcount': virtual ? colCount : undefined,
     onKeyDown: cellNavigation ? onGridKeyDown : undefined,
