@@ -4,6 +4,7 @@ import { cx } from '../../utils/cx';
 import { safeUrl } from '../../utils/url';
 import { Icon, type IconName } from '../Icon/Icon';
 import { Skeleton } from '../Skeleton/Skeleton';
+import { Sparkline } from '../Sparkline/Sparkline';
 import { useInStatGroup } from '../StatGroup/StatGroup';
 
 export interface StatCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -22,19 +23,6 @@ export interface StatCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'tit
   footer?: ReactNode;
   /** `card` (default) is a bordered tile; `plain` drops the chrome so numbers sit in a ruled `.ui-stat-group` row. */
   variant?: 'card' | 'plain';
-}
-
-function Sparkline({ values }: { values: number[] }) {
-  if (values.length < 2) return null;
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-  const points = values.map((v, i) => `${(i / (values.length - 1)) * 100},${30 - ((v - min) / range) * 28 - 1}`).join(' ');
-  return (
-    <svg className="ui-stat-card__sparkline" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <polyline points={points} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-    </svg>
-  );
 }
 
 export function StatCard({ label, value, format, delta, deltaLabel, invertDelta = false, icon, sparkline, loading = false, href, footer, variant: variantProp, className, ...rest }: StatCardProps) {
@@ -85,7 +73,7 @@ export function StatCard({ label, value, format, delta, deltaLabel, invertDelta 
           <div className="ui-stat-card__value ui-tabular">{display}</div>
         )}
         {!loading && deltaNode}
-        {!loading && sparkline && <Sparkline values={sparkline} />}
+        {!loading && sparkline && <Sparkline className="ui-stat-card__sparkline" values={sparkline} height={32} />}
         {footer && <div className="ui-stat-card__footer">{footer}</div>}
       </div>
     </div>

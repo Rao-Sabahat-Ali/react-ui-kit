@@ -11,3 +11,4 @@ export { compileMask, applyMask, unmask, type MaskSlot } from './mask';
 export { sanitizeHtml, textToHtml, isSafeHref } from './sanitize';
 export { assignRef, mergeRefs, elementRef, isRtl, focusAdjacentTabbable } from './element';
 export { BREAKPOINTS, responsiveEntries, bpClass, isResponsiveObject, type Breakpoint, type Responsive } from './responsive';
+export { copyToClipboard } from './clipboard';

@@ -1,0 +1,53 @@
+.ui-toc {
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-toc--sticky {
+  position: sticky;
+  inset-block-start: var(--ui-toc-offset, 1rem);
+  max-block-size: calc(100vh - var(--ui-toc-offset, 1rem) * 2);
+  overflow-y: auto;
+}
+
+.ui-toc__title {
+  margin: 0 0 var(--ui-space-2);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text);
+}
+
+.ui-toc__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-inline-start: 1px solid var(--ui-color-border);
+}
+
+.ui-toc__list--nested {
+  margin-inline-start: var(--ui-space-3);
+}
+
+.ui-toc__link {
+  display: block;
+  margin-inline-start: -1px;
+  padding: var(--ui-space-1) var(--ui-space-3);
+  border-inline-start: 2px solid transparent;
+  color: var(--ui-color-text-muted);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    color: var(--ui-color-text);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  }
+
+  &[aria-current='location'] {
+    border-inline-start-color: var(--ui-color-accent);
+    color: var(--ui-color-accent-emphasis);
+    font-weight: var(--ui-font-weight-medium);
+  }
+}

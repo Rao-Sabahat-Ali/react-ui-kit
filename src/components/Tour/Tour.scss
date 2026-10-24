@@ -1,0 +1,47 @@
+.ui-tour {
+  --bs-popover-max-width: 22rem;
+  inline-size: max-content;
+  max-inline-size: min(22rem, calc(100vw - 2 * var(--ui-space-4)));
+}
+
+.ui-tour__title {
+  margin: 0;
+  font-size: var(--ui-font-size-md);
+}
+
+.ui-tour__body {
+  color: var(--ui-color-text);
+  overflow-wrap: anywhere;
+}
+
+.ui-tour__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) var(--ui-space-3) var(--ui-space-3);
+}
+
+.ui-tour__counter {
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-tour__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-1);
+  margin-inline-start: auto;
+}
+
+// Flat outline around the target; the target stays interactive.
+.ui-tour__ring {
+  z-index: var(--ui-z-popover);
+  border-radius: var(--ui-radius-md);
+  outline: 2px solid var(--ui-color-accent);
+  outline-offset: 0;
+  pointer-events: none;
+}

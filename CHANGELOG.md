@@ -2,6 +2,23 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## 1.5.0 (unreleased)
+Eight everyday components that were missing from the kit.
+
+### Added
+- `CopyButton` — copies text with the Clipboard API (hidden-textarea fallback), swaps label and icon to a copied or failed state, announces it in a polite live region, icon-only variant, `timeout`, `onCopy`/`onError`; never renders or logs the value. `copyToClipboard()` is exported from utils.
+- `Countdown` — `role="timer"` that is silent by default (optional polite announcements at thresholds), `target` or `duration`, `elapsed` count-up mode, `dd:hh:mm:ss` / `hh:mm:ss` / `mm:ss` / locale-aware `words` formats, pausable, tabular numerals, stops ticking while the tab is hidden, `onComplete` and `completedContent`.
+- `DescriptionList` and `DescriptionItem` — a real `<dl>`; `columns` 1-3, `layout` stacked or inline, `ruled`, `span`, `copyable` values (CopyButton), empty-value placeholder, long-token wrapping.
+- `Sparkline` — tiny axis-free line, area or bar chart on the chart tokens, optional min/max markers, `label` plus generated or custom `summary` as text alternative. `StatCard` now renders its `sparkline` prop with it (tests unchanged).
+- `ProgressCircle` — circular progress/gauge with `size`, `strokeWidth`, centre content slot, intent `variant`, indeterminate state and `role="progressbar"` with value text; transition and spin are off under reduced motion.
+- `TableOfContents` — "On this page" navigation from headings (`from`, `headings`) or `items` with nesting, `IntersectionObserver` scrollspy with `aria-current="location"`, smooth scroll (instant under reduced motion) with focus on the heading, `sticky`, `onNavigate` for routers.
+- `Highlight` — marks matches of one or more terms with `<mark>` (accent-subtle): case, diacritic and whole-word options, regex-escaped terms, no `innerHTML`, guards for long text (`maxLength`, `maxMatches`, 20 terms).
+- `Tour` — non-modal guided product tour: ordered steps anchored by selector, ref or function, popover (title, body, step counter, Previous/Next/Skip/Done), flat highlight ring, focus moves to the panel and is restored on close, Escape closes, Tab continues to the page, target scrolled into view (reduced-motion aware), missing targets skipped with a dev-only warning. Built on `useFloating` and `useOverlay`.
+- Locale keys: `copy`, `copied`, `copyFailed`, `copyLabel`, `countdownRemaining`, `countdownElapsed`, `countdownComplete`, `sparklineSummary`, `onThisPage`, `tour`, `tourNext`, `tourPrevious`, `tourDone`, `tourSkip`.
+
+### Notes
+- Calendar and date-range selection already exist: `DatePicker` with `inline` and `selectionMode="range"`.
+
 ## 1.4.0 — 2026-10-24
 Finishes the spec: every specified component now has code, tests and a live docs example, and the last PrimeReact gaps are closed.
 

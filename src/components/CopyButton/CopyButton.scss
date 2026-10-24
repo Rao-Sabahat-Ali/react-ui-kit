@@ -1,0 +1,13 @@
+.ui-copy-button {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.ui-copy-button--copied .ui-button__icon {
+  color: var(--ui-color-success);
+}
+
+.ui-copy-button--failed .ui-button__icon {
+  color: var(--ui-color-danger);
+}

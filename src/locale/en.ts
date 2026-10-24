@@ -259,6 +259,21 @@ export const en = {
   terminalInput: 'Command',
   terminalRunning: 'Running…',
   terminalError: 'The command failed',
+  // CopyButton, Countdown, DescriptionList, Sparkline, TableOfContents, Tour (1.5.0).
+  copy: 'Copy',
+  copied: 'Copied',
+  copyFailed: 'Could not copy',
+  copyLabel: 'Copy {label}',
+  countdownRemaining: '{time} remaining',
+  countdownElapsed: '{time} elapsed',
+  countdownComplete: 'Time is up',
+  sparklineSummary: '{count} values, from {first} to {last}, lowest {min}, highest {max}',
+  onThisPage: 'On this page',
+  tour: 'Product tour',
+  tourNext: 'Next',
+  tourPrevious: 'Previous',
+  tourDone: 'Done',
+  tourSkip: 'Skip tour',
 };
 
 export type Messages = typeof en;

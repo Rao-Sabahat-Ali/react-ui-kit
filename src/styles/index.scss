@@ -29,12 +29,15 @@
 @import '../components/CommandPalette/CommandPalette';
 @import '../components/ConfirmPopup/ConfirmPopup';
 @import '../components/ContextMenu/ContextMenu';
+@import '../components/CopyButton/CopyButton';
+@import '../components/Countdown/Countdown';
 @import '../components/DataScroller/DataScroller';
 @import '../components/DataTable/DataTable';
 @import '../components/DataView/DataView';
 @import '../components/DateFormat/DateFormat';
 @import '../components/DatePicker/DatePicker';
 @import '../components/DeferredContent/DeferredContent';
+@import '../components/DescriptionList/DescriptionList';
 @import '../components/Dialog/Dialog';
 @import '../components/Divider/Divider';
 @import '../components/Dock/Dock';
@@ -47,6 +50,7 @@
 @import '../components/FloatLabel/FloatLabel';
 @import '../components/Galleria/Galleria';
 @import '../components/Grid/Grid';
+@import '../components/Highlight/Highlight';
 @import '../components/Icon/Icon';
 @import '../components/IconField/IconField';
 @import '../components/IftaLabel/IftaLabel';
@@ -85,6 +89,7 @@
 @import '../components/PickList/PickList';
 @import '../components/Popover/Popover';
 @import '../components/ProgressBar/ProgressBar';
+@import '../components/ProgressCircle/ProgressCircle';
 @import '../components/RadioButton/RadioButton';
 @import '../components/Rating/Rating';
 @import '../components/Scheduler/Scheduler';
@@ -96,6 +101,7 @@
 @import '../components/SidebarNav/SidebarNav';
 @import '../components/Skeleton/Skeleton';
 @import '../components/Slider/Slider';
+@import '../components/Sparkline/Sparkline';
 @import '../components/SpeedDial/SpeedDial';
 @import '../components/Spinner/Spinner';
 @import '../components/SplitButton/SplitButton';
@@ -106,6 +112,7 @@
 @import '../components/Stepper/Stepper';
 @import '../components/Steps/Steps';
 @import '../components/Switch/Switch';
+@import '../components/TableOfContents/TableOfContents';
 @import '../components/TabMenu/TabMenu';
 @import '../components/Tabs/Tabs';
 @import '../components/Tag/Tag';
@@ -118,6 +125,7 @@
 @import '../components/Toolbar/Toolbar';
 @import '../components/Tooltip/Tooltip';
 @import '../components/Topbar/Topbar';
+@import '../components/Tour/Tour';
 @import '../components/Tree/Tree';
 @import '../components/TreeSelect/TreeSelect';
 @import '../components/TreeTable/TreeTable';
