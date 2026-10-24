@@ -31,6 +31,7 @@ const asDate = (v: unknown): Date | null => (v instanceof Date && !Number.isNaN(
 export function ColumnFilterMenu<T>({ column, label, constraint, onChange, msg, locale }: FilterProps<T>) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const editorRef = useRef<HTMLElement | null>(null);
   const active = isFilterActive(constraint, column.filterType) || (Boolean(column.filterFn) && constraint !== undefined);
 
   const finish = (next: FilterConstraint | undefined) => {
@@ -47,6 +48,7 @@ export function ColumnFilterMenu<T>({ column, label, constraint, onChange, msg, 
       placement="bottom-start"
       arrow={false}
       className="ui-data-table__filter-menu"
+      initialFocus={editorRef}
       trigger={
         <button
           ref={buttonRef}
@@ -58,12 +60,22 @@ export function ColumnFilterMenu<T>({ column, label, constraint, onChange, msg, 
         </button>
       }
     >
-      <FilterMenuContent column={column} label={label} constraint={constraint} msg={msg} locale={locale} onApply={finish} />
+      <FilterMenuContent column={column} label={label} constraint={constraint} msg={msg} locale={locale} onApply={finish} editorRef={editorRef} />
     </Popover>
   );
 }
 
-function FilterMenuContent<T>({ column, label, constraint, msg, locale, onApply }: Omit<FilterProps<T>, 'onChange'> & { onApply: (c: FilterConstraint | undefined) => void }) {
+const FOCUSABLE = 'input:not([disabled]), select:not([disabled]), button:not([disabled]):not([tabindex="-1"]), [tabindex="0"]';
+
+function FilterMenuContent<T>({
+  column,
+  label,
+  constraint,
+  msg,
+  locale,
+  onApply,
+  editorRef,
+}: Omit<FilterProps<T>, 'onChange'> & { onApply: (c: FilterConstraint | undefined) => void; editorRef: { current: HTMLElement | null } }) {
   const modes = matchModesOf(column);
   const [matchMode, setMatchMode] = useState<MatchMode>(constraint && modes.includes(constraint.matchMode) ? constraint.matchMode : defaultMatchMode(column));
   const [value, setValue] = useState<unknown>(constraint?.value ?? null);
@@ -102,7 +114,15 @@ function FilterMenuContent<T>({ column, label, constraint, msg, locale, onApply 
           onChange={changeMode}
         />
       )}
-      <FilterEditor column={column} label={label} matchMode={matchMode} value={value} onValue={setValue} msg={msg} locale={locale} inline />
+      <div
+        className="ui-data-table__filter-value"
+        ref={(node) => {
+          // Popover moves initial focus to the value editor rather than the match-mode select.
+          editorRef.current = node?.querySelector<HTMLElement>(FOCUSABLE) ?? null;
+        }}
+      >
+        <FilterEditor column={column} label={label} matchMode={matchMode} value={value} onValue={setValue} msg={msg} locale={locale} inline />
+      </div>
       <div className="ui-data-table__filter-actions">
         <Button size="sm" variant="secondary" appearance="outline" onClick={() => onApply(undefined)}>
           {msg('clear')}
