@@ -1,0 +1,94 @@
+.ui-description-list {
+  --ui-description-list-gap: var(--ui-space-4);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-description-list-gap) var(--ui-space-6);
+  margin: 0;
+  color: var(--ui-color-text);
+}
+
+.ui-description-list__item {
+  min-inline-size: 0;
+}
+
+.ui-description-list__term {
+  margin: 0 0 var(--ui-space-1);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-description-list__value {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-1);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.ui-description-list__text {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.ui-description-list__empty {
+  color: var(--ui-color-text-subtle);
+}
+
+.ui-description-list__copy {
+  flex: none;
+  margin-block: -0.25rem;
+}
+
+.ui-description-list--ruled {
+  --ui-description-list-gap: 0;
+
+  .ui-description-list__item {
+    padding-block: var(--ui-space-3);
+    border-block-end: 1px solid var(--ui-color-border);
+  }
+}
+
+.ui-description-list--inline .ui-description-list__item {
+  display: grid;
+  grid-template-columns: minmax(6rem, 11rem) minmax(0, 1fr);
+  column-gap: var(--ui-space-4);
+  align-items: baseline;
+}
+
+.ui-description-list--inline .ui-description-list__term {
+  margin: 0;
+}
+
+@media (max-width: 575.98px) {
+  .ui-description-list--inline .ui-description-list__item {
+    display: block;
+  }
+
+  .ui-description-list--inline .ui-description-list__term {
+    margin-block-end: var(--ui-space-1);
+  }
+}
+
+@media (min-width: 768px) {
+  .ui-description-list--cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ui-description-list--cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ui-description-list__item--span-2 {
+    grid-column: span 2;
+  }
+
+  .ui-description-list__item--span-3 {
+    grid-column: 1 / -1;
+  }
+
+  .ui-description-list--cols-2 .ui-description-list__item--span-3 {
+    grid-column: span 2;
+  }
+}

@@ -1,0 +1,64 @@
+$intents: primary, secondary, success, danger, warning, info;
+
+.ui-progress-circle {
+  position: relative;
+  display: inline-block;
+  inline-size: var(--ui-progress-circle-size);
+  block-size: var(--ui-progress-circle-size);
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.ui-progress-circle__svg {
+  display: block;
+}
+
+.ui-progress-circle__track {
+  stroke: var(--ui-color-border);
+}
+
+.ui-progress-circle__value {
+  stroke: var(--ui-color-accent);
+  transition: stroke-dashoffset var(--ui-duration) var(--ui-easing);
+}
+
+@each $intent in $intents {
+  .ui-progress-circle--#{$intent} .ui-progress-circle__value {
+    stroke: var(--ui-color-#{$intent});
+  }
+}
+
+.ui-progress-circle__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--ui-progress-circle-size) * 0.14);
+  font-size: max(var(--ui-font-size-xs), calc(var(--ui-progress-circle-size) * 0.22));
+  font-weight: var(--ui-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: var(--ui-color-text);
+  text-align: center;
+}
+
+.ui-progress-circle--indeterminate .ui-progress-circle__svg {
+  animation: ui-progress-circle-spin 1s linear infinite;
+}
+
+@keyframes ui-progress-circle-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-progress-circle__value {
+    transition: none;
+  }
+
+  .ui-progress-circle--indeterminate .ui-progress-circle__svg {
+    animation: none;
+  }
+}

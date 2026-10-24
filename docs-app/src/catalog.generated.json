@@ -228,6 +228,26 @@
       ]
     },
     {
+      "name": "CopyButton",
+      "slug": "copy-button",
+      "category": "button",
+      "status": "implemented",
+      "purpose": "Copies a piece of text (token, id, URL, code snippet) to the clipboard and confirms it to everyone, including screen-reader users, with a short-lived \"Copied\" state.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Countdown",
+      "slug": "countdown",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Shows the time left until a moment (sale end, session expiry, exam, OTP resend) or, in `elapsed` mode, the time since one, without chatty screen-reader output.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "DataScroller",
       "slug": "data-scroller",
       "category": "data",
@@ -285,6 +305,20 @@
       "purpose": "Mount children only when the placeholder scrolls into view (IntersectionObserver) — lazy heavy widgets/images.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "DescriptionList",
+      "slug": "description-list",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "Key/value details of one record as a real `<dl>`: the standard way to show an order, user, article or invoice on admin and article pages.",
+      "profiles": [
+        "admin",
+        "cms",
+        "saas",
+        "dashboard",
+        "ecommerce"
       ]
     },
     {
@@ -420,6 +454,16 @@
       "category": "layout",
       "status": "implemented",
       "purpose": "Typed wrapper over the Bootstrap 5.3 row/column grid for responsive two-dimensional layouts: equal-width card grids (`columns` per breakpoint) or explicit column spans (`Grid.Col`), with gutter tokens.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "slug": "highlight",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Marks the parts of a text that match one or more search terms, for search results, dictionary lookups and filtered lists.",
       "profiles": [
         "all"
       ]
@@ -821,6 +865,16 @@
       ]
     },
     {
+      "name": "ProgressCircle",
+      "slug": "progress-circle",
+      "category": "misc",
+      "status": "implemented",
+      "purpose": "Circular progress or gauge (completion, quota, score) with room for a value or icon in the centre. Read-only; for input use `Knob`.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "RadioButton",
       "slug": "radio-button",
       "category": "form",
@@ -941,6 +995,19 @@
       ]
     },
     {
+      "name": "Sparkline",
+      "slug": "sparkline",
+      "category": "chart",
+      "status": "implemented",
+      "purpose": "A tiny axis-free chart showing the shape of a series inline (in a stat, table cell or list row). Extracted from `StatCard` for reuse.",
+      "profiles": [
+        "dashboard",
+        "admin",
+        "saas",
+        "game"
+      ]
+    },
+    {
       "name": "SpeedDial",
       "slug": "speed-dial",
       "category": "button",
@@ -1055,6 +1122,19 @@
       "purpose": "Route-level navigation styled as tabs (each tab is a URL). Use Tabs when panels are in-page.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "TableOfContents",
+      "slug": "table-of-contents",
+      "category": "menu",
+      "status": "implemented",
+      "purpose": "\"On this page\" navigation built from headings (or given items) with a scrollspy that marks the section being read.",
+      "profiles": [
+        "cms",
+        "saas",
+        "admin",
+        "landing"
       ]
     },
     {
@@ -1179,6 +1259,19 @@
         "cms",
         "saas",
         "pos"
+      ]
+    },
+    {
+      "name": "Tour",
+      "slug": "tour",
+      "category": "overlay",
+      "status": "implemented",
+      "purpose": "A guided product tour: an ordered series of steps, each anchored to an element on the page, shown in a popover with a highlight ring around the target.",
+      "profiles": [
+        "saas",
+        "admin",
+        "dashboard",
+        "cms"
       ]
     },
     {

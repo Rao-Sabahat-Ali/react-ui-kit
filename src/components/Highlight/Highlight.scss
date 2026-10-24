@@ -1,0 +1,14 @@
+.ui-highlight__mark {
+  padding: 0 0.1em;
+  margin: 0 -0.1em;
+  border-radius: var(--ui-radius-sm);
+  background-color: var(--ui-color-accent-subtle);
+  color: var(--ui-color-text);
+}
+
+@media (forced-colors: active) {
+  .ui-highlight__mark {
+    background-color: Mark;
+    color: MarkText;
+  }
+}

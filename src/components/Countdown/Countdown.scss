@@ -1,0 +1,15 @@
+.ui-countdown {
+  display: inline-block;
+  color: var(--ui-color-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.ui-countdown__time {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ui-countdown--paused {
+  color: var(--ui-color-text-muted);
+}
