@@ -17,6 +17,11 @@ export function hasIcon(name: string): boolean {
   return registry.has(name);
 }
 
+/** The registered definition (path data) of an icon, e.g. to draw it into a canvas or an exported SVG. */
+export function getIconDefinition(name: string): IconDefinition | undefined {
+  return registry.get(name);
+}
+
 const SIZES = { sm: 16, md: 20, lg: 24 } as const;
 
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name' | 'ref'> {

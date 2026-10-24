@@ -63,6 +63,20 @@ Finishes the spec: every specified component now has code, tests and a live docs
 ### Tests
 - Added the previously missing AC tests: Drawer AC-4..AC-11, LocaleProvider AC-1/AC-2, AppShell AC-4, Portal AC-2, Toast AC-5; a registry test that every spec has docs examples; the e2e docs test now visits every component page and rejects "Not implemented yet". Test helper `test/scss.ts` compiles component SCSS to assert rules jsdom cannot evaluate (media queries).
 
+## 1.5.0 (unreleased)
+### Added
+- `QRCode` — scannable QR codes from an in-house, dependency-free encoder (`encodeQr`, `qrCapacity`, `QrError` are exported): numeric, alphanumeric and UTF-8 byte modes chosen automatically, versions 1-40, error correction L/M/Q/H, Reed-Solomon over GF(256), all eight masks with the standard penalty selection. Module shapes (`square`, `rounded`, `dots`, `diamond`; timing, alignment and format modules always stay square), finder shapes and eye shapes, colours from the new always-dark-on-light QR tokens, logo from image (through `safeImageSrc`), kit `Icon` or text with shape/size/padding/excavate (level H is forced, size clamped to 0.1-0.3 and the version bumped so the logo never covers a finder), `renderAs="svg" | "canvas"`, `caption`, `bordered`, `describedValue`. Dynamic by design: memoised encoding, in-place SVG updates, `status` (`loading` Skeleton + Spinner, `expired` with a Refresh button, `scanned`), `expiresAt` / `onExpire` with timer cleanup and a polite live region, a typed error state with `onError`, and a ref handle with `toDataURL`, `toBlob` and `download` (PNG or SVG, sanitised file names, resolved colours). Dev builds warn about < 4:1 contrast, inverted codes, a quiet zone below 4 modules and risky finder mixes (circle with another shape, or any ring/eye mix under dot modules).
+- `Barcode` — dependency-free SVG barcodes: Code 128 (sets A/B/C with automatic switching), EAN-13, EAN-8, UPC-A (automatic check digits, verified when supplied), Code 39 and Interleaved 2 of 5, with validation, `displayValue` text with tabular numerals and EAN/UPC grouping, guard bars, per-format quiet zones, an invalid-value error state and `onError`.
+- `getIconDefinition(name)` (from `Icon`) returns the registered path data, used to draw icon logos into exports.
+- Shared helpers: `utils/scan` (colour parsing, WCAG contrast, token resolution) and the `useScanColorWarnings` hook.
+- Locale keys: `qrCode`, `qrWithLogo`, `qrLoading`, `qrExpired`, `qrRefresh`, `qrScanned`, `qrTooLong`, `qrEmpty`, `qrUnavailable`, `barcode`, `barcodeEmpty`, `barcodeInvalidCharacter`, `barcodeInvalidLength`, `barcodeCheckDigit`.
+- Generated tokens `--ui-color-qr-foreground` (ink) and `--ui-color-qr-background` (white), identical in light and dark and in every profile.
+- Docs: rich galleries for both components (shapes, finders, colours, sizes, logo variants, error-correction comparison, live typing, auto-refreshing and expiring codes with countdown, status states, PNG/SVG download and copy image, ticket and payment cards, dark theme; Barcode formats, live check digit, invalid values, POS receipt).
+- Tests: 21 encoder tests (known answers from ISO/IEC 18004 Annex I, textbook "HELLO WORLD", RS generators, format/version information, capacity table, mask selection, golden matrices), 32 `QRCode` and 16 `Barcode` tests, one per acceptance criterion.
+
+### Changed
+- Bundle budget raised (`dist/index.js` 140129 to 158679 bytes, `dist/styles.css` 57699 to 60605) for the encoders, renderers and regenerated tokens; apps import components individually and tree-shake them.
+
 ## 1.3.0 — 2026-10-24
 Blueprints: complete, runnable screens built only from kit components and the design contract, so every personal app looks and behaves the same without re-explaining the design.
 

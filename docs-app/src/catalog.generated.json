@@ -65,6 +65,16 @@
       ]
     },
     {
+      "name": "Barcode",
+      "slug": "barcode",
+      "category": "media",
+      "status": "implemented",
+      "purpose": "Dependency-free 1D barcodes rendered as SVG: Code 128, EAN-13, EAN-8, UPC-A, Code 39 and Interleaved 2 of 5, with validation, automatic check digits for EAN/UPC, optional human-readable text and the same always-dark-on-light colour tokens as `QRCode`. For product labels, receipts, tickets and inventory.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "BlockUI",
       "slug": "block-ui",
       "category": "misc",
@@ -957,6 +967,16 @@
       "category": "misc",
       "status": "implemented",
       "purpose": "Circular progress or gauge (completion, quota, score) with room for a value or icon in the centre. Read-only; for input use `Knob`.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "QRCode",
+      "slug": "qr-code",
+      "category": "media",
+      "status": "implemented",
+      "purpose": "Scannable QR codes generated entirely in the browser with an in-house encoder (no dependency, nothing leaves the device): numeric, alphanumeric and UTF-8 byte modes chosen automatically, versions 1–40, error correction L/M/Q/H, all eight masks with the standard penalty selection. Covers links, Wi-Fi/vCard payloads, tickets and payment hand-offs, login-by-QR with expiry, and branded codes with a logo. The value may change at any moment (live typing, rotating tokens) and the code re-renders without flicker.",
       "profiles": [
         "all"
       ]

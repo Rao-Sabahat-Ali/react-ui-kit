@@ -334,6 +334,21 @@ export const en = {
   paymentCanceledDescription: 'You canceled the payment. Nothing was charged.',
   paymentRetry: 'Try again',
   paymentAnotherMethod: 'Use another method',
+  // QRCode, Barcode (1.5.0).
+  qrCode: 'QR code',
+  qrWithLogo: '{label}, with {alt} logo',
+  qrLoading: 'Loading QR code',
+  qrExpired: 'QR code expired',
+  qrRefresh: 'Refresh',
+  qrScanned: 'QR code scanned',
+  qrTooLong: 'This value is too long for a QR code',
+  qrEmpty: 'There is nothing to encode',
+  qrUnavailable: 'The QR code could not be created',
+  barcode: 'Barcode',
+  barcodeEmpty: 'There is nothing to encode',
+  barcodeInvalidCharacter: 'This value has characters the barcode format cannot encode',
+  barcodeInvalidLength: 'This value has the wrong length for the barcode format',
+  barcodeCheckDigit: 'The check digit does not match',
 };
 
 export type Messages = typeof en;
