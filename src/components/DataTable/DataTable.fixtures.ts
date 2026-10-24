@@ -25,7 +25,7 @@ export const personColumns: Column<Person>[] = [
 ];
 
 /** Body rows of the (first) native table. */
-export const bodyRows = () => within(document.querySelector('tbody')!).queryAllByRole('row').filter((r) => !r.classList.contains('ui-data-table__empty'));
+export const bodyRows = () => within(document.querySelector('tbody')!).queryAllByRole('row').filter((r) => r.hasAttribute('data-row-key'));
 export const firstCells = () => bodyRows().map((r) => r.querySelector('td')?.textContent ?? '');
 export const names = () => bodyRows().map((r) => r.querySelector('[data-col="name"]')?.textContent ?? '');
 export const header = (name: string) => screen.getByRole('columnheader', { name: new RegExp(name) });
