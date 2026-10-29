@@ -1,4 +1,5 @@
 import { useEffect, useRef, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref } from 'react';
+import { usePresence } from '../../motion/usePresence';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { Spinner } from '../Spinner/Spinner';
@@ -17,6 +18,8 @@ export function BlockUI({ blocked, fullScreen = false, template, className, chil
   const contentRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
+  // The veil stays mounted (inert, closing) while it fades out.
+  const { present, state } = usePresence(blocked, { exitMs: 130 });
 
   useEffect(() => {
     if (!blocked) return;
@@ -42,10 +45,10 @@ export function BlockUI({ blocked, fullScreen = false, template, className, chil
         {children}
       </div>
       <div className="ui-block-ui__live" role="status">
-        {blocked && (
+        {present && (
           // Programmatic focus target while blocked; keys are swallowed so the blocked content can't be operated.
           // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-          <div ref={overlayRef} tabIndex={-1} className="ui-block-ui__overlay" onKeyDown={handleKeyDown}>
+          <div ref={overlayRef} tabIndex={-1} className="ui-block-ui__overlay" data-state={state} onKeyDown={handleKeyDown}>
             {template ?? (
               <div className="ui-block-ui__message">
                 <Spinner decorative />

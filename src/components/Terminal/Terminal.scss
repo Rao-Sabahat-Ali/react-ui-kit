@@ -1,19 +1,24 @@
+// The one place monospace is allowed, because it is code. A terminal is always a night sheet: the component sets
+// data-bs-theme="dark" on itself, so every colour token below resolves to the night values in light and dark apps
+// alike (paper-white text, accent prompt, 2px line). It is a flat part: no shadow.
 .ui-terminal {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-lg);
-  background: var(--ui-color-surface-sunken);
+  background: var(--ui-color-bg);
   color: var(--ui-color-text);
   font-family: var(--ui-font-family-mono);
   font-size: var(--ui-font-size-sm);
   line-height: 1.5;
   cursor: text;
+  transition: border-color var(--ui-motion-quick) var(--ui-easing-out);
 
   // The input has no border of its own; focus shows on the whole console.
   &:focus-within {
     border-color: var(--ui-color-accent);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
@@ -25,9 +30,10 @@
 .ui-terminal__log {
   overflow-y: auto;
   padding: var(--ui-space-3) var(--ui-space-4) 0;
+  scrollbar-color: var(--ui-color-line) transparent;
 
   &:focus-visible {
-    outline: 2px solid var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
     outline-offset: -2px;
   }
 }
@@ -39,6 +45,7 @@
 
 .ui-terminal__prompt {
   color: var(--ui-color-accent);
+  font-weight: var(--ui-font-weight-semibold);
   user-select: none;
 }
 
@@ -48,7 +55,7 @@
   color: var(--ui-color-text-muted);
 
   &--error {
-    color: var(--ui-color-danger);
+    color: var(--ui-color-danger-emphasis);
   }
 
   &--running {
@@ -56,11 +63,17 @@
   }
 }
 
+// A command line starts a new entry: it settles in with the part motion (opacity + a short travel).
+.ui-terminal__entry {
+  animation: ui-terminal-entry var(--ui-motion-part) var(--ui-easing-out);
+}
+
 .ui-terminal__form {
   display: flex;
   align-items: center;
   gap: var(--ui-space-2);
   padding: var(--ui-space-2) var(--ui-space-4) var(--ui-space-3);
+  border-top: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-terminal__input {
@@ -70,6 +83,7 @@
   border: 0;
   background: transparent;
   color: inherit;
+  caret-color: var(--ui-color-accent);
   font: inherit;
 
   &:focus,
@@ -79,5 +93,22 @@
 
   &::placeholder {
     color: var(--ui-color-text-subtle);
+  }
+}
+
+@keyframes ui-terminal-entry {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * 0.33));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-terminal {
+    transition: none;
+  }
+
+  .ui-terminal__entry {
+    animation: none;
   }
 }

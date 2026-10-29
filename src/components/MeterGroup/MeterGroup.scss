@@ -1,3 +1,7 @@
+@use '../../styles/data';
+
+// A meter group is a ruled strip: segments in the chart palette, cut from each other by 2px ink rules, drawn in from
+// the start edge on first render. Legend values read as quantity marks (tabular, ink), labels are quiet.
 .ui-meter-group {
   display: flex;
   flex-direction: column;
@@ -10,25 +14,34 @@
 }
 
 .ui-meter-group__bar {
-  --bs-progress-height: 0.75rem;
-  --bs-progress-bg: var(--ui-color-bg-subtle);
-  --bs-progress-border-radius: var(--ui-radius-pill);
+  --bs-progress-height: 1rem;
+  --bs-progress-bg: var(--ui-color-surface);
+  --bs-progress-border-radius: var(--ui-radius);
+  box-sizing: border-box;
   overflow: hidden;
-  border-radius: var(--ui-radius-pill);
-  background: var(--ui-color-bg-subtle);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface);
 }
 
 .ui-meter-group--vertical .ui-meter-group__bar {
   flex-direction: column-reverse;
   block-size: 12rem;
-  inline-size: 0.75rem;
-  height: auto;
+  inline-size: 1rem;
+  height: 12rem;
 }
 
 .ui-meter-group__segment {
   --bs-progress-bg: transparent;
   inline-size: var(--ui-meter-size);
   background: transparent;
+  border-radius: 0;
+  overflow: hidden;
+
+  // Rule between segments (not after the last one).
+  &:not(:last-child) {
+    border-inline-end: var(--ui-line-width) solid var(--ui-color-line);
+  }
 }
 
 .ui-meter-group--vertical .ui-meter-group__segment {
@@ -36,22 +49,41 @@
   block-size: var(--ui-meter-size);
   height: var(--ui-meter-size);
   width: 100%;
+
+  &:not(:last-child) {
+    border-inline-end: 0;
+    border-block-start: var(--ui-line-width) solid var(--ui-color-line);
+  }
 }
 
 .ui-meter-group__fill {
   inline-size: 100%;
   block-size: 100%;
+  width: 100%;
   background: var(--ui-meter-color);
+  transform-origin: left center;
+
+  @include data.motion-safe {
+    animation: ui-rise-inline var(--ui-motion-step) var(--ui-easing-out) both;
+  }
+}
+
+[dir='rtl'] .ui-meter-group__fill {
+  transform-origin: right center;
 }
 
 .ui-meter-group--vertical .ui-meter-group__fill {
-  width: 100%;
+  transform-origin: center bottom;
+
+  @include data.motion-safe {
+    animation-name: ui-rise;
+  }
 }
 
 .ui-meter-group__legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ui-space-2) var(--ui-space-4);
+  gap: var(--ui-space-2) var(--ui-space-5);
   margin: 0;
   padding: 0;
   font-size: var(--ui-font-size-sm);
@@ -64,18 +96,30 @@
 
 .ui-meter-group__legend-item {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   gap: var(--ui-space-2);
 }
 
+// Swatch: a small part in the series colour with the same 2px line as the strip.
 .ui-meter-group__marker {
-  inline-size: 0.625rem;
-  block-size: 0.625rem;
-  border-radius: var(--ui-radius-circle);
+  align-self: center;
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-sm);
   background: var(--ui-meter-color);
 }
 
-.ui-meter-group__value {
+.ui-meter-group__icon {
+  align-self: center;
+}
+
+.ui-meter-group__label {
   color: var(--ui-color-text-muted);
+}
+
+.ui-meter-group__value {
+  color: var(--ui-color-text);
+  font-weight: var(--ui-font-weight-medium);
   font-variant-numeric: tabular-nums;
 }

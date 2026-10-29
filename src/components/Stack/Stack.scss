@@ -17,7 +17,8 @@
 .ui-stack__divider {
   align-self: stretch;
   margin: 0;
-  color: var(--ui-color-border);
+  // A divider between stacked parts is a hairline (dense separation), not the 2px structural line.
+  color: var(--ui-color-line-muted);
 
   &.ui-divider {
     margin: 0;

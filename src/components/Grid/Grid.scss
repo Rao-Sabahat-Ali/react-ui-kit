@@ -1,3 +1,4 @@
+// Layout only: gutters come from the space tokens (--ui-gap or --ui-space-4); the grid draws nothing, so it needs no line, colour or motion.
 .ui-grid {
   --bs-gutter-x: var(--ui-gap, var(--ui-space-4));
   --bs-gutter-y: 0;

@@ -1,21 +1,40 @@
+// Links carry the accent. The underline is themed: offset from the baseline, 1px at rest and 2px (the sheet's line)
+// on hover and focus, so the state change is visible without a colour change alone.
 .ui-link {
   --bs-link-color-rgb: var(--ui-color-link-rgb);
   --bs-link-hover-color-rgb: var(--ui-color-link-hover-rgb);
   color: var(--ui-color-link);
   border-radius: var(--ui-radius-sm);
-  transition: color var(--ui-duration) var(--ui-easing);
+  text-decoration-thickness: var(--ui-line-width-hairline);
+  text-underline-offset: 0.2em;
+  transition: color var(--ui-motion-quick) var(--ui-easing-out);
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     color: var(--ui-color-link-hover);
+    text-decoration-thickness: var(--ui-line-width);
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
   }
 
   &.icon-link {
     gap: var(--ui-space-1);
+  }
+
+  // `primary` is ink in this system, but a link is accent: Bootstrap's link utility would paint it ink.
+  &.link-primary {
+    color: var(--ui-color-link) !important;
+    text-decoration-color: var(--ui-color-link) !important;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--ui-color-link-hover) !important;
+      text-decoration-color: var(--ui-color-link-hover) !important;
+    }
   }
 }
 
@@ -32,6 +51,10 @@
   cursor: not-allowed;
   pointer-events: none;
   text-decoration: none;
+
+  &.link-primary {
+    color: var(--ui-color-text-muted) !important;
+  }
 }
 
 .ui-link__external {

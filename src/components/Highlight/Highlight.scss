@@ -1,9 +1,13 @@
+// A search hit is marked with the accent ground (accent-subtle), the same tint as a selected row; text stays ink.
 .ui-highlight__mark {
-  padding: 0 0.1em;
-  margin: 0 -0.1em;
+  padding: 0 0.15em;
+  margin: 0 -0.15em;
   border-radius: var(--ui-radius-sm);
   background-color: var(--ui-color-accent-subtle);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
   color: var(--ui-color-text);
+  font-weight: var(--ui-font-weight-semibold);
 }
 
 @media (forced-colors: active) {

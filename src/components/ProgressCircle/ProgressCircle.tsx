@@ -13,7 +13,7 @@ export interface ProgressCircleProps extends Omit<HTMLAttributes<HTMLDivElement>
   valueText?: string;
   /** 40 / 64 / 96 px presets or a pixel number. */
   size?: Size | number;
-  /** Ring thickness in px; defaults to size / 8. */
+  /** Ring thickness in px; defaults to the sheet's 2px line. */
   strokeWidth?: number;
   variant?: 'accent' | Intent;
   /** Percentage in the centre (ignored when `children` is given). */
@@ -28,7 +28,7 @@ const SIZES: Record<Size, number> = { sm: 40, md: 64, lg: 96 };
 export function ProgressCircle({ value, max = 100, label, valueText, size = 'md', strokeWidth, variant = 'accent', showValue = false, children, className, style, ref, ...rest }: ProgressCircleProps) {
   const { locale } = useLocale();
   const px = typeof size === 'number' ? Math.max(16, size) : SIZES[size];
-  const stroke = Math.min(Math.max(strokeWidth ?? Math.round((px / 8) * 10) / 10, 1), px / 2);
+  const stroke = Math.min(Math.max(strokeWidth ?? 2, 1), px / 2);
   const radius = (px - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const determinate = value !== undefined;
@@ -48,7 +48,7 @@ export function ProgressCircle({ value, max = 100, label, valueText, size = 'md'
       aria-valuemax={determinate ? max : undefined}
       aria-valuenow={determinate ? clamped : undefined}
       aria-valuetext={determinate ? (valueText ?? percentText) : valueText}
-      className={cx('ui-progress-circle', `ui-progress-circle--${variant}`, !determinate && 'ui-progress-circle--indeterminate', className)}
+      className={cx('ui-progress-circle', `ui-progress-circle--${variant}`, !determinate && 'ui-progress-circle--indeterminate', px < 80 && 'ui-progress-circle--compact', className)}
       style={{ '--ui-progress-circle-size': `${px}px`, ...style } as CSSProperties}
       {...rest}
     >

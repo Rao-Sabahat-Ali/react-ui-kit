@@ -1,4 +1,5 @@
 import { useState, type HTMLAttributes, type ReactNode } from 'react';
+import { usePresence } from '../../motion/usePresence';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import type { Severity } from '../../types';
@@ -34,7 +35,9 @@ const PREFIX_KEY = {
 export function Message({ severity = 'info', title, icon, dismissible = false, onDismiss, actions, live = 'off', inline = false, className, children, ...rest }: MessageProps) {
   const { t } = useLocale();
   const [dismissed, setDismissed] = useState(false);
-  if (dismissed) return null;
+  // Uncontrolled dismissal leaves with a short exit; a message its owner removes simply unmounts (Messages keeps a ghost).
+  const { present, state } = usePresence(!dismissed);
+  if (!present) return null;
 
   const role = live === 'assertive' ? 'alert' : live === 'polite' ? 'status' : undefined;
   const iconName = icon === false ? null : (icon ?? DEFAULT_ICON[severity]);
@@ -46,7 +49,9 @@ export function Message({ severity = 'info', title, icon, dismissible = false, o
   return (
     <div
       role={role}
-      className={cx('alert', `alert-${severity}`, 'ui-message', inline && 'ui-message--inline', dismissible && 'alert-dismissible', className)}
+      data-state={state}
+      inert={state === 'closed' ? true : undefined}
+      className={cx('alert', `alert-${severity}`, 'ui-message', `ui-message--${severity}`, inline && 'ui-message--inline', dismissible && 'alert-dismissible', className)}
       {...rest}
     >
       {iconName && <Icon name={iconName} className="ui-message__icon" size={inline ? 'sm' : 'md'} />}

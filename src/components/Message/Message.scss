@@ -1,12 +1,56 @@
-.ui-message {
+// A message is a ruled note laid on the sheet: paper ground, a 2px frame in the intent colour, a 2px line-art icon.
+// Nothing tints the page and no coloured side border is used. It settles in with a short presence and leaves faster.
+.alert.ui-message {
+  --ui-message-line: var(--ui-color-info);
+  --ui-message-icon: var(--ui-color-info-emphasis);
+  --bs-alert-bg: var(--ui-color-surface);
+  --bs-alert-color: var(--ui-color-text);
+  --bs-alert-border-color: var(--ui-message-line);
   --bs-alert-border-radius: var(--ui-radius-lg);
+  --bs-alert-link-color: var(--ui-color-link);
+  --bs-alert-padding-x: var(--ui-space-4);
+  --bs-alert-padding-y: var(--ui-space-3);
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: var(--ui-space-3);
+  border: var(--ui-line-width) solid var(--ui-message-line);
+  animation: ui-message-in var(--ui-motion-part) var(--ui-easing-out);
+
+  &[data-state='closed'] {
+    pointer-events: none;
+    animation: ui-message-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+  }
+}
+
+.alert.ui-message--info {
+  --ui-message-line: var(--ui-color-info);
+  --ui-message-icon: var(--ui-color-info-emphasis);
+}
+
+.alert.ui-message--success {
+  --ui-message-line: var(--ui-color-success);
+  --ui-message-icon: var(--ui-color-success-emphasis);
+}
+
+.alert.ui-message--warning {
+  --ui-message-line: var(--ui-color-warning);
+  --ui-message-icon: var(--ui-color-warning-emphasis);
+}
+
+.alert.ui-message--danger {
+  --ui-message-line: var(--ui-color-danger);
+  --ui-message-icon: var(--ui-color-danger-emphasis);
+}
+
+.alert.ui-message--secondary {
+  --ui-message-line: var(--ui-color-line);
+  --ui-message-icon: var(--ui-color-text-muted);
 }
 
 .ui-message__icon {
   margin-top: 0.125em;
+  color: var(--ui-message-icon);
 }
 
 .ui-message__content {
@@ -15,8 +59,9 @@
 }
 
 .ui-message__title {
-  font-weight: var(--ui-font-weight-semibold);
   margin-bottom: var(--ui-space-1);
+  color: var(--ui-color-text);
+  font-weight: var(--ui-font-weight-semibold);
 }
 
 .ui-message__actions {
@@ -26,10 +71,73 @@
   margin-top: var(--ui-space-3);
 }
 
+.alert.ui-message.alert-dismissible {
+  padding-inline-end: var(--bs-alert-padding-x);
+}
+
+// The close sits in the row, not pinned to the corner like Bootstrap's.
+.ui-message__close.btn-close {
+  position: static;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  padding: 0.5rem;
+  margin-block: -0.25rem;
+  margin-inline-end: -0.5rem;
+  border-radius: var(--ui-radius-sm);
+  opacity: 0.7;
+  transition: opacity var(--ui-motion-quick) var(--ui-easing-out);
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 .ui-message--inline {
   --bs-alert-padding-y: var(--ui-space-1);
   --bs-alert-padding-x: var(--ui-space-2);
   --bs-alert-margin-bottom: 0;
   font-size: var(--ui-font-size-sm);
   gap: var(--ui-space-2);
+  border-radius: var(--ui-radius);
+}
+
+@keyframes ui-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * -0.5));
+  }
+}
+
+@keyframes ui-message-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * -0.25));
+  }
+}
+
+// Reduced motion: a short fade stays, the travel goes.
+@keyframes ui-message-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ui-message-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alert.ui-message {
+    animation: ui-message-fade 90ms linear;
+
+    &[data-state='closed'] {
+      animation: ui-message-fade-out 90ms linear forwards;
+    }
+  }
+
+  .ui-message__close {
+    transition: none;
+  }
 }
