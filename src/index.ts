@@ -68,6 +68,7 @@ export * from './components/InputNumber';
 export * from './components/InputOtp';
 export * from './components/InputText';
 export * from './components/InputTextarea';
+export * from './components/KanbanBoard';
 export * from './components/Kbd';
 export * from './components/KeyFilter';
 export * from './components/Knob';

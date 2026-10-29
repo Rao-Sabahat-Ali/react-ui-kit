@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import type { Profile } from '@sabahat/react-ui-kit';
 import { useToast } from '@sabahat/react-ui-kit';
 import { AdminListDetail } from '../../../templates/blueprints/AdminListDetail';
+import { Board } from '../../../templates/blueprints/Board';
 import { Checkout, type CheckoutState } from '../../../templates/blueprints/Checkout';
 import { AnalyticsDashboard, DASHBOARD_WIDGETS } from '../../../templates/blueprints/AnalyticsDashboard';
 import { OVERVIEW_WIDGETS, Overview } from '../../../templates/blueprints/Overview';
@@ -141,6 +142,24 @@ export const blueprints: Blueprint[] = [
     tryIt: 'Open a row, select two rows for the bulk bar, delete one, or press New invoice and submit it empty.',
     preview: { states: DATA_STATES },
     render: (p) => <AdminListDetail embedded previewState={{ widget: 'all', state: p.state as WidgetState }} />,
+  },
+  {
+    slug: 'board',
+    title: 'Task board',
+    summary: 'A sprint board: numbered stages, cards that move by drag, keyboard or menu, WIP limits and a details drawer.',
+    profile: 'saas',
+    patterns: ['list-detail'],
+    files: ['Board.tsx', 'Board.data.ts', 'shared.tsx'],
+    highlights: [
+      'PageHeader with the single ink action (New task) and a Toolbar with the text filter; the filter hides cards, marks matches and the column counts follow.',
+      'KanbanBoard with four numbered stages that assemble in order; quantity marks tick when a card moves. Doing warns over its limit of 3, Review refuses drops when full and says so.',
+      'Three ways to move a card: pointer drag with a placeholder at the drop index, Space then arrow keys (one polite announcement per step), or "Move to…" in the card menu (Shift+F10).',
+      'A card opens a Drawer with its details and focus returns to the card on close; New task reuses a Drawer with a labelled Field.',
+      'Loading, empty and error states (preview controls); a move that your API rejects rolls the card back and offers Retry.',
+    ],
+    tryIt: 'Press Space on a card, move it with the arrow keys and drop it with Space; or open its menu with Shift+F10 and choose Move to…',
+    preview: { states: DATA_STATES },
+    render: (p) => <Board embedded previewState={{ widget: 'all', state: p.state as WidgetState }} />,
   },
   {
     slug: 'overview-index',
