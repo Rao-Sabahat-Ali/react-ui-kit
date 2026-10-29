@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { useTypeahead } from '../../hooks/useTypeahead';
+import { useFlip } from '../../motion/useFlip';
 import { cx } from '../../utils/cx';
 import type { ListKey } from './reorder';
 
@@ -61,6 +62,9 @@ export function ItemListbox<T>({
 
   const baseId = useRef(id ?? `ui-listbox-${Math.random().toString(36).slice(2)}`).current;
   const optionId = (key: ListKey) => `${baseId}-opt-${key}`;
+
+  // Moves, filters and transfers animate with FLIP (transform only, at most 8 options, none under reduced motion).
+  useFlip(rootRef, [keys.join('\u0001')], { selector: '[role="option"]' });
 
   // Moving items re-orders DOM nodes, which can drop focus: restore it.
   useLayoutEffect(() => {

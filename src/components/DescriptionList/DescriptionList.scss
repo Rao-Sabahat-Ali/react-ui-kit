@@ -5,6 +5,7 @@
   gap: var(--ui-description-list-gap) var(--ui-space-6);
   margin: 0;
   color: var(--ui-color-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .ui-description-list__item {
@@ -43,10 +44,15 @@
 
 .ui-description-list--ruled {
   --ui-description-list-gap: 0;
+  // A parts list: 2px ink lines frame it, hairlines separate the rows.
+  border-block: var(--ui-line-width) solid var(--ui-color-line);
 
   .ui-description-list__item {
     padding-block: var(--ui-space-3);
-    border-block-end: 1px solid var(--ui-color-border);
+
+    &:not(:last-child) {
+      border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+    }
   }
 }
 

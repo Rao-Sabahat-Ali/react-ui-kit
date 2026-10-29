@@ -1,3 +1,5 @@
+@use '../../styles/data';
+
 .ui-order-list {
   display: flex;
   align-items: flex-start;
@@ -15,21 +17,26 @@
   min-inline-size: 0;
 }
 
+// The panel header and the list share one 2px frame; the line under the header is the list's own top line.
 .ui-order-list__header {
   padding: var(--ui-space-2) var(--ui-space-3);
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-block-end: 0;
-  border-start-start-radius: var(--ui-radius);
-  border-start-end-radius: var(--ui-radius);
-  background: var(--ui-color-bg-subtle);
+  border-start-start-radius: var(--ui-radius-lg);
+  border-start-end-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface);
   font-weight: var(--ui-font-weight-semibold);
 }
 
 .ui-item-listbox {
   overflow: auto;
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
   background: var(--ui-color-surface);
+
+  &:focus-within {
+    border-color: var(--ui-color-accent);
+  }
 }
 
 .ui-order-list__header + .ui-item-listbox {
@@ -42,28 +49,48 @@
 }
 
 .ui-item-listbox__list {
+  --bs-list-group-bg: transparent;
+  --bs-list-group-color: var(--ui-color-text);
+  --bs-list-group-border-color: var(--ui-color-line-muted);
+  --bs-list-group-border-width: var(--ui-line-width-hairline);
+  --bs-list-group-action-hover-bg: var(--ui-color-bg-subtle);
+  --bs-list-group-action-hover-color: var(--ui-color-text);
+  --bs-list-group-action-active-bg: var(--ui-color-accent-subtle);
+  --bs-list-group-action-active-color: var(--ui-color-text);
+  --bs-list-group-active-bg: var(--ui-color-accent-subtle);
+  --bs-list-group-active-color: var(--ui-color-text);
+  --bs-list-group-active-border-color: var(--ui-color-line-muted);
   margin: 0;
   border-radius: 0;
+  font-variant-numeric: tabular-nums;
 }
 
+// Selected option: accent-subtle ground and a 2px accent marker, like a menu item or table row.
 .ui-item-listbox__option {
   position: relative;
   border-inline: 0;
+  border-radius: 0;
   cursor: pointer;
   user-select: none;
   touch-action: pan-y;
-  background: var(--ui-color-surface);
+  background: transparent;
   color: var(--ui-color-text);
+  @include data.selection-marker;
+
+  &:first-child {
+    border-block-start: 0;
+  }
 
   &.active {
     background: var(--ui-color-accent-subtle);
-    border-color: var(--ui-color-border);
+    border-color: var(--ui-color-line-muted);
     color: var(--ui-color-text);
+    @include data.selection-marker-on;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--ui-color-focus-ring);
-    outline-offset: -2px;
+    outline: var(--ui-line-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-line-width) * -1);
     z-index: 1;
   }
 
@@ -72,20 +99,24 @@
   }
 }
 
+// A dragged option is lifted off the sheet.
 .ui-item-listbox__option--dragging {
-  opacity: 0.5;
+  z-index: 2;
+  background: var(--ui-color-surface-raised);
+  box-shadow: var(--ui-shadow-drag);
+  opacity: 0.9;
 }
 
-.ui-item-listbox__option--drop-before::before,
+.ui-item-listbox__option--drop-before::after,
 .ui-item-listbox__option--drop-after::after {
   content: '';
   position: absolute;
   inset-inline: 0;
-  block-size: 2px;
+  block-size: var(--ui-line-width);
   background: var(--ui-color-accent);
 }
 
-.ui-item-listbox__option--drop-before::before {
+.ui-item-listbox__option--drop-before::after {
   inset-block-start: 0;
 }
 

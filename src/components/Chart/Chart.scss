@@ -1,3 +1,6 @@
+@use '../../styles/parts';
+@use '../../styles/data';
+
 .ui-chart {
   --ui-chart-color: var(--ui-color-chart-1);
   position: relative;
@@ -14,6 +17,7 @@
   margin-block-end: var(--ui-space-2);
   color: var(--ui-color-text);
   font-weight: var(--ui-font-weight-semibold);
+  letter-spacing: var(--ui-letter-spacing-heading);
 }
 
 .ui-chart__canvas {
@@ -26,11 +30,13 @@
   overflow: visible;
   font-family: var(--ui-font-family);
   font-size: var(--ui-font-size-xs);
+  font-variant-numeric: tabular-nums;
 }
 
+// Axes and grid are hairlines in the line colour; the series carry the colour.
 .ui-chart__grid {
-  stroke: var(--ui-color-border);
-  stroke-width: 1;
+  stroke: var(--ui-color-line-muted);
+  stroke-width: var(--ui-line-width-hairline);
 }
 
 .ui-chart__tick text,
@@ -59,7 +65,7 @@
 .ui-chart__mark {
   fill: var(--ui-chart-color);
   color: var(--ui-chart-color);
-  outline: none;
+  outline: var(--ui-line-width) solid transparent; // focus is drawn on the part itself
   cursor: pointer;
 }
 
@@ -101,17 +107,62 @@
   stroke-width: 3;
 }
 
+// ---- First-render draw-in -------------------------------------------------------------------------------------
+// Lines wipe in from the start edge, bars rise from their baseline, slices fade in, points follow the line. Only
+// until the figure is marked `data-intro="done"` (see Chart.tsx); never under reduced motion.
+.ui-chart__bar {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.ui-chart__bar--neg {
+  transform-origin: 50% 0;
+}
+
+.ui-chart--horizontal .ui-chart__bar {
+  transform-origin: 0 50%;
+}
+
+.ui-chart--horizontal .ui-chart__bar--neg {
+  transform-origin: 100% 50%;
+}
+
+@include data.motion-safe {
+  .ui-chart:not([data-intro='done']) {
+    .ui-chart__series {
+      animation: ui-wipe calc(var(--ui-motion-step) * 2) var(--ui-easing-out) backwards;
+    }
+
+    .ui-chart__point {
+      animation: ui-fade-in var(--ui-motion-part) var(--ui-easing-out) calc(var(--ui-motion-step) * 1.6) backwards;
+    }
+
+    .ui-chart__bar {
+      animation: ui-rise var(--ui-motion-step) var(--ui-easing-out) backwards;
+      animation-delay: calc(var(--ui-i, 0) * var(--ui-motion-stagger));
+    }
+
+    &.ui-chart--horizontal .ui-chart__bar {
+      animation-name: ui-rise-inline;
+    }
+
+    .ui-chart__slice {
+      animation: ui-fade-in var(--ui-motion-part) var(--ui-easing-out) backwards;
+      animation-delay: calc(var(--ui-i, 0) * var(--ui-motion-stagger));
+    }
+  }
+}
+
 .ui-chart__tooltip {
   position: absolute;
   z-index: var(--ui-z-tooltip);
   display: flex;
   flex-direction: column;
   padding: var(--ui-space-1) var(--ui-space-2);
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius-sm);
-  background: var(--ui-color-surface-raised);
-  box-shadow: var(--ui-shadow-md);
-  color: var(--ui-color-text);
+  // A lifted part: 2px line, 6px corners, the one soft shadow.
+  @include parts.lifted(var(--ui-radius));
+  // Opacity only: the tooltip's own transform positions it above the mark.
+  animation: ui-fade-in var(--ui-motion-quick) var(--ui-easing-out);
   font-size: var(--ui-font-size-xs);
   line-height: var(--ui-font-line-height-tight);
   white-space: nowrap;
@@ -160,8 +211,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 

@@ -1,5 +1,8 @@
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from 'react';
 import { interpolate, useLocale } from '../../locale/LocaleProvider';
+import { readMotionMs } from '../../motion/tokens';
+import { mergeRefs } from '../../utils/element';
+import { QuantityTick } from '../QuantityTick/QuantityTick';
 import { cx } from '../../utils/cx';
 import { arcPath, areaPath, linePath, niceTicks, round, type Point } from './geometry';
 
@@ -127,6 +130,18 @@ export function Chart({
   const [focused, setFocused] = useState(false);
   const [tableOpen, setTableOpen] = useState(false);
   const markRefs = useRef(new Map<string, SVGElement>());
+  const figureRef = useRef<HTMLElement | null>(null);
+
+  // The draw-in (lines wipe in, bars rise, slices fade in) plays on first render only: once it has run the figure
+  // is marked done, so later data or width changes and toggled series never replay it. CSS also skips it under
+  // reduced motion. The attribute is set outside React on purpose.
+  useEffect(() => {
+    const el = figureRef.current;
+    if (!el) return;
+    const ms = readMotionMs(el, 'step') + readMotionMs(el, 'stagger') * 10 + 200;
+    const timer = window.setTimeout(() => el.setAttribute('data-intro', 'done'), ms);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const numberFormat = useMemo(() => new Intl.NumberFormat(locale), [locale]);
   const fmt = formatProp ?? ((n: number) => numberFormat.format(n));
@@ -420,7 +435,7 @@ export function Chart({
   const patternId = (i: number) => `ui-chart-${uid}-p${i}`;
 
   return (
-    <figure ref={ref} aria-labelledby={`ui-chart-${uid}-title`} className={cx('ui-chart', `ui-chart--${type}`, horizontal && 'ui-chart--horizontal', className)} {...rest}>
+    <figure ref={mergeRefs(figureRef, ref)} aria-labelledby={`ui-chart-${uid}-title`} className={cx('ui-chart', `ui-chart--${type}`, horizontal && 'ui-chart--horizontal', className)} {...rest}>
       <figcaption id={`ui-chart-${uid}-title`} className={cx('ui-chart__title', hideTitle && 'visually-hidden')}>{title}</figcaption>
       {legend === 'top' && legendNode}
       <div ref={containerRef} className="ui-chart__canvas" style={{ height }}>
@@ -447,7 +462,7 @@ export function Chart({
                   key={slice.i}
                   d={slice.d}
                   className={markClass(slice.i, cx('ui-chart__slice', m.key === shown?.key && 'ui-chart__mark--active'))}
-                  style={patterns && slice.i > 0 ? { fill: `url(#${patternId(slice.i)})` } : undefined}
+                  style={{ ...(patterns && slice.i > 0 ? { fill: `url(#${patternId(slice.i)})` } : null), '--ui-i': Math.min(slice.i, 7) } as CSSProperties}
                   fillRule="evenodd"
                   {...markProps(m)}
                 />
@@ -459,7 +474,7 @@ export function Chart({
               <path className="ui-chart__line" d={ln.d} strokeDasharray={patterns ? DASHES[ln.si % 8] || undefined : undefined} aria-hidden="true" />
             </g>
           ))}
-          {geometry.bars.map((b) => {
+          {geometry.bars.map((b, bi) => {
             const m = markByKey.get(b.key)!;
             return (
               <rect
@@ -468,8 +483,8 @@ export function Chart({
                 y={round(b.y)}
                 width={round(Math.max(b.w, 0))}
                 height={round(Math.max(b.h, 0))}
-                className={markClass(b.si, cx('ui-chart__bar', m.key === shown?.key && 'ui-chart__mark--active'))}
-                style={patterns && b.si > 0 ? { fill: `url(#${patternId(b.si)})` } : undefined}
+                className={markClass(b.si, cx('ui-chart__bar', m.value < 0 && 'ui-chart__bar--neg', m.key === shown?.key && 'ui-chart__mark--active'))}
+                style={{ ...(patterns && b.si > 0 ? { fill: `url(#${patternId(b.si)})` } : null), '--ui-i': Math.min(bi, 7) } as CSSProperties}
                 {...markProps(m)}
               />
             );
@@ -491,7 +506,9 @@ export function Chart({
           <div className="ui-chart__tooltip" role="tooltip" style={{ left: round(shown.x), top: round(shown.y) }}>
             <span className="ui-chart__tooltip-series">{isPie ? labels[shown.label] : series[shown.series]?.name}</span>
             {!isPie && <span className="ui-chart__tooltip-label">{labels[shown.label]}</span>}
-            <strong className="ui-chart__tooltip-value">{fmt(shown.value)}</strong>
+            <strong className="ui-chart__tooltip-value">
+              <QuantityTick value={fmt(shown.value)} announce={false} />
+            </strong>
           </div>
         )}
       </div>

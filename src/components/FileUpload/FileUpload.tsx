@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type ChangeEvent, type DragEvent, type HTMLAttributes, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
+import { useExitGhosts, withGhosts } from '../../motion/useExitGhosts';
 import { cx } from '../../utils/cx';
 import { Icon } from '../Icon/Icon';
 import { ProgressBar } from '../ProgressBar/ProgressBar';
@@ -121,6 +122,9 @@ export function FileUpload({
   const [dragging, setDragging] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
+  // Rows present on first render sit still; rows added later enter with presence and removed rows leave as ghosts.
+  const initialIds = useRef(new Set(files.map((f) => f.id)));
+  const ghosts = useExitGhosts(files, files, (f) => f.id);
 
   const update = (fn: (list: UploadFile[]) => UploadFile[]) => {
     const next = fn(filesRef.current);
@@ -299,11 +303,12 @@ export function FileUpload({
       )}
       {files.length > 0 && (
         <ul className="list-group ui-file-upload__list">
-          {files.map((item) => {
+          {withGhosts(
+            files.map((item) => {
             const name = item.file.name;
             const url = preview ? previews[item.id] : undefined;
             return (
-              <li key={item.id} className={cx('list-group-item ui-file-upload__item', `ui-file-upload__item--${item.status}`)}>
+              <li key={item.id} className={cx('list-group-item ui-file-upload__item', `ui-file-upload__item--${item.status}`, !initialIds.current.has(item.id) && 'ui-file-upload__item--new')}>
                 {url ? <img src={url} alt="" className="ui-file-upload__thumb" /> : <span className="ui-file-upload__thumb ui-file-upload__thumb--generic" aria-hidden="true" />}
                 <div className="ui-file-upload__meta">
                   {/* Filenames are rendered as text only. */}
@@ -312,7 +317,7 @@ export function FileUpload({
                     {item.status === 'pending' && formatBytes(item.file.size, locale)}
                     {item.status === 'uploading' && t('uploadProgress', { name, percent: item.progress })}
                     {item.status === 'done' && t('uploadSuccess', { name })}
-                    {item.status === 'error' && <span className="text-danger">{item.error ?? t('uploadFailed', { name })}</span>}
+                    {item.status === 'error' && <span className="text-danger-emphasis">{item.error ?? t('uploadFailed', { name })}</span>}
                   </span>
                   {item.status === 'uploading' && <ProgressBar size="sm" value={item.progress} label={t('uploadProgress', { name, percent: item.progress })} />}
                 </div>
@@ -327,7 +332,17 @@ export function FileUpload({
                 )}
               </li>
             );
-          })}
+          }),
+            ghosts,
+            (ghost) => [
+              <li key={`ghost-${ghost.key}`} data-state="closed" aria-hidden="true" inert className="list-group-item ui-file-upload__item ui-file-upload__item--ghost">
+                <span className="ui-file-upload__thumb ui-file-upload__thumb--generic" aria-hidden="true" />
+                <div className="ui-file-upload__meta">
+                  <span className="ui-file-upload__name">{(ghost.item as UploadFile).file.name}</span>
+                </div>
+              </li>,
+            ],
+          )}
         </ul>
       )}
       {upload && !auto && hasPending && (

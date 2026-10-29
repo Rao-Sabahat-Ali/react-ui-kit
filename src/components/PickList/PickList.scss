@@ -17,17 +17,26 @@
 
 .ui-pick-list__header {
   padding: var(--ui-space-2) var(--ui-space-3);
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-block-end: 0;
-  border-start-start-radius: var(--ui-radius);
-  border-start-end-radius: var(--ui-radius);
-  background: var(--ui-color-bg-subtle);
+  border-start-start-radius: var(--ui-radius-lg);
+  border-start-end-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface);
   font-weight: var(--ui-font-weight-semibold);
 }
 
 .ui-pick-list__filter {
   border-radius: 0;
   border-block-end-width: 0;
+}
+
+// Transfer buttons: 2px line-art arrows (Icon), outline buttons stacked in one group.
+.ui-pick-list__controls {
+  gap: var(--ui-space-2);
+}
+
+.ui-pick-list__header + .ui-pick-list__filter {
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-pick-list__header + .ui-item-listbox,

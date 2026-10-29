@@ -5,9 +5,14 @@
   border-radius: var(--ui-radius);
   color: var(--ui-color-text);
 
+  // Thin scrollbars in the line colour (browser surfaces carry the design too).
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-color-line-muted) transparent;
+  font-variant-numeric: tabular-nums;
+
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-line-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-line-width) * -1);
   }
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode, type Ref } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useTypeahead } from '../../hooks/useTypeahead';
 import { useLocale } from '../../locale/LocaleProvider';
@@ -342,7 +342,7 @@ export function Tree<T = unknown>({
             {isLoading && <span className="visually-hidden">{t('loading')}</span>}
           </div>
           {open && children && children.length > 0 && (
-            <ul role="group" className="ui-tree__group list-unstyled mb-0">
+            <ul role="group" className="ui-tree__group list-unstyled mb-0" style={{ '--ui-tree-level': level } as CSSProperties}>
               {renderNodes(children, level + 1)}
             </ul>
           )}

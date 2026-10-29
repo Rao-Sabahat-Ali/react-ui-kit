@@ -1,6 +1,9 @@
+@use '../../styles/data';
+
 .ui-org-chart {
   --ui-org-chart-gap: 1.5rem;
-  --ui-org-chart-line: 2px solid var(--ui-color-border-strong, var(--ui-color-border));
+  // Connectors are 2px ink lines.
+  --ui-org-chart-line: var(--ui-line-width) solid var(--ui-color-line);
   overflow-x: auto;
   padding: var(--ui-space-3);
   color: var(--ui-color-text);
@@ -33,6 +36,11 @@
     block-size: var(--ui-org-chart-gap);
     border-inline-start: var(--ui-org-chart-line);
   }
+
+  // A branch opens with a clip reveal from the parent downwards (no height animation).
+  @include data.motion-safe {
+    animation: ui-reveal-down var(--ui-motion-part) var(--ui-easing-out);
+  }
 }
 
 .ui-org-chart__item {
@@ -41,11 +49,11 @@
   flex-direction: column;
   align-items: center;
   padding-inline: var(--ui-space-2);
-  outline: none;
+  outline: var(--ui-line-width) solid transparent; // focus is drawn on the part itself
 
   &:focus-visible > .ui-org-chart__node {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
@@ -77,13 +85,9 @@
     border-block-start: 0;
   }
 
+  // The last child's horizontal bar runs one line-width past the centre so it meets the stem square, no corner notch.
   &:last-child::before {
-    border-inline-end: var(--ui-org-chart-line);
-    border-end-end-radius: var(--ui-radius);
-  }
-
-  &:first-child::after {
-    border-start-start-radius: var(--ui-radius);
+    inline-size: calc(50% + var(--ui-line-width));
   }
 
   &:only-child::before {
@@ -104,17 +108,25 @@
   gap: var(--ui-space-1);
   min-inline-size: 7rem;
   padding: var(--ui-space-2) var(--ui-space-3);
-  border-color: var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius);
   background: var(--ui-color-surface);
   text-align: center;
+  transition: border-color var(--ui-motion-quick) var(--ui-easing-out), background-color var(--ui-motion-quick) var(--ui-easing-out);
+}
+
+.ui-org-chart__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
 }
 
 .ui-org-chart__node--selectable {
   cursor: pointer;
 
   &:hover {
-    background: var(--ui-color-bg-subtle);
+    border-color: var(--ui-color-accent);
   }
 }
 

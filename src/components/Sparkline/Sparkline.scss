@@ -1,3 +1,5 @@
+@use '../../styles/data';
+
 $chart-colors: 1, 2, 3, 4, 5, 6, 7, 8;
 
 .ui-sparkline {
@@ -28,6 +30,26 @@ $chart-colors: 1, 2, 3, 4, 5, 6, 7, 8;
 
 .ui-sparkline__bar {
   fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.ui-sparkline__bar--neg {
+  transform-origin: 50% 0;
+}
+
+// Draws in once on mount (the line wipes in from the start edge, bars rise from the zero line); never on later
+// data changes, never under reduced motion.
+@include data.motion-safe {
+  .ui-sparkline--line,
+  .ui-sparkline--area {
+    animation: ui-wipe calc(var(--ui-motion-step) * 1.5) var(--ui-easing-out) backwards;
+  }
+
+  .ui-sparkline__bar {
+    animation: ui-rise var(--ui-motion-part) var(--ui-easing-out) backwards;
+    animation-delay: calc(var(--ui-i, 0) * var(--ui-motion-stagger));
+  }
 }
 
 .ui-sparkline__marker {
