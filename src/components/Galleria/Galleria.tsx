@@ -1,7 +1,11 @@
-import { useEffect, useId, useRef, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { usePrefersReducedMotion } from '../../hooks/useMediaQuery';
 import { useRovingFocus } from '../../hooks/useRovingFocus';
+import { useSlidingMark } from '../../hooks/useSlidingMark';
+import { EASING, readMotionMs } from '../../motion/tokens';
+import { safeAnimate } from '../../motion/env';
+import { useDocumentVisible } from '../../motion/useDocumentVisible';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { Dialog } from '../Dialog/Dialog';
@@ -53,6 +57,8 @@ export function Galleria({
   ref,
   onMouseEnter,
   onMouseLeave,
+  onFocus,
+  onBlur,
   ...rest
 }: GalleriaProps) {
   const { t } = useLocale();
@@ -64,13 +70,22 @@ export function Galleria({
   const [isFullscreen, setFullscreen] = useState(false);
   const [playing, setPlaying] = useState(true);
   const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const tabVisible = useDocumentVisible();
+  const indicatorsRef = useRef<HTMLDivElement>(null);
+  const mainFigure = useRef<HTMLElement | null>(null);
+  const dialogFigure = useRef<HTMLElement | null>(null);
+  const turned = useRef({ index: defaultActiveIndex, init: false });
+  const [leaving, setLeaving] = useState<{ item: GalleriaItem; dir: 1 | -1; id: number } | null>(null);
+  const turnId = useRef(0);
   const thumbsRef = useRef<HTMLDivElement>(null);
   const vertical = thumbnailsPosition === 'start' || thumbnailsPosition === 'end';
   const roving = useRovingFocus(thumbsRef, { selector: '.ui-galleria__thumb', orientation: vertical ? 'vertical' : 'horizontal', loop: circular });
 
   const interval = autoplay === true ? DEFAULT_INTERVAL : typeof autoplay === 'number' ? autoplay : 0;
   const canAutoplay = interval > 0 && !reducedMotion && count > 1;
-  const running = canAutoplay && playing && !hovered && !isFullscreen;
+  // Autoplay stops on hover, on focus, in a hidden tab and under reduced motion (canAutoplay).
+  const running = canAutoplay && playing && !hovered && !focused && tabVisible && !isFullscreen;
 
   const canPrev = circular || index > 0;
   const canNext = circular || index < count - 1;
@@ -87,6 +102,56 @@ export function Galleria({
     const timer = window.setInterval(() => goRef.current(), interval);
     return () => window.clearInterval(timer);
   }, [running, interval]);
+
+  useSlidingMark(indicatorsRef, { target: '[aria-current="true"]' }, [index, count, showIndicators]);
+
+  // Turn: the new image arrives along the reading direction while the previous one slides out (transform + opacity,
+  // motion-step, mirrored in RTL). Reduced motion, a hidden tab and browsers without Web Animations just swap.
+  const itemAt = value[index];
+  useLayoutEffect(() => {
+    const last = turned.current;
+    if (!last.init) {
+      last.init = true;
+      last.index = index;
+      return;
+    }
+    if (last.index === index) return;
+    let delta = index - last.index;
+    if (circular && Math.abs(delta) > 1) delta = -Math.sign(delta);
+    const dir: 1 | -1 = delta >= 0 ? 1 : -1;
+    const previous = value[last.index];
+    last.index = index;
+    const figure = mainFigure.current ?? dialogFigure.current;
+    if (!figure || !itemAt) return;
+    const rtl = getComputedStyle(figure).direction === 'rtl';
+    const shift = (rtl ? -dir : dir) * 6;
+    const arrived = safeAnimate(figure, [{ opacity: 0, transform: `translateX(${shift}%)` }, { opacity: 1, transform: 'translateX(0)' }], {
+      duration: readMotionMs(figure, 'step'),
+      easing: EASING.out,
+      fill: 'backwards',
+      reduced: 'fade',
+    });
+    if (arrived && previous && !reducedMotion) setLeaving({ item: previous, dir, id: ++turnId.current });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
+
+  const leaveRef = (node: HTMLElement | null) => {
+    if (!node || node.dataset.turned) return;
+    node.dataset.turned = 'true';
+    const rtl = getComputedStyle(node).direction === 'rtl';
+    const dir = Number(node.dataset.dir) || 1;
+    const shift = (rtl ? dir : -dir) * 6;
+    const left = safeAnimate(node, [{ opacity: 1, transform: 'translateX(0)' }, { opacity: 0, transform: `translateX(${shift}%)` }], {
+      duration: Math.round(readMotionMs(node, 'step') * 0.7),
+      easing: EASING.in,
+      fill: 'forwards',
+      reduced: 'skip',
+    });
+    const id = Number(node.dataset.id);
+    const clear = () => setLeaving((cur) => (cur && cur.id === id ? null : cur));
+    if (left) left.finished.then(clear, clear);
+    else clear();
+  };
 
   const handleThumbKey = (event: KeyboardEvent<HTMLDivElement>) => {
     const target = roving(event);
@@ -117,8 +182,13 @@ export function Galleria({
       id={inDialog ? undefined : stageId}
       onKeyDown={handleStageKey}
     >
+      {leaving && (
+        <figure key={leaving.id} ref={leaveRef} data-dir={leaving.dir} data-id={leaving.id} aria-hidden="true" inert className="ui-galleria__figure ui-galleria__figure--leaving">
+          <img src={safeImageSrc(leaving.item.src)} alt="" className="ui-galleria__image" />
+        </figure>
+      )}
       {item && (
-        <figure className="ui-galleria__figure">
+        <figure ref={inDialog ? dialogFigure : mainFigure} className="ui-galleria__figure">
           <img src={safeImageSrc(item.src)} alt={item.alt} className="ui-galleria__image" />
           {item.caption !== undefined && <figcaption className="ui-galleria__caption" aria-live={running ? 'off' : 'polite'}>{item.caption}</figcaption>}
         </figure>
@@ -150,6 +220,14 @@ export function Galleria({
         setHovered(false);
         onMouseLeave?.(e);
       }}
+      onFocus={(e) => {
+        setFocused(true);
+        onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+        onBlur?.(e);
+      }}
       {...rest}
     >
       <div className="ui-galleria__main">
@@ -169,7 +247,7 @@ export function Galleria({
           </div>
         )}
         {showIndicators && count > 1 && (
-          <div className="ui-galleria__indicators">
+          <div ref={indicatorsRef} className="ui-galleria__indicators">
             {value.map((_, i) => (
               <button
                 key={i}

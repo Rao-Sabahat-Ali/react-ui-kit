@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Galleria, type GalleriaItem } from './Galleria';
 
 const photos: GalleriaItem[] = [
@@ -70,5 +70,50 @@ describe('Galleria', () => {
     expect(bad.src).toBe('/x.jpg');
     render(<Galleria value={photos} />);
     expect(mainImage()).toHaveAttribute('alt', 'Red chair');
+  });
+
+  describe('autoplay', () => {
+    afterEach(() => vi.useRealTimers());
+    const alts = () => document.querySelector<HTMLImageElement>('.ui-galleria__figure:not(.ui-galleria__figure--leaving) .ui-galleria__image')!.alt;
+
+    it('advances on an interval and stops on hover, focus and in a hidden tab', () => {
+      vi.useFakeTimers();
+      render(<Galleria value={photos} autoplay={1000} showThumbnails={false} circular />);
+      const region = screen.getByRole('region');
+      act(() => vi.advanceTimersByTime(1000));
+      expect(alts()).toBe('Blue chair');
+      fireEvent.mouseEnter(region);
+      act(() => vi.advanceTimersByTime(3000));
+      expect(alts()).toBe('Blue chair');
+      fireEvent.mouseLeave(region);
+      const next = screen.getByRole('button', { name: 'Next slide' });
+      fireEvent.focus(next);
+      act(() => vi.advanceTimersByTime(3000));
+      expect(alts()).toBe('Blue chair');
+      fireEvent.blur(next);
+      const state = vi.spyOn(document, 'visibilityState', 'get');
+      state.mockReturnValue('hidden');
+      act(() => {
+        document.dispatchEvent(new Event('visibilitychange'));
+      });
+      act(() => vi.advanceTimersByTime(3000));
+      expect(alts()).toBe('Blue chair');
+      state.mockRestore();
+    });
+  });
+
+  it('indicators are dashes with a single sliding accent mark', async () => {
+    render(<Galleria value={photos} showIndicators showThumbnails={false} />);
+    const indicators = document.querySelector<HTMLElement>('.ui-galleria__indicators')!;
+    expect(indicators.style.getPropertyValue('--ui-mark-size')).not.toBe('');
+    await userEvent.click(screen.getByRole('button', { name: 'Go to slide 2' }));
+    expect(screen.getByRole('button', { name: 'Go to slide 2' })).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('turns without leaving a stale layer when animation is unavailable (jsdom)', async () => {
+    render(<Galleria value={photos} showThumbnails={false} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Next slide' }));
+    expect(mainImage().alt).toBe('Blue chair');
+    expect(document.querySelector('.ui-galleria__figure--leaving')).toBeNull();
   });
 });

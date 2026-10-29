@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+import { useAssemble } from '../../motion/useAssemble';
 import { cx } from '../../utils/cx';
 import { Skeleton } from '../Skeleton/Skeleton';
 
@@ -16,6 +17,8 @@ export function DeferredContent({ children, onLoad, placeholder, rootMargin = '2
   const onLoadRef = useRef(onLoad);
   onLoadRef.current = onLoad;
   const firedRef = useRef(false);
+  // The real content assembles in (translate + opacity along the guide line) when it replaces the placeholder.
+  useAssemble(elRef, { enabled: loaded, trigger: loaded });
 
   useEffect(() => {
     if (loaded) return;
@@ -58,7 +61,13 @@ export function DeferredContent({ children, onLoad, placeholder, rootMargin = '2
       aria-busy={loaded ? undefined : true}
       {...rest}
     >
-      {loaded ? children : (placeholder ?? <Skeleton shape="rect" width="100%" height="6rem" />)}
+      {loaded ? (
+        <div className="ui-deferred-content__body" data-assemble>
+          {children}
+        </div>
+      ) : (
+        (placeholder ?? <Skeleton shape="rect" width="100%" height="6rem" />)
+      )}
     </div>
   );
 }

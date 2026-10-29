@@ -1,3 +1,7 @@
+// SpeedDial: a floating ink trigger (lifted off the sheet) whose actions Assemble out along a dashed guide line and
+// fold back into the trigger faster than they arrived. Transform and opacity only.
+@use '../../styles/parts';
+
 .ui-speed-dial {
   --ui-speed-dial-size: 3.5rem;
   --ui-speed-dial-action-size: 2.75rem;
@@ -36,19 +40,29 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--ui-shadow-lg);
+  padding: 0;
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow-lift);
   font-size: var(--ui-font-size-xl);
   position: relative;
   z-index: 1;
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
+
+  &:active {
+    transform: translateY(1px);
+  }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring), var(--ui-shadow-lg);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: var(--ui-shadow-lift);
   }
 }
 
 .ui-speed-dial__trigger-icon {
-  transition: transform var(--ui-motion-duration-normal) var(--ui-motion-easing-standard);
+  transition: transform var(--ui-motion-part) var(--ui-easing-out);
 }
 
 .ui-speed-dial--open .ui-speed-dial__trigger-icon {
@@ -70,10 +84,44 @@
   }
 }
 
+// Each action travels between the trigger and its place (the farther the action, the longer the way), staggered
+// by motion-stagger; the last one settles with easing-snap. They fold back at 70% of the time with easing-in.
 .ui-speed-dial__entry {
+  --ui-speed-dial-pitch: calc(var(--ui-speed-dial-action-size) + var(--ui-space-2));
+  --ui-speed-dial-from-x: calc(var(--ui-speed-dial-dx, 0) * -1 * (var(--ui-speed-dial-index, 0) + 1) * var(--ui-speed-dial-pitch));
+  --ui-speed-dial-from-y: calc(var(--ui-speed-dial-dy, 0) * -1 * (var(--ui-speed-dial-index, 0) + 1) * var(--ui-speed-dial-pitch));
   pointer-events: auto;
-  animation: ui-speed-dial-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard) both;
-  animation-delay: calc(var(--ui-speed-dial-index, 0) * 30ms);
+}
+
+.ui-speed-dial__list[data-state='open'] > .ui-speed-dial__entry {
+  animation: ui-speed-dial-in var(--ui-motion-part) var(--ui-easing-out) backwards;
+  animation-delay: calc(var(--ui-speed-dial-index, 0) * var(--ui-motion-stagger));
+}
+
+.ui-speed-dial__list[data-state='open'] > .ui-speed-dial__entry--last {
+  animation-timing-function: var(--ui-easing-snap);
+}
+
+.ui-speed-dial__list[data-state='closed'] > .ui-speed-dial__entry {
+  pointer-events: none;
+  animation: ui-speed-dial-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+}
+
+// Direction of travel for linear layouts (unitless; circular layouts keep 0 and fly from the trigger centre).
+.ui-speed-dial--up {
+  --ui-speed-dial-dy: -1;
+}
+
+.ui-speed-dial--down {
+  --ui-speed-dial-dy: 1;
+}
+
+.ui-speed-dial--left {
+  --ui-speed-dial-dx: -1;
+}
+
+.ui-speed-dial--right {
+  --ui-speed-dial-dx: 1;
 }
 
 // Linear layouts: a column/row of actions next to the trigger.
@@ -115,25 +163,87 @@
   }
 }
 
+// The dashed guide line runs from the trigger through the actions (linear layouts) and is drawn on with clip-path.
+.ui-speed-dial--linear {
+  .ui-speed-dial__entry {
+    position: relative;
+    z-index: 1;
+  }
+
+  .ui-speed-dial__list::before {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  &.ui-speed-dial--up .ui-speed-dial__list::before,
+  &.ui-speed-dial--down .ui-speed-dial__list::before {
+    inset-block: 0;
+    inset-inline-start: calc(50% - var(--ui-line-width) / 2);
+    border-inline-start: var(--ui-line-width) dashed var(--ui-color-accent);
+  }
+
+  &.ui-speed-dial--left .ui-speed-dial__list::before,
+  &.ui-speed-dial--right .ui-speed-dial__list::before {
+    inset-inline: 0;
+    inset-block-start: calc(50% - var(--ui-line-width) / 2);
+    border-block-start: var(--ui-line-width) dashed var(--ui-color-accent);
+  }
+
+  .ui-speed-dial__list[data-state='open']::before {
+    animation: ui-speed-dial-guide-in calc(var(--ui-motion-part) + var(--ui-motion-stagger) * 3) var(--ui-easing-out) backwards;
+  }
+
+  .ui-speed-dial__list[data-state='closed']::before {
+    animation: ui-speed-dial-guide-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+  }
+
+  &.ui-speed-dial--up {
+    --ui-speed-dial-guide-hidden: inset(100% 0 0 0);
+  }
+
+  &.ui-speed-dial--down {
+    --ui-speed-dial-guide-hidden: inset(0 0 100% 0);
+  }
+
+  &.ui-speed-dial--left {
+    --ui-speed-dial-guide-hidden: inset(0 0 0 100%);
+  }
+
+  &.ui-speed-dial--right {
+    --ui-speed-dial-guide-hidden: inset(0 100% 0 0);
+  }
+}
+
 .ui-speed-dial__action {
+  @include parts.lifted(var(--ui-radius-lg));
   inline-size: var(--ui-speed-dial-action-size);
   block-size: var(--ui-speed-dial-action-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--ui-color-surface-raised);
-  color: var(--ui-color-text);
-  border: 1px solid var(--ui-color-border);
-  box-shadow: var(--ui-shadow-md);
+  padding: 0;
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
 
-  &:hover,
-  &:focus-visible {
+  &:hover {
     background-color: var(--ui-color-bg-subtle);
+    border-color: var(--ui-color-line);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    background-color: var(--ui-color-bg-subtle);
+    border-color: var(--ui-color-accent);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: var(--ui-shadow-lift);
   }
 }
 
@@ -144,10 +254,8 @@
 }
 
 .ui-speed-dial__label {
+  @include parts.lifted(var(--ui-radius));
   padding: var(--ui-space-1) var(--ui-space-2);
-  border-radius: var(--ui-radius-sm);
-  background-color: var(--ui-color-surface-raised);
-  box-shadow: var(--ui-shadow-sm);
   font-size: var(--ui-font-size-sm);
   white-space: nowrap;
 }
@@ -160,7 +268,26 @@
 @keyframes ui-speed-dial-in {
   from {
     opacity: 0;
-    scale: 0.6;
+    transform: translate(var(--ui-speed-dial-from-x, 0), var(--ui-speed-dial-from-y, 0));
+  }
+}
+
+@keyframes ui-speed-dial-out {
+  to {
+    opacity: 0;
+    transform: translate(var(--ui-speed-dial-from-x, 0), var(--ui-speed-dial-from-y, 0));
+  }
+}
+
+@keyframes ui-speed-dial-guide-in {
+  from {
+    clip-path: var(--ui-speed-dial-guide-hidden, inset(0));
+  }
+}
+
+@keyframes ui-speed-dial-guide-out {
+  to {
+    clip-path: var(--ui-speed-dial-guide-hidden, inset(0));
   }
 }
 
@@ -168,6 +295,22 @@
   .ui-speed-dial__entry {
     animation: none;
     animation-delay: 0s;
+  }
+
+  .ui-speed-dial__list[data-state] > .ui-speed-dial__entry,
+  .ui-speed-dial--linear .ui-speed-dial__list[data-state]::before {
+    animation: none;
+    animation-delay: 0s;
+  }
+
+  .ui-speed-dial__trigger,
+  .ui-speed-dial__action {
+    transition: none;
+  }
+
+  .ui-speed-dial__trigger:active,
+  .ui-speed-dial__action:active {
+    transform: none;
   }
 
   .ui-speed-dial__trigger-icon {

@@ -1,3 +1,7 @@
+// Carousel: the track turns along the reading direction (transform slide at motion-step, mirrored in RTL); the
+// indicators are short dashes with one accent mark that slides to the current page.
+@use '../../styles/panels';
+
 .ui-carousel {
   --ui-carousel-visible: 1;
   display: flex;
@@ -31,7 +35,7 @@
   --ui-carousel-offset: 0%;
   display: flex;
   transform: translateX(calc(-1 * var(--ui-carousel-offset)));
-  transition: transform var(--ui-motion-duration-normal) var(--ui-motion-easing-standard);
+  transition: transform var(--ui-motion-step) var(--ui-easing-out);
 }
 
 [dir='rtl'] .ui-carousel:not(.ui-carousel--vertical) .ui-carousel__track {
@@ -85,73 +89,53 @@
   min-inline-size: 2.25rem;
   min-block-size: 2.25rem;
   padding: 0;
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius-circle);
-  background: var(--ui-color-surface-raised);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface);
   color: var(--ui-color-text);
   font-size: var(--ui-font-size-lg);
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
 
   &:hover:not(:disabled) {
     background: var(--ui-color-bg-subtle);
   }
 
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
   &:disabled {
-    opacity: 0.4;
+    border-color: var(--ui-color-border-strong);
+    color: var(--ui-color-text-subtle);
+    opacity: 0.6;
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
   }
 }
 
-.ui-carousel__indicators {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--ui-space-1);
-}
-
-.ui-carousel__indicator {
-  position: relative;
-  inline-size: 24px;
-  block-size: 24px;
-  padding: 0;
-  border: 0;
-  background: none;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 50% auto auto 50%;
-    inline-size: 0.625rem;
-    block-size: 0.625rem;
-    border-radius: var(--ui-radius-circle);
-    background: var(--ui-color-border-strong);
-    transform: translate(-50%, -50%);
-  }
-
-  &--active::before {
-    background: var(--ui-color-accent);
-  }
-
-  &:focus-visible {
-    outline: 2px solid transparent;
-    border-radius: var(--ui-radius-circle);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-  }
-}
+@include panels.sliding-indicators('ui-carousel');
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-carousel__track {
+  .ui-carousel__track,
+  .ui-carousel__nav,
+  .ui-carousel__play {
     transition: none;
+  }
+
+  .ui-carousel__nav:active:not(:disabled) {
+    transform: none;
   }
 }
 
 @media (pointer: coarse) {
   .ui-carousel__nav,
-  .ui-carousel__play,
-  .ui-carousel__indicator {
+  .ui-carousel__play {
     min-inline-size: var(--ui-touch-target-min);
     min-block-size: var(--ui-touch-target-min);
   }

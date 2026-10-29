@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Panel } from './Panel';
@@ -37,6 +37,28 @@ describe('Panel', () => {
     expect(screen.getByText('Body text')).not.toBeVisible();
     expect(onToggle).toHaveBeenCalledWith(true);
     expect(screen.getByRole('button', { name: 'Expand' })).toBe(btn);
+  });
+
+  it('keeps the body mounted (inert, data-state closed) while it leaves in a browser that animates', async () => {
+    const original = document.getAnimations;
+    document.getAnimations = () => [];
+    try {
+      render(
+        <Panel header="Settings" toggleable>
+          Body text
+        </Panel>,
+      );
+      const btn = screen.getByRole('button', { name: 'Collapse' });
+      expect(document.getElementById(btn.getAttribute('aria-controls')!)).toHaveAttribute('data-state', 'open');
+      await userEvent.click(btn);
+      const body = document.getElementById(btn.getAttribute('aria-controls')!)!;
+      expect(body).toHaveAttribute('data-state', 'closed');
+      expect(body).toHaveAttribute('inert');
+      expect(body).not.toHaveAttribute('hidden');
+      await waitFor(() => expect(body).toHaveAttribute('hidden'));
+    } finally {
+      document.getAnimations = original;
+    }
   });
 
   it('supports controlled collapsed', () => {

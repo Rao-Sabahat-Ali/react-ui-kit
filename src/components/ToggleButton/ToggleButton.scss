@@ -1,7 +1,21 @@
-.ui-toggle-button {
-  &.active {
-    box-shadow: none;
-  }
+// ToggleButton: the pressed state is the accent (a 2px accent line on an accent-subtle ground), the same selection
+// language as tabs and options. Press feedback (the 1px settle) comes from Button; the colour change is motion-quick.
+.ui-toggle-button.ui-toggle-button--pressed.ui-button {
+  --bs-btn-color: var(--ui-color-accent-emphasis);
+  --bs-btn-bg: var(--ui-color-accent-subtle);
+  --bs-btn-border-color: var(--ui-color-accent);
+  --bs-btn-hover-color: var(--ui-color-accent-emphasis);
+  --bs-btn-hover-bg: var(--ui-color-accent-subtle);
+  --bs-btn-hover-border-color: var(--ui-color-accent);
+  --bs-btn-active-color: var(--ui-color-accent-emphasis);
+  --bs-btn-active-bg: var(--ui-color-accent-subtle);
+  --bs-btn-active-border-color: var(--ui-color-accent);
+  --bs-btn-active-shadow: none;
+  box-shadow: none;
+}
+
+.ui-toggle-button.active {
+  box-shadow: none;
 }
 
 @media (pointer: coarse) {

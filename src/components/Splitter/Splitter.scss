@@ -20,25 +20,23 @@
   overflow: auto;
 }
 
+// The gutter is a dashed guide line (2px dashes) with a grip part on it. The line and grip turn accent on hover,
+// keyboard focus and drag; the grip lifts (shadow-drag) while it is being dragged.
 .ui-splitter__gutter {
+  --ui-splitter-guide: var(--ui-color-border-strong);
   position: relative;
   display: flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  background: var(--ui-color-border);
   touch-action: none;
-  transition: background-color var(--ui-duration) var(--ui-easing);
 
-  &:hover,
-  &.ui-splitter__gutter--active {
-    background: var(--ui-color-accent);
-  }
-
-  &:focus-visible {
-    background: var(--ui-color-accent);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
+  // The dashed guide line, centred in the gutter.
+  &::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    transition: border-color var(--ui-motion-quick) var(--ui-easing-out);
   }
 
   // Enlarged hit area without changing layout.
@@ -47,39 +45,111 @@
     position: absolute;
     inset: 0;
   }
+
+  &:hover,
+  &.ui-splitter__gutter--active,
+  &:focus-visible {
+    --ui-splitter-guide: var(--ui-color-accent);
+  }
+
+  &:focus-visible {
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
+    box-shadow: none;
+  }
 }
 
 .ui-splitter--horizontal > .ui-splitter__gutter {
-  inline-size: 0.375rem;
+  inline-size: 0.875rem;
   cursor: col-resize;
 
   &::before {
-    inset-inline: -0.375rem;
+    inset-inline: -0.25rem;
+  }
+
+  &::after {
+    inset-block: 0;
+    inset-inline-start: calc(50% - var(--ui-line-width) / 2);
+    border-inline-start: var(--ui-line-width) dashed var(--ui-splitter-guide);
   }
 }
 
 .ui-splitter--vertical > .ui-splitter__gutter {
-  block-size: 0.375rem;
+  block-size: 0.875rem;
   cursor: row-resize;
 
   &::before {
-    inset-block: -0.375rem;
+    inset-block: -0.25rem;
+  }
+
+  &::after {
+    inset-inline: 0;
+    inset-block-start: calc(50% - var(--ui-line-width) / 2);
+    border-block-start: var(--ui-line-width) dashed var(--ui-splitter-guide);
   }
 }
 
+// The grip: a small part (2px line, 6px corners) sitting on the guide line, with two short tick marks inside.
 .ui-splitter__handle {
-  border-radius: var(--ui-radius-pill);
-  background: var(--ui-color-border-strong);
+  position: relative;
+  z-index: 1;
+  display: block;
+  border: var(--ui-line-width) solid var(--ui-splitter-guide);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface);
+  transition:
+    border-color var(--ui-motion-quick) var(--ui-easing-out),
+    box-shadow var(--ui-motion-quick) var(--ui-easing-out);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background: var(--ui-splitter-guide);
+    border-radius: var(--ui-radius-pill);
+  }
 }
 
 .ui-splitter--horizontal .ui-splitter__handle {
-  inline-size: 2px;
-  block-size: 1.5rem;
+  inline-size: 0.75rem;
+  block-size: 2rem;
+
+  &::before,
+  &::after {
+    inset-block: 0.5rem;
+    inline-size: 2px;
+  }
+
+  &::before {
+    inset-inline-start: 0.125rem;
+  }
+
+  &::after {
+    inset-inline-end: 0.125rem;
+  }
 }
 
 .ui-splitter--vertical .ui-splitter__handle {
-  inline-size: 1.5rem;
-  block-size: 2px;
+  inline-size: 2rem;
+  block-size: 0.75rem;
+
+  &::before,
+  &::after {
+    inset-inline: 0.5rem;
+    block-size: 2px;
+  }
+
+  &::before {
+    inset-block-start: 0.125rem;
+  }
+
+  &::after {
+    inset-block-end: 0.125rem;
+  }
+}
+
+.ui-splitter__gutter--active .ui-splitter__handle {
+  box-shadow: var(--ui-shadow-drag);
 }
 
 .ui-splitter--dragging {
@@ -88,16 +158,17 @@
 
 @media (pointer: coarse) {
   .ui-splitter--horizontal > .ui-splitter__gutter {
-    inline-size: 0.75rem;
+    inline-size: 1.25rem;
   }
 
   .ui-splitter--vertical > .ui-splitter__gutter {
-    block-size: 0.75rem;
+    block-size: 1.25rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-splitter__gutter {
+  .ui-splitter__gutter::after,
+  .ui-splitter__handle {
     transition: none;
   }
 }

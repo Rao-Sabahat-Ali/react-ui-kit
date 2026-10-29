@@ -1,3 +1,5 @@
+// ImageCompare: the frame is drawn with the 2px ink line (an inset outline, so the pointer maths stays exact); the
+// handle is a 2px ink line (paper-edged so it reads on any picture) with a grip part, accent on focus and drag.
 .ui-image-compare {
   --ui-image-compare-position: 50%;
   position: relative;
@@ -9,6 +11,8 @@
   touch-action: pan-y;
   user-select: none;
   cursor: ew-resize;
+  outline: var(--ui-line-width) solid var(--ui-color-line);
+  outline-offset: calc(var(--ui-line-width) * -1);
 }
 
 .ui-image-compare--disabled {
@@ -51,7 +55,7 @@
   height: 100%;
   object-fit: cover;
   clip-path: inset(0 calc(100% - var(--ui-image-compare-position)) 0 0);
-  transition: clip-path var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  transition: clip-path var(--ui-motion-quick) var(--ui-easing-out);
 }
 
 [dir='rtl'] .ui-image-compare__before {
@@ -59,13 +63,17 @@
 }
 
 .ui-image-compare__handle {
+  --ui-image-compare-ink: var(--ui-color-line);
   position: absolute;
   inset-block: 0;
   inset-inline-start: var(--ui-image-compare-position);
-  width: 2px;
-  margin-inline-start: -1px;
-  background: var(--ui-color-surface);
-  transition: inset-inline-start var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  // 2px ink line between two 2px paper edges, so the line reads on both light and dark pictures.
+  box-sizing: content-box;
+  width: var(--ui-line-width);
+  margin-inline-start: calc(var(--ui-line-width) * -1.5);
+  border-inline: var(--ui-line-width) solid var(--ui-color-surface);
+  background: var(--ui-image-compare-ink);
+  transition: inset-inline-start var(--ui-motion-quick) var(--ui-easing-out);
 
   // Wider pointer/keyboard target than the 2px line.
   &::before {
@@ -76,16 +84,17 @@
   }
 
   &:focus-visible {
+    --ui-image-compare-ink: var(--ui-color-accent);
     outline: 2px solid transparent;
-    background: var(--ui-color-accent);
   }
 
   &:focus-visible .ui-image-compare__grip {
-    outline: 2px solid var(--ui-color-focus-ring);
-    outline-offset: 2px;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
+// The grip: a small part (2px line, 6px corners) with a pair of chevrons.
 .ui-image-compare__grip {
   position: absolute;
   top: 50%;
@@ -94,9 +103,12 @@
   height: 2rem;
   margin-block-start: -1rem;
   margin-inline-start: -1rem;
-  border: 2px solid var(--ui-color-surface);
-  border-radius: var(--ui-radius-circle);
-  background: var(--ui-color-text);
+  border: var(--ui-line-width) solid var(--ui-image-compare-ink);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-surface);
+  transition:
+    border-color var(--ui-motion-quick) var(--ui-easing-out),
+    box-shadow var(--ui-motion-quick) var(--ui-easing-out);
 
   // A pair of chevrons made from borders, one on each side of centre (symmetric, so identical in RTL).
   &::before,
@@ -107,17 +119,17 @@
     width: 0.4rem;
     height: 0.4rem;
     margin-top: -0.2rem;
-    border: solid var(--ui-color-surface);
-    border-width: 0 0 2px 2px;
+    border: solid var(--ui-image-compare-ink);
+    border-width: 0 0 var(--ui-line-width) var(--ui-line-width);
   }
 
   &::before {
-    inset-inline-start: 0.45rem;
+    left: 0.35rem;
     transform: rotate(45deg);
   }
 
   &::after {
-    inset-inline-end: 0.45rem;
+    right: 0.35rem;
     transform: rotate(-135deg);
   }
 }
@@ -127,14 +139,27 @@
   transition: none;
 }
 
+// While dragging the grip is lifted off the picture and takes the accent.
+.ui-image-compare--dragging {
+  .ui-image-compare__handle {
+    --ui-image-compare-ink: var(--ui-color-accent);
+  }
+
+  .ui-image-compare__grip {
+    box-shadow: var(--ui-shadow-drag);
+  }
+}
+
 .ui-image-compare__label {
   position: absolute;
   top: var(--ui-space-3);
   padding: var(--ui-space-1) var(--ui-space-2);
-  border-radius: var(--ui-radius-sm);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius);
   background: var(--ui-color-surface);
   color: var(--ui-color-text);
   font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
   line-height: 1.2;
   pointer-events: none;
 
@@ -149,7 +174,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ui-image-compare__before,
-  .ui-image-compare__handle {
+  .ui-image-compare__handle,
+  .ui-image-compare__grip {
     transition: none;
   }
 }
