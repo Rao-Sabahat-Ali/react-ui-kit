@@ -1,3 +1,5 @@
+@use '../../styles/parts';
+
 .ui-drawer {
   --bs-offcanvas-bg: var(--ui-color-surface-raised);
   --bs-offcanvas-color: var(--ui-color-text);
@@ -85,7 +87,7 @@
   justify-content: flex-end;
   gap: var(--ui-space-2);
   padding: var(--ui-space-3) var(--ui-space-4);
-  border-top: 1px solid var(--ui-color-border);
+  border-top: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 // Exit: slide back out along the entry axis, faster than the entrance.
@@ -148,7 +150,8 @@
   flex-shrink: 0;
   background: var(--ui-color-surface);
   color: var(--ui-color-text);
-  border-inline-end: 1px solid var(--ui-color-border);
+  // Resting in the page flow: drawn with the 2px ink line, no shadow.
+  border-inline-end: var(--ui-line-width) solid var(--ui-color-line);
   box-shadow: none;
 }
 

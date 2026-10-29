@@ -1,4 +1,4 @@
-import { isValidElement, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type ReactNode, type Ref } from 'react';
+import { isValidElement, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type FocusEvent, type MouseEvent, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { usePrefersReducedMotion, useMediaQuery } from '../../hooks/useMediaQuery';
 import { cx } from '../../utils/cx';
 import { routerLinkHandler } from '../../utils/navigation';
@@ -31,6 +31,46 @@ export interface DockProps {
   ref?: Ref<HTMLDivElement>;
 }
 
+const DEFAULT_SCALE = 1.35;
+
+/**
+ * Magnification with neighbour falloff. `focus` is a coordinate along the main axis (relative to the dock's start edge,
+ * from the pointer or the centre of the focused item). Each item scales by a Gaussian of its distance to it and the
+ * items shift so the enlarged ones never overlap. Everything is written as CSS custom properties consumed by
+ * `transform` (translate + scale), so layout never changes under the pointer.
+ */
+function magnify(container: HTMLElement, items: HTMLElement[], vertical: boolean, focus: number | null) {
+  if (focus === null) {
+    for (const el of items) {
+      el.style.removeProperty('--ui-dock-s');
+      el.style.removeProperty('--ui-dock-t');
+    }
+    return;
+  }
+  const max = parseFloat(getComputedStyle(container).getPropertyValue('--ui-dock-scale')) || DEFAULT_SCALE;
+  const boxes = items
+    .map((el) => {
+      const size = vertical ? el.offsetHeight : el.offsetWidth;
+      const start = vertical ? el.offsetTop : el.offsetLeft;
+      return { el, size, center: start + size / 2 };
+    })
+    .sort((a, b) => a.center - b.center);
+  const scales = boxes.map((b) => {
+    const sigma = Math.max(b.size, 1) * 1.25;
+    const d = (b.center - focus) / sigma;
+    return 1 + (max - 1) * Math.exp(-d * d);
+  });
+  const growth = boxes.map((b, i) => (scales[i]! - 1) * b.size);
+  const total = growth.reduce((sum, g) => sum + g, 0);
+  let before = 0;
+  boxes.forEach((b, i) => {
+    const shift = before + growth[i]! / 2 - total / 2;
+    before += growth[i]!;
+    b.el.style.setProperty('--ui-dock-s', scales[i]!.toFixed(3));
+    b.el.style.setProperty('--ui-dock-t', `${shift.toFixed(2)}px`);
+  });
+}
+
 const TOOLTIP_PLACEMENT = { bottom: 'top', top: 'bottom', left: 'end', right: 'start' } as const;
 
 /** Launcher of icon items (APG Toolbar) with optional magnification. */
@@ -40,7 +80,36 @@ export function Dock({ items, position = 'bottom', magnification = true, ariaLab
   const reducedMotion = usePrefersReducedMotion();
   const coarse = useMediaQuery('(pointer: coarse)');
   const orientation = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
-  const magnify = magnification && !reducedMotion && !coarse;
+  const magnifyOn = magnification && !reducedMotion && !coarse;
+
+  const frame = useRef(0);
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+  const vertical = orientation === 'vertical';
+
+  const update = (focus: () => number | null) => {
+    cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      const container = containerRef.current;
+      if (container) magnify(container, itemEls(), vertical, focus());
+    });
+  };
+  const onPointerMove = (event: PointerEvent<HTMLElement>) => {
+    if (!magnifyOn || event.pointerType === 'touch') return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const point = vertical ? event.clientY - rect.top - event.currentTarget.clientTop : event.clientX - rect.left - event.currentTarget.clientLeft;
+    update(() => point);
+  };
+  const reset = () => update(() => null);
+  const onItemFocus = (el: HTMLElement) => {
+    let visible = false;
+    try {
+      visible = el.matches(':focus-visible');
+    } catch {
+      // Selector unsupported: no keyboard magnification.
+    }
+    if (!magnifyOn || !visible) return;
+    update(() => (vertical ? el.offsetTop + el.offsetHeight / 2 : el.offsetLeft + el.offsetWidth / 2));
+  };
 
   const itemEls = () => Array.from(containerRef.current?.querySelectorAll<HTMLElement>('.ui-dock__item') ?? []);
 
@@ -69,15 +138,21 @@ export function Dock({ items, position = 'bottom', magnification = true, ariaLab
       role="toolbar"
       aria-label={ariaLabel}
       aria-orientation={orientation}
-      className={cx('ui-dock', `ui-dock--${position}`, `ui-dock--${orientation}`, magnify && 'ui-dock--magnify', className)}
+      className={cx('ui-dock', `ui-dock--${position}`, `ui-dock--${orientation}`, magnifyOn && 'ui-dock--magnify', className)}
       style={style}
+      onPointerMove={onPointerMove}
+      onPointerLeave={reset}
+      onBlur={reset}
     >
       {items.map((item, index) => {
         const iconNode = typeof item.icon === 'string' ? <Icon name={item.icon} /> : isValidElement(item.icon) ? <span aria-hidden="true">{item.icon}</span> : null;
         const common = {
           className: 'ui-dock__item',
           tabIndex: index === Math.min(activeIndex, items.length - 1) ? 0 : -1,
-          onFocus: () => setActiveIndex(index),
+          onFocus: (event: FocusEvent<HTMLElement>) => {
+            setActiveIndex(index);
+            onItemFocus(event.currentTarget);
+          },
           onKeyDown,
         };
         const href = safeUrl(item.href);

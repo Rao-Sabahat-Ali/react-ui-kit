@@ -226,6 +226,16 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
           style={{ position: 'fixed', top: position.top, left: position.left, visibility: target ? undefined : 'hidden' }}
         >
           <div className="popover-arrow ui-popover__arrow" />
+          {/* The step numeral is drawn light like a StepSheet panel; the full "Step n of m" is read from the hidden text. */}
+          <div className="ui-tour__head">
+            <span className="ui-tour__numeral ui-tabular" aria-hidden="true">
+              {index + 1}
+            </span>
+            <span className="ui-tour__total ui-tabular" aria-hidden="true">
+              / {steps.length}
+            </span>
+            <span className="visually-hidden">{t('stepOf', { index: index + 1, total: steps.length })}</span>
+          </div>
           {step.title && (
             <h2 id={titleId} className="popover-header ui-popover__header ui-tour__title">
               {step.title}
@@ -235,7 +245,6 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
             {step.content}
           </div>
           <div className="ui-tour__footer">
-            <span className="ui-tour__counter">{t('stepOf', { index: index + 1, total: steps.length })}</span>
             <div className="ui-tour__actions">
               {!last && (
                 <Button size="sm" appearance="text" variant="secondary" onClick={() => close('skip')}>

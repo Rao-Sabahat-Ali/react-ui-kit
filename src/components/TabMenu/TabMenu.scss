@@ -1,20 +1,56 @@
-.ui-tab-menu {
+.ui-tab-menu .ui-tab-menu__list {
   --bs-nav-link-color: var(--ui-color-text-muted);
   --bs-nav-link-hover-color: var(--ui-color-text);
   --bs-nav-tabs-link-active-color: var(--ui-color-text);
-  --bs-nav-tabs-border-color: var(--ui-color-border);
+  --bs-nav-tabs-border-color: var(--ui-color-line-muted);
+  --bs-nav-tabs-border-radius: var(--ui-radius);
+  --bs-nav-tabs-link-active-bg: transparent;
+  --bs-nav-tabs-link-active-border-color: transparent;
   --bs-nav-underline-link-active-color: var(--ui-color-text);
-  --bs-nav-pills-link-active-bg: var(--ui-color-accent);
-  --bs-nav-pills-link-active-color: var(--ui-color-accent-contrast);
+  --bs-nav-pills-border-radius: var(--ui-radius);
+  --bs-nav-pills-link-active-bg: var(--ui-color-accent-subtle);
+  --bs-nav-pills-link-active-color: var(--ui-color-accent-emphasis);
 }
 
 // Overflowing tabs scroll horizontally instead of wrapping.
 .ui-tab-menu__list {
   overflow-x: auto;
+  position: relative;
   overflow-y: hidden;
   scrollbar-width: thin;
   overscroll-behavior-inline: contain;
   white-space: nowrap;
+}
+
+// The slide: one 2px accent bar under the current route, moved with transform (translate + scale) only.
+.nav-tabs.ui-tab-menu__list::after,
+.nav-underline.ui-tab-menu__list::after {
+  content: '';
+  position: absolute;
+  inset-block-end: 0;
+  left: 0;
+  inline-size: 1px;
+  block-size: var(--ui-line-width);
+  background: var(--ui-color-accent);
+  transform-origin: 0 0;
+  transform: translateX(calc(var(--ui-mark-pos, 0) * 1px)) scaleX(var(--ui-mark-size, 0));
+  pointer-events: none;
+}
+
+.ui-tab-menu__list[data-mark='ready']::after {
+  transition: transform var(--ui-motion-step) var(--ui-easing-out);
+}
+
+// The active item shows no box or border of its own: the mark is the indicator.
+.nav-tabs.ui-tab-menu__list .ui-tab-menu__link.active,
+.nav-underline.ui-tab-menu__list .ui-tab-menu__link.active {
+  border-color: transparent;
+  background: transparent;
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.nav-underline.ui-tab-menu__list .ui-tab-menu__link {
+  border-bottom-color: transparent;
 }
 
 .ui-tab-menu__link {
@@ -22,10 +58,13 @@
   align-items: center;
   gap: var(--ui-space-1);
   white-space: nowrap;
+  font-weight: var(--ui-font-weight-medium);
+  transition: color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
+    box-shadow: none;
   }
 }
 
@@ -35,8 +74,68 @@
   }
 }
 
+// Turn: a route-like change slides the old sheet out and the new one in along the reading direction. Apps opt a
+// region in with `view-transition-name: ui-turn` (the `ui-turn-sheet` class); the rest of the page stays still.
+.ui-turn-sheet {
+  view-transition-name: ui-turn;
+}
+
+@keyframes ui-turn-out {
+  to {
+    opacity: 0;
+    transform: translateX(calc(var(--ui-assemble-distance) * -2));
+  }
+}
+
+@keyframes ui-turn-in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--ui-assemble-distance) * 2));
+  }
+}
+
+@keyframes ui-turn-out-rtl {
+  to {
+    opacity: 0;
+    transform: translateX(calc(var(--ui-assemble-distance) * 2));
+  }
+}
+
+@keyframes ui-turn-in-rtl {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--ui-assemble-distance) * -2));
+  }
+}
+
+::view-transition-old(ui-turn) {
+  animation: ui-turn-out calc(var(--ui-motion-step) * 0.7) var(--ui-easing-in) both;
+}
+
+::view-transition-new(ui-turn) {
+  animation: ui-turn-in var(--ui-motion-step) var(--ui-easing-out) both;
+}
+
+[dir='rtl']::view-transition-old(ui-turn) {
+  animation-name: ui-turn-out-rtl;
+}
+
+[dir='rtl']::view-transition-new(ui-turn) {
+  animation-name: ui-turn-in-rtl;
+}
+
+// Everything outside the named region holds still during a Turn.
+:root:active-view-transition-type(ui-turn)::view-transition-old(root),
+:root:active-view-transition-type(ui-turn)::view-transition-new(root) {
+  animation-duration: 0.01ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ui-tab-menu__list {
     scroll-behavior: auto;
+  }
+
+  .ui-tab-menu__list[data-mark='ready']::after {
+    transition: none;
   }
 }

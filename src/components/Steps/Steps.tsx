@@ -1,6 +1,8 @@
-import type { CSSProperties, ReactNode, Ref } from 'react';
+import { useRef, type CSSProperties, type ReactNode, type Ref } from 'react';
+import { useSlidingMark } from '../../hooks/useSlidingMark';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { mergeRefs } from '../../utils/element';
 import { Icon } from '../Icon/Icon';
 
 /** TODO: move to locale key `stepError` (not yet in en.ts). */
@@ -31,14 +33,17 @@ export interface StepsProps {
 export function Steps({ items, activeIndex = 0, onSelect, readOnly = true, orientation = 'horizontal', ariaLabel, id, className, style, ref }: StepsProps) {
   const { t } = useLocale();
   const total = items.length;
+  const listRef = useRef<HTMLOListElement | null>(null);
+  // The accent mark slides to the current step (the same mark Tabs draws).
+  useSlidingMark(listRef, { target: '.ui-steps__item[aria-current="step"]', axis: orientation === 'vertical' ? 'y' : 'x' }, [activeIndex, items.length, orientation]);
   return (
-    <ol ref={ref} id={id} aria-label={ariaLabel} className={cx('ui-steps', `ui-steps--${orientation}`, !readOnly && 'ui-steps--interactive', className)} style={style}>
+    <ol ref={mergeRefs(listRef, ref)} id={id} aria-label={ariaLabel} className={cx('ui-steps', `ui-steps--${orientation}`, !readOnly && 'ui-steps--interactive', className)} style={style}>
       {items.map((item, index) => {
         const status: StepStatus = item.status ?? (index < activeIndex ? 'complete' : index === activeIndex ? 'current' : 'upcoming');
         const current = index === activeIndex;
         const statusText = status === 'complete' ? t('completed') : status === 'error' ? t('stepError') : undefined;
         const marker = (
-          <span className="ui-steps__marker" aria-hidden="true">
+          <span className="ui-steps__marker ui-tabular" aria-hidden="true">
             {status === 'complete' ? <Icon name="check" /> : status === 'error' ? <Icon name="alert-triangle" /> : index + 1}
           </span>
         );

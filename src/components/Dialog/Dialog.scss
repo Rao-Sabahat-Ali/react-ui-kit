@@ -1,3 +1,5 @@
+@use '../../styles/parts';
+
 .ui-dialog {
   --bs-modal-bg: var(--ui-color-surface-raised);
   --bs-modal-color: var(--ui-color-text);
@@ -40,15 +42,24 @@
   }
 }
 
+.ui-dialog__header {
+  padding: var(--ui-space-4);
+  border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+}
+
+.ui-dialog__body {
+  padding: var(--ui-space-4);
+}
+
+.ui-dialog__footer {
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+}
+
 .ui-dialog__title {
   font-family: var(--ui-font-family-heading);
   font-weight: var(--ui-font-weight-semibold);
-}
-
-@keyframes ui-fade-in {
-  from {
-    opacity: 0;
-  }
 }
 
 @keyframes ui-dialog-in {
@@ -62,12 +73,6 @@
   to {
     opacity: 0;
     transform: translateY(calc(var(--ui-assemble-distance) * 0.5)) scale(0.99);
-  }
-}
-
-@keyframes ui-fade-out {
-  to {
-    opacity: 0;
   }
 }
 

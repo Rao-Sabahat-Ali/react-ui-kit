@@ -1,6 +1,7 @@
 import { cloneElement, useCallback, useEffect, useId, useRef, useState, type FocusEvent, type PointerEvent, type ReactElement, type ReactNode } from 'react';
 import { useFloating } from '../../hooks/useFloating';
 import { cx } from '../../utils/cx';
+import { usePresence } from '../../motion/usePresence';
 import { canUseDOM } from '../../utils/dom';
 import type { Placement } from '../../utils/position';
 import { Portal } from '../Portal/Portal';
@@ -57,7 +58,9 @@ export function Tooltip({ content, placement = 'top', delay, disabled = false, a
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   const timer = useRef<number | undefined>(undefined);
   const keyboardFocused = useRef(false);
-  const position = useFloating(triggerRef, tooltipRef, { open: visible, placement, offset });
+  // Stays mounted (non-interactive, data-state="closed") while the exit animation runs.
+  const { present, state } = usePresence(visible && !disabled, { exit: 'part' });
+  const position = useFloating(triggerRef, tooltipRef, { open: present, placement, offset });
 
   useEffect(installModality, []);
 
@@ -153,21 +156,23 @@ export function Tooltip({ content, placement = 'top', delay, disabled = false, a
   return (
     <>
       {trigger}
-      {visible && !disabled && (
+      {present && (
         <Portal>
-          <div
-            ref={tooltipRef}
-            id={tooltipId}
-            role="tooltip"
-            aria-hidden={asLabel || undefined}
-            data-placement={position.placement}
-            className={cx('tooltip show ui-tooltip', `bs-tooltip-${SIDE_CLASS[side] ?? 'top'}`, `ui-tooltip--${side}`, className)}
-            style={{ position: 'fixed', top: position.top, left: position.left }}
-            onPointerEnter={clear}
-            onPointerLeave={(e) => e.pointerType !== 'touch' && scheduleHide()}
-          >
-            <div className="tooltip-arrow ui-tooltip__arrow" />
-            <div className="tooltip-inner ui-tooltip__inner">{content}</div>
+          <div className="ui-tooltip-root" data-state={state}>
+            <div
+              ref={tooltipRef}
+              id={tooltipId}
+              role="tooltip"
+              aria-hidden={asLabel || undefined}
+              data-placement={position.placement}
+              className={cx('tooltip show ui-tooltip', `bs-tooltip-${SIDE_CLASS[side] ?? 'top'}`, `ui-tooltip--${side}`, className)}
+              style={{ position: 'fixed', top: position.top, left: position.left }}
+              onPointerEnter={clear}
+              onPointerLeave={(e) => e.pointerType !== 'touch' && scheduleHide()}
+            >
+              <div className="tooltip-arrow ui-tooltip__arrow" />
+              <div className="tooltip-inner ui-tooltip__inner">{content}</div>
+            </div>
           </div>
         </Portal>
       )}

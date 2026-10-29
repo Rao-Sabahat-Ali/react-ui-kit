@@ -4,6 +4,7 @@ import { useFloating } from '../../hooks/useFloating';
 import { useOverlay } from '../../hooks/useOverlay';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { usePresence } from '../../motion/usePresence';
 import type { Placement } from '../../utils/position';
 import { Button } from '../Button/Button';
 import { Icon, type IconName } from '../Icon/Icon';
@@ -26,6 +27,10 @@ export interface ConfirmPopupOptions {
 export interface ConfirmPopupProps extends ConfirmPopupOptions {
   onAccept: () => void;
   onReject: () => void;
+  /** Set to false to play the exit animation before unmounting (the provider does this). Default true. */
+  open?: boolean;
+  /** Called after the exit animation has finished and the popup has unmounted. */
+  onExited?: () => void;
 }
 
 const SEVERITY_ICON: Record<ConfirmPopupSeverity, IconName> = {
@@ -36,7 +41,13 @@ const SEVERITY_ICON: Record<ConfirmPopupSeverity, IconName> = {
 };
 
 /** Anchored alert dialog. Usually rendered through `ConfirmPopupProvider` + `useConfirmPopup()`. */
-export function ConfirmPopup({ target, message, acceptLabel, rejectLabel, severity = 'primary', placement = 'bottom', onAccept, onReject }: ConfirmPopupProps) {
+export function ConfirmPopup({ open = true, onExited, ...props }: ConfirmPopupProps) {
+  const { present, state } = usePresence(open, { exit: 'part', onExited });
+  if (!present) return null;
+  return <ConfirmPopupInner {...props} state={state} />;
+}
+
+function ConfirmPopupInner({ target, message, acceptLabel, rejectLabel, severity = 'primary', placement = 'bottom', onAccept, onReject, state }: Omit<ConfirmPopupProps, 'open' | 'onExited'> & { state: 'open' | 'closed' }) {
   const { t } = useLocale();
   const messageId = useId();
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -47,12 +58,16 @@ export function ConfirmPopup({ target, message, acceptLabel, rejectLabel, severi
   anchorRef.current = target;
   const position = useFloating(anchorRef, contentRef, { open: true, placement, offset: 8 });
 
-  useOverlay({ rootRef, contentRef, initialFocus: severity === 'danger' ? rejectRef : acceptRef, onEscape: onReject, modal: true });
-  useClickOutside([contentRef], (event) => {
-    // Keep the click from moving focus: focus goes back to the target instead.
-    event.preventDefault();
-    onReject();
-  });
+  useOverlay({ rootRef, contentRef, initialFocus: severity === 'danger' ? rejectRef : acceptRef, onEscape: state === 'open' ? onReject : undefined, modal: true });
+  useClickOutside(
+    [contentRef],
+    (event) => {
+      // Keep the click from moving focus: focus goes back to the target instead.
+      event.preventDefault();
+      onReject();
+    },
+    state === 'open',
+  );
 
   // Declared after useOverlay so this cleanup runs last: focus always returns to the target.
   useEffect(
@@ -66,7 +81,7 @@ export function ConfirmPopup({ target, message, acceptLabel, rejectLabel, severi
 
   return (
     <Portal>
-      <div ref={rootRef} className="ui-confirm-popup-root">
+      <div ref={rootRef} className="ui-confirm-popup-root" data-state={state} inert={state === 'closed' || undefined}>
         <div className="ui-confirm-popup__catcher" aria-hidden="true" />
         <div
           ref={contentRef}
@@ -109,6 +124,7 @@ export interface ConfirmPopupProviderProps {
 /** Provides `useConfirmPopup()`. Only one popup is open at a time. */
 export function ConfirmPopupProvider({ children }: ConfirmPopupProviderProps) {
   const [state, setState] = useState<(ConfirmPopupOptions & { id: number }) | null>(null);
+  const [open, setOpen] = useState(false);
   const pending = useRef<((ok: boolean) => void) | null>(null);
   const counter = useRef(0);
 
@@ -119,6 +135,7 @@ export function ConfirmPopupProvider({ children }: ConfirmPopupProviderProps) {
         pending.current = resolve;
         counter.current += 1;
         setState({ ...options, id: counter.current });
+        setOpen(true);
       }),
     [],
   );
@@ -126,14 +143,14 @@ export function ConfirmPopupProvider({ children }: ConfirmPopupProviderProps) {
   const settle = (ok: boolean) => {
     const resolve = pending.current;
     pending.current = null;
-    setState(null);
+    setOpen(false);
     resolve?.(ok);
   };
 
   return (
     <ConfirmPopupContext.Provider value={confirmPopup}>
       {children}
-      {state && <ConfirmPopup key={state.id} {...state} onAccept={() => settle(true)} onReject={() => settle(false)} />}
+      {state && <ConfirmPopup key={state.id} {...state} open={open} onExited={() => setState((current) => (current?.id === state.id ? null : current))} onAccept={() => settle(true)} onReject={() => settle(false)} />}
     </ConfirmPopupContext.Provider>
   );
 }

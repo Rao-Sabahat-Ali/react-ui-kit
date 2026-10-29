@@ -1,3 +1,5 @@
+@use '../../styles/parts';
+
 .ui-command-palette-root {
   --ui-command-palette-width: 40rem;
   --ui-command-palette-max-height: min(60vh, 28rem);
@@ -7,6 +9,7 @@
   z-index: var(--ui-z-modal-backdrop);
   background-color: var(--ui-color-overlay);
   opacity: 1;
+  animation: ui-fade-in var(--ui-motion-part) var(--ui-easing-out);
 }
 
 .ui-command-palette {
@@ -18,18 +21,29 @@
   margin-block-start: 12vh;
 }
 
+// A lifted part: 2px ink line, sheet corner, the soft lift shadow; it grows from its top edge.
 .ui-command-palette__content {
   overflow: hidden;
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius-lg);
-  background-color: var(--ui-color-surface-raised);
-  box-shadow: var(--ui-shadow-xl);
-  animation: ui-command-palette-in var(--ui-duration) var(--ui-easing);
+  transform-origin: top center;
+  @include parts.lifted;
+  @include parts.pop-in;
+}
+
+.ui-command-palette-root[data-state='closed'] {
+  pointer-events: none;
+
+  .ui-command-palette__content {
+    @include parts.pop-out;
+  }
+
+  .ui-command-palette__backdrop {
+    animation: ui-fade-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+  }
 }
 
 .ui-command-palette__search-wrap {
   position: relative;
-  border-block-end: 1px solid var(--ui-color-border);
+  border-block-end: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 .ui-command-palette__search-icon {
@@ -51,6 +65,7 @@
 
   &:focus {
     box-shadow: none;
+    outline: 2px solid transparent;
   }
 }
 
@@ -67,10 +82,8 @@
 
 .ui-command-palette__group-label {
   padding: var(--ui-space-1) var(--ui-space-3);
-  font-size: var(--ui-font-size-xs);
+  font-size: var(--ui-font-size-sm);
   font-weight: var(--ui-font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: var(--ui-color-text-muted);
 }
 
@@ -83,7 +96,13 @@
   border-radius: var(--ui-radius);
   background: transparent;
   cursor: pointer;
-  transition: background-color var(--ui-duration) var(--ui-easing);
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
+  @include parts.item-marker;
+
+  // Pointer hover moves the active result, so hover and the keyboard-active result are the same style.
+  &:hover:not(.disabled) {
+    @include parts.item-highlighted;
+  }
 
   &.disabled {
     cursor: not-allowed;
@@ -96,9 +115,13 @@
 }
 
 .ui-command-palette__item--active {
-  background-color: var(--ui-color-accent-subtle);
-  color: var(--ui-color-accent-emphasis);
-  outline: 2px solid transparent;
+  @include parts.item-highlighted;
+}
+
+@media (forced-colors: active) {
+  .ui-command-palette__item--active {
+    outline: 2px solid Highlight;
+  }
 }
 
 .ui-command-palette__icon {
@@ -119,13 +142,6 @@
   white-space: nowrap;
 }
 
-.ui-command-palette__match {
-  padding: 0;
-  background: transparent;
-  color: inherit;
-  font-weight: var(--ui-font-weight-semibold);
-}
-
 .ui-command-palette__description {
   font-size: var(--ui-font-size-sm);
   color: var(--ui-color-text-muted);
@@ -138,12 +154,13 @@
 
 .ui-command-palette__kbd {
   padding: 0 var(--ui-space-1);
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
   border-radius: var(--ui-radius-sm);
   background-color: var(--ui-color-surface);
   color: var(--ui-color-text-muted);
-  font-family: var(--ui-font-family-mono);
+  font-family: inherit;
   font-size: var(--ui-font-size-xs);
+  font-variant-numeric: tabular-nums;
 }
 
 .ui-command-palette__empty,
@@ -155,20 +172,16 @@
 
 .ui-command-palette__footer {
   padding: var(--ui-space-2) var(--ui-space-4);
-  border-block-start: 1px solid var(--ui-color-border);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
   font-size: var(--ui-font-size-xs);
   color: var(--ui-color-text-muted);
 }
 
-@keyframes ui-command-palette-in {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .ui-command-palette__content {
+  .ui-command-palette__content,
+  .ui-command-palette__backdrop,
+  .ui-command-palette-root[data-state='closed'] .ui-command-palette__content,
+  .ui-command-palette-root[data-state='closed'] .ui-command-palette__backdrop {
     animation: none;
   }
 
