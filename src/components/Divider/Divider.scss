@@ -1,16 +1,23 @@
+// Divider: a hairline rule by default (the one rule between sections); `dashed` is the guide line of the assembly
+// sheet (2px dashes, like the line parts click along); `dotted` is a 2px dotted rule.
 .ui-divider {
-  --ui-divider-color: var(--ui-color-border);
+  --ui-divider-color: var(--ui-color-line-muted);
   --ui-divider-style: solid;
+  --ui-divider-width: var(--ui-line-width-hairline);
   color: var(--ui-color-text-muted);
   font-size: var(--ui-font-size-sm);
 }
 
 .ui-divider--dashed {
   --ui-divider-style: dashed;
+  --ui-divider-width: var(--ui-line-width);
+  --ui-divider-color: var(--ui-color-border-strong);
 }
 
 .ui-divider--dotted {
   --ui-divider-style: dotted;
+  --ui-divider-width: var(--ui-line-width);
+  --ui-divider-color: var(--ui-color-border-strong);
 }
 
 .ui-divider--horizontal {
@@ -22,7 +29,7 @@
   border: 0;
 
   &:not(.ui-divider--labelled) {
-    border-block-start: 1px var(--ui-divider-style) var(--ui-divider-color);
+    border-block-start: var(--ui-divider-width) var(--ui-divider-style) var(--ui-divider-color);
   }
 
   &.ui-divider--labelled {
@@ -30,7 +37,7 @@
     &::after {
       content: '';
       flex: 1 1 0;
-      border-block-start: 1px var(--ui-divider-style) var(--ui-divider-color);
+      border-block-start: var(--ui-divider-width) var(--ui-divider-style) var(--ui-divider-color);
     }
   }
 
@@ -48,7 +55,7 @@
   align-self: stretch;
   min-block-size: 1em;
   margin-inline: var(--ui-space-3);
-  border-inline-start: 1px var(--ui-divider-style) var(--ui-divider-color);
+  border-inline-start: var(--ui-divider-width) var(--ui-divider-style) var(--ui-divider-color);
   width: 0;
   opacity: 1;
   background-color: transparent;

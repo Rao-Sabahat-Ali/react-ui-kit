@@ -103,6 +103,36 @@ describe('Carousel', () => {
     expect(visibleLabels()).toEqual(['Item B']);
   });
 
+  it('AC-3: autoplay stops while the tab is hidden and resumes when it is visible again', () => {
+    vi.useFakeTimers();
+    mockMedia();
+    render(<Carousel value={items} itemTemplate={template} autoplayInterval={1000} />);
+    const state = vi.spyOn(document, 'visibilityState', 'get');
+    state.mockReturnValue('hidden');
+    act(() => {
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    act(() => vi.advanceTimersByTime(3000));
+    expect(visibleLabels()).toEqual(['Item A']);
+    state.mockReturnValue('visible');
+    act(() => {
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    act(() => vi.advanceTimersByTime(1000));
+    expect(visibleLabels()).toEqual(['Item B']);
+    state.mockRestore();
+  });
+
+  it('indicators carry one sliding accent mark that follows the current page', async () => {
+    mockMedia();
+    render(<Carousel value={items} itemTemplate={template} />);
+    const indicators = document.querySelector<HTMLElement>('.ui-carousel__indicators')!;
+    expect(indicators.style.getPropertyValue('--ui-mark-size')).not.toBe('');
+    expect(within(indicators).getAllByRole('button').filter((b) => b.getAttribute('aria-current') === 'true')).toHaveLength(1);
+    await userEvent.click(within(indicators).getByRole('button', { name: 'Go to slide 3' }));
+    expect(within(indicators).getByRole('button', { name: 'Go to slide 3' })).toHaveAttribute('aria-current', 'true');
+  });
+
   it('AC-3: never autoplays with reduced motion', () => {
     vi.useFakeTimers();
     mockMedia({ reduced: true });

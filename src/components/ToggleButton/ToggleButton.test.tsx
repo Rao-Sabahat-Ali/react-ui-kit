@@ -51,4 +51,14 @@ describe('ToggleButton', () => {
     await userEvent.click(screen.getByRole('button'));
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
   });
+
+  it('the pressed state carries the accent class and returns to idle', async () => {
+    render(<ToggleButton offLabel="Pin" />);
+    const button = screen.getByRole('button');
+    expect(button).not.toHaveClass('ui-toggle-button--pressed');
+    await userEvent.click(button);
+    expect(button).toHaveClass('ui-toggle-button--pressed');
+    await userEvent.click(button);
+    expect(button).not.toHaveClass('ui-toggle-button--pressed');
+  });
 });

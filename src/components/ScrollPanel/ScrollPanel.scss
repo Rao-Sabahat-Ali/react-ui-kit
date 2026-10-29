@@ -1,6 +1,8 @@
+// ScrollPanel: scrollbars match the global themed scrollbars (thin pill thumb in the strong border colour,
+// the ink line on hover); the focus ring is the global accent ring.
 .ui-scroll-panel {
   --ui-scroll-thumb: var(--ui-color-border-strong);
-  --ui-scroll-thumb-hover: var(--ui-color-text-subtle);
+  --ui-scroll-thumb-hover: var(--ui-color-line);
   --ui-scroll-track: transparent;
   overflow: auto;
   overscroll-behavior: contain;
@@ -8,8 +10,8 @@
   scrollbar-color: var(--ui-scroll-thumb) var(--ui-scroll-track);
 
   &::-webkit-scrollbar {
-    inline-size: var(--ui-space-2);
-    block-size: var(--ui-space-2);
+    inline-size: 0.625rem;
+    block-size: 0.625rem;
   }
 
   &::-webkit-scrollbar-track {
@@ -17,16 +19,19 @@
   }
 
   &::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
     border-radius: var(--ui-radius-pill);
     background: var(--ui-scroll-thumb);
+    background-clip: padding-box;
 
     &:hover {
-      background: var(--ui-scroll-thumb-hover);
+      background-color: var(--ui-scroll-thumb-hover);
     }
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
   }
 }

@@ -1,7 +1,12 @@
+// DeferredContent: the placeholder holds the space; the content assembles in (useAssemble) when it loads.
 .ui-deferred-content {
   min-block-size: var(--ui-space-8);
 }
 
 .ui-deferred-content--loaded {
   min-block-size: 0;
+}
+
+.ui-deferred-content__body {
+  min-inline-size: 0;
 }

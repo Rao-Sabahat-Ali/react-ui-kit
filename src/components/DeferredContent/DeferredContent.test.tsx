@@ -40,6 +40,13 @@ describe('DeferredContent', () => {
     expect(onLoad).toHaveBeenCalledTimes(1);
   });
 
+  it('reveals the content inside an Assemble part', () => {
+    stubObserver();
+    render(<DeferredContent placeholder={<p>Loading chart</p>}><p>Heavy widget</p></DeferredContent>);
+    act(() => callbacks[0]!([{ isIntersecting: true }]));
+    expect(screen.getByText('Heavy widget').closest('[data-assemble]')).toHaveClass('ui-deferred-content__body');
+  });
+
   it('AC-2: renders immediately without IntersectionObserver', () => {
     vi.stubGlobal('IntersectionObserver', undefined);
     const onLoad = vi.fn();

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -103,5 +104,13 @@ describe('Splitter', () => {
       </Splitter>,
     );
     expect(screen.getAllByRole('separator')).toHaveLength(2);
+  });
+
+  it('the gutter is a dashed guide line with a grip, accent on focus and drag', () => {
+    const scss = readFileSync(`${process.cwd()}/src/components/Splitter/Splitter.scss`, 'utf8');
+    expect(scss).toMatch(/border-inline-start: var\(--ui-line-width\) dashed var\(--ui-splitter-guide\)/);
+    expect(scss).toMatch(/--ui-splitter-guide: var\(--ui-color-accent\)/);
+    render(tree());
+    expect(document.querySelector('.ui-splitter__gutter .ui-splitter__handle')).toBeInTheDocument();
   });
 });

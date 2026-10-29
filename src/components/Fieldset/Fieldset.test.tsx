@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Fieldset } from './Fieldset';
@@ -31,6 +31,27 @@ describe('Fieldset', () => {
     expect(btn).toHaveAttribute('aria-controls', document.getElementById(btn.getAttribute('aria-controls')!)!.id);
     await userEvent.click(btn);
     expect(btn).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('reveals and hides the content with presence (stays mounted while it leaves)', async () => {
+    const original = document.getAnimations;
+    document.getAnimations = () => [];
+    try {
+      render(
+        <Fieldset legend="Advanced" toggleable>
+          <input aria-label="Street" />
+        </Fieldset>,
+      );
+      const btn = screen.getByRole('button', { name: /Advanced/ });
+      const content = document.getElementById(btn.getAttribute('aria-controls')!)!;
+      expect(content).toHaveAttribute('data-state', 'open');
+      await userEvent.click(btn);
+      expect(content).toHaveAttribute('data-state', 'closed');
+      expect(content).toHaveAttribute('inert');
+      await waitFor(() => expect(content).toHaveAttribute('hidden'));
+    } finally {
+      document.getAnimations = original;
+    }
   });
 
   it('supports defaultCollapsed and controlled collapsed', () => {

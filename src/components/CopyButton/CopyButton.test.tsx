@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LocaleProvider } from '../../locale/LocaleProvider';
@@ -155,5 +156,13 @@ describe('CopyButton', () => {
     render(<CopyButton value="plain" onCopy={onCopy} />);
     fireEvent.click(screen.getByRole('button'));
     await waitFor(() => expect(onCopy).toHaveBeenCalledWith('plain'));
+  });
+
+  it('the copied state draws its check mark with a clip-path wipe (mirrored in RTL, skipped under reduced motion)', () => {
+    const scss = readFileSync(`${process.cwd()}/src/components/CopyButton/CopyButton.scss`, 'utf8');
+    expect(scss).toMatch(/--copied \.ui-button__icon \{[^}]*animation: ui-copy-draw/);
+    expect(scss).toContain('clip-path: inset(0 100% 0 0)');
+    expect(scss).toContain('ui-copy-draw-rtl');
+    expect(scss).toMatch(/prefers-reduced-motion: reduce\)[\s\S]*animation: none/);
   });
 });

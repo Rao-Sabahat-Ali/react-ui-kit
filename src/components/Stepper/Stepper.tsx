@@ -1,6 +1,7 @@
 import { Children, createContext, isValidElement, useCallback, useContext, useEffect, useId, useMemo, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
+import { useAssemble } from '../../motion/useAssemble';
 import { cx } from '../../utils/cx';
 import { Icon } from '../Icon/Icon';
 
@@ -57,6 +58,7 @@ export function Stepper({ value, defaultValue, onChange, linear = false, orienta
   const activeIndex = Math.max(0, steps.findIndex((s) => s.props.value === current));
   const active = steps[activeIndex];
   const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
   const previous = useRef(current);
 
   const indexOf = useCallback((v: string) => steps.findIndex((s) => s.props.value === v), [steps]);
@@ -86,6 +88,9 @@ export function Stepper({ value, defaultValue, onChange, linear = false, orienta
     }
   }, [current]);
 
+  // The step panel assembles along its guide line whenever the step changes (the StepSheet movement).
+  useAssemble(panelRef, { trigger: current, axis: 'block' });
+
   const Heading = `h${headingLevel}` as 'h3';
   const panelId = `${uid}-panel`;
   const headingId = `${uid}-heading`;
@@ -102,8 +107,8 @@ export function Stepper({ value, defaultValue, onChange, linear = false, orienta
             const navigable = !isCurrent && (!linear || i <= activeIndex);
             const body = (
               <>
-                <span className="ui-stepper__marker" aria-hidden="true">
-                  {hasError ? <Icon name="alert-circle" size="sm" /> : isDone ? <Icon name="check" size="sm" /> : i + 1}
+                <span className="ui-stepper__marker ui-tabular" aria-hidden="true">
+                  {hasError ? <Icon name="alert-circle" size="md" /> : isDone ? <Icon name="check" size="md" /> : i + 1}
                 </span>
                 <span className="ui-stepper__text">
                   <span className="visually-hidden">{t('stepOf', { index: i + 1, total: steps.length })}. </span>
@@ -131,11 +136,14 @@ export function Stepper({ value, defaultValue, onChange, linear = false, orienta
           })}
         </ol>
         {active && (
-          <div id={panelId} role="region" aria-labelledby={headingId} className="ui-stepper__panel">
-            <Heading ref={headingRef} id={headingId} tabIndex={-1} className="ui-stepper__heading">
+          <div ref={panelRef} id={panelId} role="region" aria-labelledby={headingId} className="ui-stepper__panel">
+            <span className="ui-stepper__guide" data-assemble-guide aria-hidden="true" />
+            <Heading ref={headingRef} id={headingId} tabIndex={-1} className="ui-stepper__heading" data-assemble>
               {active.props.label}
             </Heading>
-            {active.props.children}
+            <div className="ui-stepper__body" data-assemble>
+              {active.props.children}
+            </div>
           </div>
         )}
       </div>

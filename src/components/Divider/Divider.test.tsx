@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Divider } from './Divider';
@@ -18,5 +19,11 @@ describe('Divider', () => {
     expect(screen.getByRole('separator')).toHaveClass('ui-divider--start');
     rerender(<Divider align="end" type="dashed">or</Divider>);
     expect(screen.getByRole('separator')).toHaveClass('ui-divider--end', 'ui-divider--dashed');
+  });
+
+  it('the dashed type is the 2px guide line; the default rule is a hairline', () => {
+    const scss = readFileSync(`${process.cwd()}/src/components/Divider/Divider.scss`, 'utf8');
+    expect(scss).toMatch(/--ui-divider-width: var\(--ui-line-width-hairline\)/);
+    expect(scss).toMatch(/\.ui-divider--dashed \{[^}]*--ui-divider-width: var\(--ui-line-width\)/);
   });
 });

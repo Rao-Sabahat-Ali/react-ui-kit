@@ -35,10 +35,29 @@ describe('Accordion', () => {
     expect(panel).toHaveAttribute('role', 'region');
     expect(panel).toHaveAttribute('aria-labelledby', btn.id);
     expect(screen.getByText('Alpha body')).toBeVisible();
+    // jsdom has no animation engine, so presence unmounts at once; pretend to be a browser that animates.
+    const original = document.getAnimations;
+    document.getAnimations = () => [];
+    try {
+      await userEvent.click(btn);
+      expect(btn).toHaveAttribute('aria-expanded', 'false');
+      expect(panel).toHaveClass('ui-accordion__collapse--closing');
+      expect(panel).toHaveAttribute('data-state', 'closed');
+      expect(panel).toHaveAttribute('inert');
+      await waitFor(() => expect(screen.getByText('Alpha body')).not.toBeVisible());
+    } finally {
+      document.getAnimations = original;
+    }
+  });
+
+  it('opens with data-state and keeps the open panel free of the closing state', async () => {
+    render(three());
+    const btn = screen.getByRole('button', { name: 'Beta' });
     await userEvent.click(btn);
-    expect(btn).toHaveAttribute('aria-expanded', 'false');
-    expect(panel).toHaveClass('ui-accordion__collapse--closing');
-    await waitFor(() => expect(screen.getByText('Alpha body')).not.toBeVisible());
+    const panel = document.getElementById(btn.getAttribute('aria-controls')!)!;
+    expect(panel).toHaveAttribute('data-state', 'open');
+    expect(panel).not.toHaveClass('ui-accordion__collapse--closing');
+    expect(btn.querySelector('.ui-accordion__chevron')).toBeInTheDocument();
   });
 
   it('AC-2: reduced motion collapses instantly', async () => {
