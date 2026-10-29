@@ -630,6 +630,19 @@
       ]
     },
     {
+      "name": "KanbanBoard",
+      "slug": "kanban-board",
+      "category": "data",
+      "status": "specified",
+      "purpose": "A task board: work items (cards) in ordered columns that users move between stages by dragging, by keyboard, or through a \"Move to…\" menu. In identity v2 a board reads like an assembly sheet laid out in stages: each column is a numbered stage with a quantity mark (`5×`), cards are parts that lift off the sheet when picked up, the rest make room with FLIP, and a dropped card clicks into place.",
+      "profiles": [
+        "saas",
+        "admin",
+        "dashboard",
+        "game"
+      ]
+    },
+    {
       "name": "Kbd",
       "slug": "kbd",
       "category": "misc",
