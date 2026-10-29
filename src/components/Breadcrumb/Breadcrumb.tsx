@@ -36,8 +36,10 @@ export function Breadcrumb({ items, home, maxItems, separator, ariaLabel, onNavi
   const head = collapse ? all.slice(0, 1) : all;
   const hidden = collapse ? all.slice(1, all.length - (maxItems - 1)) : [];
   const tail = collapse ? all.slice(all.length - (maxItems - 1)) : [];
-  const customSeparator = separator !== undefined && typeof separator !== 'string';
-  const dividerStyle = typeof separator === 'string' ? ({ '--bs-breadcrumb-divider': JSON.stringify(separator) } as CSSProperties) : customSeparator ? ({ '--bs-breadcrumb-divider': "''" } as CSSProperties) : undefined;
+  // Default separator: a 2px line-art chevron (the kit Icon, mirrored in RTL). A string keeps Bootstrap's text divider.
+  const sep: ReactNode = separator ?? <Icon name="chevron-right" directional />;
+  const customSeparator = typeof sep !== 'string';
+  const dividerStyle = typeof sep === 'string' ? ({ '--bs-breadcrumb-divider': JSON.stringify(sep) } as CSSProperties) : ({ '--bs-breadcrumb-divider': "''" } as CSSProperties);
 
   const renderEntry = (item: BreadcrumbItem, current: boolean) => {
     const content = (
@@ -79,7 +81,7 @@ export function Breadcrumb({ items, home, maxItems, separator, ariaLabel, onNavi
     <li key={`${item.label}-${index}`} className={cx('breadcrumb-item ui-breadcrumb__item', current && 'active')}>
       {customSeparator && index > 0 && (
         <span className="ui-breadcrumb__separator" aria-hidden="true">
-          {separator}
+          {sep}
         </span>
       )}
       {renderEntry(item, current)}
@@ -95,14 +97,14 @@ export function Breadcrumb({ items, home, maxItems, separator, ariaLabel, onNavi
 
   const last = all.length - 1;
   return (
-    <nav ref={ref} id={id} aria-label={ariaLabel ?? t('breadcrumb')} className={cx('ui-breadcrumb', className)} style={{ ...dividerStyle, ...style }}>
+    <nav ref={ref} id={id} aria-label={ariaLabel ?? t('breadcrumb')} className={cx('ui-breadcrumb', !customSeparator && 'ui-breadcrumb--text-divider', className)} style={{ ...dividerStyle, ...style }}>
       <ol className="breadcrumb mb-0">
         {head.map((item, i) => li(item, i, !collapse && i === last))}
         {collapse && (
           <li className="breadcrumb-item ui-breadcrumb__item ui-breadcrumb__overflow">
             {customSeparator && (
               <span className="ui-breadcrumb__separator" aria-hidden="true">
-                {separator}
+                {sep}
               </span>
             )}
             <Menu

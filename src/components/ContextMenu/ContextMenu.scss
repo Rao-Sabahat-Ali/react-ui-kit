@@ -1,4 +1,4 @@
-// Menu styles come from Menu.scss; this only suppresses the native touch callout on targets.
+// Menu styles (lifted part, items, presence) come from Menu.scss; this only suppresses the native touch callout on targets.
 .ui-context-menu-target {
   -webkit-touch-callout: none;
   user-select: none;

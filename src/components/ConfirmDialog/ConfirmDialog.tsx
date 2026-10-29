@@ -54,16 +54,25 @@ const ConfirmContext = createContext<ConfirmFn | null>(null);
 
 /** Provides the promise-based `useConfirm()` API. */
 export function ConfirmProvider({ children }: { children: ReactNode }) {
+  // The last request stays rendered with open={false} so the dialog can play its exit animation (Dialog unmounts itself).
   const [state, setState] = useState<(ConfirmOptions & { resolve: (ok: boolean) => void }) | null>(null);
-  const confirm = useCallback<ConfirmFn>((options) => new Promise<boolean>((resolve) => setState({ ...options, resolve })), []);
+  const [open, setOpen] = useState(false);
+  const confirm = useCallback<ConfirmFn>(
+    (options) =>
+      new Promise<boolean>((resolve) => {
+        setState({ ...options, resolve });
+        setOpen(true);
+      }),
+    [],
+  );
   const settle = (ok: boolean) => {
     state?.resolve(ok);
-    setState(null);
+    setOpen(false);
   };
   return (
     <ConfirmContext.Provider value={confirm}>
       {children}
-      {state && <ConfirmDialog {...state} open onAccept={() => settle(true)} onReject={() => settle(false)} />}
+      {state && <ConfirmDialog {...state} open={open} onAccept={() => settle(true)} onReject={() => settle(false)} />}
     </ConfirmContext.Provider>
   );
 }

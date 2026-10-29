@@ -1,29 +1,76 @@
+// Steps: a ruled strip of light numerals (the StepSheet numeral style). A 2px track runs under the steps and the
+// accent mark slides along it to the current one (transform only; the first placement does not animate).
 .ui-steps {
+  position: relative;
   display: flex;
-  gap: var(--ui-space-2);
+  gap: var(--ui-space-4);
   margin: 0;
-  padding: 0;
+  padding: 0 0 var(--ui-space-3);
   list-style: none;
   counter-reset: none;
+
+  // Track and mark are pseudo-elements, so the list keeps only <li> children.
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    left: 0;
+    block-size: var(--ui-line-width);
+    pointer-events: none;
+  }
+
+  &::before {
+    inline-size: 100%;
+    background: var(--ui-color-line-muted);
+  }
+
+  &::after {
+    inline-size: 1px;
+    background: var(--ui-color-accent);
+    transform-origin: 0 0;
+    transform: translateX(calc(var(--ui-mark-pos, 0) * 1px)) scaleX(var(--ui-mark-size, 0));
+  }
+
+  &[data-mark='ready']::after {
+    transition: transform var(--ui-motion-step) var(--ui-easing-out);
+  }
 }
 
 .ui-steps--vertical {
   flex-direction: column;
+  gap: var(--ui-space-3);
+  padding: 0;
+  padding-inline-start: var(--ui-space-4);
+
+  &::before,
+  &::after {
+    inset-block-end: auto;
+    inset-block-start: 0;
+    inline-size: var(--ui-line-width);
+    block-size: 100%;
+  }
+
+  &::before {
+    block-size: 100%;
+  }
+
+  &::after {
+    block-size: 1px;
+    transform: translateY(calc(var(--ui-mark-pos, 0) * 1px)) scaleY(var(--ui-mark-size, 0));
+  }
+}
+
+[dir='rtl'] .ui-steps--vertical::before,
+[dir='rtl'] .ui-steps--vertical::after {
+  left: auto;
+  right: 0;
 }
 
 .ui-steps__item {
   flex: 1 1 0;
   position: relative;
-}
-
-.ui-steps--horizontal .ui-steps__item:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  inset-block-start: 1rem;
-  inset-inline-start: calc(2rem + var(--ui-space-2));
-  inset-inline-end: var(--ui-space-2);
-  block-size: 1px;
-  background-color: var(--ui-color-border);
+  min-inline-size: 0;
 }
 
 .ui-steps__content {
@@ -42,33 +89,44 @@
 
 .ui-steps__button {
   cursor: pointer;
-  border-radius: var(--ui-radius-sm);
+  border-radius: var(--ui-radius);
+
+  &:hover .ui-steps__label {
+    text-decoration: underline;
+    text-decoration-thickness: var(--ui-line-width);
+    text-underline-offset: 0.2em;
+  }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
+// Light display numeral, like a StepSheet panel; no circle around it.
 .ui-steps__marker {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   flex-shrink: 0;
-  inline-size: 2rem;
-  block-size: 2rem;
-  border-radius: var(--ui-radius-circle);
-  border: 1px solid var(--ui-color-border-strong);
-  background-color: var(--ui-color-surface);
-  color: var(--ui-color-text-muted);
-  font-size: var(--ui-font-size-sm);
-  font-weight: var(--ui-font-weight-semibold);
+  min-inline-size: 1.5ch;
+  font-size: var(--ui-font-size-3xl);
+  font-weight: var(--ui-font-weight-display);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--ui-color-text-subtle);
+  transition: color var(--ui-motion-quick) var(--ui-easing-out);
+
+  .ui-icon {
+    margin-block-start: 0.25rem;
+  }
 }
 
 .ui-steps__text {
   display: flex;
   flex-direction: column;
   padding-block-start: 0.25rem;
+  min-inline-size: 0;
 }
 
 .ui-steps__label {
@@ -80,26 +138,32 @@
   font-size: var(--ui-font-size-sm);
 }
 
+.ui-steps__item--upcoming .ui-steps__label {
+  color: var(--ui-color-text-muted);
+}
+
+// Complete steps are checked in ink; the current one is the accent.
 .ui-steps__item--complete .ui-steps__marker {
-  background-color: var(--ui-color-accent);
-  border-color: var(--ui-color-accent);
-  color: var(--ui-color-accent-contrast);
+  color: var(--ui-color-text);
 }
 
 .ui-steps__item--current .ui-steps__marker {
-  border-color: var(--ui-color-accent);
   color: var(--ui-color-accent);
-  box-shadow: 0 0 0 3px var(--ui-color-accent-subtle);
 }
 
 .ui-steps__item--error .ui-steps__marker {
-  background-color: var(--ui-color-danger-subtle);
-  border-color: var(--ui-color-danger);
   color: var(--ui-color-danger-emphasis);
 }
 
 @media (pointer: coarse) {
   .ui-steps__button {
     min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-steps[data-mark='ready']::after,
+  .ui-steps__marker {
+    transition: none;
   }
 }

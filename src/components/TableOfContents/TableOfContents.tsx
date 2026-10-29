@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode, type Ref, type RefObject } from 'react';
 import { usePrefersReducedMotion } from '../../hooks/useMediaQuery';
+import { useSlidingMark } from '../../hooks/useSlidingMark';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { isPlainClick } from '../../utils/navigation';
@@ -189,8 +190,12 @@ export function TableOfContents({ items, from, headings = 'h2, h3', label, hideT
     [offset, onNavigate, reduced, lookup],
   );
 
+  // The active marker slides between entries along the track (transform only).
+  const trackRef = useRef<HTMLOListElement | null>(null);
+  useSlidingMark(trackRef, { target: '[aria-current="location"]', axis: 'y' }, [active, idKey]);
+
   const render = (nodes: TocItem[], depth: number): ReactNode => (
-    <ol className={cx('ui-toc__list', depth > 0 && 'ui-toc__list--nested')}>
+    <ol ref={depth === 0 ? trackRef : undefined} className={cx('ui-toc__list', depth > 0 && 'ui-toc__list--nested')}>
       {nodes.map((item) => (
         <li key={item.id} className="ui-toc__item">
           <a href={`#${item.id}`} className="ui-toc__link" aria-current={active === item.id ? 'location' : undefined} onClick={(e) => handleClick(e, item.id)}>

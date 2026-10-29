@@ -1,13 +1,14 @@
+@use '../../styles/parts';
+
+// A launcher lifted off the sheet: 2px ink line, sheet corner, the soft lift shadow.
 .ui-dock {
   --ui-dock-item-size: 3rem;
   --ui-dock-scale: 1.35;
+  position: relative;
   display: inline-flex;
   gap: var(--ui-space-2);
   padding: var(--ui-space-2);
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius-lg);
-  background-color: var(--ui-color-surface-raised);
-  box-shadow: var(--ui-shadow-md);
+  @include parts.lifted;
 }
 
 .ui-dock--vertical {
@@ -15,6 +16,7 @@
 }
 
 .ui-dock__item {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -26,25 +28,40 @@
   color: var(--ui-color-text);
   font-size: var(--ui-font-size-xl);
   text-decoration: none;
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
 
-  &[aria-current='page'] {
-    box-shadow: inset 0 -3px 0 var(--ui-color-accent);
+  &:hover {
+    background-color: var(--ui-color-accent-subtle);
+  }
+
+  // The current page carries the accent mark: a 2px bar under the item.
+  &[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    inset-inline: var(--ui-space-3);
+    inset-block-end: var(--ui-space-1);
+    block-size: var(--ui-line-width);
+    border-radius: var(--ui-radius-pill);
+    background: var(--ui-color-accent);
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
-// Magnification uses transform only, so neighbours never shift under the pointer.
+// Magnification uses transform only (translate + scale), so layout never moves under the pointer. The script sets
+// --ui-dock-s (scale with neighbour falloff) and --ui-dock-t (shift that keeps enlarged items apart) per item.
 .ui-dock--magnify .ui-dock__item {
-  transition: transform var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  transition:
+    transform var(--ui-motion-instant) var(--ui-easing-out),
+    background-color var(--ui-motion-quick) var(--ui-easing-out);
+  transform: translateX(var(--ui-dock-t, 0px)) scale(var(--ui-dock-s, 1));
+}
 
-  &:hover,
-  &:focus-visible {
-    transform: scale(var(--ui-dock-scale));
-  }
+.ui-dock--magnify.ui-dock--vertical .ui-dock__item {
+  transform: translateY(var(--ui-dock-t, 0px)) scale(var(--ui-dock-s, 1));
 }
 
 .ui-dock--bottom .ui-dock__item {
@@ -68,19 +85,12 @@
     min-inline-size: var(--ui-touch-target-min);
     min-block-size: var(--ui-touch-target-min);
   }
-
-  .ui-dock--magnify .ui-dock__item:hover {
-    transform: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-dock--magnify .ui-dock__item {
+  .ui-dock--magnify .ui-dock__item,
+  .ui-dock--magnify.ui-dock--vertical .ui-dock__item {
     transition: none;
-
-    &:hover,
-    &:focus-visible {
-      transform: none;
-    }
+    transform: none;
   }
 }

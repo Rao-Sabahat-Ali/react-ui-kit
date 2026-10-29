@@ -57,7 +57,7 @@ export function MenuPopup({
 }: MenuPopupProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLUListElement | null>(null);
-  const [pos, setPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+  const [pos, setPos] = useState<{ top: number; left: number; placement: Placement }>({ top: 0, left: 0, placement });
   const [resolvedDir] = useState(() => dir ?? (isRtl(restoreRef.current) ? 'rtl' : undefined));
 
   useLayoutEffect(() => {
@@ -68,7 +68,7 @@ export function MenuPopup({
       if (!anchorRect) return;
       const f = menu.getBoundingClientRect();
       const next = computePosition(anchorRect, { width: f.width, height: f.height }, { placement, offset: point ? 0 : offset, rtl: resolvedDir === 'rtl' });
-      setPos({ top: next.top, left: next.left });
+      setPos((prev) => (prev.top === next.top && prev.left === next.left && prev.placement === next.placement ? prev : { top: next.top, left: next.left, placement: next.placement }));
     };
     update();
     window.addEventListener('resize', update);
@@ -110,7 +110,7 @@ export function MenuPopup({
 
   return (
     <Portal>
-      <div ref={rootRef} className="ui-menu-popup" dir={resolvedDir} data-state={state} inert={state === 'closed' || undefined}>
+      <div ref={rootRef} className="ui-menu-popup" dir={resolvedDir} data-state={state} data-placement={pos.placement} inert={state === 'closed' || undefined}>
         <MenuList
           items={items}
           id={id}

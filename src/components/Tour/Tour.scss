@@ -1,3 +1,5 @@
+@use '../../styles/parts';
+
 .ui-tour {
   --bs-popover-max-width: 22rem;
   inline-size: max-content;
@@ -7,6 +9,8 @@
 .ui-tour__title {
   margin: 0;
   font-size: var(--ui-font-size-md);
+  border-block-end: 0;
+  padding-block-end: 0;
 }
 
 .ui-tour__body {
@@ -23,10 +27,25 @@
   padding: var(--ui-space-2) var(--ui-space-3) var(--ui-space-3);
 }
 
-.ui-tour__counter {
-  font-size: var(--ui-font-size-xs);
+.ui-tour__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-3) var(--ui-space-3) 0;
+}
+
+// Light step numeral, like a StepSheet panel; the current step is the accent.
+.ui-tour__numeral {
+  font-size: 2.5rem;
+  font-weight: var(--ui-font-weight-display);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ui-color-accent);
+}
+
+.ui-tour__total {
+  font-size: var(--ui-font-size-sm);
   color: var(--ui-color-text-muted);
-  font-variant-numeric: tabular-nums;
 }
 
 .ui-tour__actions {
@@ -37,11 +56,18 @@
   margin-inline-start: auto;
 }
 
-// Flat outline around the target; the target stays interactive.
+// The guide line of this world: a 2px dashed accent line drawn around the target. The target stays interactive.
 .ui-tour__ring {
   z-index: var(--ui-z-popover);
-  border-radius: var(--ui-radius-md);
-  outline: 2px solid var(--ui-color-accent);
+  border-radius: var(--ui-radius);
+  outline: var(--ui-line-width) dashed var(--ui-color-accent);
   outline-offset: 0;
   pointer-events: none;
+  animation: ui-fade-in var(--ui-motion-part) var(--ui-easing-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tour__ring {
+    animation: none;
+  }
 }

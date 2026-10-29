@@ -5,22 +5,32 @@
   font-size: var(--ui-font-size-sm);
 }
 
+.ui-breadcrumb:not(.ui-breadcrumb--text-divider) .breadcrumb-item + .breadcrumb-item {
+  padding-inline-start: 0;
+
+  &::before {
+    display: none;
+  }
+}
+
 .ui-breadcrumb__link {
   color: var(--ui-color-link);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-1);
+  border-radius: var(--ui-radius-sm);
 
   &:hover {
     color: var(--ui-color-link-hover);
     text-decoration: underline;
+    text-decoration-thickness: var(--ui-line-width);
+    text-underline-offset: 0.2em;
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    border-radius: var(--ui-radius-sm);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
@@ -28,18 +38,38 @@
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-1);
-  font-weight: var(--ui-font-weight-medium);
+  font-weight: var(--ui-font-weight-semibold);
 }
 
+// Separators are 2px line-art chevrons (the kit Icon draws them at stroke width 2).
 .ui-breadcrumb__separator {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
   color: var(--ui-color-text-subtle);
-  padding-inline-end: var(--ui-space-2);
+  padding-inline: var(--ui-space-2);
+
+  .ui-icon {
+    inline-size: 0.875em;
+    block-size: 0.875em;
+  }
 }
 
 .ui-breadcrumb__more {
   min-inline-size: 24px;
   min-block-size: 24px;
   color: var(--ui-color-text-muted);
+  border-radius: var(--ui-radius-sm);
+
+  &:hover {
+    color: var(--ui-color-text);
+    background-color: var(--ui-color-accent-subtle);
+  }
+
+  &:focus-visible {
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+  }
 }
 
 @media (pointer: coarse) {

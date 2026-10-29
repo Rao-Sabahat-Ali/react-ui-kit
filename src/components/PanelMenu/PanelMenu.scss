@@ -1,6 +1,9 @@
+@use '../../styles/parts';
+
+// A resting object drawn with the 2px ink line; sections are separated by one hairline.
 .ui-panel-menu {
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
   background-color: var(--ui-color-surface);
   overflow: hidden;
 }
@@ -10,7 +13,7 @@
 }
 
 .ui-panel-menu__section--root + .ui-panel-menu__section--root {
-  border-block-start: 1px solid var(--ui-color-border);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-panel-menu__heading {
@@ -19,6 +22,7 @@
 
 .ui-panel-menu__header,
 .ui-panel-menu__link {
+  @include parts.item-marker(0.5rem);
   display: flex;
   align-items: center;
   gap: var(--ui-space-2);
@@ -32,19 +36,22 @@
   text-align: start;
   text-decoration: none;
   font: inherit;
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
 
-  &:hover {
-    background-color: var(--ui-color-bg-subtle);
-  }
-
+  // Hover and keyboard focus are one style.
+  &:hover,
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include parts.item-highlighted;
   }
 }
 
 .ui-panel-menu__header {
   font-weight: var(--ui-font-weight-medium);
+
+  // Section headers only tint on hover/focus; the marker belongs to the current page.
+  &::before {
+    display: none;
+  }
 }
 
 .ui-panel-menu__label {
@@ -52,26 +59,37 @@
 }
 
 .ui-panel-menu__chevron {
-  transition: transform var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  transition: transform var(--ui-motion-quick) var(--ui-easing-out);
 }
 
 .ui-panel-menu__header--open .ui-panel-menu__chevron {
   transform: rotate(180deg);
 }
 
+// Expanding turns the section in along the reading direction (a small sheet turn: translate + opacity only).
 .ui-panel-menu__content {
   padding-inline-start: var(--ui-space-3);
-  animation: ui-panel-menu-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  animation: ui-panel-menu-in var(--ui-motion-part) var(--ui-easing-out);
+
+  [dir='rtl'] & {
+    animation-name: ui-panel-menu-in-rtl;
+  }
 }
 
 .ui-panel-menu__link {
   color: var(--ui-color-text-muted);
 
+  &:hover,
+  &:focus-visible {
+    color: var(--ui-color-text);
+  }
+
+  // The current page: accent-subtle ground and the 2px accent marker.
   &.active,
   &[aria-current='page'] {
-    color: var(--ui-color-accent);
+    @include parts.item-highlighted;
+    color: var(--ui-color-text);
     font-weight: var(--ui-font-weight-semibold);
-    box-shadow: inset 3px 0 0 var(--ui-color-accent);
   }
 
   &.disabled {
@@ -80,8 +98,11 @@
   }
 }
 
-[dir='rtl'] .ui-panel-menu__link.active {
-  box-shadow: inset -3px 0 0 var(--ui-color-accent);
+@media (forced-colors: active) {
+  .ui-panel-menu__header:focus-visible,
+  .ui-panel-menu__link:focus-visible {
+    outline: 2px solid Highlight;
+  }
 }
 
 @media (pointer: coarse) {
@@ -94,6 +115,14 @@
 @keyframes ui-panel-menu-in {
   from {
     opacity: 0;
+    transform: translateX(calc(var(--ui-assemble-distance) * -1));
+  }
+}
+
+@keyframes ui-panel-menu-in-rtl {
+  from {
+    opacity: 0;
+    transform: translateX(var(--ui-assemble-distance));
   }
 }
 

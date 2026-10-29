@@ -1,3 +1,5 @@
+@use '../../styles/parts';
+
 .ui-mega-menu__list {
   gap: var(--ui-space-1);
   position: relative;
@@ -13,9 +15,11 @@
   align-items: center;
   gap: var(--ui-space-1);
   border: 0;
+  border-radius: var(--ui-radius);
   background: none;
   color: var(--ui-color-text-muted);
   min-height: 2rem;
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out), color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:hover,
   &[aria-expanded='true'],
@@ -23,28 +27,56 @@
     color: var(--ui-color-text);
   }
 
+  &:hover,
+  &[aria-expanded='true'] {
+    background-color: var(--ui-color-accent-subtle);
+  }
+
+  &[aria-current='page'] {
+    font-weight: var(--ui-font-weight-semibold);
+  }
+
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    border-radius: var(--ui-radius-sm);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
+.ui-mega-menu__caret {
+  transition: transform var(--ui-motion-quick) var(--ui-easing-out);
+}
+
+.ui-mega-menu__top[aria-expanded='true'] .ui-mega-menu__caret:not(.ui-icon--directional) {
+  transform: rotate(180deg);
+}
+
+// A lifted part: 2px ink line, sheet corner, the soft lift shadow. Hangs from the top-left of its item.
 .ui-mega-menu__panel {
   --bs-dropdown-zindex: var(--ui-z-dropdown);
   --bs-dropdown-bg: var(--ui-color-surface-raised);
-  --bs-dropdown-border-color: var(--ui-color-border);
+  --bs-dropdown-border-color: var(--ui-color-line);
   position: absolute;
-  inset-block-start: 100%;
+  inset-block-start: calc(100% + var(--ui-space-1));
   inset-inline-start: 0;
   min-inline-size: min(48rem, 100vw - 2rem);
   padding: var(--ui-space-4);
-  border-radius: var(--ui-radius-lg);
-  box-shadow: var(--ui-shadow-lg);
-  animation: ui-mega-menu-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  margin: 0;
+  transform-origin: top left;
+  @include parts.lifted;
+  @include parts.pop-in;
+
+  [dir='rtl'] & {
+    transform-origin: top right;
+  }
 
   &[hidden] {
     display: none !important;
+  }
+
+  // Exit (usePresence keeps the panel mounted, inert, for ~70% of the entrance).
+  &[data-state='closed'] {
+    pointer-events: none;
+    @include parts.pop-out;
   }
 }
 
@@ -55,28 +87,44 @@
 
   .ui-mega-menu__panel {
     inset-block-start: 0;
-    inset-inline-start: 100%;
+    inset-inline-start: calc(100% + var(--ui-space-1));
   }
 }
 
 .ui-mega-menu__heading {
-  font-size: var(--ui-font-size-xs);
-  font-weight: var(--ui-font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--ui-color-text-muted);
   margin-block-end: var(--ui-space-2);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  color: var(--ui-color-text-muted);
 }
 
-.ui-mega-menu__link[aria-current='page'] {
-  font-weight: var(--ui-font-weight-semibold);
-  background-color: var(--ui-color-bg-subtle);
+.ui-mega-menu__link {
+  @include parts.item-marker;
+  border-radius: var(--ui-radius);
+
+  &:hover,
+  &:focus,
+  &:focus-visible,
+  &[aria-current='page'] {
+    @include parts.item-highlighted;
+  }
+
+  &[aria-current='page'] {
+    font-weight: var(--ui-font-weight-semibold);
+  }
 }
 
 .ui-mega-menu__view-all {
   margin-block-start: var(--ui-space-3);
   padding-block-start: var(--ui-space-3);
-  border-block-start: 1px solid var(--ui-color-border);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+}
+
+@media (forced-colors: active) {
+  .ui-mega-menu__link:focus,
+  .ui-mega-menu__link:hover {
+    outline: 2px solid Highlight;
+  }
 }
 
 @media (pointer: coarse) {
@@ -86,14 +134,12 @@
   }
 }
 
-@keyframes ui-mega-menu-in {
-  from {
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .ui-mega-menu__panel {
+    animation: none;
+  }
+
+  .ui-mega-menu__panel[data-state='closed'] {
     animation: none;
   }
 }
