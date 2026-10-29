@@ -17,3 +17,7 @@ Check, in order:
 5. **Checklist** — focus, targets, motion, states, contrast, Lighthouse gates.
 
 Run `check_ui_code` (or `node dist/checks.js` equivalent) on changed files. Output: a short list `file:line — problem — fix`, ordered by visibility to the user, then "Consistent with the rest of the app: yes/no" and what to change if no. Do not rewrite code unless asked.
+
+## Design skills (user scope, see ~/.claude/skills/SKILLS-PROVENANCE.md)
+- Critique and polish with the `impeccable` skill (`/impeccable critique`, `audit`, `polish`, `animate`) and the `design-taste-frontend` skill; they sharpen craft but never override this MCP's identity, tokens or consistency contract.
+- Verify in a real browser with the `playwright-cli` skill: light and dark, 1280 and 390 px, reduced motion on/off, keyboard-only; attach screenshots to the review.
