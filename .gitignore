@@ -9,3 +9,8 @@ coverage
 .vercel
 test-results
 playwright-report
+
+# Impeccable decision artefacts (not shipped)
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/build/
