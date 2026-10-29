@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Field } from '../Field/Field';
 import { Chips } from './Chips';
 
@@ -88,5 +88,29 @@ describe('Chips', () => {
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toHaveAccessibleDescription('Not an email');
     expect(input).toHaveValue('nope');
+  });
+});
+
+describe('Chips (v2) motion', () => {
+  afterEach(() => {
+    delete (document as { getAnimations?: unknown }).getAnimations;
+  });
+
+  it('AC-v2-1: a removed chip leaves as an inert ghost, then the list settles', async () => {
+    (document as { getAnimations?: unknown }).getAnimations = () => [];
+    render(<Chips aria-label="Tags" defaultValue={['a', 'b', 'c']} />);
+    await userEvent.click(screen.getByRole('button', { name: /Remove b/ }));
+    const ghost = document.querySelector('.ui-chips__chip--leaving');
+    expect(ghost).toHaveAttribute('aria-hidden', 'true');
+    expect(ghost?.querySelector('button')).toBeNull();
+    await waitFor(() => expect(document.querySelector('.ui-chips__chip--leaving')).toBeNull());
+    expect(screen.getAllByRole('button', { name: /Remove/ })).toHaveLength(2);
+  });
+
+  it('AC-v2-2: chips present at first render do not play the enter animation, new ones do', async () => {
+    const { container } = render(<Chips aria-label="Tags" defaultValue={['a']} />);
+    expect(container.querySelector('.ui-chips__chip--enter')).toBeNull();
+    await userEvent.type(screen.getByRole('textbox'), 'b{Enter}');
+    expect(container.querySelectorAll('.ui-chips__chip--enter')).toHaveLength(1);
   });
 });

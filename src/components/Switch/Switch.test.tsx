@@ -23,3 +23,14 @@ describe('Switch', () => {
     expect(container.firstChild).toHaveClass('form-check-reverse');
   });
 });
+
+describe('Switch (v2)', () => {
+  it('AC-v2-1: the knob is a separate decorative part that slides over the track', async () => {
+    const { container } = render(<Switch label="Notifications" />);
+    const knob = container.querySelector('.ui-switch__knob')!;
+    expect(knob).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getAllByRole('switch')).toHaveLength(1);
+    await userEvent.click(screen.getByRole('switch'));
+    expect(screen.getByRole('switch')).toBeChecked();
+  });
+});

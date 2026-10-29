@@ -7,6 +7,7 @@ import { cx } from '../../utils/cx';
 import { clamp } from '../../utils/number';
 import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 
 /** Local English defaults until locale keys exist (`saturationBrightnessLabel`, `hexColor`, `swatches`). */
@@ -170,6 +171,7 @@ export function ColorPicker({
   const alphaRef = useRef<HTMLDivElement | null>(null);
   const dialogLabelId = useId();
   const position = useFloating(triggerRef, popupRef, { open: open && !inline, placement: 'bottom-start' });
+  const presence = usePresence(open && !inline);
 
   // Sync internal HSV when the value changes from outside (keeps hue when saturation hits 0).
   useEffect(() => {
@@ -489,7 +491,7 @@ export function ColorPicker({
         <span className="ui-color-picker__preview" style={{ backgroundColor: toHex(current, alpha) }} aria-hidden="true" />
         <span className="ui-color-picker__text">{value}</span>
       </button>
-      {open && (
+      {presence.present && (
         <Portal>
           {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
@@ -497,6 +499,8 @@ export function ColorPicker({
             ref={popupRef}
             role="dialog"
             aria-labelledby={dialogLabelId}
+            data-state={presence.state}
+            inert={presence.exiting || undefined}
             className="dropdown-menu show ui-color-picker__popup"
             style={{ position: 'fixed', top: position.top, left: position.left }}
             onKeyDown={(e) => {

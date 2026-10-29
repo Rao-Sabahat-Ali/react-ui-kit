@@ -3,12 +3,14 @@
   display: flex;
   flex-direction: column;
   background-color: var(--ui-color-surface);
-  border: var(--bs-border-width) solid var(--ui-color-border-input);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  transition: border-color var(--ui-motion-quick) var(--ui-easing-out);
   border-radius: var(--ui-radius);
 
   &:focus-within {
     border-color: var(--ui-color-accent);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 
   &--invalid,
@@ -16,8 +18,13 @@
     border-color: var(--ui-color-danger);
   }
 
+  &--invalid:focus-within {
+    outline-color: var(--ui-color-danger);
+  }
+
   &--disabled {
-    background-color: var(--ui-color-surface-sunken);
+    border-color: var(--ui-color-border-strong);
+    background-color: var(--ui-color-bg-subtle);
   }
 
   .form-control,
@@ -42,6 +49,12 @@
   .form-select:focus {
     border: 0;
     box-shadow: none;
+    outline: none;
+  }
+
+  .form-control.is-invalid,
+  .form-select.is-invalid {
+    border: 0;
   }
 
   .ui-select__trigger {
@@ -52,6 +65,7 @@
 .ui-ifta__label {
   padding: var(--ui-space-2) var(--ui-control-padding-x) 0;
   font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
   line-height: 1.2;
   color: var(--ui-color-text-muted);
 }

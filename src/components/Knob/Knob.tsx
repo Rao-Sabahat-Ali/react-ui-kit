@@ -3,6 +3,7 @@ import { useControllableState } from '../../hooks/useControllableState';
 import { clamp, roundToStep } from '../../utils/number';
 import { cx } from '../../utils/cx';
 import type { Intent } from '../../types';
+import { QuantityTick } from '../QuantityTick/QuantityTick';
 import { useFieldControl } from '../Field/Field';
 
 export interface KnobProps extends Omit<HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
@@ -167,7 +168,7 @@ export function Knob({
         />
       </svg>
       <span className="ui-knob__text" aria-hidden="true">
-        {text}
+        <QuantityTick value={text} announce={false} />
       </span>
     </div>
   );

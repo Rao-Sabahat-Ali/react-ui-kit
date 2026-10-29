@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-mention {
   position: relative;
 }
@@ -7,25 +9,24 @@
 }
 
 .ui-mention__panel {
-  z-index: var(--ui-z-dropdown);
+  @include form.lifted-panel;
   min-inline-size: 12rem;
   max-block-size: 16rem;
   overflow-y: auto;
-  margin: 0;
+  padding: var(--ui-space-1);
 }
 
 .ui-mention__option {
-  cursor: pointer;
-  min-block-size: var(--ui-control-height-sm);
-  transition: background-color var(--ui-duration) var(--ui-easing);
+  @include form.option-row;
 
-  @media (pointer: coarse) {
-    min-block-size: var(--ui-touch-target-min);
+  &.active {
+    background-color: var(--ui-color-accent-subtle);
+    color: var(--ui-color-accent-emphasis);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ui-mention__option {
-    transition: none;
-  }
+.ui-mention__empty {
+  color: var(--ui-color-text-muted);
 }
+
+@include form.panel-keyframes;

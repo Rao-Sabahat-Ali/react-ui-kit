@@ -6,6 +6,8 @@ import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
+import { useAssemble } from '../../motion/useAssemble';
+import { usePresence } from '../../motion/usePresence';
 import { Icon } from '../Icon/Icon';
 import { Portal } from '../Portal/Portal';
 
@@ -137,6 +139,9 @@ function CustomSelect<T>({ control, value, setValue, all, sizeClass, placeholder
   }, [all, query]);
   const selected = all.find((o) => o.value === value);
   const position = useFloating(triggerRef, panelRef, { open, placement: 'bottom-start', matchWidth: true });
+  const presence = usePresence(open);
+  // The options assemble (first 8 only) each time the list opens; filtering does not replay it.
+  useAssemble(panelRef, { parts: '[role="option"]', distance: 6, enabled: open, trigger: open });
 
   const optionId = (index: number) => `${listboxId}-opt-${index}`;
   const enabledIndexes = visible.map((o, i) => (o.disabled ? -1 : i)).filter((i) => i !== -1);
@@ -290,10 +295,12 @@ function CustomSelect<T>({ control, value, setValue, all, sizeClass, placeholder
           <Icon name="x" />
         </button>
       )}
-      {open && (
+      {presence.present && (
         <Portal>
           <div
             ref={panelRef}
+            data-state={presence.state}
+            inert={presence.exiting || undefined}
             className="dropdown-menu show ui-select__panel"
             style={{ position: 'fixed', top: position.top, left: position.left, minWidth: position.minWidth }}
           >

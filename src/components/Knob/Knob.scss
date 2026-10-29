@@ -1,12 +1,15 @@
+@use '../../styles/form-mixins' as form;
+
 $intents: primary, secondary, success, danger, warning, info;
 
 .ui-knob {
   position: relative;
   display: inline-block;
-  border-radius: 50%;
+  border-radius: var(--ui-radius-circle);
   touch-action: none;
   user-select: none;
   cursor: pointer;
+  container-type: size;
 
   &--readonly,
   &--disabled {
@@ -14,13 +17,12 @@ $intents: primary, secondary, success, danger, warning, info;
   }
 
   &--disabled {
-    opacity: 0.5;
+    opacity: 0.55;
     cursor: not-allowed;
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.focus-ring;
   }
 }
 
@@ -29,12 +31,13 @@ $intents: primary, secondary, success, danger, warning, info;
 }
 
 .ui-knob__track {
-  stroke: var(--ui-color-border);
+  stroke: var(--ui-color-border-strong);
 }
 
+// Progress is the accent; the arc grows with a dasharray transition (stroke only, no layout).
 .ui-knob__value {
   stroke: var(--ui-color-accent);
-  transition: stroke-dasharray var(--ui-duration) var(--ui-easing);
+  transition: stroke-dasharray var(--ui-motion-part) var(--ui-easing-out);
 }
 
 @each $intent in $intents {
@@ -43,13 +46,19 @@ $intents: primary, secondary, success, danger, warning, info;
   }
 }
 
+// The default variant is the accent; ink variants stay legible in both themes.
+.ui-knob--primary .ui-knob__value {
+  stroke: var(--ui-color-accent);
+}
+
 .ui-knob__text {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: var(--ui-font-weight-medium);
+  font-weight: var(--ui-font-weight-light);
+  font-size: clamp(0.75rem, 22cqw, 3rem);
   font-variant-numeric: tabular-nums;
   color: var(--ui-color-text);
   pointer-events: none;
@@ -58,5 +67,15 @@ $intents: primary, secondary, success, danger, warning, info;
 @media (prefers-reduced-motion: reduce) {
   .ui-knob__value {
     transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-knob__value {
+    stroke: Highlight;
+  }
+
+  .ui-knob__track {
+    stroke: GrayText;
   }
 }

@@ -16,14 +16,17 @@ export function RadioButton({ label, description, inline = false, invalid = fals
   const descriptionId = description ? `${id}-desc` : undefined;
   return (
     <div className={cx('form-check ui-radio', inline && 'form-check-inline', className)}>
-      <input
-        type="radio"
-        id={id}
-        className={cx('form-check-input ui-radio__input', invalid && 'is-invalid')}
-        aria-describedby={descriptionId}
-        onChange={(e) => onChange?.(e.target.value, e)}
-        {...rest}
-      />
+      <span className="ui-radio__control">
+        <input
+          type="radio"
+          id={id}
+          className={cx('form-check-input ui-radio__input', invalid && 'is-invalid')}
+          aria-describedby={descriptionId}
+          onChange={(e) => onChange?.(e.target.value, e)}
+          {...rest}
+        />
+        <span className="ui-radio__dot" aria-hidden="true" />
+      </span>
       {label !== undefined && (
         <label className="form-check-label ui-radio__label" htmlFor={id}>
           {label}

@@ -1,9 +1,12 @@
+@use '../../styles/form-mixins' as form;
+
+// Line-art stars: an ink outline that fills with the accent when chosen or previewed.
 .ui-rating {
   --ui-rating-size: 1.5rem;
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-1);
-  color: var(--ui-color-warning);
+  color: var(--ui-color-accent);
 
   &--sm {
     --ui-rating-size: 1.125rem;
@@ -14,7 +17,11 @@
   }
 
   &--disabled {
-    opacity: 0.5;
+    opacity: 0.55;
+  }
+
+  &.is-invalid .ui-rating__star-empty {
+    color: var(--ui-color-danger);
   }
 }
 
@@ -36,28 +43,44 @@
   font-size: var(--ui-rating-size);
   line-height: 1;
   border-radius: var(--ui-radius-sm);
+  transition: transform var(--ui-motion-instant) var(--ui-easing-out);
+
+  // Press feedback on a star you are about to choose.
+  .ui-rating:not(.ui-rating--readonly, .ui-rating--disabled) .ui-rating__item:active & {
+    transform: scale(0.88);
+  }
 }
 
 .ui-rating__star-empty {
   display: block;
-  color: var(--ui-color-border-strong);
+  color: var(--ui-color-line);
+  transition: color var(--ui-motion-quick) var(--ui-easing-out);
 }
 
+.ui-rating:not(.ui-rating--readonly, .ui-rating--disabled) .ui-rating__item:hover .ui-rating__star-empty {
+  color: var(--ui-color-accent);
+}
+
+// The fill is clipped (clip-path via overflow of an inline-size) and tints in with the hover preview.
 .ui-rating__star-fill {
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
   overflow: hidden;
   white-space: nowrap;
+  color: var(--ui-color-accent);
 
   svg {
     display: block;
   }
 }
 
+.ui-rating--readonly .ui-rating__star-empty {
+  color: var(--ui-color-border-strong);
+}
+
 .ui-rating__input:focus-visible + .ui-rating__icon {
-  outline: 2px solid transparent;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  @include form.focus-ring;
 }
 
 @media (pointer: coarse) {
@@ -66,5 +89,23 @@
     min-block-size: var(--ui-touch-target-min);
     align-items: center;
     justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-rating__icon,
+  .ui-rating__star-empty {
+    transition: none;
+  }
+
+  .ui-rating:not(.ui-rating--readonly, .ui-rating--disabled) .ui-rating__item:active .ui-rating__icon {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-rating__star-fill {
+    forced-color-adjust: none;
+    color: Highlight;
   }
 }

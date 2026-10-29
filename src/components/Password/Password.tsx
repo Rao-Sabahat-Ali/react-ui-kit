@@ -143,7 +143,7 @@ export function Password({
             aria-valuenow={level}
             aria-valuetext={levelName}
           >
-            <div className="progress-bar ui-password__meter-bar" style={{ inlineSize: `${(level / 4) * 100}%` }} />
+            <div className="progress-bar ui-password__meter-bar" style={{ transform: `scaleX(${level / 4})` }} />
           </div>
           <div className="form-text ui-password__strength-text" role="status" aria-live="polite">
             {value ? strengthText : ''}

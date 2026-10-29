@@ -7,6 +7,8 @@ import { cx } from '../../utils/cx';
 import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
 import { Icon } from '../Icon/Icon';
+import { useAssemble } from '../../motion/useAssemble';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 import { Spinner } from '../Spinner/Spinner';
 
@@ -98,7 +100,6 @@ export function AutoComplete<T>(props: AutoCompleteProps<T>) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const timer = useRef<number>(0);
   const controller = useRef<AbortController | null>(null);
-  const position = useFloating(anchorRef, panelRef, { open, placement: 'bottom-start', matchWidth: true });
 
   // Mirror the selected label into the input in single mode.
   const singleLabel = single !== null ? getOptionLabel(single) : '';
@@ -169,6 +170,10 @@ export function AutoComplete<T>(props: AutoCompleteProps<T>) {
   };
 
   const showPanel = open && (suggestions.length > 0 || loading || searched);
+  // The panel mounts when results arrive (not when `open` flips), so positioning follows `showPanel`.
+  const position = useFloating(anchorRef, panelRef, { open: showPanel, placement: 'bottom-start', matchWidth: true });
+  const presence = usePresence(showPanel);
+  useAssemble(panelRef, { parts: '[role="option"]', distance: 6, enabled: showPanel && suggestions.length > 0, trigger: showPanel && suggestions.length > 0 });
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {
@@ -321,9 +326,9 @@ export function AutoComplete<T>(props: AutoCompleteProps<T>) {
       <div role="status" aria-live="polite" className="visually-hidden">
         {status}
       </div>
-      {showPanel && (
+      {presence.present && (
         <Portal>
-          <div ref={panelRef} className="dropdown-menu show ui-auto-complete__panel" style={{ position: 'fixed', top: position.top, left: position.left, minWidth: position.minWidth }}>
+          <div ref={panelRef} data-state={presence.state} inert={presence.exiting || undefined} className="dropdown-menu show ui-auto-complete__panel" style={{ position: 'fixed', top: position.top, left: position.left, minWidth: position.minWidth }}>
             <ul id={listboxId} role="listbox" className="list-unstyled mb-0 ui-auto-complete__list" aria-label={props['aria-label']} aria-labelledby={control.labelId}>
               {suggestions.map((item, index) => (
                 // Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests).

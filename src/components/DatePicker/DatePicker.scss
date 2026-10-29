@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-date-picker {
   position: relative;
 }
@@ -7,17 +9,16 @@
 }
 
 .ui-date-picker__popup {
-  z-index: var(--ui-z-popover);
+  @include form.lifted-panel(var(--ui-z-popover));
   padding: var(--ui-space-3);
-  margin: 0;
 }
 
 .ui-date-picker--inline .ui-date-picker__calendar {
   display: inline-flex;
   padding: var(--ui-space-3);
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-lg);
-  background-color: var(--ui-color-surface-raised);
+  background-color: var(--ui-color-surface);
 }
 
 .ui-date-picker__calendar {
@@ -30,7 +31,7 @@
   flex-direction: column;
   gap: var(--ui-space-1);
   padding-inline-end: var(--ui-space-3);
-  border-inline-end: 1px solid var(--ui-color-border);
+  border-inline-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-date-picker__preset {
@@ -76,6 +77,7 @@
 
 .ui-date-picker__grid {
   border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
 }
 
 .ui-date-picker__weekday {
@@ -98,15 +100,20 @@
   min-block-size: 2.25rem;
   border-radius: var(--ui-radius);
   color: var(--ui-color-text);
-  transition: background-color var(--ui-duration) var(--ui-easing);
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
 
   &:hover {
     background-color: var(--ui-color-bg-subtle);
   }
 
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.focus-ring(-2px);
   }
 
   @media (pointer: coarse) {
@@ -123,10 +130,12 @@
   color: var(--ui-color-text-subtle);
 }
 
+// Today is marked with a 2px ink underline, not colour alone.
 .ui-date-picker__day--today {
   font-weight: var(--ui-font-weight-bold);
   text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-decoration-thickness: var(--ui-line-width);
+  text-underline-offset: 0.25em;
 }
 
 .ui-date-picker__day--in-range {
@@ -137,7 +146,7 @@
 
 .ui-date-picker__day--preview {
   background-color: var(--ui-color-bg-subtle);
-  outline: 1px dashed var(--ui-color-accent);
+  outline: var(--ui-line-width-hairline) dashed var(--ui-color-accent);
   outline-offset: -1px;
 }
 
@@ -178,11 +187,11 @@
   justify-content: space-between;
   gap: var(--ui-space-2);
   padding-block-start: var(--ui-space-2);
-  border-block-start: 1px solid var(--ui-color-border);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-date-picker--disabled {
-  opacity: 0.65;
+  opacity: 0.55;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -190,5 +199,24 @@
   .ui-date-picker__period,
   .ui-date-picker__nav {
     transition: none;
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
   }
+}
+
+@media (forced-colors: active) {
+  .ui-date-picker__day--selected,
+  .ui-date-picker__day--range-edge {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}
+
+@include form.panel-keyframes;
+
+.ui-date-picker__toggle.btn.btn-outline-secondary {
+  @include form.attached-button;
 }

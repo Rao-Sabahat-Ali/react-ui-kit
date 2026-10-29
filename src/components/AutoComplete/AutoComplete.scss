@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-auto-complete {
   position: relative;
 }
@@ -13,9 +15,9 @@
     min-block-size: var(--ui-control-height-md);
     padding-block: var(--ui-space-1);
 
+    // Composite: the wrapper owns the line, so it takes the accent line and the ring.
     &:focus-within {
-      border-color: var(--ui-color-focus-ring);
-      box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+      @include form.line-box-focus;
     }
   }
 }
@@ -34,13 +36,18 @@
   }
 }
 
+// The input inside the multiple-selection wrapper draws nothing; the wrapper has the ring.
 .ui-auto-complete__input--bare {
   min-block-size: auto;
   border: 0;
   padding: 0;
   background: transparent;
   color: var(--ui-color-text);
-  outline: 2px solid transparent;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .ui-auto-complete__spinner {
@@ -59,52 +66,38 @@
 }
 
 .ui-auto-complete__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-space-1);
-  background-color: var(--ui-color-accent-subtle);
-  color: var(--ui-color-accent-emphasis);
-  border-radius: var(--ui-radius-pill);
-  font-weight: var(--ui-font-weight-medium);
+  @include form.chip;
+  padding-block: 0;
 }
 
 .ui-auto-complete__chip-remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-inline-size: 1.5rem;
-  min-block-size: 1.5rem;
-  padding: 0;
-  border: 0;
-  border-radius: var(--ui-radius-circle);
-  background: none;
-  color: inherit;
-
-  &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-  }
+  @include form.chip-remove;
 }
 
 .ui-auto-complete__panel {
-  z-index: var(--ui-z-dropdown);
+  @include form.lifted-panel;
   max-block-size: 18rem;
   overflow-y: auto;
-  margin: 0;
+  padding: var(--ui-space-1);
 }
 
 .ui-auto-complete__option {
-  cursor: pointer;
-  min-block-size: var(--ui-control-height-sm);
-  transition: background-color var(--ui-duration) var(--ui-easing);
+  @include form.option-row;
 
-  @media (pointer: coarse) {
-    min-block-size: var(--ui-touch-target-min);
+  &.active {
+    background-color: var(--ui-color-accent-subtle);
+    color: var(--ui-color-accent-emphasis);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ui-auto-complete__option {
-    transition: none;
-  }
+.ui-auto-complete__loading,
+.ui-auto-complete__empty {
+  color: var(--ui-color-text-muted);
 }
+
+// The attached dropdown button is drawn like the field.
+.ui-auto-complete__dropdown.btn.btn-outline-secondary {
+  @include form.attached-button;
+}
+
+@include form.panel-keyframes;

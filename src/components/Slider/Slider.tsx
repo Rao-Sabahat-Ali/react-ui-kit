@@ -4,6 +4,7 @@ import { useLocale } from '../../locale/LocaleProvider';
 import { clamp, roundToStep } from '../../utils/number';
 import { cx } from '../../utils/cx';
 import { useFieldControl } from '../Field/Field';
+import { QuantityTick } from '../QuantityTick/QuantityTick';
 
 export type SliderValue = number | [number, number];
 
@@ -270,7 +271,7 @@ export function Slider({
             >
               {showValue === 'tooltip' && (
                 <span className="ui-slider__tooltip" aria-hidden="true">
-                  {text(v)}
+                  <QuantityTick value={text(v)} announce={false} />
                 </span>
               )}
             </div>
@@ -279,7 +280,7 @@ export function Slider({
       </div>
       {showValue === true && (
         <output className="ui-slider__value" aria-hidden="true">
-          {range ? `${text(lo)} – ${text(hi)}` : text(hi)}
+          <QuantityTick value={range ? `${text(lo)} – ${text(hi)}` : text(hi)} announce={false} />
         </output>
       )}
     </div>

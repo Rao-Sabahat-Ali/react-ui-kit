@@ -1,0 +1,274 @@
+// Shared pieces of the form family (identity v2): used with `@use '../../styles/form-mixins' as form;`
+// Controls are parts on the sheet: a 2px ink line that turns accent (and takes the focus ring) on focus.
+
+// A part drawn on the sheet (text-like controls that are not a Bootstrap .form-control, for example a wrapper).
+@mixin line-box($radius: var(--ui-radius)) {
+  background-color: var(--ui-color-surface);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: $radius;
+  color: var(--ui-color-text);
+  transition: border-color var(--ui-motion-quick) var(--ui-easing-out);
+}
+
+// Focus on the wrapper of a composite control: accent line plus the global ring.
+@mixin line-box-focus {
+  border-color: var(--ui-color-accent);
+  outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+@mixin line-box-invalid {
+  border-color: var(--ui-color-danger);
+}
+
+@mixin line-box-disabled {
+  border-color: var(--ui-color-border-strong);
+  background-color: var(--ui-color-bg-subtle);
+  color: var(--ui-color-text-subtle);
+  cursor: not-allowed;
+}
+
+// The ring of a small part (icon button, chip remove, thumb): the global accent ring, 2px offset.
+@mixin focus-ring($offset: var(--ui-focus-ring-offset)) {
+  outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+  outline-offset: $offset;
+  box-shadow: none;
+}
+
+// A dropdown panel lifted off the sheet. usePresence keeps it mounted with data-state="closed" while it leaves.
+@mixin lifted-panel($z: var(--ui-z-dropdown)) {
+  z-index: $z;
+  margin: 0;
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
+  background-color: var(--ui-color-surface-raised);
+  box-shadow: var(--ui-shadow-lift);
+  animation: ui-form-panel-in var(--ui-motion-part) var(--ui-easing-out);
+
+  &[data-state='closed'] {
+    pointer-events: none;
+    animation: ui-form-panel-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+
+    &[data-state='closed'] {
+      animation: none;
+    }
+  }
+}
+
+// One row of an option list: hover and keyboard cursor use the subtle ground, the selected row the accent.
+@mixin option-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-block-size: var(--ui-control-height-sm);
+  cursor: pointer;
+  border-radius: var(--ui-radius);
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
+
+  &:hover:not(.disabled) {
+    background-color: var(--ui-color-bg-subtle);
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    color: var(--ui-color-text-subtle);
+  }
+
+  @media (pointer: coarse) {
+    min-block-size: var(--ui-touch-target-min);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// The drawn mark of a checkbox / radio / tri-state: wiped in left to right (right to left in RTL) with clip-path.
+@mixin mark-hidden {
+  clip-path: inset(0 100% 0 0);
+
+  [dir='rtl'] & {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@mixin mark-shown {
+  clip-path: inset(0 0 0 0);
+}
+
+@mixin mark-draw($duration: var(--ui-motion-quick)) {
+  transition: clip-path $duration var(--ui-easing-out);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// A chip: a small part with a 2px line, not a pill.
+@mixin chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  max-inline-size: 100%;
+  padding-inline-start: var(--ui-space-2);
+  border: var(--ui-line-width-hairline) solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-color-bg-subtle);
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: 1.5;
+}
+
+// Remove (x) button inside a chip.
+@mixin chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.5rem;
+  min-block-size: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-sm);
+  background: none;
+  color: var(--ui-color-text-muted);
+  transition:
+    color var(--ui-motion-quick) var(--ui-easing-out),
+    background-color var(--ui-motion-quick) var(--ui-easing-out);
+
+  &:hover {
+    color: var(--ui-color-text);
+    background-color: var(--ui-color-border);
+  }
+
+  &:focus-visible {
+    @include focus-ring(-2px);
+  }
+
+  @media (pointer: coarse) {
+    min-inline-size: var(--ui-touch-target-min);
+    min-block-size: var(--ui-touch-target-min);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// Row of a checkbox / radio / switch: [control] [label] with an optional description under the label.
+@mixin check-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: var(--ui-space-2);
+  min-height: 0;
+  margin-bottom: var(--ui-space-2);
+  padding-inline-start: 0;
+
+  &.form-check-inline {
+    display: inline-grid;
+    margin-inline-end: var(--ui-space-4);
+  }
+
+  .form-check-label {
+    grid-column: 2;
+    padding-block: 0.0625rem;
+    cursor: pointer;
+    line-height: 1.5;
+  }
+
+  .form-text {
+    grid-column: 2;
+    margin-block-start: 0;
+  }
+
+  @media (pointer: coarse) {
+    min-height: var(--ui-touch-target-min);
+    align-items: center;
+  }
+}
+
+// Keyframes are emitted by each stylesheet that uses them (the split stylesheets must stand alone).
+@mixin panel-keyframes {
+  @keyframes ui-form-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(calc(var(--ui-assemble-distance) * -0.5));
+    }
+  }
+
+  @keyframes ui-form-panel-out {
+    to {
+      opacity: 0;
+      transform: translateY(calc(var(--ui-assemble-distance) * -0.25));
+    }
+  }
+}
+
+// A drawn mark wipes in (clip-path) when its control becomes selected.
+@mixin mark-keyframes {
+  @keyframes ui-form-mark-draw {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes ui-form-mark-draw-rtl {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+}
+
+// A chip settles in as it is added.
+@mixin chip-keyframes {
+  @keyframes ui-chip-in {
+    from {
+      opacity: 0;
+      transform: translateY(calc(var(--ui-assemble-distance) * 0.33));
+    }
+  }
+}
+
+// A button attached to a field is drawn like the field: an ink line, a quiet hover (not Bootstrap's solid fill).
+@mixin attached-button {
+  --bs-btn-color: var(--ui-color-text);
+  --bs-btn-bg: var(--ui-color-surface);
+  --bs-btn-border-color: var(--ui-color-line);
+  --bs-btn-border-width: var(--ui-line-width);
+  --bs-btn-hover-color: var(--ui-color-text);
+  --bs-btn-hover-bg: var(--ui-color-bg-subtle);
+  --bs-btn-hover-border-color: var(--ui-color-line);
+  --bs-btn-active-color: var(--ui-color-text);
+  --bs-btn-active-bg: var(--ui-color-border);
+  --bs-btn-active-border-color: var(--ui-color-line);
+  --bs-btn-disabled-color: var(--ui-color-text-subtle);
+  --bs-btn-disabled-bg: var(--ui-color-bg-subtle);
+  --bs-btn-disabled-border-color: var(--ui-color-border-strong);
+  transition:
+    color var(--ui-motion-quick) var(--ui-easing-out),
+    background-color var(--ui-motion-quick) var(--ui-easing-out);
+
+  &:focus-visible {
+    z-index: 3;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
+    box-shadow: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

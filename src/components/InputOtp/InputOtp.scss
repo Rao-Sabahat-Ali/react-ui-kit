@@ -1,3 +1,5 @@
+// Numbered-part cells: each digit is a drawn cell with its position printed small in the corner, like the part
+// numbers on an assembly sheet. The numeral leaves when the cell is filled.
 .ui-input-otp {
   --ui-otp-box-size: var(--ui-control-height-lg);
   display: inline-flex;
@@ -13,19 +15,62 @@
   }
 }
 
-.ui-input-otp__box.form-control {
+.ui-input-otp__cell {
+  position: relative;
+  display: inline-flex;
   flex: 0 1 var(--ui-otp-box-size);
   min-inline-size: 0;
-  inline-size: var(--ui-otp-box-size);
+
+  &::before {
+    content: attr(data-index);
+    position: absolute;
+    inset-block-start: 0.3125rem;
+    inset-inline-start: 0.4375rem;
+    color: var(--ui-color-text-subtle);
+    font-size: 0.625rem;
+    font-weight: var(--ui-font-weight-medium);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+    transition: opacity var(--ui-motion-quick) var(--ui-easing-out);
+  }
+
+  &[data-filled]::before,
+  &:focus-within::before {
+    opacity: 0;
+  }
+}
+
+.ui-input-otp__box.form-control {
+  min-inline-size: 0;
+  inline-size: 100%;
   block-size: var(--ui-otp-box-size);
+  min-height: 0;
   padding: 0;
   text-align: center;
+  font-size: var(--ui-font-size-xl);
+  font-weight: var(--ui-font-weight-light);
   font-variant-numeric: tabular-nums;
   border-radius: var(--ui-radius);
+
+  &.is-invalid {
+    padding: 0;
+  }
+}
+
+// A filled cell is set heavier than an empty one.
+.ui-input-otp__cell[data-filled] .ui-input-otp__box.form-control {
+  font-weight: var(--ui-font-weight-medium);
 }
 
 @media (pointer: coarse) {
   .ui-input-otp__box.form-control {
     min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-input-otp__cell::before {
+    transition: none;
   }
 }
