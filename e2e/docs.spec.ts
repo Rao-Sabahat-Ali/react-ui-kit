@@ -29,7 +29,7 @@ test('every component page renders live examples without errors', async ({ page 
   expect(errors).toEqual([]);
 });
 
-const BLUEPRINTS = ['analytics-dashboard', 'admin-list-detail', 'overview-index', 'settings', 'sign-in', 'article-detail', 'checkout'];
+const BLUEPRINTS = ['analytics-dashboard', 'admin-list-detail', 'board', 'overview-index', 'settings', 'sign-in', 'article-detail', 'checkout'];
 
 test.describe('blueprints', () => {
   for (const slug of BLUEPRINTS) {

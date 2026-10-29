@@ -36,11 +36,12 @@ The look is the "Monteringsanvisning" (assembly sheet) identity: white instructi
 
 ## Start from a blueprint
 
-The docs app has a **Blueprints** section: complete, runnable screens (analytics dashboard, admin list to detail, overview and index page, settings, sign in, article/detail, checkout) built only from kit components and the design contract. Their source is `templates/blueprints/`.
+The docs app has a **Blueprints** section: complete, runnable screens (analytics dashboard, admin list to detail, task board, overview and index page, settings, sign in, article/detail, checkout) built only from kit components and the design contract. Their source is `templates/blueprints/`.
 
 ```bash
 npm run create-app -- ../my-dashboard --profile dashboard   # home screen = Analytics dashboard blueprint
 npm run create-app -- ../my-backoffice --profile admin      # home screen = Admin list to detail blueprint
+npm run create-app -- ../my-board --profile saas --blueprint board # home screen = Task board blueprint (any profile)
 npm run create-app -- ../my-app --profile dashboard --blank # empty starter page instead
 ```
 

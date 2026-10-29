@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 // @ts-expect-error — plain .mjs script module
-import { BLUEPRINT_HOMES, PROFILES_SHELL, STARTER_INCLUDE } from '../scripts/profile-shells.mjs';
+import { BLUEPRINTS, BLUEPRINT_HOMES, PROFILES_SHELL, STARTER_INCLUDE } from '../scripts/profile-shells.mjs';
 
 const root = join(import.meta.dirname, '..');
 const base = mkdtempSync(join(tmpdir(), 'kit-starter-'));
@@ -64,6 +64,14 @@ describe('create-app (OPS-017)', () => {
       expect(missing, `classes used by the ${profile} starter but not in uiKitStyles include`).toEqual([]);
       if (profile === 'saas') expect([...include]).toEqual(STARTER_INCLUDE);
     });
+
+    it.each(Object.keys(BLUEPRINTS))('--blueprint %s', (slug) => {
+      const dir = join(base, `${slug}-bp-include`);
+      execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', 'saas', '--blueprint', slug]);
+      const include = listed(dir);
+      const missing = [...used(dir)].filter((c) => !include.has(c));
+      expect(missing, `classes used by the ${slug} blueprint but not in uiKitStyles include`).toEqual([]);
+    });
   });
 
   it.each(Object.keys(BLUEPRINT_HOMES))('starts the %s profile from its blueprint instead of the empty page', (profile) => {
@@ -81,6 +89,17 @@ describe('create-app (OPS-017)', () => {
     expect(app).not.toContain('Welcome');
     expect(readFileSync(join(dir, 'src/App.test.tsx'), 'utf8')).toContain(`name: '${heading}'`);
     expect(readFileSync(join(dir, 'CLAUDE.md'), 'utf8')).toContain(`\`${screen}\` blueprint`);
+  });
+
+  it.each(Object.keys(BLUEPRINTS))('--blueprint %s starts any profile from that blueprint', (slug) => {
+    const { screen, heading, files } = (BLUEPRINTS as Record<string, { screen: string; heading: string; files: string[] }>)[slug]!;
+    const dir = join(base, `${slug}-blueprint`);
+    execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', 'saas', '--blueprint', slug, '--title', 'Taskly']);
+    for (const file of files) expect(readFileSync(join(dir, 'src/screens', file), 'utf8'), file).toBe(readFileSync(join(root, 'templates/blueprints', file), 'utf8'));
+    expect(readFileSync(join(dir, 'src/App.tsx'), 'utf8')).toContain(`import { ${screen} } from './screens/${screen}'`);
+    expect(readFileSync(join(dir, 'src/App.tsx'), 'utf8')).toContain('<ThemeProvider profile="saas">');
+    expect(readFileSync(join(dir, 'src/App.test.tsx'), 'utf8')).toContain(`name: '${heading}'`);
+    expect(() => execFileSync('node', [join(root, 'scripts/create-app.mjs'), join(base, 'bad-bp'), '--blueprint', 'nope'], { stdio: 'pipe' })).toThrow();
   });
 
   it('escapes --title and --description: quotes and <script> cannot break out of JSON, HTML, JSX or Markdown', () => {
@@ -116,10 +135,11 @@ describe('create-app (OPS-017)', () => {
   // Type-checks the generated apps against the built kit types. Needs `npm run build` first (dist/types); the app is generated
   // inside the repo so react, vitest and testing-library resolve from the kit's node_modules.
   describe.skipIf(!existsSync(join(root, 'dist/types/index.d.ts')))('generated blueprint apps typecheck', () => {
-    it.each(Object.keys(BLUEPRINT_HOMES))('%s', (profile) => {
-      const dir = join(root, `.tmp-starter-${profile}-${process.pid}`);
+    it.each([...Object.keys(BLUEPRINT_HOMES), ...Object.keys(BLUEPRINTS).map((slug) => `saas+${slug}`)])('%s', (name) => {
+      const [profile, slug] = name.split('+') as [string, string | undefined];
+      const dir = join(root, `.tmp-starter-${name.replace('+', '-')}-${process.pid}`);
       try {
-        execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', profile]);
+        execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', profile, ...(slug ? ['--blueprint', slug] : [])]);
         writeFileSync(
           join(dir, 'tsconfig.check.json'),
           JSON.stringify({

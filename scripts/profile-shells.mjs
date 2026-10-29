@@ -16,6 +16,11 @@ export const BLUEPRINT_HOMES = {
   admin: { screen: 'AdminListDetail', heading: 'Invoices', files: ['AdminListDetail.tsx', 'AdminListDetail.data.ts', 'shared.tsx'], include: ['align-items-center', 'col', 'col-sm-4', 'col-sm-8', 'd-flex', 'd-md-block', 'd-none', 'flex-wrap', 'fw-normal', 'fw-semibold', 'gap-2', 'gx-0', 'mb-0', 'mb-3', 'mb-4', 'me-auto', 'pe-3', 'ps-3', 'row', 'table', 'table-responsive', 'table-sm', 'text-body-secondary', 'text-end', 'text-nowrap'] },
 };
 
+// Blueprints a new app can start from with `--blueprint <slug>` (any profile; the same files the docs "Blueprints" pages render).
+export const BLUEPRINTS = {
+  board: { screen: 'Board', heading: 'Sprint 42', files: ['Board.tsx', 'Board.data.ts', 'shared.tsx'], include: ['align-items-center', 'col-sm-4', 'col-sm-8', 'd-flex', 'flex-wrap', 'fw-normal', 'gap-2', 'gx-0', 'mb-0', 'mb-3', 'pe-3', 'row', 'text-body-secondary'] },
+};
+
 // Bootstrap classes written directly in the generated app's source (the style plugin cannot see them; kit-rendered classes are covered by
 // the manifest). test/create-app.test.ts checks these lists against the classes the generated sources actually use.
 export const STARTER_INCLUDE = ['col-md-6', 'g-3', 'row'];

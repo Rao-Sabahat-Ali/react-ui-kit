@@ -1,0 +1,487 @@
+// KanbanBoard: columns are numbered stages drawn in 2px ink lines, cards are 2px-line parts on the sheet.
+// Flat at rest; a picked-up card lifts (scale + --ui-shadow-drag) and settles with the snap easing.
+.ui-kanban {
+  --ui-kanban-column-width: 18rem;
+  --ui-kanban-gap: var(--ui-space-4);
+  --ui-kanban-card-padding: var(--ui-space-3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+  min-inline-size: 0;
+  color: var(--ui-color-text);
+}
+
+.ui-kanban--compact {
+  --ui-kanban-gap: var(--ui-space-3);
+  --ui-kanban-card-padding: var(--ui-space-2) var(--ui-space-3);
+}
+
+.ui-kanban--dragging,
+.ui-kanban--dragging * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+.ui-kanban__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-3);
+}
+
+// The sheet scrolls sideways when the stages do not fit; the page itself never does.
+.ui-kanban__scroller {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-6);
+  padding-block: var(--ui-space-2) var(--ui-space-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+// The dashed guide the columns assemble along (shown only while they assemble).
+.ui-kanban__guide {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  border-block-start: 2px dashed var(--ui-color-accent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.ui-kanban__columns {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-kanban-gap);
+  min-inline-size: min-content;
+}
+
+// ---------- lanes ----------
+
+.ui-kanban__lane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+  min-inline-size: min-content;
+}
+
+.ui-kanban__lane-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  padding-block-end: var(--ui-space-2);
+  border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line);
+  position: sticky;
+  inset-inline-start: 0;
+  max-inline-size: calc(100vw - var(--ui-space-8));
+}
+
+.ui-kanban__lane-title {
+  margin: 0;
+  font-size: var(--ui-font-size-lg);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-kanban__lane:not(.is-first) .ui-kanban__numeral {
+  display: none;
+}
+
+// ---------- columns ----------
+
+.ui-kanban__column {
+  flex: 0 0 var(--ui-kanban-column-width);
+  inline-size: var(--ui-kanban-column-width);
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ui-color-bg-subtle);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
+
+  &[data-wip='over'] {
+    border-color: var(--ui-color-warning);
+  }
+
+  &[data-drop='valid'] {
+    border-color: var(--ui-color-accent);
+  }
+
+  &[data-drop='blocked'] {
+    border-color: var(--ui-color-danger);
+    border-style: dashed;
+  }
+}
+
+.ui-kanban__column-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-1) var(--ui-space-2);
+  padding: var(--ui-space-3) var(--ui-space-2) var(--ui-space-2) var(--ui-space-3);
+}
+
+// Light display numeral, like a step on an assembly sheet.
+.ui-kanban__numeral {
+  order: 0;
+  font-size: 2rem;
+  font-weight: var(--ui-font-weight-display);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--ui-color-text-subtle);
+}
+
+.ui-kanban--compact .ui-kanban__numeral {
+  font-size: 1.5rem;
+}
+
+.ui-kanban__column-title {
+  order: 1;
+  flex: 1 1 0;
+  min-inline-size: 0;
+  margin: 0;
+  font-size: var(--ui-font-size-md);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.ui-kanban__count {
+  order: 2;
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-kanban__column-actions {
+  order: 3;
+  display: inline-flex;
+  margin-inline-start: auto;
+}
+
+.ui-kanban__wip {
+  order: 4;
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-1) var(--ui-space-2);
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+
+  &[data-state='over'] {
+    padding: var(--ui-space-1) var(--ui-space-2);
+    border-radius: var(--ui-radius);
+    background: var(--ui-color-warning-subtle);
+    color: var(--ui-color-warning-emphasis);
+    font-weight: var(--ui-font-weight-semibold);
+  }
+}
+
+.ui-kanban__wip-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-kanban__column-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  min-block-size: 4rem;
+  max-block-size: var(--ui-kanban-column-max-height, 36rem);
+  padding: 0 var(--ui-space-2) var(--ui-space-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ui-kanban__drop-note {
+  margin: 0;
+  padding: var(--ui-space-1) var(--ui-space-2);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  color: var(--ui-color-danger-emphasis);
+}
+
+.ui-kanban__list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: var(--ui-space-1) 0;
+  list-style: none;
+
+  &:empty {
+    padding: 0;
+  }
+}
+
+.ui-kanban__scroll {
+  max-block-size: 28rem;
+  padding-inline: var(--ui-space-1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ui-kanban__list--virtual {
+  display: block;
+  padding: 0;
+
+  // Windowed rows have a fixed height: the card fills it, long titles clamp and labels stay in the details.
+  .ui-kanban__card {
+    block-size: 100%;
+    overflow: hidden;
+  }
+
+  .ui-kanban__card-button {
+    block-size: 100%;
+    overflow: hidden;
+  }
+
+  .ui-kanban__card-labels {
+    display: none;
+  }
+
+  .ui-kanban__card-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
+
+// ---------- collapsed strip ----------
+
+.ui-kanban__column--collapsed {
+  flex-basis: 3.5rem;
+  inline-size: 3.5rem;
+}
+
+.ui-kanban__strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-3);
+  inline-size: 100%;
+  min-block-size: 12rem;
+  padding: var(--ui-space-3) var(--ui-space-1);
+  border: 0;
+  border-radius: calc(var(--ui-radius-lg) - var(--ui-line-width));
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ui-color-surface-sunken);
+  }
+
+  &:focus-visible {
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-line-width) * -1);
+  }
+}
+
+.ui-kanban__strip-title {
+  writing-mode: vertical-rl;
+  font-weight: var(--ui-font-weight-semibold);
+  white-space: nowrap;
+}
+
+// ---------- cards ----------
+
+.ui-kanban__item {
+  margin: 0;
+  list-style: none;
+
+  &.is-dragging {
+    // The floating card follows the pointer in viewport coordinates (transform set from script).
+    position: fixed;
+    left: 0;
+    top: 0;
+    inline-size: var(--ui-kanban-drag-width);
+    block-size: var(--ui-kanban-drag-height);
+    z-index: var(--ui-z-popover);
+    pointer-events: none;
+  }
+}
+
+.ui-kanban__card {
+  position: relative;
+  background: var(--ui-color-surface);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius);
+  // Lift on pick-up and settle on drop; transform and box-shadow only.
+  transition:
+    transform var(--ui-motion-part) var(--ui-easing-snap),
+    box-shadow var(--ui-motion-part) var(--ui-easing-snap);
+
+  &:hover {
+    border-color: var(--ui-color-text-muted);
+  }
+
+  &.is-grabbed,
+  &.is-dragging {
+    z-index: 2;
+    border-color: var(--ui-color-accent);
+    box-shadow: var(--ui-shadow-drag);
+  }
+
+  &.is-grabbed {
+    transform: scale(1.02);
+    transition-timing-function: var(--ui-easing-out);
+  }
+
+  &.is-pending {
+    border-style: dashed;
+  }
+}
+
+.ui-kanban__card-button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding: var(--ui-kanban-card-padding);
+  border: 0;
+  border-radius: calc(var(--ui-radius) - var(--ui-line-width));
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: grab;
+  user-select: none;
+  -webkit-touch-callout: none;
+
+  &:focus-visible {
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-line-width) * -1);
+  }
+}
+
+.ui-kanban--readonly .ui-kanban__card-button {
+  cursor: pointer;
+}
+
+.ui-kanban__card-title {
+  max-inline-size: 100%;
+  padding-inline-end: var(--ui-space-5);
+  font-weight: var(--ui-font-weight-medium);
+  line-height: var(--ui-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.ui-kanban__card-labels,
+.ui-kanban__card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-1) var(--ui-space-2);
+}
+
+.ui-kanban__card-meta {
+  inline-size: 100%;
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-kanban--compact .ui-kanban__card-meta {
+  padding-block-start: var(--ui-space-1);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+}
+
+.ui-kanban__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+
+  &[data-priority='urgent'],
+  &[data-priority='high'] {
+    color: var(--ui-color-danger-emphasis);
+    font-weight: var(--ui-font-weight-semibold);
+  }
+}
+
+.ui-kanban__assignees {
+  margin-inline-start: auto;
+}
+
+// Actions button: visible on hover, focus and touch screens; always reachable through the keyboard menu keys.
+.ui-kanban__card-more {
+  position: absolute;
+  inset-block-start: var(--ui-space-1);
+  inset-inline-end: var(--ui-space-1);
+  opacity: 0;
+  transition: opacity var(--ui-motion-quick) var(--ui-easing-out);
+}
+
+.ui-kanban__card:hover .ui-kanban__card-more,
+.ui-kanban__card:focus-within .ui-kanban__card-more {
+  opacity: 1;
+}
+
+@media (pointer: coarse) {
+  .ui-kanban__card-more {
+    opacity: 1;
+  }
+}
+
+.ui-kanban__rename {
+  margin: var(--ui-space-1);
+}
+
+// The slot a dragged card will land in.
+.ui-kanban__placeholder {
+  min-block-size: 3rem;
+  margin: 0;
+  list-style: none;
+  border: var(--ui-line-width) dashed var(--ui-color-accent);
+  border-radius: var(--ui-radius);
+  background: var(--ui-color-accent-subtle);
+}
+
+// ---------- quick add ----------
+
+.ui-kanban__add {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  padding-block: var(--ui-space-1);
+}
+
+.ui-kanban__add-hint {
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+
+  &--error {
+    color: var(--ui-color-danger-emphasis);
+    font-weight: var(--ui-font-weight-semibold);
+  }
+}
+
+// ---------- loading ----------
+
+.ui-kanban__card--skeleton {
+  padding: var(--ui-kanban-card-padding);
+  border-color: var(--ui-color-line-muted);
+
+  &:hover {
+    border-color: var(--ui-color-line-muted);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-kanban__card,
+  .ui-kanban__card-more {
+    transition: none;
+  }
+
+  .ui-kanban__card.is-grabbed {
+    transform: none;
+  }
+}
