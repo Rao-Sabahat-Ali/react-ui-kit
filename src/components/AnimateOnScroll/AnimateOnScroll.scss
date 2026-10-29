@@ -1,9 +1,10 @@
+// Reveal on scroll = one part of the Assemble grammar: opacity + a short travel along the guide, motion-part, easing-out.
 // Only opacity and transform change, so revealing never shifts layout. The pending state exists only once
 // the component has armed itself on the client, so server and no-JS output is fully visible.
 .ui-animate {
   transition-property: opacity, transform;
-  transition-duration: var(--ui-motion-duration-slow);
-  transition-timing-function: var(--ui-motion-easing-emphasized);
+  transition-duration: var(--ui-motion-part);
+  transition-timing-function: var(--ui-easing-out);
 }
 
 .ui-animate--pending {
@@ -11,7 +12,7 @@
 }
 
 .ui-animate--slide-up.ui-animate--pending {
-  transform: translateY(var(--ui-space-6));
+  transform: translateY(var(--ui-assemble-distance));
 }
 
 @media (prefers-reduced-motion: reduce) {

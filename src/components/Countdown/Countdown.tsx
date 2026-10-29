@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { QuantityTick } from '../QuantityTick/QuantityTick';
 
 export type CountdownFormat = 'dd:hh:mm:ss' | 'hh:mm:ss' | 'mm:ss' | 'words';
 type DateInput = Date | number | string;
@@ -157,6 +158,7 @@ export function Countdown({ label, target, duration, mode = 'countdown', since, 
 
   const { d, h, m, s } = split(total);
   const iso = `P${d}DT${h}H${m}M${s}S`;
+  const shown = formatTime(total, format, locale);
 
   return (
     <>
@@ -165,7 +167,7 @@ export function Countdown({ label, target, duration, mode = 'countdown', since, 
           <span className="ui-countdown__completed">{completedContent}</span>
         ) : (
           <time className="ui-countdown__time ui-tabular" dateTime={iso}>
-            {formatTime(total, format, locale)}
+            {format === 'words' ? shown : <QuantityTick value={shown} announce={false} />}
           </time>
         )}
       </div>

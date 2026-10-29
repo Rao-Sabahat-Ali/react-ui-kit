@@ -26,7 +26,7 @@ export function Badge({ value, variant = 'primary', appearance = 'solid', pill =
     <span
       className={cx(
         'badge ui-badge',
-        appearance === 'solid' ? `text-bg-${variant}` : `bg-${variant}-subtle text-${variant}-emphasis`,
+        appearance === 'solid' ? `text-bg-${variant}` : `bg-${variant}-subtle text-${variant}-emphasis border border-${variant}-subtle`,
         pill && 'rounded-pill',
         dot && 'ui-badge--dot p-1',
         overlay && `position-absolute translate-middle ${POSITION[overlay.position ?? 'top-end']}`,

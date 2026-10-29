@@ -1,4 +1,9 @@
+@use '../../styles/parts';
+
+// A round part lifted off the sheet (2px line, the one soft shadow). It enters and leaves with presence: scale and
+// opacity only, and instantly under reduced motion.
 .ui-scroll-top {
+  @include parts.lifted(var(--ui-radius-circle));
   position: fixed;
   inset-block-end: var(--ui-space-6);
   inset-inline-end: var(--ui-space-6);
@@ -9,16 +14,36 @@
   inline-size: var(--ui-control-height-lg);
   block-size: var(--ui-control-height-lg);
   padding: 0;
-  border-radius: var(--ui-radius-circle);
-  box-shadow: var(--ui-shadow-md);
+  cursor: pointer;
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out);
+
+  &[data-state='open'] {
+    @include parts.pop-in;
+  }
+
+  &[data-state='closed'] {
+    @include parts.pop-out;
+    pointer-events: none;
+  }
 
   &[hidden] {
     display: none;
   }
 
+  &:hover {
+    border-color: var(--ui-color-accent);
+    color: var(--ui-color-accent);
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
@@ -32,5 +57,17 @@
   .ui-scroll-top {
     min-inline-size: var(--ui-touch-target-min);
     min-block-size: var(--ui-touch-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-scroll-top,
+  .ui-scroll-top[data-state] {
+    animation: none;
+    transition: none;
+  }
+
+  .ui-scroll-top:active {
+    transform: none;
   }
 }

@@ -1,5 +1,7 @@
 $intents: primary, secondary, success, danger, warning, info;
 
+// A 2px ring: the track is a quiet rule, the progress an accent arc that draws itself by stroke-dashoffset.
+// The value is written in the centre with light display numerals.
 .ui-progress-circle {
   position: relative;
   display: inline-block;
@@ -19,7 +21,7 @@ $intents: primary, secondary, success, danger, warning, info;
 
 .ui-progress-circle__value {
   stroke: var(--ui-color-accent);
-  transition: stroke-dashoffset var(--ui-duration) var(--ui-easing);
+  transition: stroke-dashoffset var(--ui-motion-step) var(--ui-easing-out);
 }
 
 @each $intent in $intents {
@@ -35,16 +37,21 @@ $intents: primary, secondary, success, danger, warning, info;
   align-items: center;
   justify-content: center;
   padding: calc(var(--ui-progress-circle-size) * 0.14);
-  font-size: max(var(--ui-font-size-xs), calc(var(--ui-progress-circle-size) * 0.22));
-  font-weight: var(--ui-font-weight-medium);
+  font-size: max(var(--ui-font-size-xs), calc(var(--ui-progress-circle-size) * 0.26));
+  font-weight: var(--ui-font-weight-display);
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
   color: var(--ui-color-text);
   text-align: center;
 }
 
+// Small rings carry their text at a weight that stays legible.
+.ui-progress-circle--compact .ui-progress-circle__content {
+  font-weight: var(--ui-font-weight-medium);
+}
+
 .ui-progress-circle--indeterminate .ui-progress-circle__svg {
-  animation: ui-progress-circle-spin 1s linear infinite;
+  animation: ui-progress-circle-spin 1.2s linear infinite;
 }
 
 @keyframes ui-progress-circle-spin {

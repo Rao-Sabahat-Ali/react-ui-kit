@@ -1,24 +1,141 @@
+// A progress bar is a 2px (sm) to 4px (md) track with an accent fill that grows by transform, never by width.
+// `lg` is a ruled gauge: 2px ink frame with the value written beside it as a quantity mark.
+// Indeterminate is a short segment travelling along the track.
 .ui-progress-bar {
-  --bs-progress-bg: var(--ui-color-surface-sunken);
+  --ui-progress-fill: var(--ui-color-accent);
+  --ui-progress-dir: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  inline-size: 100%;
+
+  &--primary {
+    --ui-progress-fill: var(--ui-color-accent);
+  }
+
+  &--secondary {
+    --ui-progress-fill: var(--ui-color-secondary);
+  }
+
+  &--success {
+    --ui-progress-fill: var(--ui-color-success);
+  }
+
+  &--danger {
+    --ui-progress-fill: var(--ui-color-danger);
+  }
+
+  &--warning {
+    --ui-progress-fill: var(--ui-color-warning);
+  }
+
+  &--info {
+    --ui-progress-fill: var(--ui-color-info);
+  }
+}
+
+[dir='rtl'] .ui-progress-bar {
+  --ui-progress-dir: -1;
+}
+
+.ui-progress-bar__track {
+  --bs-progress-bg: var(--ui-color-border);
   --bs-progress-border-radius: var(--ui-radius-pill);
-  --bs-progress-bar-transition: width var(--ui-duration) var(--ui-easing);
+  --bs-progress-bar-transition: none;
+  position: relative;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  overflow: hidden;
+  background: var(--ui-color-border);
+}
 
-  &--sm {
-    --bs-progress-height: 0.25rem;
+.ui-progress-bar--sm .ui-progress-bar__track {
+  --bs-progress-height: 2px;
+  block-size: 2px;
+}
+
+.ui-progress-bar--md .ui-progress-bar__track {
+  --bs-progress-height: 4px;
+  block-size: 4px;
+}
+
+.ui-progress-bar--lg .ui-progress-bar__track {
+  --bs-progress-height: 0.875rem;
+  --bs-progress-border-radius: var(--ui-radius-sm);
+  block-size: 0.875rem;
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-color-surface);
+}
+
+.ui-progress-bar__fill {
+  inline-size: 100%;
+  width: 100%;
+  block-size: 100%;
+  background: var(--ui-progress-fill);
+  background-image: none;
+  transform-origin: left center;
+  transform: scaleX(var(--ui-progress-value, 0));
+  transition: transform var(--ui-motion-step) var(--ui-easing-out);
+
+  // Bootstrap's stripes are a gradient; the sheet has none, so `striped` keeps the class and draws nothing extra.
+  &.progress-bar-striped {
+    background-image: none;
   }
+}
 
-  &--md {
-    --bs-progress-height: 0.5rem;
+[dir='rtl'] .ui-progress-bar__fill {
+  transform-origin: right center;
+}
+
+// Determinate + animated: a slow breath on the fill.
+.ui-progress-bar:not(.ui-progress-bar--indeterminate) .ui-progress-bar__fill.progress-bar-animated {
+  animation: ui-progress-breathe 1.6s ease-in-out infinite;
+}
+
+.ui-progress-bar--indeterminate .ui-progress-bar__fill {
+  --ui-progress-segment: 0.35;
+  transition: none;
+  transform: translateX(calc(var(--ui-progress-dir) * -35%)) scaleX(var(--ui-progress-segment));
+  animation: ui-progress-travel 1.4s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+.ui-progress-bar__value {
+  flex: 0 0 auto;
+  min-inline-size: 3ch;
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+@keyframes ui-progress-travel {
+  to {
+    transform: translateX(calc(var(--ui-progress-dir) * 100%)) scaleX(var(--ui-progress-segment));
   }
+}
 
-  &--lg {
-    --bs-progress-height: 1rem;
-    --bs-progress-font-size: var(--ui-font-size-xs);
+@keyframes ui-progress-breathe {
+  50% {
+    opacity: 0.7;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-progress-bar .progress-bar-animated {
+  .ui-progress-bar__fill {
+    transition: none;
+  }
+
+  .ui-progress-bar:not(.ui-progress-bar--indeterminate) .ui-progress-bar__fill.progress-bar-animated {
     animation: none;
+  }
+
+  // No travel and no loop: an unknown amount is drawn as a full, half-strength fill.
+  .ui-progress-bar--indeterminate .ui-progress-bar__fill {
+    transform: none;
+    animation: none;
+    opacity: 0.5;
   }
 }

@@ -1,10 +1,16 @@
-// Layout, glyph and title come from EmptyState; this only tones the glyph per state.
-.ui-payment-status--succeeded .ui-empty-state__icon {
-  color: var(--ui-color-success);
-}
-
+// Layout, plate and drawing come from EmptyState; this only sets the mark per state, the way StepSheet does:
+// the active step (processing, action needed) is accent, a finished step is an ink check, trouble is danger.
+.ui-payment-status--processing .ui-empty-state__icon,
 .ui-payment-status--requires-action .ui-empty-state__icon {
   color: var(--ui-color-accent);
+}
+
+.ui-payment-status--succeeded .ui-empty-state__icon {
+  color: var(--ui-color-text);
+}
+
+.ui-payment-status--canceled .ui-empty-state__icon {
+  color: var(--ui-color-text-muted);
 }
 
 .ui-payment-status__actions {
@@ -22,18 +28,32 @@
 
 .ui-payment-status__reference-value {
   color: var(--ui-color-text);
+  font-weight: var(--ui-font-weight-medium);
   font-variant-numeric: tabular-nums;
   user-select: all;
 }
 
+// Processing: the arrows turn slowly. Reduced motion keeps a quiet pulse instead of a rotation.
 @media (prefers-reduced-motion: no-preference) {
-  .ui-payment-status--processing .ui-empty-state__icon {
+  .ui-payment-status--processing .ui-empty-state__icon svg {
     animation: ui-payment-status-spin 1.4s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-payment-status--processing .ui-empty-state__icon svg {
+    animation: ui-payment-status-pulse 1.6s ease-in-out infinite;
   }
 }
 
 @keyframes ui-payment-status-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes ui-payment-status-pulse {
+  50% {
+    opacity: 0.45;
   }
 }

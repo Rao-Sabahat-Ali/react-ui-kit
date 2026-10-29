@@ -1,4 +1,5 @@
-import type { MouseEvent, ReactNode } from 'react';
+import { useRef, type MouseEvent, type ReactNode } from 'react';
+import { useSlidingMark } from '../../hooks/useSlidingMark';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { routerLinkHandler } from '../../utils/navigation';
@@ -22,9 +23,11 @@ export interface BottomNavProps {
 
 export function BottomNav({ items, activeHref, onNavigate, ariaLabel, className }: BottomNavProps) {
   const { t } = useLocale();
+  const listRef = useRef<HTMLUListElement>(null);
+  useSlidingMark(listRef, { target: '[aria-current="page"]' }, [activeHref, items.length]);
   return (
     <nav aria-label={ariaLabel ?? t('mainNavigation')} className={cx('ui-bottom-nav', className)}>
-      <ul className="ui-bottom-nav__list">
+      <ul ref={listRef} className="ui-bottom-nav__list">
         {items.map((item) => {
           const href = safeUrl(item.href) ?? '#';
           const active = item.href === activeHref;

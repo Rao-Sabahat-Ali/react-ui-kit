@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref } from 'react';
+import { useCallback, useEffect, useRef, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
@@ -25,6 +25,13 @@ export function Inplace({ display, children, active, defaultActive = false, onTo
   const displayRef = useRef<HTMLButtonElement | null>(null);
   const editorRef = useRef<HTMLDivElement | null>(null);
   const previous = useRef(isActive);
+  // The swap animates only after the first change (derived state, no effect, so there is no flash).
+  const [seen, setSeen] = useState(isActive);
+  const [swapped, setSwapped] = useState(false);
+  if (seen !== isActive) {
+    setSeen(isActive);
+    setSwapped(true);
+  }
 
   const close = useCallback(() => setActive(false), [setActive]);
 
@@ -51,7 +58,7 @@ export function Inplace({ display, children, active, defaultActive = false, onTo
   const name = label ?? (typeof display === 'string' ? display : '');
 
   return (
-    <div ref={ref} className={cx('ui-inplace', isActive && 'ui-inplace--active', disabled && 'ui-inplace--disabled', className)} {...rest}>
+    <div ref={ref} className={cx('ui-inplace', isActive && 'ui-inplace--active', swapped && 'ui-inplace--swap', disabled && 'ui-inplace--disabled', className)} {...rest}>
       {isActive ? (
         // Escape-to-cancel for the editor contents; focus goes to the first field inside.
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions

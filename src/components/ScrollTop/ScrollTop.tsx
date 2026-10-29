@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ButtonHTMLAttributes, type Ref } from 'react';
 import { usePrefersReducedMotion } from '../../hooks/useMediaQuery';
+import { usePresence } from '../../motion/usePresence';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { Icon } from '../Icon/Icon';
@@ -25,6 +26,8 @@ export function ScrollTop({ threshold = 400, target = 'window', behavior = 'smoo
   const reduced = usePrefersReducedMotion();
   const [visible, setVisible] = useState(false);
   const innerRef = useRef<HTMLButtonElement | null>(null);
+  // Stays mounted (hidden) so `target="parent"` can find its scroller; presence keeps it visible while it leaves.
+  const { present, state } = usePresence(visible);
 
   useEffect(() => {
     const scroller: Window | HTMLElement | null = target === 'window' ? window : innerRef.current?.parentElement ?? null;
@@ -61,9 +64,10 @@ export function ScrollTop({ threshold = 400, target = 'window', behavior = 'smoo
         else if (ref) ref.current = node;
       }}
       type="button"
-      hidden={!visible}
+      hidden={!present}
+      data-state={state}
       aria-label={label ?? t('scrollTop')}
-      className={cx('btn btn-primary ui-scroll-top', target === 'parent' && 'ui-scroll-top--parent', className)}
+      className={cx('ui-scroll-top', target === 'parent' && 'ui-scroll-top--parent', className)}
       onClick={handleClick}
       {...rest}
     >
