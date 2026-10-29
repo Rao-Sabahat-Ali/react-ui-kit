@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-tree-select {
   position: relative;
 }
@@ -7,7 +9,6 @@
   align-items: center;
   min-block-size: var(--ui-control-height-md);
   padding-inline-start: var(--ui-control-padding-x);
-  border-radius: var(--ui-radius);
   background-color: var(--ui-color-surface);
   color: var(--ui-color-text);
   text-align: start;
@@ -19,12 +20,16 @@
 
   &.form-select-lg {
     min-block-size: var(--ui-control-height-lg);
+    border-radius: var(--ui-radius-lg);
+  }
+
+  &[aria-expanded='true'] {
+    border-color: var(--ui-color-accent);
   }
 }
 
 .ui-tree-select--disabled .ui-tree-select__trigger {
-  cursor: not-allowed;
-  opacity: 0.65;
+  @include form.line-box-disabled;
 }
 
 .ui-tree-select__value {
@@ -44,21 +49,12 @@
 }
 
 .ui-tree-select__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-space-1);
-  background: var(--ui-color-accent-subtle);
-  color: var(--ui-color-text);
-  border-radius: var(--ui-radius-sm);
-  font-weight: var(--ui-font-weight-normal, 400);
+  @include form.chip;
+  animation: ui-chip-in var(--ui-motion-part) var(--ui-easing-out);
 }
 
 .ui-tree-select__chip-remove {
-  display: inline-flex;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
+  @include form.chip-remove;
 }
 
 .ui-tree-select__clear {
@@ -75,12 +71,25 @@
   &:hover {
     color: var(--ui-color-text);
   }
+
+  &:focus-visible {
+    @include form.focus-ring(-2px);
+  }
 }
 
 .ui-tree-select__panel {
-  z-index: var(--ui-z-dropdown);
+  @include form.lifted-panel;
   max-block-size: 20rem;
   overflow-y: auto;
-  margin: 0;
   padding: var(--ui-space-2);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tree-select__chip {
+    animation: none;
+  }
+}
+
+@include form.panel-keyframes;
+
+@include form.chip-keyframes;

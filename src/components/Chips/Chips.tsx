@@ -1,8 +1,11 @@
-import { useId, useRef, useState, type ClipboardEvent, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref } from 'react';
+import { useEffect, useId, useRef, useState, type ClipboardEvent, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import type { Size } from '../../types';
+import { canAnimate, prefersReducedMotion } from '../../motion/env';
+import { readMotionMs } from '../../motion/tokens';
+import { useFlip } from '../../motion/useFlip';
 import { useFieldControl } from '../Field/Field';
 import { Icon } from '../Icon/Icon';
 
@@ -30,6 +33,20 @@ export interface ChipsProps {
   'aria-label'?: string;
   'aria-describedby'?: string;
   ref?: Ref<HTMLInputElement>;
+}
+
+const sameList = (a: string[], b: string[]) => a.length === b.length && a.every((x, i) => x === b[i]);
+
+interface Ghost {
+  id: number;
+  label: string;
+  at: number;
+}
+
+interface Track {
+  values: string[];
+  ids: number[];
+  ghosts: Ghost[];
 }
 
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -64,6 +81,33 @@ export function Chips({
   });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
+  const controlRef = useRef<HTMLDivElement | null>(null);
+  const nextId = useRef(0);
+  const initialCount = useRef(value.length);
+  const [track, setTrack] = useState<Track>(() => ({ values: value, ids: value.map(() => nextId.current++), ghosts: [] }));
+  // Stable identity per chip so FLIP and the enter/leave animations follow the chip, not its index (derived state).
+  if (!sameList(track.values, value)) {
+    const prev = track.values;
+    let start = 0;
+    while (start < prev.length && start < value.length && prev[start] === value[start]) start++;
+    let endPrev = prev.length;
+    let endNext = value.length;
+    while (endPrev > start && endNext > start && prev[endPrev - 1] === value[endNext - 1]) {
+      endPrev--;
+      endNext--;
+    }
+    const ids = [...track.ids.slice(0, start), ...value.slice(start, endNext).map(() => nextId.current++), ...track.ids.slice(endPrev)];
+    const leaving: Ghost[] = canAnimate() && !prefersReducedMotion() ? prev.slice(start, endPrev).map((label, k) => ({ id: track.ids[start + k]!, label, at: start })) : [];
+    setTrack({ values: value, ids, ghosts: [...track.ghosts, ...leaving] });
+  }
+  useEffect(() => {
+    if (track.ghosts.length === 0) return;
+    const ms = Math.round(readMotionMs(controlRef.current, 'part') * 0.7);
+    const timer = window.setTimeout(() => setTrack((t) => ({ ...t, ghosts: [] })), ms);
+    return () => window.clearTimeout(timer);
+  }, [track.ghosts]);
+  // Neighbours slide into the gap (transform only).
+  useFlip(controlRef, [track.ids, track.ghosts], { selector: '.ui-chips__chip', duration: readMotionMs(typeof document === 'undefined' ? null : document.documentElement, 'part') });
   const full = max !== undefined && value.length >= max;
   const charSeparators = separators.filter((s) => s.length === 1);
 
@@ -177,35 +221,50 @@ export function Chips({
 
   const sizeClass = size === 'sm' ? 'form-control-sm' : size === 'lg' ? 'form-control-lg' : undefined;
 
+  const renderChip = (chip: string, index: number) => {
+    const id = track.ids[index] ?? index;
+    return (
+      <li key={`c-${id}`} className={cx('ui-chips__chip', id >= initialCount.current && 'ui-chips__chip--enter')}>
+        <span className="ui-chips__label">{chipTemplate ? chipTemplate(chip) : chip}</span>
+        {!disabled && (
+          <button
+            type="button"
+            tabIndex={-1}
+            className="ui-chips__remove"
+            aria-label={t('removeChip', { label: chip })}
+            onClick={() => remove(index, 'input')}
+            onKeyDown={(e) => handleChipKeyDown(e, index)}
+          >
+            <Icon name="x" />
+          </button>
+        )}
+      </li>
+    );
+  };
+
   return (
     <div className={cx('ui-chips', disabled && 'ui-chips--disabled', className)} style={style}>
       {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
+        ref={controlRef}
         className={cx('form-control ui-chips__control', sizeClass, control.invalid && 'is-invalid', disabled && 'disabled')}
         onClick={(e) => {
           if (e.target === e.currentTarget) inputRef.current?.focus();
         }}
       >
-        {value.length > 0 && (
+        {(value.length > 0 || track.ghosts.length > 0) && (
           <ul ref={listRef} className="list-unstyled mb-0 ui-chips__list">
-            {value.map((chip, index) => (
-              <li key={`${chip}-${index}`} className="badge ui-chips__chip">
-                <span className="ui-chips__label">{chipTemplate ? chipTemplate(chip) : chip}</span>
-                {!disabled && (
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    className="ui-chips__remove"
-                    aria-label={t('removeChip', { label: chip })}
-                    onClick={() => remove(index, 'input')}
-                    onKeyDown={(e) => handleChipKeyDown(e, index)}
-                  >
-                    <Icon name="x" />
-                  </button>
-                )}
-              </li>
-            ))}
+            {Array.from({ length: value.length + 1 }, (_, position) => position).flatMap((position) => [
+              ...track.ghosts
+                .filter((g) => Math.min(g.at, value.length) === position)
+                .map((g) => (
+                  <li key={`g-${g.id}`} className="ui-chips__chip ui-chips__chip--leaving" aria-hidden="true" data-state="closed">
+                    <span className="ui-chips__label">{g.label}</span>
+                  </li>
+                )),
+              ...(position < value.length ? [renderChip(value[position]!, position)] : []),
+            ])}
           </ul>
         )}
         <input

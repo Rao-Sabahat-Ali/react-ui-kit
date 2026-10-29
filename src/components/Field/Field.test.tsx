@@ -29,3 +29,12 @@ describe('Field', () => {
     expect(container.querySelector('label')).toHaveClass('visually-hidden');
   });
 });
+
+describe('Field (v2)', () => {
+  it('AC-v2-1: the error message carries a line-art warning icon, never colour alone', () => {
+    const { container } = render(<Field label="Email" error="Enter a valid email"><InputText /></Field>);
+    const error = container.querySelector('.ui-field__error')!;
+    expect(error.querySelector('svg.ui-field__error-icon')).toBeInTheDocument();
+    expect(error).toHaveTextContent('Enter a valid email');
+  });
+});

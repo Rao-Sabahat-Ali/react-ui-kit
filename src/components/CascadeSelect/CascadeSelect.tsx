@@ -7,6 +7,7 @@ import { cx } from '../../utils/cx';
 import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
 import { Icon } from '../Icon/Icon';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 
 export interface CascadeOption<T> {
@@ -83,6 +84,7 @@ export function CascadeSelect<T>({
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const position = useFloating(triggerRef, panelRef, { open, placement: 'bottom-start' });
+  const presence = usePresence(open);
 
   const selectedPath = useMemo(() => findPath(options, value), [options, value]);
   const selectedLabel = selectedPath ? getOptionLabel(levelAt(options, selectedPath, selectedPath.length - 1)[selectedPath[selectedPath.length - 1]!]!) : null;
@@ -282,9 +284,9 @@ export function CascadeSelect<T>({
       >
         <span className={cx('ui-cascade-select__value', !selectedLabel && 'ui-cascade-select__placeholder')}>{selectedLabel ?? placeholder ?? t('select')}</span>
       </button>
-      {open && (
+      {presence.present && (
         <Portal>
-          <div ref={panelRef} className="ui-cascade-select__panel" style={{ position: 'fixed', top: position.top, left: position.left }}>
+          <div ref={panelRef} data-state={presence.state} inert={presence.exiting || undefined} className="ui-cascade-select__panel" style={{ position: 'fixed', top: position.top, left: position.left }}>
             {renderLevel(options, [])}
           </div>
         </Portal>

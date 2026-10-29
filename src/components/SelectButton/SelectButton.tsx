@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from 'react';
+import { useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { cx } from '../../utils/cx';
 import type { Intent, Size } from '../../types';
@@ -51,6 +51,26 @@ export function SelectButton<T>(props: SelectButtonProps<T>) {
   );
   const [many, setMany] = useControllableState<T[]>(props.multiple ? props.value : undefined, props.multiple ? (props.defaultValue ?? []) : [], props.multiple ? props.onChange : undefined);
 
+  // Sliding accent indicator (single selection): measured from the selected item, moved with transform only.
+  const groupRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState<{ pos: number; size: number; ready: boolean } | null>(null);
+  const slides = !props.multiple;
+  const place = () => {
+    const selected = groupRef.current?.querySelector<HTMLElement>('.btn-check:checked')?.parentElement;
+    if (!selected || selected.offsetWidth === 0) return setIndicator(null);
+    const pos = selected.offsetLeft;
+    const size = selected.offsetWidth;
+    setIndicator((prev) => (prev && prev.pos === pos && prev.size === size ? prev : { pos, size, ready: prev !== null }));
+  };
+  useLayoutEffect(() => {
+    if (!slides) return;
+    place();
+    const group = groupRef.current;
+    const observer = typeof ResizeObserver === 'undefined' || !group ? null : new ResizeObserver(place);
+    if (group) observer?.observe(group);
+    return () => observer?.disconnect();
+  }, [slides, single, options.length, size, block]);
+
   const isSelected = (v: T) => (props.multiple ? many.includes(v) : single === v);
   const toggle = (option: SelectButtonOption<T>) => {
     if (props.multiple) {
@@ -65,9 +85,11 @@ export function SelectButton<T>(props: SelectButtonProps<T>) {
 
   return (
     <div
+      ref={groupRef}
       role="group"
       aria-label={props['aria-label']}
-      className={cx('btn-group ui-select-button', size === 'sm' && 'btn-group-sm', size === 'lg' && 'btn-group-lg', block && 'd-flex w-100', className)}
+      style={indicator ? ({ '--ui-seg-pos': indicator.pos, '--ui-seg-size': indicator.size } as CSSProperties) : undefined}
+      className={cx('btn-group ui-select-button', slides && indicator && 'ui-select-button--sliding', size === 'sm' && 'btn-group-sm', size === 'lg' && 'btn-group-lg', block && 'd-flex w-100', className)}
     >
       {options.map((option, index) => {
         const id = `${name}-${index}`;
@@ -96,6 +118,7 @@ export function SelectButton<T>(props: SelectButtonProps<T>) {
           </span>
         );
       })}
+      {slides && indicator && <span className={cx('ui-select-button__indicator', indicator.ready && 'ui-select-button__indicator--ready')} aria-hidden="true" />}
     </div>
   );
 }

@@ -1,5 +1,7 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-slider {
-  --ui-slider-track-size: 0.375rem;
+  --ui-slider-track-size: 0.625rem;
   --ui-slider-thumb-size: 1.25rem;
   --ui-slider-length: 12rem;
   position: relative;
@@ -10,7 +12,7 @@
   padding-inline: calc(var(--ui-slider-thumb-size) / 2);
 
   &--disabled {
-    opacity: 0.5;
+    opacity: 0.55;
   }
 
   &--vertical {
@@ -21,11 +23,13 @@
   }
 }
 
+// The track is a 2px ink line drawn as a thin capsule; the accent range fills it.
 .ui-slider__track {
   position: relative;
   flex: 1 1 auto;
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-sm);
-  background-color: var(--ui-color-border);
+  background-color: var(--ui-color-surface);
   touch-action: none;
   cursor: pointer;
 
@@ -42,6 +46,7 @@
 
   .ui-slider--disabled & {
     cursor: not-allowed;
+    border-color: var(--ui-color-border-strong);
   }
 }
 
@@ -59,15 +64,17 @@
   }
 }
 
+// The thumb is a 2px ink ring on the sheet colour; it takes the accent when hovered, focused or dragged.
 .ui-slider__thumb {
   position: absolute;
   inline-size: var(--ui-slider-thumb-size);
   block-size: var(--ui-slider-thumb-size);
-  border-radius: 50%;
+  border-radius: var(--ui-radius-circle);
   background-color: var(--ui-color-surface);
-  border: 2px solid var(--ui-color-accent);
-  box-shadow: var(--ui-shadow-sm);
-  transition: box-shadow var(--ui-duration) var(--ui-easing);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  transition:
+    border-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
 
   .ui-slider--horizontal & {
     inset-block-start: 50%;
@@ -83,19 +90,33 @@
     translate: 50% -50%;
   }
 
-  &:focus-visible,
+  &:hover,
   &.is-active {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    border-color: var(--ui-color-accent);
+  }
+
+  &.is-active {
+    transform: scale(0.92);
+  }
+
+  &:focus-visible {
+    border-color: var(--ui-color-accent);
+    @include form.focus-ring;
   }
 
   &:hover .ui-slider__tooltip,
   &:focus-visible .ui-slider__tooltip,
   &.is-active .ui-slider__tooltip {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
+.ui-slider--disabled .ui-slider__thumb {
+  border-color: var(--ui-color-border-strong);
+}
+
+// Value tooltip: an ink label lifted off the sheet; its figure ticks while the value changes.
 .ui-slider__tooltip {
   position: absolute;
   inset-block-end: calc(100% + var(--ui-space-2));
@@ -105,11 +126,15 @@
   border-radius: var(--ui-radius-sm);
   color: var(--ui-color-text-inverse);
   background-color: var(--ui-color-text);
-  font-size: 0.75rem;
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-medium);
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: opacity var(--ui-duration) var(--ui-easing);
+  transform: translateY(calc(var(--ui-assemble-distance) * 0.33));
+  transition:
+    opacity var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-quick) var(--ui-easing-out);
 
   [dir='rtl'] & {
     translate: 50% 0;
@@ -120,7 +145,7 @@
   position: absolute;
   inline-size: 2px;
   block-size: 2px;
-  border-radius: 50%;
+  border-radius: var(--ui-radius-circle);
   background-color: var(--ui-color-border-strong);
 
   &.is-active {
@@ -145,7 +170,8 @@
 .ui-slider__mark-label {
   position: absolute;
   color: var(--ui-color-text-muted);
-  font-size: 0.75rem;
+  font-size: var(--ui-font-size-xs);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
   pointer-events: none;
 
@@ -168,7 +194,8 @@
 
 .ui-slider__value {
   min-inline-size: 3ch;
-  color: var(--ui-color-text-muted);
+  color: var(--ui-color-text);
+  font-weight: var(--ui-font-weight-medium);
   font-variant-numeric: tabular-nums;
 }
 
@@ -176,15 +203,22 @@
   .ui-slider {
     --ui-slider-thumb-size: var(--ui-touch-target-min);
   }
-
-  .ui-slider__thumb {
-    border-width: 3px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ui-slider__thumb,
   .ui-slider__tooltip {
     transition: none;
+  }
+
+  .ui-slider__thumb.is-active {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-slider__range {
+    forced-color-adjust: none;
+    background-color: Highlight;
   }
 }

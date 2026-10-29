@@ -150,31 +150,32 @@ export function InputOtp({
       {...rest}
     >
       {Array.from({ length }, (_, index) => (
-        <input
-          key={index}
-          ref={(node) => {
-            boxes.current[index] = node;
-          }}
-          id={index === 0 ? control.id : undefined}
-          type={mask ? 'password' : 'text'}
-          inputMode={integerOnly ? 'numeric' : 'text'}
-          autoComplete={index === 0 ? 'one-time-code' : 'off'}
-          autoCapitalize="off"
-          autoCorrect="off"
-          spellCheck={false}
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus={autoFocus && index === 0}
-          value={value[index] ?? ''}
-          disabled={disabled}
-          readOnly={readOnly}
-          aria-label={t('otpDigit', { index: index + 1, total: length })}
-          aria-invalid={control.invalid || undefined}
-          className={cx('form-control ui-input-otp__box', control.invalid && 'is-invalid')}
-          onChange={(event) => handleChange(index, event)}
-          onKeyDown={(event) => handleKeyDown(index, event)}
-          onPaste={(event) => handlePaste(index, event)}
-          onFocus={(event) => event.currentTarget.select()}
-        />
+        <span key={index} className="ui-input-otp__cell" data-index={index + 1} data-filled={value[index] ? '' : undefined}>
+          <input
+            ref={(node) => {
+              boxes.current[index] = node;
+            }}
+            id={index === 0 ? control.id : undefined}
+            type={mask ? 'password' : 'text'}
+            inputMode={integerOnly ? 'numeric' : 'text'}
+            autoComplete={index === 0 ? 'one-time-code' : 'off'}
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus={autoFocus && index === 0}
+            value={value[index] ?? ''}
+            disabled={disabled}
+            readOnly={readOnly}
+            aria-label={t('otpDigit', { index: index + 1, total: length })}
+            aria-invalid={control.invalid || undefined}
+            className={cx('form-control ui-input-otp__box', control.invalid && 'is-invalid')}
+            onChange={(event) => handleChange(index, event)}
+            onKeyDown={(event) => handleKeyDown(index, event)}
+            onPaste={(event) => handlePaste(index, event)}
+            onFocus={(event) => event.currentTarget.select()}
+          />
+        </span>
       ))}
     </div>
   );

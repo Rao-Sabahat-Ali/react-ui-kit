@@ -8,6 +8,8 @@ import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
 import { Icon } from '../Icon/Icon';
 import { flattenOptions, orderByOptions, type FlatOption } from '../ListBox/ListBox';
+import { useAssemble } from '../../motion/useAssemble';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 import type { Option, OptionGroup } from '../Select/Select';
 
@@ -75,6 +77,8 @@ export function MultiSelect<T>({
   const panelRef = useRef<HTMLDivElement | null>(null);
   const filterRef = useRef<HTMLInputElement | null>(null);
   const position = useFloating(triggerRef, panelRef, { open, placement: 'bottom-start', matchWidth: true });
+  const presence = usePresence(open);
+  useAssemble(panelRef, { parts: '[role="option"]', distance: 6, enabled: open, trigger: open });
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -271,9 +275,9 @@ export function MultiSelect<T>({
           {summary}
         </div>
       </div>
-      {open && (
+      {presence.present && (
         <Portal>
-          <div ref={panelRef} className="dropdown-menu show ui-multi-select__panel" style={{ position: 'fixed', top: position.top, left: position.left, minWidth: position.minWidth }}>
+          <div ref={panelRef} data-state={presence.state} inert={presence.exiting || undefined} className="dropdown-menu show ui-multi-select__panel" style={{ position: 'fixed', top: position.top, left: position.left, minWidth: position.minWidth }}>
             {(filter || selectAll) && (
               <div className="ui-multi-select__header">
                 {selectAll && (

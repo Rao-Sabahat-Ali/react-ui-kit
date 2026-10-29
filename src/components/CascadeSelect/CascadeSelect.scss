@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-cascade-select {
   position: relative;
 }
@@ -5,7 +7,6 @@
 .ui-cascade-select__trigger {
   inline-size: 100%;
   min-block-size: var(--ui-control-height-md);
-  border-radius: var(--ui-radius);
   text-align: start;
   background-color: var(--ui-color-surface);
   color: var(--ui-color-text);
@@ -16,6 +17,11 @@
 
   &.form-select-lg {
     min-block-size: var(--ui-control-height-lg);
+    border-radius: var(--ui-radius-lg);
+  }
+
+  &[aria-expanded='true'] {
+    border-color: var(--ui-color-accent);
   }
 }
 
@@ -30,8 +36,15 @@
   color: var(--ui-color-text-subtle);
 }
 
+// Wrapper only: every level is its own lifted menu so nested levels keep their line and shadow.
 .ui-cascade-select__panel {
   z-index: var(--ui-z-dropdown);
+  animation: ui-form-panel-in var(--ui-motion-part) var(--ui-easing-out);
+
+  &[data-state='closed'] {
+    pointer-events: none;
+    animation: ui-form-panel-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+  }
 }
 
 .ui-cascade-select__level {
@@ -39,12 +52,17 @@
   display: block;
   min-inline-size: 12rem;
   margin: 0;
+  padding: var(--ui-space-1);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
+  background-color: var(--ui-color-surface-raised);
+  box-shadow: var(--ui-shadow-lift);
 }
 
 .ui-cascade-select__level--sub {
   position: absolute;
-  inset-block-start: calc(-1 * var(--ui-space-2));
-  inset-inline-start: 100%;
+  inset-block-start: calc(-1 * var(--ui-space-1) - var(--ui-line-width));
+  inset-inline-start: calc(100% + var(--ui-space-1));
 }
 
 .ui-cascade-select__node {
@@ -52,19 +70,12 @@
 }
 
 .ui-cascade-select__item {
-  display: flex;
-  align-items: center;
-  gap: var(--ui-space-2);
-  min-block-size: var(--ui-control-height-sm);
-  cursor: pointer;
-  transition: background-color var(--ui-duration) var(--ui-easing);
+  @include form.option-row;
 
-  &.disabled {
-    cursor: not-allowed;
-  }
-
-  @media (pointer: coarse) {
-    min-block-size: var(--ui-touch-target-min);
+  &.active {
+    background-color: var(--ui-color-accent-subtle);
+    color: var(--ui-color-accent-emphasis);
+    font-weight: var(--ui-font-weight-semibold);
   }
 }
 
@@ -77,7 +88,7 @@
 }
 
 .ui-cascade-select__item--active {
-  outline: 2px solid var(--ui-color-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
   outline-offset: -2px;
 
   &:not(.active) {
@@ -91,7 +102,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-cascade-select__item {
-    transition: none;
+  .ui-cascade-select__panel,
+  .ui-cascade-select__panel[data-state='closed'] {
+    animation: none;
   }
 }
+
+@include form.panel-keyframes;

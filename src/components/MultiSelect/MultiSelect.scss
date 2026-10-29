@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-multi-select {
   position: relative;
 }
@@ -8,7 +10,6 @@
   align-items: center;
   gap: var(--ui-space-1);
   min-block-size: var(--ui-control-height-md);
-  border-radius: var(--ui-radius);
   background-color: var(--ui-color-surface);
   color: var(--ui-color-text);
   cursor: pointer;
@@ -19,16 +20,15 @@
 
   &.form-select-lg {
     min-block-size: var(--ui-control-height-lg);
+    border-radius: var(--ui-radius-lg);
   }
 
   &:focus-within {
-    border-color: var(--ui-color-focus-ring);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.line-box-focus;
   }
 
   &.disabled {
-    cursor: not-allowed;
-    background-color: var(--ui-color-bg-subtle);
+    @include form.line-box-disabled;
   }
 }
 
@@ -38,13 +38,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  outline: 2px solid transparent;
+
+  // The wrapper shows the focus; the inner combobox element draws nothing of its own.
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .ui-multi-select__placeholder {
   color: var(--ui-color-text-subtle);
 }
 
+// Chips enter and leave with the part movement (transform + opacity).
 .ui-multi-select__chips {
   display: flex;
   flex-wrap: wrap;
@@ -52,94 +58,100 @@
 }
 
 .ui-multi-select__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-space-1);
-  background-color: var(--ui-color-accent-subtle);
-  color: var(--ui-color-accent-emphasis);
-  border-radius: var(--ui-radius-pill);
-  font-weight: var(--ui-font-weight-medium);
+  @include form.chip;
+  animation: ui-chip-in var(--ui-motion-part) var(--ui-easing-out);
 }
 
 .ui-multi-select__chip-remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-inline-size: 1.5rem;
-  min-block-size: 1.5rem;
-  padding: 0;
-  border: 0;
-  border-radius: var(--ui-radius-circle);
-  background: none;
-  color: inherit;
-
-  &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-  }
+  @include form.chip-remove;
 }
 
 .ui-multi-select__panel {
-  z-index: var(--ui-z-dropdown);
+  @include form.lifted-panel;
   max-block-size: 20rem;
   overflow-y: auto;
-  margin: 0;
+  padding: var(--ui-space-1);
 }
 
 .ui-multi-select__header {
   display: flex;
   align-items: center;
   gap: var(--ui-space-2);
-  padding: 0 var(--ui-space-3) var(--ui-space-2);
-  border-block-end: 1px solid var(--ui-color-border);
+  padding: var(--ui-space-1) var(--ui-space-2) var(--ui-space-2);
+  border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
   margin-block-end: var(--ui-space-1);
 
+  .form-control:focus {
+    outline-offset: -2px;
+  }
+
   .form-check-input {
-    margin: 0;
     flex-shrink: 0;
+    margin: 0;
+    border: var(--ui-line-width) solid var(--ui-color-line);
+    border-radius: var(--ui-radius-sm);
+    background-color: var(--ui-color-surface);
+
+    &:checked,
+    &:indeterminate {
+      background-color: var(--ui-color-accent);
+      border-color: var(--ui-color-accent);
+    }
   }
 }
 
 .ui-multi-select__option {
-  display: flex;
-  align-items: center;
-  gap: var(--ui-space-2);
-  min-block-size: var(--ui-control-height-sm);
-  cursor: pointer;
-  transition: background-color var(--ui-duration) var(--ui-easing);
-
-  &.disabled {
-    cursor: not-allowed;
-  }
-
-  @media (pointer: coarse) {
-    min-block-size: var(--ui-touch-target-min);
-  }
+  @include form.option-row;
+  padding-inline: var(--ui-space-2);
 }
 
 .ui-multi-select__option--active {
   background-color: var(--ui-color-bg-subtle);
   color: var(--ui-color-text);
-  outline: 2px solid var(--ui-color-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
   outline-offset: -2px;
 }
 
-.ui-multi-select__check {
+// The option's check box: ink line; filled accent with the tick drawn in when selected.
+.ui-multi-select__check.form-check-input {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
   margin: 0;
   flex-shrink: 0;
+  background-image: none;
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-sm);
+  background-color: var(--ui-color-surface);
+
+  svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
 }
 
-.ui-multi-select__check--on {
+.ui-multi-select__check--on.form-check-input {
   background-color: var(--ui-color-accent);
   border-color: var(--ui-color-accent);
   color: var(--ui-color-accent-contrast);
+
+  // The tick only exists while selected, so it is drawn in on mount.
+  svg {
+    animation: ui-form-mark-draw var(--ui-motion-quick) var(--ui-easing-out);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-multi-select__option {
-    transition: none;
+  .ui-multi-select__chip,
+  .ui-multi-select__check--on.form-check-input svg {
+    animation: none;
   }
 }
+
+@include form.panel-keyframes;
+
+@include form.mark-keyframes;
+
+@include form.chip-keyframes;

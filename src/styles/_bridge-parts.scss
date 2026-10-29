@@ -206,6 +206,56 @@ $ui-intents: primary, secondary, success, danger, warning, info;
     }
   }
 
+  // Bootstrap draws its own validation icon and compile-time danger colour; the kit draws a danger line and the message icon.
+  .form-control.is-invalid,
+  .form-select.is-invalid {
+    border-color: var(--ui-color-danger);
+    background-image: none;
+    padding-inline-end: var(--ui-control-padding-x);
+
+    &:focus {
+      border-color: var(--ui-color-danger);
+      box-shadow: none;
+      outline-color: var(--ui-color-danger);
+    }
+  }
+
+  .form-select.is-invalid {
+    --bs-form-select-bg-icon: none;
+    background-image: var(--bs-form-select-bg-img);
+    padding-inline-end: 2.25rem;
+  }
+
+  textarea.form-control.is-invalid {
+    background-image: none;
+  }
+
+  // Disabled: a quiet line and ground. Read-only: a dashed guide line (you can read and copy it, not change it).
+  .form-control:disabled,
+  .form-select:disabled {
+    border-color: var(--ui-color-border-strong);
+    background-color: var(--ui-color-bg-subtle);
+    color: var(--ui-color-text-subtle);
+    cursor: not-allowed;
+  }
+
+  .form-control[readonly]:not(:disabled) {
+    border-style: dashed;
+    background-color: var(--ui-color-bg-subtle);
+
+    &:focus {
+      border-color: var(--ui-color-line);
+      outline-color: var(--ui-color-accent);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .form-control.is-invalid,
+    .form-select.is-invalid {
+      border-color: Mark;
+    }
+  }
+
   .input-group-text {
     border: var(--ui-line-width) solid var(--ui-color-line);
     border-radius: var(--ui-radius);

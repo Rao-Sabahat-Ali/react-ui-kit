@@ -24,6 +24,7 @@ import {
 import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
 import { Icon } from '../Icon/Icon';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 
 /** Local English defaults until locale keys exist (`previousYears`, `nextYears`, `am`, `pm`, `clearDate`, `presets`). */
@@ -157,6 +158,7 @@ export function DatePicker(props: DatePickerProps) {
   const popupRef = useRef<HTMLDivElement | null>(null);
   const calendarRef = useRef<HTMLDivElement | null>(null);
   const position = useFloating(anchorRef, popupRef, { open: open && !inline, placement: 'bottom-start' });
+  const presence = usePresence(open && !inline);
   // The trap's initial focus is the roving grid item (selected date or today), per APG.
   const initialFocus = useMemo<RefObject<HTMLElement | null>>(
     () => ({
@@ -791,7 +793,7 @@ export function DatePicker(props: DatePickerProps) {
           <Icon name="calendar" />
         </button>
       </div>
-      {open && (
+      {presence.present && (
         <Portal>
           {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
@@ -801,6 +803,8 @@ export function DatePicker(props: DatePickerProps) {
             role="dialog"
             aria-modal="true"
             aria-label={t('chooseDate')}
+            data-state={presence.state}
+            inert={presence.exiting || undefined}
             className="dropdown-menu show ui-date-picker__popup"
             style={{ position: 'fixed', top: position.top, left: position.left }}
             onKeyDown={(e) => {

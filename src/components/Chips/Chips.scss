@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-chips__control {
   display: flex;
   flex-wrap: wrap;
@@ -15,14 +17,18 @@
     min-block-size: var(--ui-control-height-lg);
   }
 
+  // Composite: the wrapper draws the line and the ring; the bare input inside draws nothing.
   &:focus-within {
-    border-color: var(--ui-color-focus-ring);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.line-box-focus;
+  }
+
+  &.is-invalid:focus-within {
+    border-color: var(--ui-color-danger);
+    outline-color: var(--ui-color-danger);
   }
 
   &.disabled {
-    background-color: var(--ui-color-bg-subtle);
-    cursor: not-allowed;
+    @include form.line-box-disabled;
   }
 }
 
@@ -31,14 +37,26 @@
 }
 
 .ui-chips__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-space-1);
-  max-inline-size: 100%;
-  background-color: var(--ui-color-secondary-subtle);
-  color: var(--ui-color-secondary-emphasis);
-  border-radius: var(--ui-radius-pill);
-  font-weight: var(--ui-font-weight-medium);
+  @include form.chip;
+  padding-block: 0;
+}
+
+// Enter: the new chip settles in (transform + opacity). Leave: a ghost shrinks away while neighbours FLIP into the gap.
+.ui-chips__chip--enter {
+  animation: ui-chip-in var(--ui-motion-part) var(--ui-easing-snap);
+}
+
+.ui-chips__chip--leaving {
+  padding-inline-end: var(--ui-space-2);
+  pointer-events: none;
+  animation: ui-chip-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+}
+
+@keyframes ui-chip-out {
+  to {
+    opacity: 0;
+    transform: scale(0.85);
+  }
 }
 
 .ui-chips__label {
@@ -47,31 +65,7 @@
 }
 
 .ui-chips__remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-inline-size: 1.5rem;
-  min-block-size: 1.5rem;
-  padding: 0;
-  border: 0;
-  border-radius: var(--ui-radius-circle);
-  background: none;
-  color: inherit;
-  transition: background-color var(--ui-duration) var(--ui-easing);
-
-  &:hover {
-    background-color: var(--ui-color-bg-subtle);
-  }
-
-  &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-  }
-
-  @media (pointer: coarse) {
-    min-inline-size: var(--ui-touch-target-min);
-    min-block-size: var(--ui-touch-target-min);
-  }
+  @include form.chip-remove;
 }
 
 .ui-chips__input {
@@ -81,7 +75,11 @@
   padding: 0;
   background: transparent;
   color: var(--ui-color-text);
-  outline: 2px solid transparent;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
 
   &[readonly] {
     cursor: default;
@@ -89,7 +87,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-chips__remove {
-    transition: none;
+  .ui-chips__chip--enter,
+  .ui-chips__chip--leaving {
+    animation: none;
   }
 }
+
+@include form.chip-keyframes;

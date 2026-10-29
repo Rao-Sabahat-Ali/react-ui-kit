@@ -1,10 +1,101 @@
-.ui-switch__input {
+@use '../../styles/form-mixins' as form;
+
+.ui-switch {
+  --ui-switch-width: 2.5rem;
+  --ui-switch-height: 1.5rem;
+}
+
+.ui-switch.form-switch.form-check {
+  @include form.check-row;
+}
+
+.ui-switch__control {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  inline-size: var(--ui-switch-width);
+  block-size: var(--ui-switch-height);
+}
+
+// Track: a pill outlined in ink. The knob slides with transform only.
+.ui-switch__control > .ui-switch__input.form-check-input {
+  position: absolute;
+  inset: 0;
+  float: none;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  background-image: none;
+  background-color: var(--ui-color-surface);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-pill);
   cursor: pointer;
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:checked {
+    background-image: none;
     background-color: var(--ui-color-accent);
     border-color: var(--ui-color-accent);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 1;
+    border-color: var(--ui-color-border-strong);
+    background-color: var(--ui-color-bg-subtle);
+
+    &:checked {
+      background-color: var(--ui-color-border-strong);
+    }
+
+    ~ .ui-switch__knob {
+      background-color: var(--ui-color-border-strong);
+    }
+  }
+
+  &:focus-visible {
+    box-shadow: none;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+  }
+}
+
+.ui-switch__knob {
+  --ui-switch-knob: calc(var(--ui-switch-height) - 0.75rem);
+  position: absolute;
+  inset-block-start: calc((var(--ui-switch-height) - var(--ui-switch-knob)) / 2);
+  inset-inline-start: calc((var(--ui-switch-height) - var(--ui-switch-knob)) / 2);
+  inline-size: var(--ui-switch-knob);
+  block-size: var(--ui-switch-knob);
+  border-radius: var(--ui-radius-circle);
+  background-color: var(--ui-color-line);
+  transition:
+    transform var(--ui-motion-part) var(--ui-easing-snap),
+    background-color var(--ui-motion-quick) var(--ui-easing-out);
+  pointer-events: none;
+}
+
+.ui-switch__input:active:not(:disabled) ~ .ui-switch__knob {
+  transform: scale(0.88);
+}
+
+.ui-switch__input:checked ~ .ui-switch__knob {
+  background-color: var(--ui-color-accent-contrast);
+  transform: translateX(calc(var(--ui-switch-width) - var(--ui-switch-height)));
+}
+
+[dir='rtl'] .ui-switch__input:checked ~ .ui-switch__knob {
+  transform: translateX(calc(var(--ui-switch-height) - var(--ui-switch-width)));
+}
+
+.ui-switch__input:checked:active:not(:disabled) ~ .ui-switch__knob {
+  transform: translateX(calc(var(--ui-switch-width) - var(--ui-switch-height))) scale(0.88);
+}
+
+[dir='rtl'] .ui-switch__input:checked:active:not(:disabled) ~ .ui-switch__knob {
+  transform: translateX(calc(var(--ui-switch-height) - var(--ui-switch-width))) scale(0.88);
 }
 
 .ui-switch__label {
@@ -12,23 +103,59 @@
 }
 
 .ui-switch--lg {
-  min-height: 2rem;
-  padding-inline-start: 3.25em;
-  display: flex;
-  align-items: center;
+  --ui-switch-width: 3.25rem;
+  --ui-switch-height: 1.875rem;
+}
 
-  .ui-switch__input {
-    width: 2.75em;
-    height: 1.5em;
-    margin-inline-start: -3.25em;
-    margin-top: 0;
+// Label before the switch: the control moves to the end of the row.
+.ui-switch.form-check-reverse {
+  padding-inline: 0;
+  text-align: start;
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  .form-check-label {
+    grid-column: 1;
+    grid-row: 1;
   }
 
-  &.form-check-reverse {
-    padding-inline: 0 3.25em;
+  .ui-switch__control {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
 
-    .ui-switch__input {
-      margin-inline: 0 -3.25em;
-    }
+@media (prefers-reduced-motion: reduce) {
+  .ui-switch__control > .ui-switch__input.form-check-input,
+  .ui-switch__knob {
+    transition: none;
+  }
+
+  .ui-switch__input:active:not(:disabled) ~ .ui-switch__knob {
+    transform: none;
+  }
+
+  .ui-switch__input:checked:active:not(:disabled) ~ .ui-switch__knob {
+    transform: translateX(calc(var(--ui-switch-width) - var(--ui-switch-height)));
+  }
+
+  [dir='rtl'] .ui-switch__input:checked:active:not(:disabled) ~ .ui-switch__knob {
+    transform: translateX(calc(var(--ui-switch-height) - var(--ui-switch-width)));
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-switch__knob {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+
+  .ui-switch__input:checked ~ .ui-switch__knob {
+    background-color: HighlightText;
+  }
+
+  .ui-switch__control > .ui-switch__input.form-check-input:checked {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    border-color: Highlight;
   }
 }

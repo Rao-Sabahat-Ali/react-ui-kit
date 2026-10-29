@@ -4,6 +4,8 @@ import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { useFieldControl } from '../Field/Field';
+import { useAssemble } from '../../motion/useAssemble';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 
 export interface MentionProps<T> extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'value' | 'defaultValue' | 'onChange' | 'ref'> {
@@ -101,6 +103,9 @@ export function Mention<T>({
   const lastSearch = useRef<string | null>(null);
 
   const open = mention !== null && mention.start !== dismissedAt;
+  // The panel stays mounted while it leaves, after `mention` is already gone.
+  const lastTrigger = useRef(mention?.trigger);
+  if (mention) lastTrigger.current = mention.trigger;
 
   const inspect = (text: string, caret: number) => {
     const found = findMention(text, caret, triggers);
@@ -185,6 +190,8 @@ export function Mention<T>({
   };
 
   useClickOutside([textareaRef, panelRef], close, open);
+  const presence = usePresence(open);
+  useAssemble(panelRef, { parts: '[role="option"]', distance: 6, enabled: open, trigger: open });
 
   const setRefs = (node: HTMLTextAreaElement | null) => {
     textareaRef.current = node;
@@ -230,10 +237,10 @@ export function Mention<T>({
           if (!panelRef.current?.contains(e.relatedTarget as Node | null)) setMention(null);
         }}
       />
-      {open && (
+      {presence.present && (
         <Portal>
-          <div ref={panelRef} className="dropdown-menu show ui-mention__panel" style={{ position: 'fixed', top: pos.top, left: pos.left } as CSSProperties}>
-            <ul id={listboxId} role="listbox" aria-label={mention.trigger} className="list-unstyled mb-0 ui-mention__list">
+          <div ref={panelRef} data-state={presence.state} inert={presence.exiting || undefined} className="dropdown-menu show ui-mention__panel" style={{ position: 'fixed', top: pos.top, left: pos.left } as CSSProperties}>
+            <ul id={listboxId} role="listbox" aria-label={lastTrigger.current} className="list-unstyled mb-0 ui-mention__list">
               {suggestions.map((item, index) => (
                 // Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests).
                 // eslint-disable-next-line jsx-a11y/click-events-have-key-events

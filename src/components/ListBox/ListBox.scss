@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-list-box {
   display: flex;
   flex-direction: column;
@@ -6,25 +8,24 @@
 
 .ui-list-box__list {
   overflow-y: auto;
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius);
-  background-color: var(--ui-color-surface);
-  outline: 2px solid transparent;
+  @include form.line-box;
 
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.line-box-focus;
   }
 
   &.is-invalid {
     border-color: var(--ui-color-danger);
   }
 
-  // Borders come from the container.
+  // The 2px line comes from the container; rows are separated by a hairline only.
   > .list-group-item,
   .ui-list-box__group-wrap > .list-group-item,
   .ui-list-box__spacer > .list-group-item {
     border-inline: 0;
     border-radius: 0;
+    border-color: var(--ui-color-line-muted);
+    border-width: 0 0 var(--ui-line-width-hairline);
   }
 }
 
@@ -35,7 +36,7 @@
   min-block-size: var(--ui-control-height-sm);
   cursor: pointer;
   user-select: none;
-  transition: background-color var(--ui-duration) var(--ui-easing);
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
 
   &.disabled {
     cursor: not-allowed;
@@ -53,7 +54,7 @@
 
 .ui-list-box__list:focus-visible .ui-list-box__option--focused,
 .ui-list-box__option--focused.active {
-  outline: 2px solid var(--ui-color-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
   outline-offset: -2px;
 }
 
@@ -64,10 +65,19 @@
   inline-size: 1rem;
   block-size: 1rem;
   flex-shrink: 0;
-  border: 1px solid var(--ui-color-border-strong);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-sm);
   background-color: var(--ui-color-surface);
-  color: var(--ui-color-accent);
+  color: var(--ui-color-accent-contrast);
+
+  svg {
+    animation: ui-form-mark-draw var(--ui-motion-quick) var(--ui-easing-out);
+  }
+}
+
+.ui-list-box__check--on {
+  background-color: var(--ui-color-accent);
+  border-color: var(--ui-color-accent);
 }
 
 .ui-list-box__group {
@@ -84,7 +94,7 @@
 }
 
 .ui-list-box--disabled {
-  opacity: 0.65;
+  opacity: 0.55;
   pointer-events: none;
 }
 
@@ -92,4 +102,10 @@
   .ui-list-box__option {
     transition: none;
   }
+
+  .ui-list-box__check svg {
+    animation: none;
+  }
 }
+
+@include form.mark-keyframes;

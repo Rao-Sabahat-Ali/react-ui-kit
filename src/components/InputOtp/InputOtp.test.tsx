@@ -102,3 +102,12 @@ describe('InputOtp', () => {
     expect(box(3, 4)).toHaveValue('9');
   });
 });
+
+describe('InputOtp (v2)', () => {
+  it('AC-v2-1: every box sits in a numbered-part cell that marks filled cells', () => {
+    const { container } = render(<InputOtp aria-label="Code" length={4} defaultValue="12" />);
+    const cells = Array.from(container.querySelectorAll('.ui-input-otp__cell'));
+    expect(cells.map((c) => c.getAttribute('data-index'))).toEqual(['1', '2', '3', '4']);
+    expect(cells.map((c) => c.hasAttribute('data-filled'))).toEqual([true, true, false, false]);
+  });
+});

@@ -36,17 +36,24 @@ export function Checkbox({ checked: checkedProp, defaultChecked = false, onChang
 
   return (
     <div className={cx('form-check ui-checkbox', inline && 'form-check-inline', className)}>
-      <input
-        ref={setRefs}
-        type="checkbox"
-        id={control.id}
-        checked={checked}
-        onChange={handleChange}
-        aria-invalid={control.invalid || undefined}
-        {...rest}
-        aria-describedby={control.describedBy}
-        className={cx('form-check-input ui-checkbox__input', control.invalid && 'is-invalid')}
-      />
+      <span className="ui-checkbox__control">
+        <input
+          ref={setRefs}
+          type="checkbox"
+          id={control.id}
+          checked={checked}
+          onChange={handleChange}
+          aria-invalid={control.invalid || undefined}
+          {...rest}
+          aria-describedby={control.describedBy}
+          className={cx('form-check-input ui-checkbox__input', control.invalid && 'is-invalid')}
+        />
+        {/* The mark is drawn in with a clip-path wipe; the input stays the single accessible control. */}
+        <svg className="ui-checkbox__mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path className="ui-checkbox__tick" d="M5 12.5l4.5 4.5L19 7.5" />
+          <path className="ui-checkbox__dash" d="M6 12h12" />
+        </svg>
+      </span>
       {label !== undefined && (
         <label className="form-check-label ui-checkbox__label" htmlFor={control.id}>
           {label}

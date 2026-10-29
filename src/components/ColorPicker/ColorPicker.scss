@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-color-picker {
   position: relative;
   display: inline-block;
@@ -9,6 +11,7 @@
   gap: var(--ui-space-2);
   min-block-size: var(--ui-control-height-md);
   text-align: start;
+  cursor: pointer;
 
   &.form-control-sm {
     min-block-size: var(--ui-control-height-sm);
@@ -25,9 +28,8 @@
 }
 
 .ui-color-picker__popup {
-  z-index: var(--ui-z-popover);
+  @include form.lifted-panel(var(--ui-z-popover));
   padding: var(--ui-space-3);
-  margin: 0;
 }
 
 .ui-color-picker__panel {
@@ -39,9 +41,9 @@
 
 .ui-color-picker__panel--inline {
   padding: var(--ui-space-3);
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-lg);
-  background-color: var(--ui-color-surface-raised);
+  background-color: var(--ui-color-surface);
 }
 
 .ui-color-picker__area,
@@ -51,10 +53,10 @@
   border-radius: var(--ui-radius);
   touch-action: none;
   cursor: crosshair;
-  outline: 2px solid transparent;
+  border: var(--ui-line-width) solid var(--ui-color-line);
 
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.focus-ring;
   }
 }
 
@@ -89,9 +91,9 @@
   position: absolute;
   inline-size: 0.875rem;
   block-size: 0.875rem;
-  border: 2px solid var(--ui-color-surface);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-circle);
-  box-shadow: var(--ui-shadow-sm);
+  background-color: var(--ui-color-surface);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -115,7 +117,7 @@
   inline-size: 1.5rem;
   block-size: 1.5rem;
   flex-shrink: 0;
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-sm);
 }
 
@@ -133,21 +135,22 @@
   inline-size: 1.5rem;
   block-size: 1.5rem;
   padding: 0;
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width-hairline) solid var(--ui-color-border-strong);
   border-radius: var(--ui-radius-sm);
-  transition: transform var(--ui-duration) var(--ui-easing);
+  transition: transform var(--ui-motion-instant) var(--ui-easing-out);
 
+  // The chosen swatch is ringed in accent (a 2px offset outline, not colour alone: it also grows).
   &[aria-checked='true'] {
-    box-shadow: 0 0 0 2px var(--ui-color-surface), 0 0 0 4px var(--ui-color-accent);
+    outline: var(--ui-line-width) solid var(--ui-color-accent);
+    outline-offset: 2px;
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.focus-ring;
   }
 
-  &:hover {
-    transform: scale(1.1);
+  &:active {
+    transform: scale(0.92);
   }
 
   @media (pointer: coarse) {
@@ -157,7 +160,7 @@
 }
 
 .ui-color-picker--disabled {
-  opacity: 0.65;
+  opacity: 0.55;
   pointer-events: none;
 }
 
@@ -165,8 +168,10 @@
   .ui-color-picker__swatch {
     transition: none;
 
-    &:hover {
+    &:active {
       transform: none;
     }
   }
 }
+
+@include form.panel-keyframes;

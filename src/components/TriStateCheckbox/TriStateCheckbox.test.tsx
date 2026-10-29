@@ -59,3 +59,12 @@ describe('TriStateCheckbox', () => {
     expect(screen.getByRole('checkbox')).toHaveAttribute('aria-checked', 'mixed');
   });
 });
+
+describe('TriStateCheckbox (v2)', () => {
+  it('AC-v2-1: the mark is drawn in only after the user changes the state', async () => {
+    const { container } = render(<TriStateCheckbox label="Active" />);
+    expect(container.querySelector('.ui-tri-state-checkbox__mark--draw')).toBeNull();
+    await userEvent.click(screen.getByRole('checkbox'));
+    expect(container.querySelector('.ui-tri-state-checkbox__mark--draw')).toBeInTheDocument();
+  });
+});
