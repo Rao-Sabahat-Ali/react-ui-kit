@@ -8,10 +8,10 @@
 .ui-sidebar-nav__section {
   margin-top: var(--ui-space-3);
   padding: var(--ui-space-3) var(--ui-space-3) var(--ui-space-1);
-  border-top: 1px solid var(--ui-color-border);
-  font-size: var(--ui-font-size-xs);
-  font-weight: var(--ui-font-weight-medium);
-  color: var(--ui-color-text-subtle);
+  border-top: var(--ui-line-width-hairline) solid color-mix(in srgb, var(--ui-color-shell-contrast) 35%, transparent);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  color: var(--ui-color-shell-contrast);
 }
 
 .ui-sidebar-nav__section:first-child {
@@ -19,44 +19,35 @@
   border-top: 0;
 }
 
+// Links sit on the kraft rail. The active one is a white part with a 2px ink line, like a label on the box.
 .ui-sidebar-nav__link {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--ui-space-3);
   width: 100%;
   min-height: var(--ui-control-height-md);
   padding: var(--ui-space-2) var(--ui-space-3);
-  border: 0;
+  border: var(--ui-line-width) solid transparent;
   border-radius: var(--ui-radius);
   background: none;
-  color: var(--ui-color-text);
+  color: var(--ui-color-shell-contrast);
   font-size: var(--ui-font-size-sm);
   font-weight: var(--ui-font-weight-medium);
   text-align: start;
-
-  position: relative;
-  color: var(--ui-color-text-muted);
+  text-decoration: none;
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:hover {
-    background: var(--ui-color-surface-sunken);
-    color: var(--ui-color-text);
+    background: var(--ui-color-shell-hover);
+    color: var(--ui-color-shell-contrast);
   }
 
-  // Active: ink text plus a pine bar on the leading edge, not a filled pill.
   &.active {
-    background: none;
+    background: var(--ui-color-bg);
+    border-color: var(--ui-color-line);
     color: var(--ui-color-text);
     font-weight: var(--ui-font-weight-semibold);
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset-block: var(--ui-space-2);
-      inset-inline-start: calc(var(--ui-space-2) * -1);
-      width: 2px;
-      border-radius: var(--ui-radius-sm);
-      background: var(--ui-color-accent);
-    }
 
     .ui-sidebar-nav__icon {
       color: var(--ui-color-accent);
@@ -64,8 +55,9 @@
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
   }
 }
 
@@ -79,7 +71,7 @@
 }
 
 .ui-sidebar-nav__chevron {
-  color: var(--ui-color-text-muted);
+  color: inherit;
 }
 
 .ui-sidebar-nav__sublist {
@@ -94,5 +86,5 @@
 .ui-sidebar-nav__footer {
   margin-top: auto;
   padding-top: var(--ui-space-3);
-  border-top: 1px solid var(--ui-color-border);
+  border-top: var(--ui-line-width-hairline) solid color-mix(in srgb, var(--ui-color-shell-contrast) 35%, transparent);
 }

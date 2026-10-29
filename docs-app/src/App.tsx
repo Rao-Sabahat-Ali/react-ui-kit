@@ -70,8 +70,9 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
     route[0] === 'roadmap' ? <RoadmapPage /> :
     <HomePage />;
 
-  const navLink = (to: string, label: string, extra?: string) => (
+  const navLink = (to: string, label: string, extra?: string, icon?: string) => (
     <a key={to} href={href(...to.split('/'))} className={`docs-nav__link ${current === to ? 'active' : ''} ${extra ?? ''}`} aria-current={current === to ? 'page' : undefined}>
+      {icon && <Icon name={icon} className="docs-nav__icon" />}
       {label}
     </a>
   );
@@ -85,7 +86,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
         <Button className={blueprint ? '' : 'd-lg-none'} appearance="text" variant="secondary" icon="menu" aria-label="Navigation" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)} />
         <a href={href()} className="docs-brand">react-ui-kit</a>
         <div className="ms-auto d-flex align-items-center gap-2">
-          <span className="small text-body-secondary d-none d-sm-inline">Profile</span>
+          <span className="small d-none d-sm-inline">Profile</span>
           <div style={{ width: '9.5rem' }}>
             <Select<Profile> aria-label="App profile" size="sm" options={profiles.map((p) => ({ label: p.name, value: p.name as Profile }))} value={profile} onChange={(v) => v && onProfileChange(v)} />
           </div>
@@ -95,11 +96,11 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
       <div className="docs-body">
         <nav id="docs-nav" className={`docs-nav ${navOpen ? 'docs-nav--open' : ''}`} aria-label="Docs">
           <div className="docs-nav__section">
-            {navLink('', 'Overview')}
-            {navLink('foundations', 'Foundations')}
-            {navLink('profiles', 'App profiles')}
-            {navLink('blueprints', 'Blueprints')}
-            {navLink('roadmap', 'Roadmap')}
+            {navLink('', 'Overview', '', 'home')}
+            {navLink('foundations', 'Foundations', '', 'layers')}
+            {navLink('profiles', 'App profiles', '', 'user')}
+            {navLink('blueprints', 'Blueprints', '', 'box')}
+            {navLink('roadmap', 'Roadmap', '', 'list')}
           </div>
           <div className="px-3 pb-2">
             <InputText size="sm" type="search" aria-label="Filter components" placeholder="Filter components…" prefix={<Icon name="search" />} value={query} onChange={setQuery} />

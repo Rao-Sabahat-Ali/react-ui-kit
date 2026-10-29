@@ -2,6 +2,7 @@ import { useId, useRef, type MouseEvent, type ReactNode, type RefObject } from '
 import { useOverlay } from '../../hooks/useOverlay';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 
 export type DialogCloseReason = 'escape' | 'backdrop' | 'close-button';
@@ -31,8 +32,10 @@ export interface DialogProps {
 const SIZE_CLASS = { sm: 'modal-sm', md: undefined, lg: 'modal-lg', xl: 'modal-xl', fullscreen: 'modal-fullscreen' } as const;
 
 export function Dialog(props: DialogProps) {
-  if (!props.open) return null;
-  return <DialogInner {...props} />;
+  // Stays mounted with data-state="closed" while the exit animation runs (motion v2), then unmounts.
+  const { present, state } = usePresence(props.open, { exit: 'step' });
+  if (!present) return null;
+  return <DialogInner {...props} state={state} />;
 }
 
 function DialogInner({
@@ -51,26 +54,27 @@ function DialogInner({
   appendTo,
   className,
   role = 'dialog',
+  state = 'open',
   ...aria
-}: DialogProps) {
+}: DialogProps & { state?: 'open' | 'closed' }) {
   const { t } = useLocale();
   const titleId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const pointerDownOnBackdrop = useRef(false);
-  useOverlay({ rootRef, contentRef, initialFocus, onEscape: closeOnEscape ? () => onClose('escape') : undefined });
+  useOverlay({ rootRef, contentRef, initialFocus, onEscape: closeOnEscape && state === 'open' ? () => onClose('escape') : undefined });
 
   const handleBackdropDown = (event: MouseEvent<HTMLDivElement>) => {
     pointerDownOnBackdrop.current = event.target === event.currentTarget;
   };
   const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
-    if (closeOnBackdrop && pointerDownOnBackdrop.current && event.target === event.currentTarget) onClose('backdrop');
+    if (state === 'open' && closeOnBackdrop && pointerDownOnBackdrop.current && event.target === event.currentTarget) onClose('backdrop');
     pointerDownOnBackdrop.current = false;
   };
 
   return (
     <Portal container={appendTo}>
-      <div ref={rootRef} className="ui-dialog-root">
+      <div ref={rootRef} className="ui-dialog-root" data-state={state}>
         <div className="modal-backdrop show ui-dialog__backdrop" />
         {/* Backdrop click is a pointer convenience; keyboard users close with Escape (useOverlay). */}
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}

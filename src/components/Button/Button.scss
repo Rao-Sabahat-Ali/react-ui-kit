@@ -7,17 +7,33 @@ $intents: primary, secondary, success, danger, warning, info;
   --bs-btn-padding-y: 0;
   --bs-btn-font-weight: var(--ui-font-weight-medium);
   --bs-btn-border-radius: var(--ui-radius);
+  --bs-btn-border-width: var(--ui-line-width);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5em;
   min-height: var(--ui-control-height-md);
-  transition-duration: var(--ui-duration);
-  transition-timing-function: var(--ui-easing);
+  // Colour changes at motion-quick; press feedback (a 1px settle) at motion-instant. Transform and colours only.
+  transition:
+    color var(--ui-motion-quick) var(--ui-easing-out),
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
+
+  &:active:not(:disabled, .disabled) {
+    transform: translateY(1px);
+  }
+
+  // The ring is the global one (accent, 2px, offset 2px); Bootstrap's box-shadow ring is dropped.
+  &:focus-visible {
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
+  }
 
   &.btn-sm {
     --bs-btn-padding-x: calc(var(--ui-control-padding-x) * 0.75);
-    --bs-btn-border-radius: var(--ui-radius-sm);
+    --bs-btn-border-radius: var(--ui-radius);
     min-height: var(--ui-control-height-sm);
   }
 
@@ -29,6 +45,22 @@ $intents: primary, secondary, success, danger, warning, info;
 
   &.rounded-pill {
     --bs-btn-border-radius: var(--ui-radius-pill);
+  }
+
+  // Secondary actions are drawn in ink: a 2px line, no fill.
+  &.btn-outline-secondary,
+  &.btn-outline-primary {
+    --bs-btn-color: var(--ui-color-text);
+    --bs-btn-border-color: var(--ui-color-line);
+    --bs-btn-bg: transparent;
+    --bs-btn-hover-color: var(--ui-color-text);
+    --bs-btn-hover-bg: var(--ui-color-bg-subtle);
+    --bs-btn-hover-border-color: var(--ui-color-line);
+    --bs-btn-active-color: var(--ui-color-text);
+    --bs-btn-active-bg: var(--ui-color-border);
+    --bs-btn-active-border-color: var(--ui-color-line);
+    --bs-btn-disabled-color: var(--ui-color-text-subtle);
+    --bs-btn-disabled-border-color: var(--ui-color-border-strong);
   }
 
   &.btn-link {
@@ -57,6 +89,12 @@ $intents: primary, secondary, success, danger, warning, info;
 
 .ui-button__badge {
   font-size: 0.75em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-button:active:not(:disabled, .disabled) {
+    transform: none;
+  }
 }
 
 @each $intent in $intents {

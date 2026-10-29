@@ -28,11 +28,11 @@ createRoot(root).render(
 );
 ```
 
-Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash of the wrong theme. Fonts (Fraunces, Instrument Sans) ship in the package and load from your own origin.
+Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash of the wrong theme. Fonts (Albert Sans) ship in the package and load from your own origin. For the fastest first paint preload the latin file (`<link rel="preload" as="font" type="font/woff2" crossorigin href="…/fonts/albert-sans-latin-wght-normal.woff2">`, the URL your bundler gives `@sabahat/react-ui-kit/dist/fonts/albert-sans-latin-wght-normal.woff2`), and if you precache assets in a service worker include the four `albert-sans-*.woff2` files (latin and latin-ext, normal and italic) instead of the old Fraunces and Instrument Sans files.
 
 ## Design contract
 
-The look is the "Nordic editorial" identity: paper surfaces, an ink primary action, a pine accent, serif headings, rules instead of boxes. Build screens from `PageHeader`, `Section`, `IndexList`, `StatGroup` and `DataTable`. Specs, tokens, patterns and the consistency rules live in [design-system-mcp](https://github.com/Rao-Sabahat-Ali/design-system-mcp) (an MCP server for coding agents).
+The look is the "Monteringsanvisning" (assembly sheet) identity: white instruction paper, a kraft shell, 2px ink lines, an ink primary action, a signal-blue accent, Albert Sans, quantity marks (`12×`) and numbered step panels for multi-step work. Build screens from `PageHeader`, `Section`, `IndexList`, `StatGroup` (the parts list), `StepSheet` and `DataTable`. Specs, tokens, patterns and the consistency rules live in [design-system-mcp](https://github.com/Rao-Sabahat-Ali/design-system-mcp) (an MCP server for coding agents).
 
 ## Start from a blueprint
 

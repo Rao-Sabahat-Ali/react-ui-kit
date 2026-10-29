@@ -269,7 +269,7 @@ describe('Menu', () => {
   });
 
   it('AC-16: reduced motion disables open animation', () => {
-    expect(scss).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*{\s*\.ui-menu--popup,\s*\.ui-menu--submenu\s*{\s*animation: none/);
+    expect(scss).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*{\s*\.ui-menu--popup,\s*\.ui-menu--submenu,\s*\.ui-menu-popup\[data-state='closed'\] \.ui-menu--popup\s*{\s*animation: none/);
   });
 
   it('groups render with a label', () => {

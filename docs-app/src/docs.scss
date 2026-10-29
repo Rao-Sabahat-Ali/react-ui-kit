@@ -21,13 +21,17 @@
   gap: var(--ui-space-3);
   height: 3.5rem;
   padding: 0 var(--ui-space-4);
-  background: var(--ui-color-surface);
-  border-bottom: 1px solid var(--ui-color-border);
+  // Kraft cardboard shell (identity v2): rail and top bar share the material, the sheet beside them is white.
+  background: var(--ui-color-shell);
+  color: var(--ui-color-shell-contrast);
+  border-bottom: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 .docs-brand {
-  font-weight: var(--ui-font-weight-bold);
-  color: var(--ui-color-text);
+  font-weight: var(--ui-font-weight-heading);
+  letter-spacing: var(--ui-letter-spacing-heading);
+  font-size: var(--ui-font-size-lg);
+  color: var(--ui-color-shell-contrast);
   text-decoration: none;
 }
 
@@ -42,8 +46,9 @@
   height: calc(100vh - 3.5rem);
   overflow-y: auto;
   padding: var(--ui-space-3) 0;
-  background: var(--ui-color-bg-subtle);
-  border-inline-end: 1px solid var(--ui-color-border);
+  background: var(--ui-color-shell);
+  color: var(--ui-color-shell-contrast);
+  border-inline-end: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 @mixin docs-nav-drawer {
@@ -52,8 +57,7 @@
   z-index: var(--ui-z-drawer);
   width: 16rem;
   transform: translateX(-100%);
-  transition: transform var(--ui-duration) var(--ui-easing);
-  box-shadow: var(--ui-shadow-lg);
+  transition: transform var(--ui-motion-step) var(--ui-easing-out);
 
   [dir='rtl'] & {
     transform: translateX(100%);
@@ -73,6 +77,8 @@
 
 .docs-nav--open {
   transform: none !important;
+  // Only the open drawer is lifted off the sheet; closed it must not leak a shadow into the viewport.
+  box-shadow: var(--ui-shadow-lift);
 }
 
 .docs-nav__section {
@@ -82,38 +88,42 @@
 .docs-nav__heading {
   margin-top: var(--ui-space-3);
   padding: var(--ui-space-3) var(--ui-space-3) var(--ui-space-1);
-  border-top: 1px solid var(--ui-color-border);
-  font-size: var(--ui-font-size-xs);
-  font-weight: var(--ui-font-weight-medium);
-  color: var(--ui-color-text-subtle);
+  border-top: var(--ui-line-width-hairline) solid color-mix(in srgb, var(--ui-color-shell-contrast) 35%, transparent);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  color: var(--ui-color-shell-contrast);
 }
 
 .docs-nav__link {
   display: block;
   padding: var(--ui-space-1) var(--ui-space-3);
+  border: var(--ui-line-width) solid transparent;
   border-radius: var(--ui-radius);
-  color: var(--ui-color-text);
+  color: var(--ui-color-shell-contrast);
   text-decoration: none;
   font-size: var(--ui-font-size-sm);
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:hover {
-    background: var(--ui-color-surface-sunken);
+    background: var(--ui-color-shell-hover);
   }
 
+  // The current page is a white part with a 2px ink line, like a label on the box.
   &.active {
-    background: var(--ui-color-primary-subtle);
-    color: var(--ui-color-primary-emphasis);
+    background: var(--ui-color-bg);
+    border-color: var(--ui-color-line);
+    color: var(--ui-color-text);
     font-weight: var(--ui-font-weight-semibold);
-  }
-
-  &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
   }
 }
 
+// Specified but not yet built components: same ink, set in italics instead of a washed-out colour (contrast stays AA).
+.docs-nav__icon {
+  margin-inline-end: var(--ui-space-2);
+}
+
 .docs-nav__link--pending {
-  color: var(--ui-color-text-muted);
+  font-style: italic;
 }
 
 .docs-main {
@@ -134,6 +144,27 @@
 
 .docs-page-header {
   margin-bottom: var(--ui-space-6);
+
+  h1 {
+    font-size: var(--ui-font-size-4xl);
+    letter-spacing: var(--ui-letter-spacing-heading);
+    text-wrap: balance;
+  }
+}
+
+.docs-motion-demo {
+  display: grid;
+  gap: var(--ui-space-2);
+  max-width: 28rem;
+  margin: 0 0 var(--ui-space-3);
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: var(--ui-space-2) var(--ui-space-3);
+    border: var(--ui-line-width) solid var(--ui-color-line);
+    border-radius: var(--ui-radius);
+  }
 }
 
 .docs-example {
@@ -142,7 +173,7 @@
 
 .docs-example__preview {
   padding: var(--ui-space-5);
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-lg);
   background: var(--ui-color-surface);
 }
@@ -156,7 +187,7 @@
     padding-top: var(--ui-space-8);
     border-radius: var(--ui-radius-lg);
     background: var(--ui-color-surface-sunken);
-    border: 1px solid var(--ui-color-border);
+    border: 0;
     font-family: var(--ui-font-family-mono);
     font-size: var(--ui-font-size-sm);
     color: var(--ui-color-text);
@@ -239,7 +270,7 @@
 // `clip` (not hidden) keeps sticky table headers inside the frame working.
 .docs-blueprint__frame {
   margin-bottom: var(--ui-space-8);
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-lg);
   overflow: clip;
 }

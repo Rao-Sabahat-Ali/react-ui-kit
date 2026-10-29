@@ -2,6 +2,29 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## Unreleased — identity v2 foundation (Monteringsanvisning)
+
+Branch `design/v2-foundation`; not tagged or published. The look changes everywhere: white instruction paper, kraft shell, 2px ink lines, signal-blue accent, Albert Sans and an assembly motion grammar. Specs: design-system-mcp `foundations/identity` and `foundations/motion`; tokens 2.0.0.
+
+### Changed
+- **Tokens (generated).** Palette replaced: white ground, neutral chrome (no cream), ink `#121212`, kraft ramp for the shell, signal blue `#1E5AA8` / `#8DB3E8`, new chart series. New keys: `color-shell`, `color-shell-hover`, `color-shell-contrast`, `color-line`, `color-line-muted`, `line-width` (2px), `line-width-hairline`, `font-weight-display` (250), `shadow-lift`, `shadow-drag`, `focus-ring-offset`, `motion-instant|quick|part|step|stagger`, `easing-out|snap|in`, `assemble-distance`. Radius is now 6px (`radius`), 10px (`radius-lg`), 3px (`radius-sm`). The pine/paper/Fraunces tokens are gone; every semantic key apps used still exists. `color-focus-ring` is a solid accent colour and `focus-ring-width` is 2px.
+- **Profiles.** cms accent is pencil red, pos primary is go-green with minimal motion, game is the night sheet with a warm yellow accent and bolder assemble travel, ecommerce primary is orange, admin is compact with 3px corners.
+- **Font.** Albert Sans variable (OFL, 100–900, normal + italic, latin + latin-ext) replaces Fraunces and Instrument Sans, self-hosted in `src/fonts` and shipped to `dist/fonts` as before. Preload `fonts/albert-sans-latin-wght-normal.woff2` for the fastest first paint; update any app that precached the old files.
+- **Global surfaces.** `::selection` (accent), `caret-color`, `accent-color`, one focus ring (accent, 2px, offset 2px), thin scrollbars in the line colour, tabular numerals in tables, link underline offset.
+- **Restyled primitives.** Button (6px, 2px line, ink primary, outline secondary in ink, 1px press feedback at `motion-instant`), inputs/selects/checkbox/radio/switch (2px line, accent focus and checked), Card (2px line, flat), Tabs (accent step indicator that slides, transform only), SidebarNav/Topbar/AppShell (kraft shell, active link is a white part with a 2px line), PageHeader/Section/IndexList (2px structural lines, hairlines between rows), Tag, Badge, Toast/Dialog/Drawer/Menu (lifted with `shadow-lift`, enter and exit through `usePresence`; toasts reflow with FLIP; no coloured side border on toasts). The Icon stroke is now 2px. The AppShell sidebar no longer animates its width.
+- **StatCard / StatGroup** are the parts list: line icon, quantity mark (`12×`, new `quantity` prop), label, ruled strip. Values tick with `QuantityTick`. The existing API is unchanged.
+
+### Added
+- **Motion engine** (`src/motion`, ADR 0002): `MOTION`, `EASING`, `useReducedMotion`, `usePresence`, `useAssemble`, `useFlip`, `useCountTick`, `useViewTransition`, `safeAnimate`, `prefersReducedMotion`, `canAnimate`. Dependency-free, reduced-motion safe, stops in hidden tabs, transform/opacity/clip-path only.
+- `QuantityTick` — a count that rolls changed digits, announced once through a polite status region.
+- `StepSheet`, `StepPanel`, `useStepSheet` — numbered step panels (the signature of multi-step work): large light numeral, title, one value, one action; current, complete and upcoming states, `aria-current="step"`, inert actions off the current step, focus moves to the new step, Assemble on entry.
+- Icons: `flame`, `book`, `clock`, `layers`, `box`, `target`, `list`.
+- Docs app: kraft rail with line-art icons, white sheet, a StepSheet on the home page, shell/line swatches and an Assemble demo on Foundations.
+- ADR 0002.
+
+### Deferred to later waves
+The other ~110 components still draw their own 1px borders and the old motion; they keep working and read the new tokens. Board columns (FLIP), Turn transitions between routes and per-component enter/exit for the remaining overlays (Popover, Tooltip, ConfirmPopup, MegaMenu) follow.
+
 ## 1.4.0 — 2026-10-24
 
 One release bundling: spec completion (Tabs scrollable, IftaLabel, ImageCompare, AnimateOnScroll, Terminal), QRCode and Barcode, eight everyday components (CopyButton, Countdown, DescriptionList, Sparkline, ProgressCircle, TableOfContents, Highlight, Tour), the payment suite and the fixes from its security review. Install with `npm install @sabahat/react-ui-kit@1.4.0`.
@@ -169,7 +192,7 @@ New visual identity from design-system-mcp 0.4.0 (**Nordic editorial**). No comp
 - Form controls use `--ui-color-border-input` (≥ 3:1 contrast).
 
 ### Added
-- Self-hosted OFL fonts (Fraunces, Instrument Sans; latin + latin-ext, `unicode-range`), shipped as `dist/fonts/*.woff2` and referenced from `dist/styles.css`. No third-party font requests; strict CSPs keep working.
+- Self-hosted OFL fonts (Fraunces, Instrument Sans in 1.4.0, replaced by Albert Sans in the identity v2 foundation; latin + latin-ext, `unicode-range`), shipped as `dist/fonts/*.woff2` and referenced from `dist/styles.css`. No third-party font requests; strict CSPs keep working.
 - `StatCard` `variant="plain"` and the `.ui-stat-group` ruled row for key numbers (StatCard AC-4, AC-5).
 
 ## 1.0.0 — 2026-10-24

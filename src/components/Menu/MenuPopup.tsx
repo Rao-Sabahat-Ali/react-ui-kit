@@ -30,6 +30,8 @@ export interface MenuPopupProps {
   dir?: 'rtl' | 'ltr';
   className?: string;
   listRef?: Ref<HTMLUListElement>;
+  /** `closed` while the exit animation runs: the popup is inert and ignores Escape. */
+  state?: 'open' | 'closed';
 }
 
 /** Portalled popup menu: positioning (flip/shift), overlay stack, outside click, focus restore. Render only while open. */
@@ -51,6 +53,7 @@ export function MenuPopup({
   dir,
   className,
   listRef,
+  state = 'open',
 }: MenuPopupProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLUListElement | null>(null);
@@ -94,7 +97,7 @@ export function MenuPopup({
   };
 
   // Registers on the overlay stack so a menu inside a modal stays interactive and Escape closes it first.
-  useOverlay({ rootRef, contentRef: menuRef, modal: false, onEscape: () => closeAll('escape') });
+  useOverlay({ rootRef, contentRef: menuRef, modal: false, onEscape: state === 'open' ? () => closeAll('escape') : undefined });
 
   useClickOutside(point ? [menuRef] : [menuRef, ...(anchorRef ? [anchorRef] : [])], () => {
     const focusInside = rootRef.current?.contains(document.activeElement) ?? false;
@@ -107,7 +110,7 @@ export function MenuPopup({
 
   return (
     <Portal>
-      <div ref={rootRef} className="ui-menu-popup" dir={resolvedDir}>
+      <div ref={rootRef} className="ui-menu-popup" dir={resolvedDir} data-state={state} inert={state === 'closed' || undefined}>
         <MenuList
           items={items}
           id={id}

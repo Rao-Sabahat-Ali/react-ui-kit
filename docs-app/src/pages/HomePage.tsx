@@ -1,7 +1,18 @@
-import { StatCard, StatGroup, Tag } from '@sabahat/react-ui-kit';
+import { Button, StatCard, StatGroup, StepPanel, StepSheet, Tag, useStepSheet } from '@sabahat/react-ui-kit';
 import { href } from '../router';
 import { components, isImplemented, profiles, specVersion } from '../registry';
 import { CodeBlock } from '../components/CodeBlock';
+
+function Continue({ label = 'Continue' }: { label?: string }) {
+  const { next, current, count } = useStepSheet();
+  return current === count - 1 ? (
+    <Button as="a" href={href('foundations')} icon="arrow-right" iconPosition="end">
+      Browse foundations
+    </Button>
+  ) : (
+    <Button onClick={next}>{label}</Button>
+  );
+}
 
 export function HomePage() {
   const implemented = components.filter(isImplemented).length;
@@ -14,12 +25,23 @@ export function HomePage() {
         </p>
       </header>
       <StatGroup aria-label="Library at a glance" className="mb-5">
-        <StatCard label="Components implemented" value={implemented} />
-        <StatCard label="Components specified" value={components.length} href={href('roadmap')} />
-        <StatCard label="App profiles" value={profiles.length} href={href('profiles')} />
-        <StatCard label="Themes (light, dark)" value={2} href={href('foundations')} />
+        <StatCard icon="layers" label="Components implemented" value={implemented} />
+        <StatCard icon="box" label="Components specified" value={components.length} href={href('roadmap')} />
+        <StatCard icon="user" label="App profiles" value={profiles.length} href={href('profiles')} />
+        <StatCard icon="moon" label="Themes (light, dark)" value={2} href={href('foundations')} />
       </StatGroup>
-      <h2 className="h4">Use in an app</h2>
+      <h2 className="h4 mb-3">Use in an app</h2>
+      <StepSheet aria-label="Use in an app" className="mb-4">
+        <StepPanel title="Install" visual={<code>npm install</code>} action={<Continue />}>
+          Add the package and Bootstrap as peer dependencies.
+        </StepPanel>
+        <StepPanel title="Load the styles" visual={<code>styles.css</code>} action={<Continue />}>
+          One import brings tokens, themes and the self-hosted font.
+        </StepPanel>
+        <StepPanel title="Wrap the app" visual={<code>ThemeProvider</code>} action={<Continue />}>
+          Pick a profile; light and dark follow the system.
+        </StepPanel>
+      </StepSheet>
       <CodeBlock
         code={`npm install github:Rao-Sabahat-Ali/react-ui-kit#main\n\n// main.tsx\nimport '@sabahat/react-ui-kit/styles.css';\nimport { ThemeProvider } from '@sabahat/react-ui-kit';\n\n<ThemeProvider profile="admin">\n  <App />\n</ThemeProvider>`}
       />

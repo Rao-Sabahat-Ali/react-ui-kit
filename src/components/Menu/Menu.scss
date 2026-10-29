@@ -3,8 +3,9 @@
   --bs-dropdown-zindex: var(--ui-z-popover);
   --bs-dropdown-bg: var(--ui-color-surface-raised);
   --bs-dropdown-color: var(--ui-color-text);
-  --bs-dropdown-border-color: var(--ui-color-border);
-  --bs-dropdown-border-radius: var(--ui-radius);
+  --bs-dropdown-border-color: var(--ui-color-line);
+  --bs-dropdown-border-width: var(--ui-line-width);
+  --bs-dropdown-border-radius: var(--ui-radius-lg);
   --bs-dropdown-link-color: var(--ui-color-text);
   --bs-dropdown-link-hover-color: var(--ui-color-text);
   --bs-dropdown-link-hover-bg: var(--ui-color-bg-subtle);
@@ -13,10 +14,10 @@
   --bs-dropdown-link-disabled-color: var(--ui-color-text-subtle);
   --bs-dropdown-header-color: var(--ui-color-text-muted);
   --bs-dropdown-divider-bg: var(--ui-color-border);
-  --bs-dropdown-box-shadow: var(--ui-shadow-md);
+  --bs-dropdown-box-shadow: var(--ui-shadow-lift);
   margin: 0;
   min-width: 12rem;
-  box-shadow: var(--ui-shadow-md);
+  box-shadow: var(--ui-shadow-lift);
 
   &[hidden] {
     display: none !important;
@@ -24,7 +25,12 @@
 }
 
 .ui-menu--popup {
-  animation: ui-menu-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  animation: ui-menu-in var(--ui-motion-part) var(--ui-easing-out);
+}
+
+// Exit: usePresence keeps the popup mounted (inert) with data-state="closed" for ~70% of the entrance.
+.ui-menu-popup[data-state='closed'] .ui-menu--popup {
+  animation: ui-menu-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
 }
 
 .ui-menu--inline {
@@ -112,12 +118,21 @@
 @keyframes ui-menu-in {
   from {
     opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * -0.5));
+  }
+}
+
+@keyframes ui-menu-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * -0.25));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ui-menu--popup,
-  .ui-menu--submenu {
+  .ui-menu--submenu,
+  .ui-menu-popup[data-state='closed'] .ui-menu--popup {
     animation: none;
   }
 }

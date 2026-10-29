@@ -4,8 +4,10 @@
   gap: var(--ui-space-3);
   height: var(--ui-topbar-height, 3.5rem);
   padding: 0 var(--ui-space-4);
-  background: var(--ui-color-surface);
-  border-bottom: 1px solid var(--ui-color-border);
+  // Kraft cardboard: the material the parts came in.
+  background: var(--ui-color-shell);
+  color: var(--ui-color-shell-contrast);
+  border-bottom: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 .ui-topbar--sticky {
@@ -25,7 +27,7 @@
   white-space: nowrap;
 
   a {
-    color: var(--ui-color-text);
+    color: var(--ui-color-shell-contrast);
     text-decoration: none;
   }
 }

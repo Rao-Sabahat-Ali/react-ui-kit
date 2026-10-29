@@ -1,0 +1,50 @@
+// Quantity mark: tabular figures; changed digits roll inside a clipped column (transform only).
+.ui-qty-tick {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ui-qty-tick__visual {
+  display: inline-flex;
+}
+
+.ui-qty-tick__col {
+  display: inline-block;
+  height: 1.1em;
+  line-height: 1.1;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.ui-qty-tick__roll {
+  display: flex;
+  flex-direction: column;
+
+  > span {
+    display: block;
+    height: 1.1em;
+    line-height: 1.1;
+  }
+}
+
+// Quantity mark: `12×`. The multiplication sign is muted; the label sits beside or under it.
+.ui-qty {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-qty__mark {
+  color: var(--ui-color-text-muted);
+  font-weight: var(--ui-font-weight-regular);
+}
+
+// Display scale: step numerals and hero quantities use the light display weight.
+.ui-qty--display {
+  font-size: 3rem;
+  font-weight: var(--ui-font-weight-display);
+  line-height: 1.1;
+  letter-spacing: var(--ui-letter-spacing-heading);
+}

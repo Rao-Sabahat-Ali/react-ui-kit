@@ -2,10 +2,10 @@
   margin-bottom: var(--ui-space-6);
 }
 
-// Editorial rule under the title block (tabs draw their own line).
+// The sheet's title block ends in a 2px ink line (tabs draw their own line).
 .ui-page-header:not(:has(.ui-page-header__tabs)) {
   padding-bottom: var(--ui-space-5);
-  border-bottom: 1px solid var(--ui-color-border);
+  border-bottom: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 .ui-page-header__breadcrumb {
@@ -51,6 +51,7 @@
   letter-spacing: var(--ui-letter-spacing-heading);
   line-height: 1.1;
   margin: 0;
+  text-wrap: balance;
 }
 
 .ui-page-header__meta {

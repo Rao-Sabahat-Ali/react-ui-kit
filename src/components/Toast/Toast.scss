@@ -38,12 +38,19 @@
 .ui-toast {
   --bs-toast-bg: var(--ui-color-surface-raised);
   --bs-toast-color: var(--ui-color-text);
-  --bs-toast-border-color: var(--ui-color-border);
+  --bs-toast-border-color: var(--ui-color-line);
+  --bs-toast-border-width: var(--ui-line-width);
   --bs-toast-border-radius: var(--ui-radius-lg);
-  --bs-toast-box-shadow: var(--ui-shadow-lg);
+  --bs-toast-box-shadow: var(--ui-shadow-lift);
   pointer-events: auto;
-  border-inline-start: 4px solid var(--ui-toast-accent, var(--ui-color-info));
-  animation: ui-toast-in var(--ui-duration) var(--ui-motion-easing-emphasized);
+  // Lifted off the sheet: the one thing that carries a shadow. Severity is the icon colour plus text, never a side border.
+  box-shadow: var(--ui-shadow-lift);
+  animation: ui-toast-in var(--ui-motion-part) var(--ui-easing-out);
+
+  &[data-state='closed'] {
+    animation: ui-toast-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+    pointer-events: none;
+  }
 }
 
 .ui-toast--success {
@@ -85,12 +92,20 @@
 @keyframes ui-toast-in {
   from {
     opacity: 0;
-    transform: translateY(-0.5rem);
+    transform: translateY(calc(var(--ui-assemble-distance) * -1));
+  }
+}
+
+@keyframes ui-toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * -0.5));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-toast {
+  .ui-toast,
+  .ui-toast[data-state='closed'] {
     animation: none;
   }
 }

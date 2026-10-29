@@ -4,6 +4,7 @@ import { cx } from '../../utils/cx';
 import { safeUrl } from '../../utils/url';
 import { Icon, type IconName } from '../Icon/Icon';
 import { Skeleton } from '../Skeleton/Skeleton';
+import { QuantityTick } from '../QuantityTick/QuantityTick';
 import { Sparkline } from '../Sparkline/Sparkline';
 import { useInStatGroup } from '../StatGroup/StatGroup';
 
@@ -21,15 +22,17 @@ export interface StatCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'tit
   loading?: boolean;
   href?: string;
   footer?: ReactNode;
-  /** `card` (default) is a bordered tile; `plain` drops the chrome so numbers sit in a ruled `.ui-stat-group` row. */
+  /** `card` (default) is a bordered tile; `plain` drops the chrome so items sit in a ruled `.ui-stat-group` parts list. */
   variant?: 'card' | 'plain';
+  /** Write the value as a quantity mark (`12×`). Default: on for plain numeric counts, off for text, percent and currency. */
+  quantity?: boolean;
 }
 
-export function StatCard({ label, value, format, delta, deltaLabel, invertDelta = false, icon, sparkline, loading = false, href, footer, variant: variantProp, className, ...rest }: StatCardProps) {
+export function StatCard({ label, value, format, delta, deltaLabel, invertDelta = false, icon, sparkline, loading = false, href, footer, variant: variantProp, quantity: quantityProp, className, ...rest }: StatCardProps) {
   const inGroup = useInStatGroup();
   const variant = variantProp ?? (inGroup ? 'plain' : 'card');
   const { t, locale } = useLocale();
-  const display = typeof value === 'number' ? new Intl.NumberFormat(locale, format).format(value) : value;
+  const quantity = quantityProp ?? (typeof value === 'number' && (format?.style === undefined || format.style === 'decimal'));
   const link = safeUrl(href);
 
   let deltaNode: ReactNode = null;
@@ -51,27 +54,32 @@ export function StatCard({ label, value, format, delta, deltaLabel, invertDelta 
   return (
     <div className={cx('ui-stat-card', variant === 'card' ? 'card' : 'ui-stat-card--plain', link && 'ui-stat-card--interactive', className)} {...rest}>
       <div className={variant === 'card' ? 'card-body' : 'ui-stat-card__body'}>
-        <div className="ui-stat-card__header">
-          <span className="ui-stat-card__label">
-            {link ? (
-              <a href={link} className="stretched-link">
-                {label}
-              </a>
-            ) : (
-              label
-            )}
+        {icon && (
+          <span className="ui-stat-card__icon">
+            <Icon name={icon} size="lg" />
           </span>
-          {icon && (
-            <span className="ui-stat-card__icon">
-              <Icon name={icon} />
-            </span>
-          )}
-        </div>
+        )}
         {loading ? (
           <Skeleton width="60%" height="2rem" />
         ) : (
-          <div className="ui-stat-card__value ui-tabular">{display}</div>
+          <div className="ui-stat-card__value ui-qty ui-tabular">
+            <QuantityTick value={value} format={format} />
+            {quantity && (
+              <span className="ui-qty__mark" aria-hidden="true">
+                ×
+              </span>
+            )}
+          </div>
         )}
+        <span className="ui-stat-card__label">
+          {link ? (
+            <a href={link} className="stretched-link">
+              {label}
+            </a>
+          ) : (
+            label
+          )}
+        </span>
         {!loading && deltaNode}
         {!loading && sparkline && <Sparkline className="ui-stat-card__sparkline" values={sparkline} height={32} />}
         {footer && <div className="ui-stat-card__footer">{footer}</div>}

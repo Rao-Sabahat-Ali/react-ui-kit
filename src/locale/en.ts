@@ -38,6 +38,10 @@ export const en = {
   deltaUp: 'Up {value}',
   deltaDown: 'Down {value}',
   deltaFlat: 'No change',
+  stepStatus: 'Step {n} of {count}, {status}',
+  stepComplete: 'completed',
+  stepCurrent: 'current',
+  stepUpcoming: 'not started',
   // Reserved for upcoming components (design-system-mcp specs/components/locale-provider.md).
   toastRegion: 'Notifications',
   moreActions: 'More actions',

@@ -1,26 +1,42 @@
+// StatCard: one item of the parts list. Small line icon, quantity mark (12×), muted label.
 .ui-stat-card {
   --bs-card-bg: var(--ui-color-surface);
-  --bs-card-border-color: var(--ui-color-border);
+  --bs-card-border-color: var(--ui-color-line);
+  --bs-card-border-width: var(--ui-line-width);
   --bs-card-border-radius: var(--ui-radius-lg);
   position: relative;
   height: 100%;
-  transition: border-color var(--ui-duration) var(--ui-easing);
+  transition: border-color var(--ui-motion-quick) var(--ui-easing-out);
 }
 
-// Plain: no box. Numbers are typography; a .ui-stat-group draws the rules between them.
+// Plain: no box. A .ui-stat-group draws the rules between the items.
 .ui-stat-card--plain {
   height: auto;
 }
 
-.ui-stat-card__header {
+.ui-stat-card__body,
+.card-body.ui-stat-card__body {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ui-space-2);
-  margin-bottom: var(--ui-space-1);
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ui-stat-card__icon {
+  display: inline-flex;
+  margin-bottom: var(--ui-space-3);
+  color: var(--ui-color-text);
+}
+
+.ui-stat-card__value {
+  font-size: var(--ui-font-size-4xl);
+  font-weight: var(--ui-font-weight-display);
+  letter-spacing: var(--ui-letter-spacing-heading);
+  line-height: 1.1;
+  color: var(--ui-color-text);
 }
 
 .ui-stat-card__label {
+  margin-top: var(--ui-space-1);
   font-size: var(--ui-font-size-sm);
   font-weight: var(--ui-font-weight-medium);
   color: var(--ui-color-text-muted);
@@ -31,26 +47,11 @@
   }
 }
 
-// A quiet glyph, not a tinted bubble (identity: no icon-in-a-circle decoration).
-.ui-stat-card__icon {
-  display: inline-flex;
-  color: var(--ui-color-text-subtle);
-}
-
-.ui-stat-card__value {
-  font-family: var(--ui-font-family-heading);
-  font-size: var(--ui-font-size-4xl);
-  font-weight: var(--ui-font-weight-heading);
-  letter-spacing: var(--ui-letter-spacing-heading);
-  line-height: 1.05;
-  color: var(--ui-color-text);
-}
-
 .ui-stat-card__delta {
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-1);
-  margin-top: var(--ui-space-1);
+  margin-top: var(--ui-space-2);
   font-size: var(--ui-font-size-sm);
   color: var(--ui-color-text-muted);
 }
@@ -70,7 +71,7 @@
 
 .ui-stat-card--interactive:hover,
 .ui-stat-card--interactive:focus-within {
-  --bs-card-border-color: var(--ui-color-border-strong);
+  --bs-card-border-color: var(--ui-color-accent);
 
   .ui-stat-card__label a {
     color: var(--ui-color-link);

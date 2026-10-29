@@ -3,6 +3,7 @@ import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useOverlay } from '../../hooks/useOverlay';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 import type { DialogCloseReason } from '../Dialog/Dialog';
 
@@ -32,9 +33,10 @@ export interface DrawerProps {
 export function Drawer(props: DrawerProps) {
   // 'not all' never matches, so without `responsive` the drawer is never inline.
   const inline = useMediaQuery(props.responsive ? `(min-width: ${BREAKPOINTS[props.responsive]}px)` : 'not all', false);
+  const { present, state } = usePresence(props.open && !(props.responsive && inline), { exit: 'step' });
   if (props.responsive && inline) return <DrawerInline {...props} />;
-  if (!props.open) return null;
-  return <DrawerInner {...props} />;
+  if (!present) return null;
+  return <DrawerInner {...props} state={state} />;
 }
 
 function DrawerInline({ title, children, footer, size = 'md', className, id, ...aria }: DrawerProps) {
@@ -69,20 +71,21 @@ function DrawerInner({
   responsive: _responsive,
   className,
   id,
+  state = 'open',
   ...aria
-}: DrawerProps) {
+}: DrawerProps & { state?: 'open' | 'closed' }) {
   const { t } = useLocale();
   const titleId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  useOverlay({ rootRef, contentRef, initialFocus, modal, onEscape: closeOnEscape ? () => onClose('escape') : undefined });
+  useOverlay({ rootRef, contentRef, initialFocus, modal, onEscape: closeOnEscape && state === 'open' ? () => onClose('escape') : undefined });
 
   return (
     <Portal>
-      <div ref={rootRef} className="ui-drawer-root">
+      <div ref={rootRef} className="ui-drawer-root" data-state={state}>
         {/* Backdrop click is a pointer convenience; keyboard users close with Escape (useOverlay). */}
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-        {modal && <div className="offcanvas-backdrop show ui-drawer__backdrop" onClick={() => closeOnBackdrop && onClose('backdrop')} />}
+        {modal && <div className="offcanvas-backdrop show ui-drawer__backdrop" onClick={() => closeOnBackdrop && state === 'open' && onClose('backdrop')} />}
         <div
           ref={contentRef}
           id={id}

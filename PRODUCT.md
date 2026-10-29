@@ -32,7 +32,7 @@ The specs, tokens, patterns and consistency contract are served to coding agents
 - Eight app profiles (saas, admin, dashboard, cms, pos, game, ecommerce, landing), light and dark themes, density modes and high-contrast mode must keep working.
 - Per-component CSS via the kit's Vite plugin (`virtual:ui-kit-styles`); self-hosted fonts; strict CSP compatibility (no inline styles from the library at runtime beyond CSS custom properties).
 - Performance budgets: Lighthouse performance ≥ 0.9 and accessibility = 1 on app key routes in CI; bundle budgets enforced in kit CI.
-- Undecided: the visual direction of identity v2 (to be chosen from three prototypes); exact motion vocabulary; which components get 3D-capable variants.
+- Decided 2026-10-29: identity v2 is Monteringsanvisning (assembly sheet) with the four-movement motion grammar (Assemble, Turn, Tick, Lift and drop). Undecided: which components get 3D-capable variants.
 
 ## Brand Commitments
 

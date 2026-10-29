@@ -51,7 +51,7 @@ export function Icon({ name, size, label, directional, className, ...rest }: Ico
       height={dimension}
       fill={def.fill ? 'currentColor' : 'none'}
       stroke={def.fill ? 'none' : 'currentColor'}
-      strokeWidth={1.5}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       focusable="false"

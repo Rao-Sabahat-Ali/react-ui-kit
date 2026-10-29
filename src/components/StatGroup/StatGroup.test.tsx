@@ -26,7 +26,7 @@ describe('StatGroup', () => {
     expect(cards[1]).toHaveClass('card');
   });
 
-  it('AC-3: draws rules via the group class, with no box or shadow classes', () => {
+  it('AC-3: draws the 2px line and hairlines via the group class alone, with no box or shadow classes', () => {
     render(
       <StatGroup aria-label="g">
         <StatCard label="A" value={1} />
@@ -34,5 +34,21 @@ describe('StatGroup', () => {
     );
     const group = screen.getByRole('group');
     expect(group.className).toBe('ui-stat-group');
+  });
+
+  it('AC-4: a changed item value updates in place without re-mounting the group', () => {
+    const { rerender } = render(
+      <StatGroup aria-label="g">
+        <StatCard label="A" value={1} />
+      </StatGroup>,
+    );
+    const group = screen.getByRole('group');
+    rerender(
+      <StatGroup aria-label="g">
+        <StatCard label="A" value={2} />
+      </StatGroup>,
+    );
+    expect(screen.getByRole('group')).toBe(group);
+    expect(screen.getByRole('status')).toHaveTextContent('2');
   });
 });
