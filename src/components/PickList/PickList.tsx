@@ -77,9 +77,9 @@ export function PickList<T>({ source, target, onChange, itemTemplate, dataKey = 
   };
 
   const transferButtons: { label: 'moveToTarget' | 'moveAllToTarget' | 'moveToSource' | 'moveAllToSource'; icon: string; run: () => void; off: boolean }[] = [
-    { label: 'moveToTarget', icon: 'chevron-right', run: () => transfer('source', selectedItems('source')), off: selectedItems('source').length === 0 },
+    { label: 'moveToTarget', icon: 'arrow-right', run: () => transfer('source', selectedItems('source')), off: selectedItems('source').length === 0 },
     { label: 'moveAllToTarget', icon: 'chevrons-right', run: () => transfer('source', visible('source')), off: visible('source').length === 0 },
-    { label: 'moveToSource', icon: 'chevron-left', run: () => transfer('target', selectedItems('target')), off: selectedItems('target').length === 0 },
+    { label: 'moveToSource', icon: 'arrow-left', run: () => transfer('target', selectedItems('target')), off: selectedItems('target').length === 0 },
     { label: 'moveAllToSource', icon: 'chevrons-left', run: () => transfer('target', visible('target')), off: visible('target').length === 0 },
   ];
 

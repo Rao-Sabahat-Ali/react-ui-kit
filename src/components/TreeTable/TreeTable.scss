@@ -1,5 +1,12 @@
+// TreeTable is a DataTable (the sheet's grid, see DataTable.scss) with an indented first column. The hierarchy is
+// drawn as a dashed guide line from the parent's chevron down through its child rows.
 .ui-tree-table {
   --ui-tree-table-indent: 1.5rem;
+  --ui-tree-table-pad: var(--ui-space-4);
+}
+
+.ui-data-table--sm.ui-tree-table {
+  --ui-tree-table-pad: var(--ui-space-3);
 }
 
 .ui-tree-table__cell-start {
@@ -35,7 +42,7 @@
 }
 
 .ui-tree-table__chevron {
-  transition: transform var(--ui-duration) var(--ui-easing);
+  transition: transform var(--ui-motion-quick) var(--ui-easing-out);
 }
 
 .ui-tree-table__chevron--open {
@@ -47,8 +54,23 @@
 }
 
 .ui-tree-table__row:focus-visible {
-  outline: 2px solid var(--ui-color-focus-ring);
-  outline-offset: -2px;
+  outline: var(--ui-line-width) solid var(--ui-color-focus-ring);
+  outline-offset: calc(var(--ui-line-width) * -1);
+}
+
+// The guide line of a child row sits under its parent's chevron (centre of the 1.5rem toggler).
+.ui-tree-table__row[aria-level]:not([aria-level='1']) > :first-child {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: calc(var(--ui-tree-table-pad) + var(--ui-tree-table-indent) * (var(--ui-tree-level, 1) - 2) + 0.75rem);
+    inline-size: 0;
+    border-inline-start: var(--ui-line-width) dashed var(--ui-color-line-muted);
+    pointer-events: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

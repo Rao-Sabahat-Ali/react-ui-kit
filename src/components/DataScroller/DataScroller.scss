@@ -1,3 +1,5 @@
+@use '../../styles/data';
+
 .ui-data-scroller {
   color: var(--ui-color-text);
 }
@@ -14,11 +16,11 @@
 .ui-data-scroller--inline .ui-data-scroller__viewport {
   overflow-y: auto;
   overscroll-behavior: contain;
-  border-block: 1px solid var(--ui-color-border);
+  border-block: var(--ui-line-width) solid var(--ui-color-line);
 
   &:focus-visible {
-    outline: 2px solid var(--ui-color-accent);
-    outline-offset: -2px;
+    outline: var(--ui-line-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-line-width) * -1);
   }
 }
 
@@ -26,11 +28,22 @@
   outline: 2px solid transparent;
 }
 
+// Items appended by "load more" or the sentinel slide in (opacity + a few px), never all at once on first paint.
+.ui-data-scroller__item--new {
+  animation: ui-part-in var(--ui-motion-part) var(--ui-easing-out);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 .ui-data-scroller__item {
   padding: var(--ui-space-3) var(--ui-space-2);
 
+  font-variant-numeric: tabular-nums;
+
   & + & {
-    border-block-start: 1px solid var(--ui-color-border);
+    border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
   }
 }
 

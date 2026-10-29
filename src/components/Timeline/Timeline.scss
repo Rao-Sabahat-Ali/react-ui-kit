@@ -1,6 +1,6 @@
 .ui-timeline {
   --ui-timeline-marker-size: 0.875rem;
-  --ui-timeline-connector-size: 2px;
+  --ui-timeline-connector-size: var(--ui-line-width);
   display: flex;
   color: var(--ui-color-text);
 }
@@ -35,15 +35,37 @@
   box-sizing: border-box;
   inline-size: var(--ui-timeline-marker-size);
   block-size: var(--ui-timeline-marker-size);
-  border: 2px solid var(--ui-color-accent);
+  border: var(--ui-line-width) solid var(--ui-color-accent);
   border-radius: 50%;
   background: var(--ui-color-surface);
   flex: none;
 }
 
+// A numbered marker is a small part: 6px corners, a 2px line, a tabular numeral.
+.ui-timeline__marker--number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: auto;
+  min-inline-size: 1.75rem;
+  block-size: 1.75rem;
+  padding-inline: var(--ui-space-1);
+  border-color: var(--ui-color-line);
+  border-radius: var(--ui-radius);
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: 1;
+}
+
+// The guide line between markers is dashed (the assembly sheet's guide line), drawn as a border.
 .ui-timeline__connector {
   flex-grow: 1;
-  background: var(--ui-color-border);
+  min-block-size: var(--ui-space-3);
+  min-inline-size: var(--ui-space-3);
+  border: 0 dashed var(--ui-color-line-muted);
+  background: none;
 }
 
 /* Vertical ------------------------------------------------------------- */
@@ -60,7 +82,8 @@
   }
 
   .ui-timeline__connector {
-    inline-size: var(--ui-timeline-connector-size);
+    inline-size: 0;
+    border-inline-start-width: var(--ui-timeline-connector-size);
   }
 }
 
@@ -110,7 +133,8 @@
   }
 
   .ui-timeline__connector {
-    block-size: var(--ui-timeline-connector-size);
+    block-size: 0;
+    border-block-start-width: var(--ui-timeline-connector-size);
   }
 
   .ui-timeline__opposite,

@@ -1,4 +1,5 @@
-import { useId } from 'react';
+import { useId, useRef } from 'react';
+import { useSlidingMark } from '../../hooks/useSlidingMark';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import type { Size } from '../../types';
@@ -42,6 +43,7 @@ export function getPageItems(page: number, pageCount: number, siblings = 1): Pag
 export function Paginator({ page, pageSize = 25, total, onPageChange, pageSizeOptions = [10, 25, 50, 100], siblings = 1, showReport = true, showFirstLast = true, size = 'md', className }: PaginatorProps) {
   const { t } = useLocale();
   const sizeLabelId = useId();
+  const listRef = useRef<HTMLUListElement | null>(null);
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const current = Math.min(Math.max(page, 0), pageCount - 1);
   const first = total === 0 ? 0 : current * pageSize + 1;
@@ -49,6 +51,9 @@ export function Paginator({ page, pageSize = 25, total, onPageChange, pageSizeOp
   const go = (next: number) => {
     if (next !== current && next >= 0 && next < pageCount) onPageChange(next, pageSize);
   };
+
+  // The accent mark slides under the current page (the same mark Tabs draws).
+  useSlidingMark(listRef, { target: '.ui-paginator__page[aria-current="page"]' }, [current, pageCount, siblings, showFirstLast, size]);
 
   const navButton = (target: number, icon: IconName, label: string, disabled: boolean) => (
     <li className={cx('page-item', disabled && 'disabled')}>
@@ -66,7 +71,7 @@ export function Paginator({ page, pageSize = 25, total, onPageChange, pageSizeOp
         </span>
       )}
       <nav aria-label={t('pagination')} className="ui-paginator__nav-wrapper">
-        <ul className={cx('pagination mb-0 ui-paginator__list', size === 'sm' && 'pagination-sm', size === 'lg' && 'pagination-lg')}>
+        <ul ref={listRef} className={cx('pagination mb-0 ui-paginator__list', size === 'sm' && 'pagination-sm', size === 'lg' && 'pagination-lg')}>
           {showFirstLast && navButton(0, 'chevrons-left', t('firstPage'), current === 0)}
           {navButton(current - 1, 'chevron-left', t('previousPage'), current === 0)}
           {getPageItems(current, pageCount, siblings).map((item) =>

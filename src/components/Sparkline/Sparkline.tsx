@@ -1,4 +1,4 @@
-import type { Ref, SVGAttributes } from 'react';
+import type { CSSProperties, Ref, SVGAttributes } from 'react';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 
@@ -91,7 +91,7 @@ export function Sparkline({ values, type = 'line', height = 32, color = 1, showM
       {bars &&
         valid.map((p) => {
           const y = yOf(p.v);
-          return <rect key={p.i} className="ui-sparkline__bar" x={round(slot * p.i + slot * 0.15)} width={round(slot * 0.7)} y={round(Math.min(y, zeroY))} height={round(Math.max(Math.abs(y - zeroY), p.v === 0 ? 0 : 1))} />;
+          return <rect key={p.i} className={cx('ui-sparkline__bar', p.v < 0 && 'ui-sparkline__bar--neg')} style={{ '--ui-i': Math.min(p.i, 7) } as CSSProperties} x={round(slot * p.i + slot * 0.15)} width={round(slot * 0.7)} y={round(Math.min(y, zeroY))} height={round(Math.max(Math.abs(y - zeroY), p.v === 0 ? 0 : 1))} />;
         })}
       {showMinMax &&
         [lowest, highest].map((p, k) => (

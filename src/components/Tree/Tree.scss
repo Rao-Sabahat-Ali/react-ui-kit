@@ -1,3 +1,5 @@
+@use '../../styles/data';
+
 .ui-tree {
   --ui-tree-indent: 1.25rem;
   color: var(--ui-color-text);
@@ -8,16 +10,39 @@
 }
 
 .ui-tree__node {
-  outline: none;
+  outline: var(--ui-line-width) solid transparent; // focus is drawn on the part itself
 
   &:focus-visible > .ui-tree__row {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-focus-ring-width) * -1);
+  }
+}
+
+// Children are connected by a dashed guide line that runs down from the parent's chevron.
+.ui-tree__group {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    // Centre of the parent's toggler: (level - 1) indents + half the 1.5rem toggler.
+    inset-inline-start: calc(var(--ui-tree-indent) * (var(--ui-tree-level, 1) - 1) + 0.75rem);
+    inline-size: 0;
+    border-inline-start: var(--ui-line-width) dashed var(--ui-color-line-muted);
+    pointer-events: none;
+  }
+
+  // Expanding reveals the children with a short clip-path wipe: no height animation, no layout reflow.
+  @include data.motion-safe {
+    animation: ui-reveal-down var(--ui-motion-part) var(--ui-easing-out);
   }
 }
 
 .ui-tree__node--dragging > .ui-tree__row {
-  opacity: 0.5;
+  background: var(--ui-color-surface-raised);
+  box-shadow: var(--ui-shadow-drag);
+  opacity: 0.9;
 }
 
 .ui-tree__row {
@@ -29,6 +54,8 @@
   padding-inline-end: var(--ui-space-2);
   border-radius: var(--ui-radius-sm);
   user-select: none;
+  font-variant-numeric: tabular-nums;
+  @include data.selection-marker;
 
   &:hover {
     background: var(--ui-color-bg-subtle);
@@ -41,6 +68,11 @@
 
 .ui-tree__row--selected {
   background: var(--ui-color-accent-subtle);
+  @include data.selection-marker-on;
+
+  &:hover {
+    background: var(--ui-color-accent-subtle);
+  }
 }
 
 .ui-tree__row--selectable {
@@ -53,19 +85,19 @@
 }
 
 .ui-tree__row--drop-inside {
-  box-shadow: inset 0 0 0 2px var(--ui-color-accent);
+  box-shadow: inset 0 0 0 var(--ui-line-width) var(--ui-color-accent);
 }
 
-.ui-tree__row--drop-before::before,
+.ui-tree__row--drop-before::after,
 .ui-tree__row--drop-after::after {
   content: '';
   position: absolute;
   inset-inline: 0;
-  block-size: 2px;
+  block-size: var(--ui-line-width);
   background: var(--ui-color-accent);
 }
 
-.ui-tree__row--drop-before::before {
+.ui-tree__row--drop-before::after {
   inset-block-start: 0;
 }
 
@@ -88,7 +120,7 @@
 }
 
 .ui-tree__chevron {
-  transition: transform var(--ui-duration) var(--ui-easing);
+  transition: transform var(--ui-motion-quick) var(--ui-easing-out);
 }
 
 .ui-tree__chevron--open {

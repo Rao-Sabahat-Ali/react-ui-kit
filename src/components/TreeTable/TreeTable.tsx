@@ -1,7 +1,8 @@
-import { useId, useMemo, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
+import { useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useTypeahead } from '../../hooks/useTypeahead';
 import { useLocale } from '../../locale/LocaleProvider';
+import { useFlip } from '../../motion/useFlip';
 import { cx } from '../../utils/cx';
 import { getByPath } from '../../utils/object';
 import { Checkbox } from '../Checkbox/Checkbox';
@@ -245,6 +246,9 @@ export function TreeTable<T>({
   };
 
   const hasData = flat.length > 0;
+  // Expanding or sorting moves rows with FLIP; rows that appear fade in (transform/opacity only, at most 8 rows).
+  const bodyRef = useRef<HTMLTableSectionElement | null>(null);
+  useFlip(bodyRef, [flat.map((f) => String(f.node.key)).join('\u0001')], { selector: 'tr.ui-tree-table__row' });
 
   return (
     <div className={cx('ui-data-table ui-tree-table', size === 'sm' && 'ui-data-table--sm', className)}>
@@ -275,7 +279,7 @@ export function TreeTable<T>({
                         onClick={(e) => setSort(nextSort(sort, key, sortMode === 'multiple' && e.shiftKey))}
                       >
                         <span>{column.header}</span>
-                        <Icon name={meta ? (meta.order === 1 ? 'sort-up' : 'sort-down') : 'sort'} size="sm" className="ui-data-table__sort-icon" />
+                        <Icon name={meta ? (meta.order === 1 ? 'chevron-up' : 'chevron-down') : 'sort'} size="sm" className="ui-data-table__sort-icon" />
                         {sort.length > 1 && meta && <span className="ui-data-table__sort-rank">{sortIndex + 1}</span>}
                       </button>
                     ) : (
@@ -288,7 +292,7 @@ export function TreeTable<T>({
           </thead>
           {/* Row keyboard handling (APG treegrid) lives on the rowgroup. */}
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-          <tbody className="ui-data-table__body" onKeyDown={handleKeyDown}>
+          <tbody ref={bodyRef} className="ui-data-table__body" onKeyDown={handleKeyDown}>
             {loading &&
               Array.from({ length: loadingRows }, (_, r) => (
                 <tr key={`loading-${r}`} role="row" aria-hidden="true">
@@ -329,7 +333,8 @@ export function TreeTable<T>({
                     aria-disabled={node.disabled || undefined}
                     aria-busy={isLoading || undefined}
                     tabIndex={activeKey === node.key ? 0 : -1}
-                    className={cx('ui-tree-table__row', highlighted && 'table-active', selectionMode && 'ui-tree-table__row--selectable')}
+                    style={{ '--ui-tree-level': level } as CSSProperties}
+                    className={cx('ui-tree-table__row', highlighted && 'table-active ui-data-table__row--selected', selectionMode && 'ui-tree-table__row--selectable')}
                     onFocus={(e) => {
                       if (e.target === e.currentTarget) setFocusedKey(node.key);
                     }}

@@ -63,6 +63,8 @@ export function DataScroller<T>({
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const buttonFocused = useRef(false);
+  // Items present on first render sit still; items appended later slide in.
+  const initialCount = useRef(items.length);
   const inFlight = useRef(false);
   const latest = useRef({ loading, hasMore, loadMore });
   latest.current = { loading, hasMore, loadMore };
@@ -176,7 +178,7 @@ export function DataScroller<T>({
           // eslint-disable-next-line jsx-a11y/no-redundant-roles -- restores list semantics removed by list-style: none in Safari
           <ul className="ui-data-scroller__items list-unstyled mb-0" role="list">
             {items.map((item, index) => (
-              <li key={keyOf(item, index)} className="ui-data-scroller__item">
+              <li key={keyOf(item, index)} className={cx('ui-data-scroller__item', index >= initialCount.current && 'ui-data-scroller__item--new')}>
                 {itemTemplate(item, index)}
               </li>
             ))}

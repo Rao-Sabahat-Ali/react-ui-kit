@@ -1,14 +1,23 @@
-.ui-data-table {
+@use '../../styles/data';
+
+// The table is the sheet's grid: a 2px ink line frames it and runs under the header, hairlines separate the rows,
+// numerals are tabular. The selected row is accent-subtle with a 2px accent marker.
+.ui-data-table,
+.ui-data-table .table {
   --bs-table-bg: var(--ui-color-surface);
   --bs-table-color: var(--ui-color-text);
-  --bs-table-border-color: var(--ui-color-border);
+  --bs-table-border-color: var(--ui-color-line-muted);
   --bs-table-striped-bg: var(--ui-color-bg-subtle);
   --bs-table-hover-bg: var(--ui-color-bg-subtle);
   --bs-table-active-bg: var(--ui-color-accent-subtle);
   --bs-table-active-color: var(--ui-color-text);
-  border: 1px solid var(--ui-color-border);
+}
+
+.ui-data-table {
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-lg);
   background: var(--ui-color-surface);
+  font-variant-numeric: tabular-nums;
   overflow: hidden;
 }
 
@@ -23,11 +32,11 @@
 }
 
 .ui-data-table__toolbar {
-  border-bottom: 1px solid var(--ui-color-border);
+  border-bottom: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-data-table__footer {
-  border-top: 1px solid var(--ui-color-border);
+  border-top: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 .ui-data-table__caption {
@@ -38,12 +47,22 @@
 }
 
 .ui-data-table__head th {
-  background: var(--ui-color-bg-subtle);
-  color: var(--ui-color-text-muted);
+  background: var(--ui-color-surface);
+  color: var(--ui-color-text);
   font-size: var(--ui-font-size-sm);
   font-weight: var(--ui-font-weight-semibold);
   white-space: nowrap;
   vertical-align: middle;
+}
+
+// The 2px ink line under the header (the filter row, when shown, sits under a hairline instead).
+.ui-data-table .ui-data-table__head > tr:last-child > th,
+.ui-data-table .ui-data-table__head > tr:last-child > td {
+  border-block-end: var(--ui-line-width) solid var(--ui-color-line);
+}
+
+.ui-data-table .ui-data-table__head > tr:has(+ tr) > * {
+  border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-data-table table > :not(caption) > * > * {
@@ -77,21 +96,31 @@
   justify-content: inherit;
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
     border-radius: var(--ui-radius-sm);
   }
 }
 
+.ui-data-table__sort {
+  border-radius: var(--ui-radius-sm);
+
+  &:hover .ui-data-table__sort-icon {
+    color: var(--ui-color-text);
+  }
+}
+
+// Inactive: a muted line-art pair of arrows. Active: a 2px chevron in the accent.
 .ui-data-table__sort-icon {
-  opacity: 0.45;
+  color: var(--ui-color-text-subtle);
+  transition: color var(--ui-motion-quick) var(--ui-easing-out);
 }
 
 .ui-data-table__sort--active {
   color: var(--ui-color-text);
 
   .ui-data-table__sort-icon {
-    opacity: 1;
+    color: var(--ui-color-accent);
   }
 }
 
@@ -120,8 +149,39 @@
   cursor: pointer;
 
   &:focus-visible {
-    outline: 2px solid var(--ui-color-focus-ring);
-    outline-offset: -2px;
+    outline: var(--ui-line-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-line-width) * -1);
+  }
+}
+
+// Selected row: accent-subtle ground (Bootstrap's `table-active`) plus a 2px accent marker on the first cell.
+.ui-data-table tbody > tr > :first-child {
+  @include data.selection-marker;
+
+  &:not(.ui-data-table__cell--frozen) {
+    position: relative;
+  }
+}
+
+.ui-data-table tbody > tr.ui-data-table__row--selected > :first-child {
+  @include data.selection-marker-on;
+}
+
+.ui-data-table__grid [role='row'] > :first-child {
+  @include data.selection-marker;
+  position: relative;
+}
+
+.ui-data-table__grid .ui-data-table__row--selected > :first-child {
+  @include data.selection-marker-on;
+}
+
+// A row that left the data: an inert ghost fades out for a moment (opacity and transform only).
+.ui-data-table tr[data-state='closed'] {
+  pointer-events: none;
+
+  @include data.motion-safe {
+    animation: ui-part-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
   }
 }
 
@@ -260,23 +320,24 @@
   touch-action: none;
   z-index: 2;
 
+  // A dashed guide line: muted at rest, the accent while hovered, focused or dragged.
   &::after {
     content: '';
     position: absolute;
-    inset-block: 25%;
+    inset-block: 15%;
     inset-inline-end: 0;
-    inline-size: 2px;
-    background: var(--ui-color-border);
+    inline-size: 0;
+    border-inline-end: var(--ui-line-width) dashed var(--ui-color-line-muted);
+    transition: border-color var(--ui-motion-quick) var(--ui-easing-out);
   }
 
   &:hover::after,
   &:focus-visible::after {
-    background: var(--ui-color-accent);
+    border-color: var(--ui-color-accent);
   }
 
   &:focus-visible {
     outline: 2px solid transparent;
-    box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
   }
 
   @media (pointer: coarse) {
@@ -287,7 +348,7 @@
   // Backgrounds are dropped in forced-colors mode; keep the separator line visible.
   @media (forced-colors: active) {
     &::after {
-      background: ButtonText;
+      border-color: ButtonText;
     }
   }
 }
@@ -295,6 +356,10 @@
 .ui-data-table--resizing {
   cursor: col-resize;
   user-select: none;
+}
+
+.ui-data-table--resizing .ui-data-table__resizer::after {
+  border-color: var(--ui-color-accent);
 }
 
 .ui-data-table__table--fixed {
@@ -318,7 +383,7 @@
 .ui-data-table__head .ui-data-table__cell--frozen {
   position: sticky;
   z-index: 3;
-  background: var(--ui-color-bg-subtle);
+  background: var(--ui-color-surface);
 }
 
 .ui-data-table__expander {
@@ -327,7 +392,7 @@
 }
 
 .ui-data-table__expander-icon {
-  transition: transform var(--ui-duration) var(--ui-easing);
+  transition: transform var(--ui-motion-quick) var(--ui-easing-out);
 
   [aria-expanded='true'] > & {
     transform: rotate(90deg);
@@ -349,6 +414,13 @@
 .ui-data-table__expansion > td {
   background: var(--ui-color-bg-subtle);
   padding-block: var(--ui-space-3);
+
+  // The detail row opens with a short clip reveal, no height animation.
+  > * {
+    @include data.motion-safe {
+      animation: ui-reveal-down var(--ui-motion-part) var(--ui-easing-out);
+    }
+  }
 }
 
 // ── Phase 3 ────────────────────────────────────────────────────────────────
@@ -357,8 +429,8 @@
   cursor: text;
 
   &:focus-visible {
-    outline: 2px solid var(--ui-color-focus-ring);
-    outline-offset: -2px;
+    outline: var(--ui-line-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-line-width) * -1);
   }
 }
 
@@ -378,6 +450,7 @@
 
 .ui-data-table__group-header > th {
   background: var(--ui-color-bg-subtle);
+  border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
   font-weight: var(--ui-font-weight-semibold);
 }
 
@@ -393,8 +466,8 @@
 .ui-data-table [role='grid'] [tabindex='0']:focus-visible,
 .ui-data-table table[role='grid'] td:focus-visible,
 .ui-data-table table[role='grid'] th:focus-visible {
-  outline: 2px solid var(--ui-color-focus-ring);
-  outline-offset: -2px;
+  outline: var(--ui-line-width) solid var(--ui-color-focus-ring);
+  outline-offset: calc(var(--ui-line-width) * -1);
 }
 
 // Virtual scroll: ARIA table of divs laid out with CSS grid (rows have a fixed height).
@@ -409,7 +482,7 @@
     display: grid;
     grid-template-columns: var(--ui-data-table-columns);
     align-items: center;
-    border-block-end: 1px solid var(--ui-color-border);
+    border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
     block-size: 100%;
   }
 
@@ -421,10 +494,14 @@
   }
 
   .ui-data-table__head [role='row'] > * {
-    background: var(--ui-color-bg-subtle);
-    color: var(--ui-color-text-muted);
+    background: var(--ui-color-surface);
+    color: var(--ui-color-text);
     font-size: var(--ui-font-size-sm);
     font-weight: var(--ui-font-weight-semibold);
+  }
+
+  .ui-data-table__head [role='row']:last-child {
+    border-block-end: var(--ui-line-width) solid var(--ui-color-line);
   }
 
   .ui-data-table__row--selected > * {

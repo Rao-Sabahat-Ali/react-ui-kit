@@ -1,4 +1,6 @@
 import {
+  cloneElement,
+  isValidElement,
   useEffect,
   useId,
   useImperativeHandle,
@@ -12,11 +14,14 @@ import {
   type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactElement,
   type ReactNode,
   type SyntheticEvent,
 } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
+import { useFlip } from '../../motion/useFlip';
+import { useExitGhosts, withGhosts } from '../../motion/useExitGhosts';
 import { cx } from '../../utils/cx';
 import { getByPath } from '../../utils/object';
 import { Button } from '../Button/Button';
@@ -240,6 +245,10 @@ export function DataTable<T>(props: DataTableProps<T>) {
 
   const selectedKeys = new Set<RowKey>(Array.isArray(selection) ? selection : selection === null || selection === undefined ? [] : [selection]);
   const pageKeys = rows.map(keyOf);
+  // Motion: rows reorder with FLIP (at most 8 rows animate), new rows fade in, removed rows leave as inert ghosts.
+  const bodyRef = useRef<HTMLTableSectionElement | null>(null);
+  useFlip(bodyRef, [pageKeys.join('\u0001')], { selector: 'tr[data-row-key]', enabled: !virtualScroll && !groupBy });
+  const ghosts = useExitGhosts(data, rows, (row) => String(keyOf(row)), !virtualScroll && !groupBy && !lazy);
   const selectedOnPage = pageKeys.filter((k) => selectedKeys.has(k)).length;
   const expandedSet = new Set(expanded);
 
@@ -686,7 +695,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
         onKeyDown={onHeaderKeyDown}
       >
         <span>{column.header}</span>
-        <Icon name={meta ? (meta.order === 1 ? 'sort-up' : 'sort-down') : 'sort'} size="sm" className="ui-data-table__sort-icon" />
+        <Icon name={meta ? (meta.order === 1 ? 'chevron-up' : 'chevron-down') : 'sort'} size="sm" className="ui-data-table__sort-icon" />
         {sort.length > 1 && meta && <span className="ui-data-table__sort-rank">{sortIndex + 1}</span>}
       </button>
     ) : reorderable ? (
@@ -935,7 +944,18 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(() => new Set());
   const renderBody = (): ReactNode[] => {
     const offset = paginate ? currentPage * pageSize : 0;
-    if (!groupBy) return rows.flatMap((row, i) => renderRow(row, i, offset + i));
+    if (!groupBy) {
+      const segments = withGhosts(
+        rows.map((row, i) => renderRow(row, i, offset + i)),
+        ghosts,
+        (ghost) => [
+          renderRow(ghost.item as T, ghost.index, offset + ghost.index).map((node) =>
+            isValidElement(node) ? cloneElement(node as ReactElement<Record<string, unknown>>, { 'data-state': 'closed', 'data-row-key': undefined, 'aria-hidden': true, inert: true, tabIndex: undefined, onClick: undefined, onKeyDown: undefined, onContextMenu: undefined }) : node,
+          ),
+        ],
+      );
+      return segments.flat();
+    }
     const out: ReactNode[] = [];
     let index = 0;
     for (const group of groupRows(rows, groupBy)) {
@@ -1152,7 +1172,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
               {headerRow}
               {filterRow}
             </thead>
-            <tbody className="ui-data-table__body">
+            <tbody ref={bodyRef} className="ui-data-table__body">
               {loadingRowsEl}
               {emptyRow}
               {!loading && renderBody()}
