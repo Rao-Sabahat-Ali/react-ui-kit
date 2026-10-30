@@ -7,6 +7,8 @@ const items: SpeedDialItem[] = [
   { label: 'Share', icon: 'external-link', command: () => undefined },
 ];
 
+const ALIGN = { start: 'justify-content-start', center: 'justify-content-center', end: 'justify-content-end' } as const;
+
 /**
  * One demo per cell. A cell is sized for the farthest an action travels (three actions at 3.25rem each plus the 3.5rem trigger
  * is about 14rem; a circular fan reaches 6rem from the trigger centre), so nothing leaves its frame at 1280 or 390.
@@ -15,7 +17,7 @@ function Cell({ label, align = 'center', height, children }: { label: string; al
   return (
     <figure className="m-0 d-flex flex-column gap-2">
       <figcaption className="small text-body-secondary">{label}</figcaption>
-      <div className={`d-flex align-items-end justify-content-${align} border rounded p-3`} style={{ minBlockSize: height }}>
+      <div className={`d-flex align-items-end ${ALIGN[align]} border rounded p-3`} style={{ minBlockSize: height }}>
         {children}
       </div>
     </figure>

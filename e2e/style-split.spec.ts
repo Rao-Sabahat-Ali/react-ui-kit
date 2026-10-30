@@ -67,12 +67,12 @@ test.describe('split styles render identically @split', () => {
           // Components that measure themselves (the sliding marks of SelectButton, Tabs and others write `--ui-seg-pos`-style custom
           // properties and a `--ready` class once their first measurement has landed, and measure again when the font swaps in) must
           // be finished too: the signature covers every class list and inline style, and has to stay unchanged for two polls
-          // in a row. Any animation still running is awaited, so no capture can fall inside a transition.
+          // in a row. Any finite animation still running is awaited (infinite ones, such as a spinner, never finish), so no capture can fall inside a transition.
           let previous = '';
           let stable = 0;
           for (let i = 0; i < 40 && stable < 2; i++) {
             const signature = await page.evaluate(async () => {
-              await Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined)));
+              await Promise.all(document.getAnimations().filter((a) => a.effect?.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => undefined)));
               const state = [...document.querySelectorAll('body *')].map((el) => `${el.getAttribute('class') ?? ''}|${el.getAttribute('style') ?? ''}`).join('\n');
               let hash = 0;
               for (let c = 0; c < state.length; c++) hash = (hash * 31 + state.charCodeAt(c)) | 0;
