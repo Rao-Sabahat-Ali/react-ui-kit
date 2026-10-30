@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Button, Icon, InputText, Select, ThemeProvider, ThemeToggle, type Profile } from '@sabahat/react-ui-kit';
 import { BlueprintPage } from './pages/BlueprintPage';
 import { BlueprintsPage } from './pages/BlueprintsPage';
@@ -8,6 +8,8 @@ import { FoundationsPage } from './pages/FoundationsPage';
 import { HomePage } from './pages/HomePage';
 import { ProfilesPage } from './pages/ProfilesPage';
 import { RoadmapPage } from './pages/RoadmapPage';
+// The 3D overview is loaded on demand like the 3D examples (the page itself only renders lazy examples).
+const Depth3DPage = lazy(() => import('./pages/Depth3DPage').then((m) => ({ default: m.Depth3DPage })));
 import { CATEGORY_LABELS, components, isImplemented, profiles } from './registry';
 import { href, useRoute } from './router';
 
@@ -68,6 +70,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
     route[0] === 'foundations' ? <FoundationsPage /> :
     route[0] === 'profiles' ? <ProfilesPage /> :
     route[0] === 'roadmap' ? <RoadmapPage /> :
+    route[0] === '3d' ? <Suspense fallback={null}><Depth3DPage /></Suspense> :
     <HomePage />;
 
   const navLink = (to: string, label: string, extra?: string, icon?: string) => (
@@ -100,6 +103,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
             {navLink('foundations', 'Foundations', '', 'layers')}
             {navLink('profiles', 'App profiles', '', 'user')}
             {navLink('blueprints', 'Blueprints', '', 'box')}
+            {navLink('3d', 'Depth (3D)', '', 'layers')}
             {navLink('roadmap', 'Roadmap', '', 'list')}
           </div>
           <div className="px-3 pb-2">

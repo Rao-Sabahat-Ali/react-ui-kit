@@ -48,6 +48,34 @@
   color: var(--ui-color-accent);
 }
 
+// Media slot (a Scene3D or an Image): the empty state sizes it, the media fills it.
+.ui-empty-state__media {
+  position: relative;
+  inline-size: 10rem;
+  block-size: 10rem;
+  margin-bottom: var(--ui-space-2);
+  overflow: hidden;
+  border-radius: var(--ui-radius);
+
+  > * {
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: none;
+  }
+
+  img,
+  svg {
+    display: block;
+    object-fit: contain;
+  }
+}
+
+.ui-empty-state--sm .ui-empty-state__media {
+  inline-size: 6rem;
+  block-size: 6rem;
+  margin-bottom: var(--ui-space-1);
+}
+
 .ui-empty-state__title {
   margin: 0;
   color: var(--ui-color-text);

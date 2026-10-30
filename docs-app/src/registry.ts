@@ -24,8 +24,8 @@ export interface CatalogProfile {
   density: string;
 }
 
-// Components live in src/components/<Name>/, the foundation providers in src/theme and src/locale.
-const modules = import.meta.glob<{ examples: Example[] }>(['../../src/components/*/*.examples.tsx', '../../src/theme/*.examples.tsx', '../../src/locale/*.examples.tsx'], { eager: true });
+// Components live in src/components/<Name>/, the foundation providers in src/theme and src/locale, optional packages in packages/*/src/components/<Name>/.
+const modules = import.meta.glob<{ examples: Example[] }>(['../../src/components/*/*.examples.tsx', '../../src/theme/*.examples.tsx', '../../src/locale/*.examples.tsx', '../../packages/*/src/components/*/*.examples.tsx'], { eager: true });
 
 /** Examples keyed by the name in the file (`<Name>.examples.tsx`), which matches the spec `name`. */
 export const examplesByName = new Map<string, Example[]>(

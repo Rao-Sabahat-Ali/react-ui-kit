@@ -20,6 +20,23 @@ describe('create-app (OPS-017)', () => {
     expect(readFileSync(join(dir, 'index.html'), 'utf8')).toContain(`'${profile}'`);
   });
 
+  it('--with-3d adds the optional 3D package, three and its stylesheet; without it the starter has none', () => {
+    const plain = join(base, 'no-3d');
+    execFileSync('node', [join(root, 'scripts/create-app.mjs'), plain, '--profile', 'landing']);
+    expect(readFileSync(join(plain, 'package.json'), 'utf8')).not.toMatch(/three/);
+    expect(readFileSync(join(plain, 'src/main.tsx'), 'utf8')).not.toContain('react-ui-kit-3d');
+
+    const dir = join(base, 'with-3d');
+    execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', 'landing', '--with-3d']);
+    const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; devDependencies: Record<string, string> };
+    const three = JSON.parse(readFileSync(join(root, 'packages/react-ui-kit-3d/package.json'), 'utf8')) as { version: string; devDependencies: Record<string, string> };
+    expect(pkg.dependencies['@sabahat/react-ui-kit-3d']).toBe(`^${three.version}`);
+    expect(pkg.dependencies.three).toBe(`^${three.devDependencies.three}`);
+    expect(pkg.devDependencies['@types/three']).toBe(three.devDependencies['@types/three']);
+    expect(Object.keys(pkg.dependencies)).toEqual([...Object.keys(pkg.dependencies)].sort());
+    expect(readFileSync(join(dir, 'src/main.tsx'), 'utf8')).toContain("import '@sabahat/react-ui-kit-3d/styles.css';");
+  });
+
   it.each(Object.keys(PROFILES_SHELL))('%s starter loads only the styles it uses (style plugin)', (profile) => {
     const dir = join(base, `${profile}-styles`);
     execFileSync('node', [join(root, 'scripts/create-app.mjs'), dir, '--profile', profile]);

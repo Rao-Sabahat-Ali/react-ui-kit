@@ -108,6 +108,10 @@ Good to know:
 
 The pieces ship in the package as `dist/styles/**` (`@sabahat/react-ui-kit/styles/*`): `base.css`, `bootstrap/<partial>.css`, `utilities/<key>[@<breakpoint>].css`, `components/<Name>.css` and `manifest.json` (per component: its css file, the Bootstrap partials, utilities and other components it needs; the global cascade `order`; gzip size of every file). `node scripts/measure-style-split.mjs [Component …]` prints the size an app would load.
 
+## Depth (3D), optional
+
+`@sabahat/react-ui-kit-3d` (in [`packages/react-ui-kit-3d`](packages/react-ui-kit-3d), published separately) adds `Scene3D` and `Model3D` on plain three.js for a landing hero object, a game backdrop, an empty-state illustration or a product turntable. The core kit never imports three; apps that skip the package pay nothing. See its [README](packages/react-ui-kit-3d/README.md), [ADR 0003](docs/adr/0003-optional-3d-package.md) and the `Depth (3D)` page of the docs app. `node scripts/create-app.mjs <dir> --profile landing --with-3d` adds it to a new app.
+
 ## Status
 
 All specified components are implemented (see the [live catalogue](https://react-ui-kit-docs.vercel.app) and [CHANGELOG](CHANGELOG.md)). Every component ships with WCAG 2.2 AA keyboard and screen-reader support, light/dark themes and eight app profiles.
@@ -117,7 +121,7 @@ All specified components are implemented (see the [live catalogue](https://react
 ```bash
 npm install
 npm run dev     # docs app http://localhost:5180
-npm run check   # typecheck + tests + build
+npm run check   # lint, typecheck, tests, build, bundle budget, and the 3D package (npm run check:3d)
 ```
 
 See [CLAUDE.md](CLAUDE.md) for the spec-driven workflow, agents and conventions.

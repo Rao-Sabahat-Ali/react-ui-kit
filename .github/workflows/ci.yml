@@ -23,6 +23,8 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: node scripts/check-bundle.mjs
+      # The optional 3D package (lint, typecheck and tests already cover it above): build it and check its own bundle budget.
+      - run: npm run check:3d
       - run: npm run build:docs
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test --project=desktop
