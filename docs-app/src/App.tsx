@@ -1,10 +1,11 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
-import { Button, Icon, InputText, Select, ThemeProvider, ThemeToggle, type Profile, type ThemeSetting } from '@sabahat/react-ui-kit';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Button, ConsentProvider, CookieBanner, Icon, InputText, Select, ThemeProvider, ThemeToggle, useConsent, type Profile, type ThemeSetting } from '@sabahat/react-ui-kit';
 import { blueprints, findBlueprint } from './blueprints/registry';
 import { BlueprintPage } from './pages/BlueprintPage';
 import { BlueprintsPage } from './pages/BlueprintsPage';
 import { ComponentPage } from './pages/ComponentPage';
 import { HomePage } from './pages/HomePage';
+import { PrivacyPage } from './pages/PrivacyPage';
 import { CATEGORY_LABELS, components, isImplemented, profiles } from './registry';
 import { href, useRoute } from './router';
 // Heavy pages load on demand: the blueprints bring every demo screen and its source, the 3D overview its lazy examples.
@@ -47,13 +48,18 @@ export function App() {
 
   return (
     <ThemeProvider profile={profile} theme={picked ?? defaultThemeOf(profile)} onThemeChange={setPicked}>
-      <Shell profile={profile} onProfileChange={setProfile} />
+      {/* The docs only keep the theme and profile choice in the browser (see the Privacy page): a notice, not a consent form. */}
+      <ConsentProvider policyVersion="2026-10">
+        <CookieBanner policyHref={href('privacy')}>This site keeps your theme and profile choice in your browser. No cookies, no tracking.</CookieBanner>
+        <Shell profile={profile} onProfileChange={setProfile} />
+      </ConsentProvider>
     </ThemeProvider>
   );
 }
 
 function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange: (p: Profile) => void }) {
   const route = useRoute();
+  const { openSettings } = useConsent();
   const [query, setQuery] = useState('');
   const [navOpen, setNavOpen] = useState(false);
   const current = route.join('/');
@@ -66,7 +72,11 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
     return () => document.removeEventListener('keydown', onKey);
   }, [navOpen]);
 
+  // A route change moves focus to the page; the first load does not take focus (the cookie notice is the first stop for the keyboard).
+  const shownRoute = useRef(current);
   useEffect(() => {
+    if (shownRoute.current === current) return;
+    shownRoute.current = current;
     setNavOpen(false);
     document.getElementById('main')?.focus();
     window.scrollTo(0, 0);
@@ -91,6 +101,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
     route[0] === 'components' && route[1] ? <ComponentPage slug={route[1]} /> :
     route[0] === 'foundations' ? <Suspense fallback={null}><FoundationsPage /></Suspense> :
     route[0] === 'profiles' ? <Suspense fallback={null}><ProfilesPage /></Suspense> :
+    route[0] === 'privacy' ? <PrivacyPage /> :
     route[0] === 'roadmap' ? <Suspense fallback={null}><RoadmapPage /></Suspense> :
     route[0] === '3d' ? <Suspense fallback={null}><Depth3DPage /></Suspense> :
     <HomePage />;
@@ -132,6 +143,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
       <div className="docs-body">
         {navOpen && <button type="button" className="docs-scrim" tabIndex={-1} aria-label="Close docs menu" onClick={() => setNavOpen(false)} />}
         <nav id="docs-nav" className={`docs-nav ${navOpen ? 'docs-nav--open' : ''}`} aria-label="Docs">
+          <div className="docs-nav__scroll">
           {blueprint && (
             // Phones only: the docs bar keeps just the Docs button, so the profile and (when the screen has no theme toggle of its own) the theme live here.
             <div className="docs-nav__tools d-md-none">
@@ -166,6 +178,13 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
               {list.map((c) => navLink(`components/${c.slug}`, c.name, isImplemented(c) ? '' : 'docs-nav__link--pending'))}
             </div>
           ))}
+          </div>
+          <div className="docs-nav__footer">
+            {navLink('privacy', 'Privacy')}
+            <button type="button" className="docs-nav__link" onClick={openSettings}>
+              Cookies and storage
+            </button>
+          </div>
         </nav>
         {blueprint ? (
           // Blueprints bring their own app shell, and with it the page's single main landmark.

@@ -1,0 +1,150 @@
+@use '../../styles/parts';
+
+// A ruled note lifted at the bottom of the sheet: the fixed region spans the width (and keeps the page gutter below
+// the note, so its height is the whole bottom reservation); the sheet inside carries the frame and the one shadow.
+// It sits under the modal and drawer backdrops, so the preferences dialog dims it like the rest of the page.
+.ui-cookie-banner {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: var(--ui-z-fixed);
+  display: flex;
+  justify-content: center;
+  padding-inline: var(--ui-space-4);
+  padding-block-end: max(var(--ui-space-4), env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+
+  &--bottom-start {
+    justify-content: flex-start;
+  }
+
+  &--bottom-end {
+    justify-content: flex-end;
+  }
+}
+
+.ui-cookie-banner__sheet {
+  @include parts.lifted;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+  inline-size: min(100%, var(--ui-cookie-banner-max-width, 40rem));
+  max-block-size: calc(100dvh - var(--ui-space-8));
+  overflow-y: auto;
+  padding: var(--ui-space-4);
+  pointer-events: auto;
+  animation: ui-cookie-banner-in var(--ui-motion-part) var(--ui-easing-out);
+
+  .ui-cookie-banner[data-state='closed'] & {
+    pointer-events: none;
+    animation: ui-cookie-banner-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+  }
+}
+
+.ui-cookie-banner__title {
+  margin: 0 0 var(--ui-space-1);
+  font-family: var(--ui-font-family-heading);
+  font-size: var(--ui-font-size-lg);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-font-line-height-tight);
+}
+
+.ui-cookie-banner__message {
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-sm);
+  line-height: var(--ui-font-line-height-normal);
+}
+
+.ui-cookie-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+// Reject all and Accept all are the same button, side by side, at every width.
+.ui-cookie-banner__button {
+  flex: 1 1 8rem;
+}
+
+.ui-cookie-banner__choose {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+}
+
+// The lone acknowledge button of a notice is no wider than it needs on a wide note, and full width on a phone.
+@media (min-width: 30.0625rem) {
+  .ui-cookie-banner__actions--single .ui-cookie-banner__button {
+    flex: 0 0 auto;
+    min-inline-size: 8rem;
+    margin-inline-start: auto;
+  }
+}
+
+@media (max-width: 30rem) {
+  .ui-cookie-banner__choose {
+    flex-basis: 100%;
+    margin-inline-start: 0;
+  }
+}
+
+@keyframes ui-cookie-banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ui-assemble-distance));
+  }
+}
+
+@keyframes ui-cookie-banner-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * 0.5));
+  }
+}
+
+// Reduced motion: no travel, an opacity fade of at most 120 ms.
+@media (prefers-reduced-motion: reduce) {
+  .ui-cookie-banner__sheet {
+    animation: ui-fade-in 120ms linear;
+  }
+
+  .ui-cookie-banner[data-state='closed'] .ui-cookie-banner__sheet {
+    animation: ui-fade-out 120ms linear forwards;
+  }
+}
+
+// ---------- preferences (kit Dialog) ----------
+
+.ui-cookie-preferences__intro {
+  margin-block: 0 var(--ui-space-4);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-cookie-preferences__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-cookie-preferences__item {
+  padding-block: var(--ui-space-3);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+
+  &:first-child {
+    border-block-start: 0;
+    padding-block-start: 0;
+  }
+
+  &:last-child {
+    padding-block-end: 0;
+  }
+}
+
+.ui-cookie-preferences__description {
+  margin: var(--ui-space-1) 0 0;
+  padding-inline-start: calc(2.5rem + var(--ui-space-2));
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}

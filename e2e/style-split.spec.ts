@@ -4,6 +4,7 @@ import { expect, test } from '@playwright/test';
 import * as sass from 'sass';
 import catalog from '../docs-app/src/catalog.generated.json' with { type: 'json' };
 import { collectClassTokens, importedComponents } from '../scripts/build-style-split.mjs';
+import { acknowledgeNotice } from './consent';
 import { scanDirectories, selectStyleFiles, type StyleManifest } from '../src/vite';
 
 /**
@@ -58,6 +59,7 @@ test.describe('split styles render identically @split', () => {
         const context = await browser.newContext({ baseURL, viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
         try {
           const page = await context.newPage();
+          await acknowledgeNotice(page);
           if (swap) await page.route(/\/assets\/index-[^/]+\.css$/, (route) => route.fulfill({ contentType: 'text/css', body: css }));
           await page.goto(`/#/components/${c.slug}`);
           await expect(page.getByRole('heading', { level: 1, name: c.name })).toBeVisible();

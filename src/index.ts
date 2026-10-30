@@ -32,6 +32,7 @@ export * from './components/CommandPalette';
 export * from './components/ConfirmDialog';
 export * from './components/ConfirmPopup';
 export * from './components/ContextMenu';
+export * from './components/CookieBanner';
 export * from './components/CopyButton';
 export * from './components/Countdown';
 export * from './components/DataScroller';

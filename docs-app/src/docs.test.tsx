@@ -108,3 +108,25 @@ describe('blueprint page', () => {
     expect(await screen.findByText('Sample data.')).toBeInTheDocument();
   });
 });
+
+describe('cookie notice', () => {
+  it('shows a notice on the first visit, OK stores the record, and the sidebar link shows it again', async () => {
+    open('#/');
+    render(<App />);
+    const notice = screen.getByRole('region', { name: 'Cookies and storage' });
+    expect(within(notice).getByText(/No cookies, no tracking\./)).toBeInTheDocument();
+    expect(within(notice).getByRole('link', { name: 'Privacy and cookies' })).toHaveAttribute('href', '#/privacy');
+    await userEvent.click(within(notice).getByRole('button', { name: 'OK' }));
+    expect(screen.queryByRole('region', { name: 'Cookies and storage' })).toBeNull();
+    expect(JSON.parse(localStorage.getItem('ui:consent')!)).toMatchObject({ version: '2026-10', mode: 'notice' });
+    await userEvent.click(within(screen.getByRole('navigation', { name: 'Docs' })).getByRole('button', { name: 'Cookies and storage' }));
+    expect(screen.getByRole('region', { name: 'Cookies and storage' })).toBeInTheDocument();
+  });
+
+  it('the Privacy page names every key the docs always store', async () => {
+    open('#/privacy');
+    render(<App />);
+    expect(await screen.findByRole('heading', { level: 1, name: 'Privacy' })).toBeInTheDocument();
+    for (const key of ['ui:theme', 'docs:profile', 'ui:consent']) expect(screen.getByRole('rowheader', { name: key })).toBeInTheDocument();
+  });
+});
