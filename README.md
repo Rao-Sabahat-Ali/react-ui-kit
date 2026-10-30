@@ -10,6 +10,8 @@ Specs, tokens and rules: [`design-system-mcp`](https://github.com/Rao-Sabahat-Al
 npm install @sabahat/react-ui-kit react react-dom
 ```
 
+Upgrading from 1.x? Read the [2.0.0 upgrade guide](docs/migration-v2.md) first: the identity v2 look changes everywhere and a few defaults changed.
+
 Requires React 19. Bootstrap is compiled into the stylesheet; install `bootstrap` only if you import the SCSS (`@sabahat/react-ui-kit/scss/*`).
 
 ```tsx
