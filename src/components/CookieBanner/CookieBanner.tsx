@@ -48,7 +48,7 @@ function restoreFocus(region: HTMLElement | null, previous: HTMLElement | null) 
 export function CookieBanner({ mode = 'auto', title, children, policyHref, policyLabel, placement = 'bottom', className }: CookieBannerProps) {
   const { t } = useLocale();
   const consent = useConsent();
-  const { ready, record, categories, bannerForced, prefsOpen, prefsKey, openPrefs, closePrefs, registerMode } = useConsentInternals();
+  const { ready, record, categories, bannerForced, bannerRequest, prefsOpen, prefsKey, openPrefs, closePrefs, registerMode } = useConsentInternals();
   const titleId = useId();
   const regionRef = useRef<HTMLElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
@@ -112,6 +112,18 @@ export function CookieBanner({ mode = 'auto', title, children, policyHref, polic
     document.addEventListener('focusin', onFocusIn);
     return () => document.removeEventListener('focusin', onFocusIn);
   }, [visible]);
+
+  // A reopen from openSettings() (notice mode) is a user action, so focus goes to the banner's first action: otherwise a
+  // keyboard user who pressed the link at the end of a long page would have to tab back from the end. The banner never
+  // does this on load. After OK, focus returns to the element above (previousFocus is the one that called openSettings).
+  const handledRequest = useRef(bannerRequest);
+  useEffect(() => {
+    if (bannerRequest === handledRequest.current || !host || state === 'closed') return;
+    const first = regionRef.current?.querySelector<HTMLElement>('.ui-cookie-banner__actions button');
+    if (!first) return;
+    handledRequest.current = bannerRequest;
+    first.focus();
+  }, [bannerRequest, host, state]);
 
   // After a decision, focus that was in the banner (or in the preferences opened from it) goes back where it was.
   const wasVisible = useRef(visible);

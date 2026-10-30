@@ -2,7 +2,18 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
-## Unreleased (2.1.0)
+## 2.1.1 — 2026-10-30
+
+Four fixes to **CookieBanner**, found while integrating it into the svenska-ord app (spec: design-system-mcp `components/cookie-banner`, ACs 9, 12, 15, 17 and 18; `components/app-shell` AC-8). No API change.
+
+### Fixed
+
+- **CookieBanner no longer delays Largest Contentful Paint.** It entered from `opacity: 0`, so Chrome reported its text as the LCP element only once the fade was under way (svenska-ord Home: Lighthouse performance 0.94 to 0.75, simulated LCP 2.7 s to 6.5 s). With motion allowed it now rises by `--ui-assemble-distance` at full opacity from its first frame (the exit may still fade). Under reduced motion it appears at once, with no animation, and leaves with an opacity fade of at most 120 ms.
+- **CookieBanner no longer sits under a fixed bottom nav.** Below `lg`, AppShell's `bottomNav` shares the bottom edge and layer with the banner and covered its buttons. AppShell now publishes the nav's rendered height as `--ui-bottom-nav-offset` on the document root while a fixed `bottomNav` is shown (removed when it is hidden or the shell unmounts; an embedded, non-fixed nav publishes nothing; an app with its own fixed bottom bar can set the same property). The banner sits on top of that height, one layer above the nav and still under dialog and drawer backdrops. Reserved space counts the nav once: `--ui-consent-offset` and the document's bottom padding are still the banner's own height (the shell pads `main` for the nav), and `scroll-padding-bottom` adds `--ui-bottom-nav-offset` so a focused element clears both. `scroll-padding-bottom` is now a `calc()` with that variable instead of a plain length.
+- **CookieBanner's shadow is no longer cut off at the bottom of the viewport.** `--ui-shadow-lift` reaches about 26px below the sheet, but the banner was 16px from the edge. The fixed region now keeps `--ui-space-8` (or the safe-area inset when larger) below the sheet; over a bottom nav the gap shrinks to `--ui-space-3`. The banner's reserved height grows by the same 16px.
+- **Reopening the notice from `openSettings()` moves focus to OK.** The reopen is a user action, so a keyboard user who pressed "Cookies and storage" at the end of a long page no longer has to tab back from the end. After OK, focus still returns to the element that called `openSettings()`. On load the banner still never takes focus; consent mode still opens the preferences dialog.
+
+## 2.1.0 — 2026-10-30
 
 ### Added
 

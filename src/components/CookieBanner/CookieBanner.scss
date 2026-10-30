@@ -1,17 +1,23 @@
 @use '../../styles/parts';
 
-// A ruled note lifted at the bottom of the sheet: the fixed region spans the width (and keeps the page gutter below
-// the note, so its height is the whole bottom reservation); the sheet inside carries the frame and the one shadow.
+// A ruled note lifted at the bottom of the sheet: the fixed region spans the width and keeps room below the note for
+// its whole shadow (--ui-shadow-lift reaches about 26px down, so the viewport edge must be at least that far away);
+// the region's height is the banner's whole bottom reservation. The sheet inside carries the frame and the one shadow.
 // It sits under the modal and drawer backdrops, so the preferences dialog dims it like the rest of the page.
+//
+// A fixed bottom nav (AppShell bottomNav) publishes its height as --ui-bottom-nav-offset on the document root. The banner
+// then sits on top of it, one layer above, and drops the room below the sheet: the nav's solid surface is under the shadow
+// and its height already contains the safe area. The `* 100` turns any non-zero offset into a hugely negative length, so
+// that term loses the max() and the gap falls back to space-3; with no nav it is `0 * 100` and the gap is the shadow room.
 .ui-cookie-banner {
   position: fixed;
   inset-inline: 0;
-  inset-block-end: 0;
-  z-index: var(--ui-z-fixed);
+  inset-block-end: var(--ui-bottom-nav-offset, 0px);
+  z-index: calc(var(--ui-z-fixed) + 1);
   display: flex;
   justify-content: center;
   padding-inline: var(--ui-space-4);
-  padding-block-end: max(var(--ui-space-4), env(safe-area-inset-bottom, 0px));
+  padding-block-end: max(var(--ui-space-3), calc(max(var(--ui-space-8), env(safe-area-inset-bottom, 0px)) - var(--ui-bottom-nav-offset, 0px) * 100));
   pointer-events: none;
 
   &--bottom-start {
@@ -29,10 +35,11 @@
   flex-direction: column;
   gap: var(--ui-space-3);
   inline-size: min(100%, var(--ui-cookie-banner-max-width, 40rem));
-  max-block-size: calc(100dvh - var(--ui-space-8));
+  max-block-size: calc(100dvh - var(--ui-space-8) - var(--ui-bottom-nav-offset, 0px));
   overflow-y: auto;
   padding: var(--ui-space-4);
   pointer-events: auto;
+  // Transform only: opaque from the first frame, so the banner's text is painted (and counted as LCP) at once.
   animation: ui-cookie-banner-in var(--ui-motion-part) var(--ui-easing-out);
 
   .ui-cookie-banner[data-state='closed'] & {
@@ -88,9 +95,9 @@
   }
 }
 
+// Never animates opacity: a banner that fades in from 0 delays the Largest Contentful Paint of the page it covers.
 @keyframes ui-cookie-banner-in {
   from {
-    opacity: 0;
     transform: translateY(var(--ui-assemble-distance));
   }
 }
@@ -102,10 +109,10 @@
   }
 }
 
-// Reduced motion: no travel, an opacity fade of at most 120 ms.
+// Reduced motion: it appears at once; leaving is an opacity fade of at most 120 ms, with no travel.
 @media (prefers-reduced-motion: reduce) {
   .ui-cookie-banner__sheet {
-    animation: ui-fade-in 120ms linear;
+    animation: none;
   }
 
   .ui-cookie-banner[data-state='closed'] .ui-cookie-banner__sheet {
