@@ -11,6 +11,7 @@ import { Overview } from '../../../templates/blueprints/Overview';
 import { ReportsIndex } from '../../../templates/blueprints/ReportsIndex';
 import { Settings } from '../../../templates/blueprints/Settings';
 import { SignIn } from '../../../templates/blueprints/SignIn';
+import { blueprintNav } from './nav';
 import { blueprints, sourceOf } from './registry';
 
 function setViewport(desktop: boolean) {
@@ -48,6 +49,10 @@ function expectOrderedHeadings() {
     if (i > 0) expect(level, `heading #${i} (h${level}) after h${levels[i - 1]}`).toBeLessThanOrEqual(levels[i - 1]! + 1);
   });
 }
+
+it('the lightweight docs navigation lists the same blueprints as the registry', () => {
+  expect(blueprintNav).toEqual(blueprints.map((b) => ({ slug: b.slug, title: b.title })));
+});
 
 describe.each(blueprints)('blueprint $slug (smoke)', (blueprint) => {
   it('renders one h1, ordered headings, one main landmark and no console errors', () => {

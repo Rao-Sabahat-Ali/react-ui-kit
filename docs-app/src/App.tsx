@@ -1,17 +1,17 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Button, Icon, InputText, Select, ThemeProvider, ThemeToggle, type Profile } from '@sabahat/react-ui-kit';
-import { BlueprintPage } from './pages/BlueprintPage';
-import { BlueprintsPage } from './pages/BlueprintsPage';
-import { findBlueprint, blueprints } from './blueprints/registry';
+import { blueprintNav } from './blueprints/nav';
 import { ComponentPage } from './pages/ComponentPage';
-import { FoundationsPage } from './pages/FoundationsPage';
 import { HomePage } from './pages/HomePage';
-import { ProfilesPage } from './pages/ProfilesPage';
-import { RoadmapPage } from './pages/RoadmapPage';
-// The 3D overview is loaded on demand like the 3D examples (the page itself only renders lazy examples).
-const Depth3DPage = lazy(() => import('./pages/Depth3DPage').then((m) => ({ default: m.Depth3DPage })));
 import { CATEGORY_LABELS, components, isImplemented, profiles } from './registry';
 import { href, useRoute } from './router';
+// Heavy pages load on demand: the blueprints bring every demo screen and its source, the 3D overview its lazy examples.
+const FoundationsPage = lazy(() => import('./pages/FoundationsPage').then((m) => ({ default: m.FoundationsPage })));
+const ProfilesPage = lazy(() => import('./pages/ProfilesPage').then((m) => ({ default: m.ProfilesPage })));
+const RoadmapPage = lazy(() => import('./pages/RoadmapPage').then((m) => ({ default: m.RoadmapPage })));
+const BlueprintPage = lazy(() => import('./pages/BlueprintPage').then((m) => ({ default: m.BlueprintPage })));
+const BlueprintsPage = lazy(() => import('./pages/BlueprintsPage').then((m) => ({ default: m.BlueprintsPage })));
+const Depth3DPage = lazy(() => import('./pages/Depth3DPage').then((m) => ({ default: m.Depth3DPage })));
 
 function readProfile(): Profile {
   try {
@@ -62,14 +62,14 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
     return Object.keys(CATEGORY_LABELS).filter((k) => map.has(k)).map((k) => [k, map.get(k)!] as const);
   }, [query]);
 
-  const blueprint = route[0] === 'blueprints' ? findBlueprint(route[1]) : undefined;
+  const blueprint = route[0] === 'blueprints' ? blueprintNav.find((b) => b.slug === route[1]) : undefined;
   const page =
-    blueprint ? <BlueprintPage slug={blueprint.slug} onProfileChange={onProfileChange} /> :
-    route[0] === 'blueprints' ? <BlueprintsPage /> :
+    blueprint ? <Suspense fallback={null}><BlueprintPage slug={blueprint.slug} onProfileChange={onProfileChange} /></Suspense> :
+    route[0] === 'blueprints' ? <Suspense fallback={null}><BlueprintsPage /></Suspense> :
     route[0] === 'components' && route[1] ? <ComponentPage slug={route[1]} /> :
-    route[0] === 'foundations' ? <FoundationsPage /> :
-    route[0] === 'profiles' ? <ProfilesPage /> :
-    route[0] === 'roadmap' ? <RoadmapPage /> :
+    route[0] === 'foundations' ? <Suspense fallback={null}><FoundationsPage /></Suspense> :
+    route[0] === 'profiles' ? <Suspense fallback={null}><ProfilesPage /></Suspense> :
+    route[0] === 'roadmap' ? <Suspense fallback={null}><RoadmapPage /></Suspense> :
     route[0] === '3d' ? <Suspense fallback={null}><Depth3DPage /></Suspense> :
     <HomePage />;
 
@@ -111,7 +111,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
           </div>
           <div className="docs-nav__section">
             <div className="docs-nav__heading">Blueprints</div>
-            {blueprints.map((b) => navLink(`blueprints/${b.slug}`, b.title))}
+            {blueprintNav.map((b) => navLink(`blueprints/${b.slug}`, b.title))}
           </div>
           {groups.map(([category, list]) => (
             <div key={category} className="docs-nav__section">

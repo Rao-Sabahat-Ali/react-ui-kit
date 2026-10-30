@@ -1,14 +1,14 @@
 import { Tag } from '@sabahat/react-ui-kit';
 import { CodeBlock } from '../components/CodeBlock';
 import { ExampleCard } from '../components/ExampleCard';
-import { examplesByName } from '../registry';
+import { useExamples } from '../registry';
 import { href } from '../router';
 
 const INSTALL = `npm install @sabahat/react-ui-kit-3d three\n\n// once, next to the kit styles\nimport '@sabahat/react-ui-kit-3d/styles.css';`;
 
 /** Overview of the optional 3D package: where depth belongs, what it costs, and the two showcase scenes. */
 export function Depth3DPage() {
-  const examples = examplesByName.get('Scene3D') ?? [];
+  const examples = useExamples('Scene3D') ?? [];
   return (
     <>
       <header className="docs-page-header">

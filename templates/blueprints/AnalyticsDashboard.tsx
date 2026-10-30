@@ -328,7 +328,7 @@ export function AnalyticsDashboard({ appName = 'Nordic Tools', previewState, emb
           </div>
         </div>
 
-        <Section title="Recent orders" description="Latest 64 orders across all channels. Sort, filter or search to narrow the list.">
+        <Section title="Recent orders" description={orderState === 'empty' ? 'Orders across all channels appear here.' : 'Latest 64 orders across all channels. Sort, filter or search to narrow the list.'}>
           <StateBlock name="Recent orders" state={orderState === 'loading' ? 'ready' : orderState} onRetry={retry('orders')} empty="No orders in this period" skeleton={null}>
             <DataTable<Order>
               caption="Recent orders"

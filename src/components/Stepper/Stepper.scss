@@ -45,7 +45,8 @@
 }
 
 .ui-stepper__step {
-  flex: 1 1 9rem;
+  // 8rem: four steps still fit one row in a ~590px column (the checkout blueprint) and wrap two by two on a phone.
+  flex: 1 1 8rem;
   min-inline-size: 0;
   padding-block-start: var(--ui-space-2);
   border-block-start: var(--ui-line-width) solid var(--ui-stepper-track);
