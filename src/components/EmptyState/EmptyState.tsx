@@ -5,6 +5,8 @@ import { Icon, type IconName } from '../Icon/Icon';
 
 export interface EmptyStateProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   icon?: IconName;
+  /** Replaces the icon (e.g. a `Scene3D variant="empty-state"` or an `Image`). The empty state sizes the slot and clips overflow; the media brings its own text alternative. */
+  media?: ReactNode;
   title: ReactNode;
   /** Use `'h1'` when the empty state is the whole page. */
   titleAs?: 'h1' | 'h2' | 'h3' | 'h4';
@@ -26,7 +28,7 @@ const DEFAULT_ICON: Record<NonNullable<EmptyStateProps['variant']>, IconName> = 
   'first-run': 'star',
 };
 
-export function EmptyState({ icon, title, titleAs: Title = 'h3', description, action, variant = 'empty', size = 'md', live = false, assemble = true, className, ref, ...rest }: EmptyStateProps) {
+export function EmptyState({ icon, media, title, titleAs: Title = 'h3', description, action, variant = 'empty', size = 'md', live = false, assemble = true, className, ref, ...rest }: EmptyStateProps) {
   const own = useRef<HTMLDivElement | null>(null);
   useAssemble(own, { enabled: assemble });
   return (
@@ -40,9 +42,15 @@ export function EmptyState({ icon, title, titleAs: Title = 'h3', description, ac
       className={cx('ui-empty-state text-center', `ui-empty-state--${variant}`, `ui-empty-state--${size}`, className)}
       {...rest}
     >
-      <span className="ui-empty-state__icon" data-assemble>
-        <Icon name={icon ?? DEFAULT_ICON[variant]} />
-      </span>
+      {media ? (
+        <div className="ui-empty-state__media" data-assemble>
+          {media}
+        </div>
+      ) : (
+        <span className="ui-empty-state__icon" data-assemble>
+          <Icon name={icon ?? DEFAULT_ICON[variant]} />
+        </span>
+      )}
       <Title className="ui-empty-state__title" data-assemble>
         {title}
       </Title>

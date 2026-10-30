@@ -14,7 +14,11 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "paths": {
+      "@sabahat/react-ui-kit": ["./src/index.ts"],
+      "@sabahat/react-ui-kit-3d": ["./packages/react-ui-kit-3d/src/index.ts"]
+    },
     "types": ["vite/client", "node", "@testing-library/jest-dom/vitest"]
   },
-  "include": ["src", "docs-app/src", "templates/blueprints", "test", "vite.config.ts", "vite.docs.config.ts"]
+  "include": ["src", "docs-app/src", "templates/blueprints", "test", "packages/react-ui-kit-3d/src", "vite.config.ts", "vite.docs.config.ts"]
 }

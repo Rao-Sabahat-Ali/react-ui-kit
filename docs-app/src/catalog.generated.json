@@ -779,6 +779,20 @@
       ]
     },
     {
+      "name": "Model3D",
+      "slug": "model-3d",
+      "category": "media",
+      "status": "specified",
+      "purpose": "Declares one object inside a `Scene3D`: either a procedural factory (the output contract of the `img2threejs` skill: code that builds a `THREE.Object3D`) or a glTF/GLB file. It renders nothing to the DOM; the parent scene builds, places, styles, animates and disposes it.",
+      "profiles": [
+        "landing",
+        "game",
+        "saas",
+        "ecommerce"
+      ],
+      "package": "@sabahat/react-ui-kit-3d"
+    },
+    {
       "name": "MultiSelect",
       "slug": "multi-select",
       "category": "form",
@@ -1025,6 +1039,20 @@
         "game",
         "saas"
       ]
+    },
+    {
+      "name": "Scene3D",
+      "slug": "scene-3d",
+      "category": "media",
+      "status": "specified",
+      "purpose": "A lazy-loaded three.js stage for decorative or product depth: a landing hero object, a game menu backdrop, an empty-state illustration or a product turntable. Lives in the optional package `@sabahat/react-ui-kit-3d` (ADR 0003), so apps that don't use 3D pay nothing. In identity v2 the default `look=\"sheet\"` draws the assembly-sheet world in depth: paper-coloured flat parts with ink edges, and on first view the object can Assemble, its parts travelling in along dashed guide lines and clicking into place.",
+      "profiles": [
+        "landing",
+        "game",
+        "saas",
+        "ecommerce"
+      ],
+      "package": "@sabahat/react-ui-kit-3d"
     },
     {
       "name": "Scheduler",

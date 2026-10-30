@@ -1,0 +1,67 @@
+{
+  "name": "@sabahat/react-ui-kit-3d",
+  "version": "0.1.0",
+  "description": "Optional 3D package for @sabahat/react-ui-kit: Scene3D and Model3D on plain three.js, lazy-loaded, with the assembly-sheet look.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "npm run build:lib && npm run build:types",
+    "build:lib": "vite build",
+    "build:types": "tsc -p tsconfig.build.json && node scripts/clean-types.mjs",
+    "test": "vitest run --root ../.. packages/react-ui-kit-3d",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "prepublishOnly": "npm run typecheck && npm run build && npm run check:bundle"
+  },
+  "peerDependencies": {
+    "@sabahat/react-ui-kit": "^1.4.0 || ^2.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": ">=0.170.0"
+  },
+  "devDependencies": {
+    "@sabahat/react-ui-kit": "file:../..",
+    "@types/three": "0.186.0",
+    "three": "0.187.0"
+  },
+  "author": "Rao Sabahat Ali <raosabahat@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rao-Sabahat-Ali/react-ui-kit.git",
+    "directory": "packages/react-ui-kit-3d"
+  },
+  "homepage": "https://react-ui-kit-docs.vercel.app",
+  "keywords": [
+    "react",
+    "three",
+    "threejs",
+    "3d",
+    "ui-kit",
+    "assembly"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

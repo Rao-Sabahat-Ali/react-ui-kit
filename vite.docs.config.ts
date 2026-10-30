@@ -9,7 +9,12 @@ export default defineConfig({
   base: './',
   plugins: [react()],
   css: { preprocessorOptions: { scss: scssOptions } },
-  resolve: { alias: { '@sabahat/react-ui-kit': resolve(import.meta.dirname, 'src/index.ts') } },
+  resolve: {
+    alias: {
+      '@sabahat/react-ui-kit-3d': resolve(import.meta.dirname, 'packages/react-ui-kit-3d/src/index.ts'),
+      '@sabahat/react-ui-kit': resolve(import.meta.dirname, 'src/index.ts'),
+    },
+  },
   build: { outDir: resolve(import.meta.dirname, 'docs-dist'), emptyOutDir: true },
   server: { port: 5180 },
 });

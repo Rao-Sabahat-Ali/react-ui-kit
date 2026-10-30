@@ -20,7 +20,8 @@ src/
   theme/               ThemeProvider, useTheme, themeScript, profiles.generated.ts
   locale/              LocaleProvider, en.ts (all UI strings)
   styles/              index.scss (entry), _bridge.scss (tokens → Bootstrap), _tokens.generated.scss
-docs-app/              docs web app (Vite), auto-discovers *.examples.tsx
+packages/react-ui-kit-3d/  optional 3D package @sabahat/react-ui-kit-3d (npm workspace; Scene3D, Model3D; three only as a dynamically imported peer, ADR 0003)
+docs-app/              docs web app (Vite), auto-discovers *.examples.tsx (also in packages/*)
 test/setup.ts          jsdom setup
 tasks.md               all work items (UI-*, OPS-*)
 ```
@@ -53,6 +54,7 @@ npm run typecheck
 npm run build        # dist/index.js + dist/styles.css + dist/types
 npm run build:docs   # static docs → docs-dist/
 npm run check        # typecheck + test + build
+npm run check:3d     # 3D package: typecheck, build, bundle budget (≤ 12 KB gzip without three)
 ```
 Design-system MCP must be built in the sibling checkout (`../design-system-mcp`, `npm run build`) for `.mcp.json` to work.
 

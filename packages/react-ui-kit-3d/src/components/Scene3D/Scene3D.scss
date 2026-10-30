@@ -1,0 +1,113 @@
+// Scene3D: one box shared by the poster and the canvas, so nothing shifts when the scene loads. Tokens only.
+.ui-scene3d {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--ui-radius-lg);
+  color: var(--ui-color-text);
+}
+
+// Hero: fills its slot, at least 20rem tall, 16:9 on wide.
+.ui-scene3d--hero {
+  min-block-size: 20rem;
+  aspect-ratio: 16 / 9;
+}
+
+// Empty state: a 160px square drawing (EmptyState `media` resizes it to its slot).
+.ui-scene3d--empty-state {
+  inline-size: 10rem;
+  block-size: 10rem;
+  aspect-ratio: 1;
+}
+
+.ui-scene3d__poster,
+.ui-scene3d__canvas {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.ui-scene3d__poster {
+  display: grid;
+  place-items: center;
+  transition: opacity var(--ui-motion-part) var(--ui-easing-out);
+
+  > * {
+    max-inline-size: 100%;
+    max-block-size: 100%;
+  }
+
+  img,
+  svg {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+  }
+}
+
+// The canvas is transparent: the page's paper (or the kraft plate behind it) shows through.
+.ui-scene3d__canvas {
+  display: block;
+  opacity: 0;
+  transition: opacity var(--ui-motion-part) var(--ui-easing-out);
+
+  &[role='application'] {
+    cursor: grab;
+    touch-action: pan-y; // horizontal drags rotate, vertical drags still scroll the page
+    border-radius: var(--ui-radius-lg);
+
+    &[data-dragging] {
+      cursor: grabbing;
+    }
+
+    &:focus-visible {
+      outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+      outline-offset: calc(-1 * var(--ui-focus-ring-width));
+    }
+  }
+}
+
+.ui-scene3d[data-state='ready'] {
+  .ui-scene3d__poster {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ui-scene3d__canvas {
+    opacity: 1;
+  }
+}
+
+.ui-scene3d__controls {
+  position: absolute;
+  inset-block-end: var(--ui-space-2);
+  inset-inline-end: var(--ui-space-2);
+  display: flex;
+  gap: var(--ui-space-1);
+
+  .btn {
+    background-color: var(--ui-color-surface);
+  }
+}
+
+// Text alternative: visually hidden, read through aria-describedby.
+.ui-scene3d__description {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-scene3d__poster,
+  .ui-scene3d__canvas {
+    transition-duration: var(--ui-motion-instant);
+  }
+}
