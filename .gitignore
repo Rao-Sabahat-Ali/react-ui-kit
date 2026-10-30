@@ -14,3 +14,4 @@ playwright-report
 .impeccable/mocks/
 .impeccable/review/
 .impeccable/build/
+.lighthouseci

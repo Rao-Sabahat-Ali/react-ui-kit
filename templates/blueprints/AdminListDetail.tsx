@@ -91,9 +91,11 @@ export function AdminListDetail({ appName = 'Back office', previewState, embedde
   const visible = useMemo(() => (status === 'all' ? rows : rows.filter((r) => r.status === status)), [rows, status]);
   const current = rows.find((r) => r.id === openId) ?? null;
 
-  const outstanding = rows.filter((r) => r.status === 'Sent' || r.status === 'Overdue').reduce((s, r) => s + r.total, 0);
-  const overdue = rows.filter((r) => r.status === 'Overdue');
-  const paid = rows.filter((r) => r.status === 'Paid');
+  // First run: no invoices, so the totals and the count say 0 as well (not the sample data behind the empty table).
+  const counted = state === 'empty' ? [] : rows;
+  const outstanding = counted.filter((r) => r.status === 'Sent' || r.status === 'Overdue').reduce((s, r) => s + r.total, 0);
+  const overdue = counted.filter((r) => r.status === 'Overdue');
+  const paid = counted.filter((r) => r.status === 'Paid');
 
   const update = (ids: string[], next: InvoiceStatus) => {
     setRows((all) => all.map((r) => (ids.includes(r.id) ? { ...r, status: next } : r)));
@@ -187,10 +189,10 @@ export function AdminListDetail({ appName = 'Back office', previewState, embedde
           <StatCard label="Outstanding" value={outstanding} format={{ style: 'currency', currency: 'SEK', maximumFractionDigits: 0 }} />
           <StatCard label="Overdue invoices" value={overdue.length} />
           <StatCard label="Paid invoices" value={paid.length} />
-          <StatCard label="Drafts" value={rows.filter((r) => r.status === 'Draft').length} />
+          <StatCard label="Drafts" value={counted.filter((r) => r.status === 'Draft').length} />
         </StatGroup>
 
-        <Section title="All invoices" description={`${visible.length} of ${rows.length} invoices`}>
+        <Section title="All invoices" description={`${state === 'empty' ? 0 : visible.length} of ${counted.length} invoices`}>
           {state === 'error' && (
             <Message
               severity="danger"

@@ -1,22 +1,20 @@
-import { Tag } from '@sabahat/react-ui-kit';
 import { CodeBlock } from '../components/CodeBlock';
 import { ExampleCard } from '../components/ExampleCard';
-import { examplesByName } from '../registry';
+import { useExamples } from '../registry';
 import { href } from '../router';
 
 const INSTALL = `npm install @sabahat/react-ui-kit-3d three\n\n// once, next to the kit styles\nimport '@sabahat/react-ui-kit-3d/styles.css';`;
 
 /** Overview of the optional 3D package: where depth belongs, what it costs, and the two showcase scenes. */
 export function Depth3DPage() {
-  const examples = examplesByName.get('Scene3D') ?? [];
+  const examples = useExamples('Scene3D') ?? [];
   return (
     <>
       <header className="docs-page-header">
-        <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
-          <Tag value="Optional package" />
-          <Tag value="@sabahat/react-ui-kit-3d" />
-        </div>
         <h1>Depth (3D)</h1>
+        <p className="small text-body-secondary mb-2">
+          Optional package · <code>@sabahat/react-ui-kit-3d</code>
+        </p>
         <p className="lead text-body-secondary">
           The sheet is flat. When an object earns depth, it is drawn the way the world draws things: flat paper fills with 2px ink edges, parts that travel in along dashed guide lines and click into place.
         </p>

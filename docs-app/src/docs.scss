@@ -43,7 +43,9 @@
   position: sticky;
   top: 3.5rem;
   flex: 0 0 16rem;
+  // Sticky and exactly as tall as the viewport below the bar, so the kraft rail fills the screen however far the sheet scrolls.
   height: calc(100vh - 3.5rem);
+  height: calc(100dvh - 3.5rem);
   overflow-y: auto;
   padding: var(--ui-space-3) 0;
   background: var(--ui-color-shell);
@@ -70,15 +72,73 @@
   }
 }
 
+// A blueprint brings its own app header on phones: the docs bar shrinks to the brand (menu, profile and a duplicate theme toggle are hidden in the markup).
+@media (max-width: 767.98px) {
+  .docs-topbar--blueprint {
+    height: 2.5rem;
+  }
+
+  // The drawer starts under the slimmer bar.
+  .docs-shell--wide .docs-scrim {
+    inset-block-start: 2.5rem;
+  }
+
+  .docs-shell--wide .docs-nav {
+    top: 2.5rem;
+    height: calc(100vh - 2.5rem);
+    height: calc(100dvh - 2.5rem);
+  }
+}
+
 // Blueprint pages need the full width, so the docs navigation becomes a drawer at every size.
 .docs-shell--wide .docs-nav {
   @include docs-nav-drawer;
+}
+
+// A paper veil (no blur) behind the open drawer, below the bar so the button that opened it stays in view.
+.docs-scrim {
+  display: none;
+  position: fixed;
+  inset: 3.5rem 0 0;
+  padding: 0;
+  border: 0;
+  z-index: var(--ui-z-drawer-backdrop);
+  background: var(--ui-color-overlay);
+  animation: ui-fade-in var(--ui-motion-part) var(--ui-easing-out);
+}
+
+@media (max-width: 991.98px) {
+  .docs-scrim {
+    display: block;
+  }
+}
+
+.docs-shell--wide .docs-scrim {
+  display: block;
+}
+
+// Open state of the phone Docs button: the accent line on an accent-subtle ground, as a pressed ToggleButton.
+.docs-menu-button.ui-button[aria-expanded='true'] {
+  --bs-btn-color: var(--ui-color-accent-emphasis);
+  --bs-btn-bg: var(--ui-color-accent-subtle);
+  --bs-btn-border-color: var(--ui-color-accent);
+  --bs-btn-hover-color: var(--ui-color-accent-emphasis);
+  --bs-btn-hover-bg: var(--ui-color-accent-subtle);
+  --bs-btn-hover-border-color: var(--ui-color-accent);
 }
 
 .docs-nav--open {
   transform: none !important;
   // Only the open drawer is lifted off the sheet; closed it must not leak a shadow into the viewport.
   box-shadow: var(--ui-shadow-lift);
+}
+
+.docs-nav__tools {
+  display: grid;
+  gap: var(--ui-space-2);
+  margin: 0 var(--ui-space-2) var(--ui-space-3);
+  padding: var(--ui-space-3);
+  border-block-end: var(--ui-line-width-hairline) solid color-mix(in srgb, var(--ui-color-shell-contrast) 35%, transparent);
 }
 
 .docs-nav__section {
@@ -263,6 +323,12 @@
   font-size: var(--ui-font-size-sm);
 }
 
+.docs-blueprint__sample {
+  margin: 0 0 var(--ui-space-3);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
 .docs-blueprint__controls {
   display: flex;
   flex-wrap: wrap;
@@ -276,6 +342,11 @@
 }
 
 // `clip` (not hidden) keeps sticky table headers inside the frame working.
+.docs-blueprint__pending {
+  // Holds the frame's place while its screen chunk loads, so the notes below do not jump when it arrives.
+  min-block-size: 100vh;
+}
+
 .docs-blueprint__frame {
   margin-bottom: var(--ui-space-8);
   border: var(--ui-line-width) solid var(--ui-color-line);
@@ -299,4 +370,34 @@
 .docs-code--tall pre {
   max-height: 32rem;
   overflow: auto;
+}
+
+// One app profile on its own surface (Profiles page): the profile's tokens and default theme apply inside.
+.docs-profile {
+  height: 100%;
+  padding: var(--ui-space-5);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-bg);
+  color: var(--ui-color-text);
+}
+
+.docs-profile__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: var(--ui-space-2) var(--ui-space-4);
+  margin: 0 0 var(--ui-space-4);
+  padding-block: var(--ui-space-3);
+  border-block: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+
+  dt {
+    font-size: var(--ui-font-size-sm);
+    font-weight: 400;
+    color: var(--ui-color-text-muted);
+  }
+
+  dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
 }

@@ -12,7 +12,6 @@ import {
   SidebarNav,
   Tag,
   ThemeToggle,
-  Toolbar,
   Topbar,
   applyKanbanMove,
   useToast,
@@ -23,7 +22,7 @@ import type { WidgetState } from './shared';
 
 /*
  * Blueprint: Task board (profile `saas`, list-detail pattern with a board in place of the list).
- * PageHeader with the single ink action; a Toolbar with the text filter; the KanbanBoard (keyboard pick-up, "Move to…" menu,
+ * PageHeader with the single ink action; the text filter; the KanbanBoard (keyboard pick-up, "Move to…" menu,
  * pointer drag, WIP limits, Undo-by-rollback with a Retry toast); a Drawer with the task details. The board owns no data:
  * this screen applies every move to its own list, exactly as a real app would after its API call.
  */
@@ -100,20 +99,16 @@ export function Board({ appName = 'Taskly', previewState, embedded = false, onNa
             </Button>
           }
         />
-        <Toolbar
-          ariaLabel="Board filter"
-          className="mb-3"
-          start={
-            <div className="d-flex align-items-center gap-2 flex-wrap">
-              <InputText type="search" aria-label="Filter tasks" placeholder="Filter tasks" prefix={<Icon name="search" />} value={filter} onChange={setFilter} />
-              {filter && (
-                <Button size="sm" appearance="text" variant="secondary" onClick={() => setFilter('')}>
-                  Clear filter
-                </Button>
-              )}
-            </div>
-          }
-        />
+        <div role="search" aria-label="Board filter" className="d-flex align-items-center gap-2 mb-3">
+          <div style={{ flex: '1 1 auto', minWidth: 0 }}>
+            <InputText type="search" aria-label="Filter tasks" placeholder="Filter tasks" prefix={<Icon name="search" />} value={filter} onChange={setFilter} />
+          </div>
+          {filter && (
+            <Button size="sm" appearance="text" variant="secondary" onClick={() => setFilter('')}>
+              Clear filter
+            </Button>
+          )}
+        </div>
         <KanbanBoard
           aria-label="Sprint 42 board"
           headingLevel={2}

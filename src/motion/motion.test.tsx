@@ -153,9 +153,9 @@ describe('usePresence', () => {
   });
 });
 
-function Sheet({ trigger = 0, enabled = true, onComplete }: { trigger?: number; enabled?: boolean; onComplete?: () => void }) {
+function Sheet({ trigger = 0, enabled = true, reverse = false, onComplete }: { trigger?: number; enabled?: boolean; reverse?: boolean; onComplete?: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
-  useAssemble(ref, { trigger, enabled, onComplete });
+  useAssemble(ref, { trigger, enabled, reverse, onComplete });
   return (
     <div ref={ref} data-testid="sheet">
       <span data-assemble-guide />
@@ -178,6 +178,12 @@ describe('useAssemble', () => {
     expect(parts[0]!.options.easing).toBe(EASING.out);
     expect(parts.at(-1)!.options.easing).toBe(EASING.snap);
     expect(parts[0]!.options.fill).toBe('backwards');
+  });
+
+  it('AC-10b: reverse lowers the parts in from above', () => {
+    render(<Sheet reverse />);
+    const parts = calls.filter((c) => c.el.hasAttribute('data-assemble'));
+    expect(parts[0]!.keyframes[0]).toMatchObject({ opacity: 0, transform: 'translate(0, -12px)' });
   });
 
   it('AC-11: draws the dashed guide line in with clip-path', () => {
