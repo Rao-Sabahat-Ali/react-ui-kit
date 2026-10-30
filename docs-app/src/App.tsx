@@ -58,6 +58,14 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
   const [navOpen, setNavOpen] = useState(false);
   const current = route.join('/');
 
+  // The drawer is an overlay below lg (and on blueprint pages): Escape closes it like any other overlay.
+  useEffect(() => {
+    if (!navOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setNavOpen(false);
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [navOpen]);
+
   useEffect(() => {
     setNavOpen(false);
     document.getElementById('main')?.focus();
@@ -104,7 +112,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
         <Button className={blueprint ? 'd-none d-md-inline-flex' : 'd-lg-none'} appearance="text" variant="secondary" icon="menu" aria-label="Docs navigation" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)} />
         {blueprint && (
           // The one docs entry point on a phone: a text button, distinct from the app's own hamburger. The profile and theme controls live in its drawer.
-          <Button className="d-md-none" appearance="outline" variant="secondary" size="sm" aria-label="Docs menu" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)}>
+          <Button className="d-md-none docs-menu-button" appearance="outline" variant="secondary" size="sm" aria-label="Docs menu" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)}>
             Docs
           </Button>
         )}
@@ -122,6 +130,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
         </div>
       </header>
       <div className="docs-body">
+        {navOpen && <button type="button" className="docs-scrim" tabIndex={-1} aria-label="Close docs menu" onClick={() => setNavOpen(false)} />}
         <nav id="docs-nav" className={`docs-nav ${navOpen ? 'docs-nav--open' : ''}`} aria-label="Docs">
           {blueprint && (
             // Phones only: the docs bar keeps just the Docs button, so the profile and (when the screen has no theme toggle of its own) the theme live here.

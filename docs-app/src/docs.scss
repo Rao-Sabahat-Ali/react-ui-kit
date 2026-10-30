@@ -79,6 +79,10 @@
   }
 
   // The drawer starts under the slimmer bar.
+  .docs-shell--wide .docs-scrim {
+    inset-block-start: 2.5rem;
+  }
+
   .docs-shell--wide .docs-nav {
     top: 2.5rem;
     height: calc(100vh - 2.5rem);
@@ -89,6 +93,38 @@
 // Blueprint pages need the full width, so the docs navigation becomes a drawer at every size.
 .docs-shell--wide .docs-nav {
   @include docs-nav-drawer;
+}
+
+// A paper veil (no blur) behind the open drawer, below the bar so the button that opened it stays in view.
+.docs-scrim {
+  display: none;
+  position: fixed;
+  inset: 3.5rem 0 0;
+  padding: 0;
+  border: 0;
+  z-index: var(--ui-z-drawer-backdrop);
+  background: var(--ui-color-overlay);
+  animation: ui-fade-in var(--ui-motion-part) var(--ui-easing-out);
+}
+
+@media (max-width: 991.98px) {
+  .docs-scrim {
+    display: block;
+  }
+}
+
+.docs-shell--wide .docs-scrim {
+  display: block;
+}
+
+// Open state of the phone Docs button: the accent line on an accent-subtle ground, as a pressed ToggleButton.
+.docs-menu-button.ui-button[aria-expanded='true'] {
+  --bs-btn-color: var(--ui-color-accent-emphasis);
+  --bs-btn-bg: var(--ui-color-accent-subtle);
+  --bs-btn-border-color: var(--ui-color-accent);
+  --bs-btn-hover-color: var(--ui-color-accent-emphasis);
+  --bs-btn-hover-bg: var(--ui-color-accent-subtle);
+  --bs-btn-hover-border-color: var(--ui-color-accent);
 }
 
 .docs-nav--open {

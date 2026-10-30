@@ -112,8 +112,9 @@
   }
 }
 
+// Upcoming figures stay a clear step lighter than the current one (ink) but meet 3:1 against the sheet in both themes.
 .ui-step-panel--upcoming .ui-step-panel__figure {
-  color: var(--ui-color-border-strong);
+  color: color-mix(in srgb, var(--ui-color-line) 66%, var(--ui-color-surface));
 }
 
 // Wide stack: the picture sits beside the copy instead of above it.
