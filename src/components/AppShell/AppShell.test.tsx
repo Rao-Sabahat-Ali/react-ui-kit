@@ -1,7 +1,8 @@
 import type React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { compileScss } from '../../../test/scss';
 import { ThemeProvider } from '../../theme';
 import { BottomNav } from '../BottomNav/BottomNav';
 import { SidebarNav } from '../SidebarNav/SidebarNav';
@@ -79,6 +80,62 @@ describe('AppShell', () => {
     const mobile = renderShell();
     expect(mobile.container.querySelector('.ui-bottom-nav')).toBeInTheDocument();
     expect(mobile.container.firstChild).toHaveClass('ui-app-shell--with-bottom-nav');
+  });
+
+  describe('AC-8: --ui-bottom-nav-offset', () => {
+    const offset = () => document.documentElement.style.getPropertyValue('--ui-bottom-nav-offset');
+    const style = document.createElement('style');
+    const navHeight = (height: number) =>
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+        const h = this.classList.contains('ui-app-shell__bottom-nav') ? height : 0;
+        return { height: h, width: 0, top: 0, left: 0, right: 0, bottom: h, x: 0, y: 0, toJSON: () => ({}) };
+      });
+    beforeEach(() => {
+      style.textContent = compileScss('src/components/AppShell/AppShell.scss');
+      document.head.append(style);
+    });
+    afterEach(() => {
+      style.remove();
+      vi.restoreAllMocks();
+    });
+
+    it('the shell publishes the fixed nav height on the document root while it is shown, and removes it on unmount', () => {
+      navHeight(66);
+      setViewport(false);
+      const { unmount } = renderShell();
+      expect(offset()).toBe('66px');
+      unmount();
+      expect(offset()).toBe('');
+      expect(document.documentElement.hasAttribute('style')).toBe(false);
+    });
+
+    it('nothing is published where the nav is not shown (desktop) or has no shell', () => {
+      navHeight(66);
+      setViewport(true);
+      const { unmount } = renderShell();
+      expect(offset()).toBe('');
+      unmount();
+      render(bottom);
+      expect(offset()).toBe('');
+    });
+
+    it('an embedded shell (sticky nav inside a frame) publishes nothing', () => {
+      navHeight(66);
+      setViewport(false);
+      renderShell({ className: 'ui-app-shell--embedded' });
+      expect(offset()).toBe('');
+    });
+
+    it('the largest of several shells wins and the previous inline value comes back', () => {
+      document.documentElement.style.setProperty('--ui-bottom-nav-offset', '10px');
+      navHeight(66);
+      setViewport(false);
+      const { unmount } = renderShell();
+      expect(offset()).toBe('66px');
+      unmount();
+      expect(offset()).toBe('10px');
+      document.documentElement.style.removeProperty('--ui-bottom-nav-offset');
+    });
   });
 
   it('AC-4: default variant is derived from the active profile', () => {

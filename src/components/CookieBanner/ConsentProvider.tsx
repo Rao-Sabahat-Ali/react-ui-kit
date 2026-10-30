@@ -15,6 +15,8 @@ export interface ConsentInternals {
   categories: ConsentCategory[];
   /** The banner asked to show again (notice mode `openSettings`). */
   bannerForced: boolean;
+  /** Counts `openSettings()` calls that asked for the banner (notice mode); the banner moves focus to its first action for each one. */
+  bannerRequest: number;
   prefsOpen: boolean;
   /** Changes on every open, so the preferences form starts from the stored record each time. */
   prefsKey: number;
@@ -43,6 +45,7 @@ export function ConsentProvider({
   const record = useMemo(() => (ready ? parseRecord(raw, policyVersion, maxAgeDays) : null), [raw, ready, policyVersion, maxAgeDays]);
 
   const [bannerForced, setBannerForced] = useState(false);
+  const [bannerRequest, setBannerRequest] = useState(0);
   const [prefs, setPrefs] = useState({ open: false, key: 0 });
   const modeRef = useRef<ConsentMode | null>(null);
   const categoriesRef = useRef(categories);
@@ -95,15 +98,17 @@ export function ConsentProvider({
       rejectAll: () => commit(() => false),
       save: (choices) => commit((c) => choices[c.id] === true),
       openSettings: () => {
-        if (currentMode() === 'notice') setBannerForced(true);
-        else openPrefs();
+        if (currentMode() === 'notice') {
+          setBannerForced(true);
+          setBannerRequest((n) => n + 1);
+        } else openPrefs();
       },
     };
   }, [record, categories, commit, currentMode, openPrefs]);
 
   const internals = useMemo<ConsentInternals>(
-    () => ({ ready, record, categories, bannerForced, prefsOpen: prefs.open, prefsKey: prefs.key, openPrefs, closePrefs, registerMode }),
-    [ready, record, categories, bannerForced, prefs, openPrefs, closePrefs, registerMode],
+    () => ({ ready, record, categories, bannerForced, bannerRequest, prefsOpen: prefs.open, prefsKey: prefs.key, openPrefs, closePrefs, registerMode }),
+    [ready, record, categories, bannerForced, bannerRequest, prefs, openPrefs, closePrefs, registerMode],
   );
 
   return (

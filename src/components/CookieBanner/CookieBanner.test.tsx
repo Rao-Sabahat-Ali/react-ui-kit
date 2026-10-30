@@ -58,6 +58,15 @@ function Harness({ banner, ...provider }: ConsentProviderProps & { banner?: Cook
   );
 }
 
+/** The body of `@keyframes <name>`, or ''. */
+const keyframes = (css: string, name: string) => mediaBlock(css.replace(`@keyframes ${name}`, `@media ${name}`), name);
+/** The declaration block of the first rule whose selector is exactly `selector`, or ''. */
+const rule = (css: string, selector: string) => {
+  const start = css.search(new RegExp(`(^|\\})\\s*${selector.replace(/[.\\]/g, '\\$&')} \\{`));
+  if (start === -1) return '';
+  const open = css.indexOf('{', start);
+  return css.slice(open + 1, css.indexOf('}', open));
+};
 const region = () => screen.queryByRole('region', { name: 'Cookies and storage' });
 const reduceMotion = (reduced: boolean) => {
   vi.spyOn(window, 'matchMedia').mockImplementation(
@@ -275,6 +284,47 @@ describe('CookieBanner', () => {
     expect(region()).toBeNull();
   });
 
+  it('AC-9: in notice mode the reopened banner moves focus to OK, and OK returns it to the button that called openSettings', async () => {
+    seed(record({ mode: 'notice', categories: { necessary: true } }));
+    render(
+      <ConsentProvider policyVersion="1" storageKey={KEY}>
+        <CookieBanner policyHref="/privacy" />
+        <Probe />
+        <main>Page</main>
+      </ConsentProvider>,
+    );
+    expect(document.body).toHaveFocus(); // hidden, and nothing grabbed focus on load
+    const opener = screen.getByRole('button', { name: 'Cookies and storage settings' });
+    act(() => opener.focus());
+    await userEvent.click(opener);
+    expect(screen.getByRole('button', { name: 'OK' })).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+    expect(region()).toBeNull();
+    await waitFor(() => expect(opener).toHaveFocus());
+  });
+
+  it('AC-9: asking again while the notice is showing moves focus to OK again; the first load never does', async () => {
+    render(
+      <ConsentProvider policyVersion="1" storageKey={KEY}>
+        <CookieBanner />
+        <Probe />
+      </ConsentProvider>,
+    );
+    expect(region()).toBeInTheDocument();
+    expect(document.body).toHaveFocus();
+    await userEvent.click(screen.getByRole('button', { name: 'Cookies and storage settings' }));
+    expect(screen.getByRole('button', { name: 'OK' })).toHaveFocus();
+  });
+
+  it('AC-9: in consent mode openSettings opens the dialog, which holds focus, and does not focus the banner', async () => {
+    seed();
+    render(<Harness />);
+    await userEvent.click(screen.getByRole('button', { name: 'Cookies and storage settings' }));
+    const dialog = screen.getByRole('dialog', { name: 'Cookie preferences' });
+    expect(dialog).toContainElement(document.activeElement as HTMLElement);
+    expect(region()).toBeNull();
+  });
+
   it('AC-10: storage="cookie" writes ui_consent with Path, SameSite and Max-Age, reads it back, and writes no localStorage', async () => {
     const setter = vi.spyOn(Document.prototype, 'cookie', 'set');
     render(<Harness storage="cookie" maxAgeDays={30} />);
@@ -326,7 +376,8 @@ describe('CookieBanner', () => {
     render(<Harness />);
     expect(root.style.getPropertyValue('--ui-consent-offset')).toBe('120px');
     expect(root.style.getPropertyValue('padding-bottom')).toBe('120px');
-    expect(root.style.getPropertyValue('scroll-padding-bottom')).toBe('120px');
+    // The nav (if any) is added on the live variable, so a nav that appears later needs no update.
+    expect(root.style.getPropertyValue('scroll-padding-bottom')).toBe('calc(120px + var(--ui-bottom-nav-offset, 0px))');
     await userEvent.click(screen.getByRole('button', { name: 'Reject all' }));
     expect(root.style.getPropertyValue('--ui-consent-offset')).toBe('');
     expect(root.style.getPropertyValue('scroll-padding-bottom')).toBe('');
@@ -382,18 +433,76 @@ describe('CookieBanner', () => {
     expect(within(region()!).queryByRole('link')).toBeNull();
   });
 
-  it('AC-15: under reduced motion the stylesheet fades in and out within 120 ms with no transform, and the banner leaves at once', async () => {
+  it('AC-15: the enter keyframes never animate opacity: transform only, so the banner is opaque from its first frame', () => {
+    const css = compileScss('src/components/CookieBanner/CookieBanner.scss');
+    const enter = keyframes(css, 'ui-cookie-banner-in');
+    expect(enter).toMatch(/transform:\s*translateY\(var\(--ui-assemble-distance\)\)/);
+    expect(enter).not.toMatch(/opacity/);
+    // Nothing else the sheet enters with fades either: the enter animation is that one, outside any reduced-motion rule.
+    const reduced = mediaBlock(css, '(prefers-reduced-motion: reduce)');
+    const outside = css.replace(reduced, '');
+    expect(outside).toMatch(/\.ui-cookie-banner__sheet \{[^}]*animation: ui-cookie-banner-in /);
+    expect(outside).not.toMatch(/animation:[^;]*ui-fade-in|animation:[^;]*ui-pop-in/);
+  });
+
+  it('AC-15: under reduced motion the banner appears without animation and leaves with an opacity-only fade within 120 ms', async () => {
     const css = compileScss('src/components/CookieBanner/CookieBanner.scss');
     const reduced = mediaBlock(css, '(prefers-reduced-motion: reduce)');
-    expect(reduced).toContain('ui-fade-in 120ms');
+    expect(reduced).toMatch(/\.ui-cookie-banner__sheet \{[^}]*animation: none/);
+    expect(reduced).not.toContain('ui-fade-in');
     expect(reduced).toContain('ui-fade-out 120ms');
     expect(reduced).not.toMatch(/transform|translate|scale/);
-    expect(css.replace(reduced, '')).toMatch(/ui-cookie-banner-in[\s\S]*transform/);
+    expect(keyframes(css, 'ui-fade-out')).not.toMatch(/transform/);
 
     reduceMotion(true);
     render(<Harness />);
     await userEvent.click(screen.getByRole('button', { name: 'Accept all' }));
     expect(region()).toBeNull();
+  });
+
+  it('AC-17: the banner sits on the bottom nav offset, one layer above the nav and below the backdrops, without counting the safe area twice', () => {
+    const css = compileScss('src/components/CookieBanner/CookieBanner.scss');
+    const banner = rule(css, '.ui-cookie-banner');
+    expect(banner).toContain('inset-block-end: var(--ui-bottom-nav-offset, 0px)');
+    expect(banner).toContain('z-index: calc(var(--ui-z-fixed) + 1)');
+    // The safe area is part of the padding only while there is no nav (the nav's own height already contains it).
+    expect(banner).toMatch(/padding-block-end: max\(var\(--ui-space-3\), max\(var\(--ui-space-8\), env\(safe-area-inset-bottom, 0px\)\) - var\(--ui-bottom-nav-offset, 0px\) \* 100\)/);
+    expect(rule(css, '.ui-cookie-banner__sheet')).toContain('max-block-size: calc(100dvh - var(--ui-space-8) - var(--ui-bottom-nav-offset, 0px))');
+    // z-fixed is 1030, drawer and modal backdrops 1040 and 1050.
+    const tokens = compileScss('src/styles/index.scss');
+    const z = (name: string) => Number(new RegExp(`--ui-z-${name}:\\s*(\\d+)`).exec(tokens)![1]);
+    expect(z('fixed') + 1).toBeLessThan(z('drawer-backdrop'));
+  });
+
+  it('AC-17: reserved space counts the nav once: the document pads by the banner only, the scroll padding adds the nav', async () => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      const height = this.classList.contains('ui-cookie-banner') ? 140 : 0;
+      return { height, width: 0, top: 0, left: 0, right: 0, bottom: height, x: 0, y: 0, toJSON: () => ({}) };
+    });
+    const root = document.documentElement;
+    root.style.setProperty('--ui-bottom-nav-offset', '66px');
+    try {
+      render(<Harness />);
+      expect(root.style.getPropertyValue('--ui-consent-offset')).toBe('140px');
+      expect(root.style.getPropertyValue('padding-bottom')).toBe('140px');
+      // Resolved by the browser to 140px + 66px; here the live variable is what is asserted.
+      expect(root.style.getPropertyValue('scroll-padding-bottom')).toContain('var(--ui-bottom-nav-offset, 0px)');
+      await userEvent.click(screen.getByRole('button', { name: 'Reject all' }));
+      expect(root.style.getPropertyValue('--ui-bottom-nav-offset')).toBe('66px'); // the banner never touches the nav's variable
+    } finally {
+      root.style.removeProperty('--ui-bottom-nav-offset');
+    }
+  });
+
+  it('AC-18: the region keeps room below the sheet for the whole lift shadow at the viewport edge', () => {
+    const css = compileScss('src/components/CookieBanner/CookieBanner.scss');
+    // --ui-shadow-lift: 0 8px 24px -6px -> 26px below the sheet; space-8 is 2rem.
+    expect(rule(css, '.ui-cookie-banner')).toContain('max(var(--ui-space-8), env(safe-area-inset-bottom, 0px))');
+    const tokens = compileScss('src/styles/index.scss');
+    const shadow = /--ui-shadow-lift:\s*0 (\d+)px (\d+)px (-?\d+)px/.exec(tokens)!;
+    const reach = Number(shadow[1]) + Number(shadow[2]) + Number(shadow[3]);
+    const space8 = Number(/--ui-space-8:\s*([\d.]+)rem/.exec(tokens)![1]) * 16;
+    expect(space8).toBeGreaterThanOrEqual(reach);
   });
 
   it('AC-16: renders nothing and reads no storage on the server, then appears after hydration without a warning', async () => {

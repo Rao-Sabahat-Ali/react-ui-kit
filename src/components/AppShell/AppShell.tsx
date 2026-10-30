@@ -1,10 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useId, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useLocale } from '../../locale/LocaleProvider';
 import { useOptionalTheme } from '../../theme/ThemeProvider';
 import type { Profile } from '../../theme/profiles.generated';
 import { cx } from '../../utils/cx';
 import { Drawer } from '../Drawer/Drawer';
+import { clearBottomNavOffset, setBottomNavOffset } from './bottomNavOffset';
 
 const BREAKPOINTS = { md: 768, lg: 992, xl: 1200 } as const;
 
@@ -128,6 +129,26 @@ export function AppShell({
 
   const showBottomNav = Boolean(bottomNav) && isMobile;
 
+  // While the bottom nav is shown and fixed to the bottom edge, publish its height so fixed overlays (CookieBanner) sit above it.
+  // An embedded shell (docs demos: sticky inside a frame) shares no edge with the page and publishes nothing.
+  const bottomNavRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const el = bottomNavRef.current;
+    if (!showBottomNav || !el) return;
+    const id = Symbol('bottom-nav');
+    const publish = () => {
+      if (getComputedStyle(el).position === 'fixed') setBottomNavOffset(id, el.getBoundingClientRect().height);
+      else clearBottomNavOffset(id);
+    };
+    publish();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(publish);
+    observer?.observe(el);
+    return () => {
+      observer?.disconnect();
+      clearBottomNavOffset(id);
+    };
+  }, [showBottomNav]);
+
   return (
     <AppShellContext.Provider value={ctx}>
       <div className={cx('ui-app-shell', `ui-app-shell--${variant}`, collapsed && !isMobile && 'ui-app-shell--collapsed', showBottomNav && 'ui-app-shell--with-bottom-nav', className)}>
@@ -155,7 +176,11 @@ export function AppShell({
           </main>
         </div>
         {footer && <footer className="ui-app-shell__footer">{footer}</footer>}
-        {showBottomNav && <div className="ui-app-shell__bottom-nav">{bottomNav}</div>}
+        {showBottomNav && (
+          <div ref={bottomNavRef} className="ui-app-shell__bottom-nav">
+            {bottomNav}
+          </div>
+        )}
         {hasSidebar && isMobile && (
           <Drawer open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} position="start" size="sm" title={mobileNavTitle} aria-label={t('menu')} id={navId}>
             {sidebar}
