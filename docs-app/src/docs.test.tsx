@@ -1,6 +1,6 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from './App';
 import { blueprints } from './blueprints/registry';
 
@@ -79,6 +79,29 @@ describe('profiles page', () => {
 });
 
 describe('blueprint page', () => {
+  it('keeps one Docs entry whose drawer holds the profile select (and the theme toggle when the screen has none)', async () => {
+    act(() => open('#/blueprints/checkout'));
+    const { container } = render(<App />);
+    await screen.findByText('Sample data.');
+    const drawer = container.querySelector('#docs-nav')!;
+    const tools = drawer.querySelector('.docs-nav__tools')!;
+    expect(within(tools as HTMLElement).getByRole('combobox', { name: 'App profile' })).toBeInTheDocument();
+    expect(tools.querySelector('button[aria-label*="mode" i]')).not.toBeNull();
+    expect(screen.getByRole('button', { name: 'Docs menu', expanded: false })).toBeInTheDocument();
+  });
+
+  it('draws checkout figures without text or quantity marks', async () => {
+    act(() => open('#/blueprints/checkout'));
+    const { container } = render(<App />);
+    await screen.findByText('Sample data.');
+    const svg = await vi.waitFor(() => {
+      const el = container.querySelector('svg[data-fig-ok], .docs-blueprint__frame svg[focusable="false"]');
+      if (!el) throw new Error('no figure yet');
+      return el;
+    });
+    expect(svg.querySelector('text')).toBeNull();
+  });
+
   it('labels the preview as sample data', async () => {
     act(() => open(`#/blueprints/${blueprints[0]!.slug}`));
     render(<App />);

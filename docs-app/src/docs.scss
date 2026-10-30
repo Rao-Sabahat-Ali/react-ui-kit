@@ -77,6 +77,13 @@
   .docs-topbar--blueprint {
     height: 2.5rem;
   }
+
+  // The drawer starts under the slimmer bar.
+  .docs-shell--wide .docs-nav {
+    top: 2.5rem;
+    height: calc(100vh - 2.5rem);
+    height: calc(100dvh - 2.5rem);
+  }
 }
 
 // Blueprint pages need the full width, so the docs navigation becomes a drawer at every size.
@@ -88,6 +95,14 @@
   transform: none !important;
   // Only the open drawer is lifted off the sheet; closed it must not leak a shadow into the viewport.
   box-shadow: var(--ui-shadow-lift);
+}
+
+.docs-nav__tools {
+  display: grid;
+  gap: var(--ui-space-2);
+  margin: 0 var(--ui-space-2) var(--ui-space-3);
+  padding: var(--ui-space-3);
+  border-block-end: var(--ui-line-width-hairline) solid color-mix(in srgb, var(--ui-color-shell-contrast) 35%, transparent);
 }
 
 .docs-nav__section {

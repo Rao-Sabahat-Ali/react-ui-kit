@@ -1,4 +1,4 @@
-import { Box, Figure, Guide, No, Part, Ring, Trace } from '../../../templates/blueprints/figures';
+import { Box, Figure, Guide, Part, Ring, Trace } from '../../../templates/blueprints/figures';
 
 /** 1. The package is lowered into the project folder. */
 export function PackageIntoFolderFigure() {
@@ -11,7 +11,6 @@ export function PackageIntoFolderFigure() {
         <Trace d="M80 14v14M72 14v8h16v-8" />
       </Part>
       <Trace d="M36 56h88v22a6 6 0 0 1-6 6H42a6 6 0 0 1-6-6z" paper />
-      <No x={132} y={28}>1×</No>
     </Figure>
   );
 }
@@ -29,7 +28,6 @@ export function SheetOntoFrameFigure() {
         <Trace d="M62 36h36M62 46h36M62 56h22" />
         <Trace d="M72 16v-8h16v8" />
       </Part>
-      <No x={132} y={24}>1×</No>
     </Figure>
   );
 }
@@ -46,7 +44,6 @@ export function PartIntoSlotFigure() {
         <Trace d="M70 36h20M70 46h12" />
       </Part>
       <Trace d="M50 52l-8-2M110 52l8-2" />
-      <No x={132} y={28}>1×</No>
     </Figure>
   );
 }

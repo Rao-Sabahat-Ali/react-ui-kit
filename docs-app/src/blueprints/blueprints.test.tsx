@@ -99,7 +99,7 @@ describe('analytics dashboard', () => {
     expect(screen.getByText(/Revenue totalled SEK/)).toBeInTheDocument();
     expect(screen.getByText(/is the largest channel/)).toBeInTheDocument();
     // Deltas announce direction in words, never colour only.
-    expect(screen.getAllByText(/(Up|Down) [\d.]+% vs previous period/).length).toBeGreaterThanOrEqual(4);
+    expect(screen.getAllByText(/(Up|Down) [\d.]+% vs prior period/).length).toBeGreaterThanOrEqual(4);
   });
 
   it('has exactly one solid button in the page header and identical row actions', () => {

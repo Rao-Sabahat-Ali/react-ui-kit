@@ -68,12 +68,14 @@ const isEmail = (v: string) => {
   return !/\s/.test(value) && /^[^@]+@[^@]+\.[^@]+$/.test(value);
 };
 const MEASURE = { maxWidth: '36rem' } as const;
-const ITEM_COUNT = CART_LINES.reduce((n, l) => n + l.quantity, 0);
 
-/** The drawn part of a step, above its form (the picture before the words). */
-const picture = (step: StepValue) => (
-  <div className="mb-3">
-    <CheckoutFigure step={step} items={ITEM_COUNT} />
+/** One line of copy per step with its drawn part beside it from lg up (hidden on narrow screens so the first field stays near the top). */
+const lead = (step: StepValue, copy: string) => (
+  <div className="d-flex align-items-start justify-content-between gap-3 mb-3">
+    <p className="text-body-secondary mb-0">{copy}</p>
+    <div className="d-none d-lg-block flex-shrink-0">
+      <CheckoutFigure step={step} />
+    </div>
   </div>
 );
 
@@ -271,8 +273,7 @@ export function Checkout({ appName = 'Nordic Tools', previewState, onContinueSho
       <Stepper linear value={step} onChange={(v) => setStep(v as StepValue)} headingLevel={2}>
         <Stepper.Step value="contact" label="Contact">
           <form noValidate onSubmit={submitContact} style={MEASURE} aria-label="Contact">
-            {picture('contact')}
-            <p className="text-body-secondary">You are checking out as a guest. No account needed.</p>
+            {lead('contact', 'You are checking out as a guest. No account needed.')}
             <Field id="checkout-email" label="Email" required error={errors.email} help="We send your receipt here.">
               <InputText ref={refs.email} type="email" autoComplete="email" value={email} onChange={setEmail} />
             </Field>
@@ -287,7 +288,7 @@ export function Checkout({ appName = 'Nordic Tools', previewState, onContinueSho
 
         <Stepper.Step value="delivery" label="Delivery">
           <form noValidate onSubmit={submitDelivery} style={MEASURE} aria-label="Delivery">
-            {picture('delivery')}
+            {lead('delivery', 'Where should we send it, and how fast?')}
             <Field id="checkout-name" label="Full name" required error={errors.name}>
               <InputText ref={refs.name} autoComplete="shipping name" value={address.name} onChange={(name) => setAddress((a) => ({ ...a, name }))} />
             </Field>
@@ -324,7 +325,7 @@ export function Checkout({ appName = 'Nordic Tools', previewState, onContinueSho
 
         <Stepper.Step value="payment" label="Payment">
           <form noValidate onSubmit={submitPayment} style={MEASURE} aria-label="Payment">
-            {picture('payment')}
+            {lead('payment', 'Choose how you want to pay.')}
             <PaymentMethodSelector
               legend="Payment method"
               legendHidden
@@ -356,7 +357,7 @@ export function Checkout({ appName = 'Nordic Tools', previewState, onContinueSho
 
         <Stepper.Step value="review" label="Review">
           <div style={MEASURE}>
-            {picture('review')}
+            {lead('review', 'Check your order, then place it.')}
             <ul className="list-unstyled mb-4">
               {[
                 { key: 'contact', label: 'Contact', value: email, to: 'contact' as const },

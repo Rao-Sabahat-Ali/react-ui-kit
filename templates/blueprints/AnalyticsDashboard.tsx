@@ -20,6 +20,7 @@ import {
   ThemeToggle,
   Timeline,
   Topbar,
+  useMediaQuery,
   useToast,
   type Column,
   type Intent,
@@ -90,6 +91,8 @@ const sum = (values: number[]) => values.reduce((a, b) => a + b, 0);
 export function AnalyticsDashboard({ appName = 'Nordic Tools', previewState, embedded = false, onNavigate }: AnalyticsDashboardProps) {
   const toast = useToast();
   const [period, setPeriod] = useState<Period>(30);
+  // Two narrow columns on a phone: the delta line says "vs prior" so it stays on one line.
+  const narrow = useMediaQuery('(max-width: 575.98px)');
   const [metric, setMetric] = useState<'revenue' | 'orders'>('revenue');
   const [density, setDensity] = useState<'comfortable' | 'compact'>('comfortable');
   const [query, setQuery] = useState('');
@@ -228,7 +231,7 @@ export function AnalyticsDashboard({ appName = 'Nordic Tools', previewState, emb
                 value={k.value}
                 format={k.format}
                 delta={k.delta}
-                deltaLabel="vs previous period"
+                deltaLabel={narrow ? 'vs prior' : 'vs prior period'}
                 invertDelta={k.invert}
                 quantity={k.id === 'orders'}
               />

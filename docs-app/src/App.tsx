@@ -102,6 +102,12 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
       <header className={`docs-topbar ${blueprint ? 'docs-topbar--blueprint' : ''}`}>
         {/* On a phone a blueprint brings its own app header: the docs bar shrinks to the brand, and the way back is the breadcrumb. */}
         <Button className={blueprint ? 'd-none d-md-inline-flex' : 'd-lg-none'} appearance="text" variant="secondary" icon="menu" aria-label="Docs navigation" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)} />
+        {blueprint && (
+          // The one docs entry point on a phone: a text button, distinct from the app's own hamburger. The profile and theme controls live in its drawer.
+          <Button className="d-md-none" appearance="outline" variant="secondary" size="sm" aria-label="Docs menu" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)}>
+            Docs
+          </Button>
+        )}
         <a href={href()} className="docs-brand">react-ui-kit</a>
         <div className="ms-auto d-flex align-items-center gap-2">
           <div className={`align-items-center gap-2 ${blueprint ? 'd-none d-md-flex' : 'd-flex'}`}>
@@ -110,14 +116,26 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
               <Select<Profile> aria-label="App profile" size="sm" options={profiles.map((p) => ({ label: p.name, value: p.name as Profile }))} value={profile} onChange={(v) => v && onProfileChange(v)} />
             </div>
           </div>
-          {/* One theme control on phones: the screen's own when it has one, otherwise this one. */}
-          <span className={blueprint?.appTheme ? 'd-none d-md-inline-flex' : 'd-inline-flex'}>
+          <span className={blueprint ? 'd-none d-md-inline-flex' : 'd-inline-flex'}>
             <ThemeToggle size="sm" />
           </span>
         </div>
       </header>
       <div className="docs-body">
         <nav id="docs-nav" className={`docs-nav ${navOpen ? 'docs-nav--open' : ''}`} aria-label="Docs">
+          {blueprint && (
+            // Phones only: the docs bar keeps just the Docs button, so the profile and (when the screen has no theme toggle of its own) the theme live here.
+            <div className="docs-nav__tools d-md-none">
+              <span className="small">Profile</span>
+              <Select<Profile> aria-label="App profile" size="sm" options={profiles.map((p) => ({ label: p.name, value: p.name as Profile }))} value={profile} onChange={(v) => v && onProfileChange(v)} />
+              {!blueprint.appTheme && (
+                <div className="d-flex align-items-center justify-content-between gap-2">
+                  <span className="small">Theme</span>
+                  <ThemeToggle size="sm" />
+                </div>
+              )}
+            </div>
+          )}
           <div className="docs-nav__section">
             {navLink('', 'Overview', '', 'home')}
             {navLink('foundations', 'Foundations', '', 'layers')}
