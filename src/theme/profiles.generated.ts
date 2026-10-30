@@ -1,4 +1,4 @@
-// GENERATED from design-system-mcp/specs/tokens/tokens.json v0.4.0. Do not edit.
+// GENERATED from design-system-mcp/specs/tokens/tokens.json v2.0.0. Do not edit.
 export const PROFILES = {
   saas: { defaultTheme: 'system', density: 'comfortable' },
   admin: { defaultTheme: 'system', density: 'compact' },

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref, type TouchEvent } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
+import { useSlidingMark } from '../../hooks/useSlidingMark';
+import { useDocumentVisible } from '../../motion/useDocumentVisible';
 import { usePrefersReducedMotion } from '../../hooks/useMediaQuery';
 import { useLocale } from '../../locale/LocaleProvider';
 import { canUseDOM } from '../../utils/dom';
@@ -95,7 +97,10 @@ export function Carousel<T>({
   const [playing, setPlaying] = useState(true);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
-  const running = canAutoplay && playing && !hovered && !focused;
+  // Autoplay stops on hover, on focus, in a hidden tab and under reduced motion (canAutoplay).
+  const tabVisible = useDocumentVisible();
+  const running = canAutoplay && playing && !hovered && !focused && tabVisible;
+  const indicatorsRef = useRef<HTMLDivElement | null>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const goTo = useCallback((next: number) => setPage(Math.min(Math.max(next, 0), totalPages - 1)), [setPage, totalPages]);
@@ -135,6 +140,8 @@ export function Carousel<T>({
       if (canNext) next();
     } else if (canPrev) prev();
   };
+
+  useSlidingMark(indicatorsRef, { target: '[aria-current="true"]' }, [page, totalPages, showIndicators]);
 
   // Positive offset; the stylesheet applies the direction (LTR/RTL/vertical).
   const trackStyle = { '--ui-carousel-offset': `${(first * 100) / visibleCount}%` } as CSSProperties;
@@ -206,7 +213,7 @@ export function Carousel<T>({
         )}
       </div>
       {showIndicators && totalPages > 1 && (
-        <div className="ui-carousel__indicators">
+        <div ref={indicatorsRef} className="ui-carousel__indicators">
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i}

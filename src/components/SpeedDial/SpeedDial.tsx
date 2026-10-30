@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEv
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { usePresence } from '../../motion/usePresence';
 import { cx } from '../../utils/cx';
 import { Icon, type IconName } from '../Icon/Icon';
 import { focusAdjacentTabbable, mergeRefs } from '../../utils/element';
@@ -78,6 +79,8 @@ export function SpeedDial({
   const itemEls = useRef<(HTMLButtonElement | null)[]>([]);
   const coarse = useMediaQuery('(pointer: coarse)');
   const n = items.length;
+  // The actions stay mounted while they fold back into the trigger (they leave faster than they arrive).
+  const { present, state } = usePresence(open);
 
   useClickOutside([rootRef], () => setOpen(false), open);
 
@@ -154,7 +157,7 @@ export function SpeedDial({
       )}
       style={style}
     >
-      <ul id={menuId} role="menu" aria-labelledby={triggerId} aria-orientation={orientation} hidden={!open} className="list-unstyled ui-speed-dial__list">
+      <ul id={menuId} role="menu" aria-labelledby={triggerId} aria-orientation={orientation} hidden={!present} data-state={state} inert={!open} className="list-unstyled ui-speed-dial__list">
         {items.map((item, index) => {
           const offset = offsets?.[index];
           const button = (
@@ -166,7 +169,7 @@ export function SpeedDial({
               role="menuitem"
               tabIndex={-1}
               aria-label={item.label}
-              className="btn rounded-circle ui-speed-dial__action"
+              className="btn ui-speed-dial__action"
               onClick={() => {
                 item.command();
                 close();
@@ -180,7 +183,7 @@ export function SpeedDial({
             <li
               key={`${item.label}-${index}`}
               role="none"
-              className="ui-speed-dial__entry"
+              className={cx('ui-speed-dial__entry', index === n - 1 && 'ui-speed-dial__entry--last')}
               style={{ '--ui-speed-dial-index': index, ...(offset ? { '--ui-speed-dial-x': `${offset.x}rem`, '--ui-speed-dial-y': `${offset.y}rem` } : {}) } as CSSProperties}
             >
               {coarse ? (
@@ -204,7 +207,7 @@ export function SpeedDial({
         ref={mergeRefs(triggerRef, ref)}
         id={triggerId}
         type="button"
-        className="btn btn-primary rounded-circle ui-speed-dial__trigger"
+        className="btn btn-primary ui-speed-dial__trigger"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}

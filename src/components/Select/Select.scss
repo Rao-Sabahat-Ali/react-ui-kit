@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-select {
   position: relative;
 }
@@ -5,7 +7,6 @@
 .ui-select__trigger {
   min-height: var(--ui-control-height-md);
   padding-inline-start: var(--ui-control-padding-x);
-  border-radius: var(--ui-radius);
   text-align: start;
   width: 100%;
   background-color: var(--ui-color-surface);
@@ -17,6 +18,11 @@
 
   &.form-select-lg {
     min-height: var(--ui-control-height-lg);
+    border-radius: var(--ui-radius-lg);
+  }
+
+  &[aria-expanded='true'] {
+    border-color: var(--ui-color-accent);
   }
 }
 
@@ -49,26 +55,54 @@
   &:hover {
     color: var(--ui-color-text);
   }
+
+  &:focus-visible {
+    @include form.focus-ring(-2px);
+  }
 }
 
+// The option list is a lifted overlay; its options assemble when it opens.
 .ui-select__panel {
-  z-index: var(--ui-z-dropdown);
+  @include form.lifted-panel;
   max-height: 18rem;
   overflow-y: auto;
-  margin: 0;
+  padding: var(--ui-space-1);
+}
+
+.ui-select__filter {
+  padding-inline: var(--ui-space-1);
+
+  // The panel is already a framed overlay: keep the filter's ring inside it.
+  .form-control:focus {
+    outline-offset: -2px;
+  }
+}
+
+.ui-select__group {
+  padding: var(--ui-space-2) var(--ui-space-3) var(--ui-space-1);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.ui-select__empty {
+  padding: var(--ui-space-2) var(--ui-space-3);
 }
 
 .ui-select__option {
-  display: flex;
-  align-items: center;
+  @include form.option-row;
   justify-content: space-between;
-  gap: var(--ui-space-2);
-  cursor: pointer;
-  min-height: var(--ui-control-height-sm);
 
-  &.disabled {
-    cursor: not-allowed;
+  &.active {
+    background-color: var(--ui-color-accent-subtle);
+    color: var(--ui-color-accent-emphasis);
+    font-weight: var(--ui-font-weight-semibold);
   }
+}
+
+.ui-select__check {
+  flex: none;
+  color: var(--ui-color-accent);
 }
 
 .ui-select__option--active:not(.active) {
@@ -76,7 +110,9 @@
   color: var(--ui-color-text);
 }
 
-.ui-select__option--active.active {
-  outline: 2px solid var(--ui-color-focus-ring);
+.ui-select__option--active {
+  outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
   outline-offset: -2px;
 }
+
+@include form.panel-keyframes;

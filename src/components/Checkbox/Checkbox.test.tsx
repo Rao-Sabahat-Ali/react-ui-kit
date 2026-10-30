@@ -44,3 +44,14 @@ describe('Checkbox', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 });
+
+describe('Checkbox (v2)', () => {
+  it('AC-v2-1: the mark is a decorative drawn svg beside the single accessible input', () => {
+    const { container } = render(<Checkbox label="Remember me" defaultChecked />);
+    expect(screen.getAllByRole('checkbox')).toHaveLength(1);
+    const mark = container.querySelector('svg.ui-checkbox__mark')!;
+    expect(mark).toHaveAttribute('aria-hidden', 'true');
+    expect(mark.querySelector('.ui-checkbox__tick')).toBeInTheDocument();
+    expect(mark.querySelector('.ui-checkbox__dash')).toBeInTheDocument();
+  });
+});

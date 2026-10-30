@@ -1,6 +1,7 @@
 import { useId, type ElementType, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
+import { usePresence } from '../../motion/usePresence';
 import { cx } from '../../utils/cx';
 import { Icon } from '../Icon/Icon';
 
@@ -23,6 +24,8 @@ export function Panel({ header, icons, toggleable = false, collapsed, defaultCol
   const bodyId = `${uid}-body`;
   const [isCollapsed, setCollapsed] = useControllableState(collapsed, defaultCollapsed, onToggle);
   const collapsedNow = toggleable && isCollapsed;
+  // The body stays mounted while it leaves so the reveal can run backwards.
+  const { present, state, exiting } = usePresence(!collapsedNow);
   const Heading = headerAs as ElementType;
   const hasHeader = header !== undefined || icons !== undefined || toggleable;
 
@@ -35,16 +38,16 @@ export function Panel({ header, icons, toggleable = false, collapsed, defaultCol
             {icons}
             {toggleable && (
               <button type="button" className="btn btn-sm ui-panel__toggle" aria-expanded={!collapsedNow} aria-controls={bodyId} aria-label={collapsedNow ? t('expand') : t('collapse')} onClick={() => setCollapsed(!isCollapsed)}>
-                <Icon name={collapsedNow ? 'chevron-down' : 'chevron-up'} />
+                <Icon name="chevron-down" className="ui-panel__chevron" />
               </button>
             )}
           </div>
         </div>
       )}
-      <div id={bodyId} className="card-body ui-panel__body" hidden={collapsedNow}>
+      <div id={bodyId} className={cx('card-body ui-panel__body', exiting && 'ui-panel__body--closing')} hidden={!present} inert={exiting} data-state={state}>
         {children}
       </div>
-      {footer && !collapsedNow && <div className="card-footer ui-panel__footer">{footer}</div>}
+      {footer && present && <div className="card-footer ui-panel__footer">{footer}</div>}
     </div>
   );
 }

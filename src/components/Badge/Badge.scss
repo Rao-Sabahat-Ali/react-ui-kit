@@ -1,9 +1,29 @@
+// Badges use the small part radius (identity v2 has no pills; `pill` stays only for compatibility). Same type as Tag; the subtle appearance keeps Tag's
+// hairline so a tint is readable on white. Overlay badges are cut from what they sit on by a paper ring.
 .ui-badge {
+  min-inline-size: 1.5em;
   font-weight: var(--ui-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+
+  &:not(.rounded-pill) {
+    border-radius: var(--ui-radius-sm);
+  }
+
+  // Subtle appearance: a hairline in the tint, like Tag.
+  &[class*='-subtle'] {
+    border-width: var(--ui-line-width-hairline) !important;
+  }
 }
 
-.ui-badge--dot {
+.ui-badge.ui-badge--dot {
   width: 0.625rem;
   height: 0.625rem;
-  border: 2px solid var(--ui-color-surface);
+  min-inline-size: 0;
+  border-radius: var(--ui-radius-circle); // a status dot is a mark, not a pill
+  border: var(--ui-line-width) solid var(--ui-color-surface);
+}
+
+.ui-badge__overlay > .ui-badge:not(.ui-badge--dot) {
+  outline: var(--ui-line-width) solid var(--ui-color-surface);
 }

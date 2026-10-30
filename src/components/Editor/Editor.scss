@@ -1,18 +1,22 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-editor {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius);
-  background: var(--ui-color-surface);
+  @include form.line-box;
 
   &:focus-within {
-    border-color: var(--ui-color-accent);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.line-box-focus;
   }
 }
 
-.ui-editor--invalid {
+.ui-editor--invalid,
+.ui-editor--invalid:focus-within {
   border-color: var(--ui-color-danger);
+}
+
+.ui-editor--invalid:focus-within {
+  outline-color: var(--ui-color-danger);
 }
 
 .ui-editor__toolbar {
@@ -21,26 +25,35 @@
   align-items: center;
   gap: var(--ui-space-1);
   padding: var(--ui-space-1);
-  border-block-end: 1px solid var(--ui-color-border);
+  border-block-end: var(--ui-line-width) solid var(--ui-color-line);
   background: var(--ui-color-bg-subtle);
-  border-start-start-radius: var(--ui-radius);
-  border-start-end-radius: var(--ui-radius);
+  border-start-start-radius: calc(var(--ui-radius) - var(--ui-line-width));
+  border-start-end-radius: calc(var(--ui-radius) - var(--ui-line-width));
 }
 
 .ui-editor__tool {
   min-inline-size: 2rem;
   min-block-size: 2rem;
   padding: 0 var(--ui-space-1);
-  border: 1px solid transparent;
+  border: var(--ui-line-width) solid transparent;
   color: var(--ui-color-text);
   font-size: var(--ui-font-size-sm);
   line-height: 1;
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
 
   &:hover:not(:disabled) {
     background: var(--ui-color-surface);
-    border-color: var(--ui-color-border);
+    border-color: var(--ui-color-line);
   }
 
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  // A tool that is on shows accent text and a 2px accent line (also a different shape of border, not colour alone).
   &.active,
   &[aria-pressed='true'] {
     background: var(--ui-color-accent-subtle);
@@ -49,13 +62,12 @@
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.focus-ring(-2px);
   }
 }
 
 .ui-editor__glyph--bold { font-weight: var(--ui-font-weight-bold); }
-.ui-editor__glyph--italic { font-style: italic; font-family: var(--ui-font-family-heading); }
+.ui-editor__glyph--italic { font-style: italic; }
 .ui-editor__glyph--underline { text-decoration: underline; }
 .ui-editor__glyph--strike { text-decoration: line-through; }
 .ui-editor__glyph--code,
@@ -65,31 +77,32 @@
   inline-size: 1px;
   block-size: 1.25rem;
   margin-inline: var(--ui-space-1);
-  background: var(--ui-color-border);
+  background: var(--ui-color-line-muted);
 }
 
 .ui-editor__link {
   display: flex;
   gap: var(--ui-space-2);
   padding: var(--ui-space-2);
-  border-block-end: 1px solid var(--ui-color-border);
-  background: var(--ui-color-surface-raised);
+  border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+  background: var(--ui-color-surface);
 }
 
 .ui-editor__content {
   overflow-y: auto;
   padding: var(--ui-space-3);
   border: 0;
-  border-radius: 0 0 var(--ui-radius) var(--ui-radius);
+  border-radius: 0 0 calc(var(--ui-radius) - var(--ui-line-width)) calc(var(--ui-radius) - var(--ui-line-width));
   background: transparent;
   color: var(--ui-color-text);
   line-height: var(--ui-font-line-height-relaxed);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 
+  // The editor frame carries the focus line and ring.
   &:focus,
   &:focus-visible {
-    outline: 2px solid transparent;
+    outline: none;
     box-shadow: none;
   }
 
@@ -116,7 +129,7 @@
 
   blockquote {
     padding-inline-start: var(--ui-space-3);
-    border-inline-start: 3px solid var(--ui-color-border-strong);
+    border-inline-start: var(--ui-line-width) solid var(--ui-color-border-strong);
     color: var(--ui-color-text-muted);
   }
 
@@ -150,7 +163,7 @@
 
   hr {
     margin-block: var(--ui-space-3);
-    border-color: var(--ui-color-border);
+    border-color: var(--ui-color-line-muted);
   }
 }
 
@@ -164,10 +177,17 @@
 
 .ui-editor__counter {
   padding: var(--ui-space-1) var(--ui-space-3);
-  border-block-start: 1px solid var(--ui-color-border);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
   color: var(--ui-color-text-muted);
   font-size: var(--ui-font-size-xs);
+  font-variant-numeric: tabular-nums;
   text-align: end;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-editor__tool {
+    transition: none;
+  }
 }
 
 @media (pointer: coarse) {

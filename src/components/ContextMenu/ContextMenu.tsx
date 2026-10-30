@@ -1,6 +1,7 @@
 import { useEffect, useId, useImperativeHandle, useRef, useState, type Ref, type RefObject } from 'react';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { usePresence } from '../../motion/usePresence';
 import { MenuPopup } from '../Menu/MenuPopup';
 import type { FocusRequest, MenuItem, NavigateHandler } from '../Menu/types';
 import { isRtl } from '../../utils/element';
@@ -33,7 +34,10 @@ let hideActive: (() => void) | null = null;
 export function ContextMenu({ items, target, global = false, onShow, onHide, ariaLabel, onNavigate, className, ref }: ContextMenuProps) {
   const { t } = useLocale();
   const menuId = useId();
+  // `point` is the open state; `shown` keeps the last position so the menu can play its exit animation.
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
+  const [shown, setShown] = useState<{ x: number; y: number; id: number } | null>(null);
+  const { present, state } = usePresence(point !== null, { exit: 'part' });
   const [request, setRequest] = useState<FocusRequest | null>(null);
   const restoreRef = useRef<HTMLElement | null>(null);
   const pointRef = useRef<{ x: number; y: number } | null>(null);
@@ -59,6 +63,7 @@ export function ContextMenu({ items, target, global = false, onShow, onHide, ari
     setRequest({ position: 'first', seq: seq.current });
     pointRef.current = { x, y };
     setPoint({ x, y });
+    setShown({ x, y, id: seq.current });
     callbacks.current.onShow?.(event);
   };
   const openAtRef = useRef(openAt);
@@ -152,14 +157,16 @@ export function ContextMenu({ items, target, global = false, onShow, onHide, ari
     [],
   );
 
-  if (!point) return null;
+  if (!present || !shown) return null;
   return (
     <MenuPopup
+      key={shown.id}
+      state={state}
       items={items}
       id={menuId}
       ariaLabel={ariaLabel ?? t('menu')}
       tiered
-      point={point}
+      point={shown}
       placement="bottom-start"
       restoreRef={restoreRef}
       tabBehavior="restore"

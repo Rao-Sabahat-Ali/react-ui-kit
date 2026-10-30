@@ -1,5 +1,5 @@
 /**
- * Built-in icon set: 24×24 grid, 1.5px stroke, round caps, `currentColor`.
+ * Built-in icon set: 24×24 grid, 2px stroke (identity v2 line art), round caps, `currentColor`.
  * Original geometric paths (no third-party icon set).
  */
 export interface IconDefinition {
@@ -59,6 +59,13 @@ export const builtInIcons = {
   play: { d: 'M8 5v14l11-7z', fill: true },
   rotate: { d: 'M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5' },
   maximize: { d: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5' },
+  flame: { d: 'M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2 0 1.7.8 2.7 1.8 2.7C11.5 9 11 6 12 3z' },
+  book: { d: 'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4zM5 17a3 3 0 0 1 3-3h11' },
+  clock: { d: `${circle(12, 12, 9)}M12 7v5l3 2` },
+  layers: { d: 'M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5' },
+  box: { d: 'M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM4 7.5l8 4.5 8-4.5M12 12v9' },
+  target: { d: `${circle(12, 12, 9)}${circle(12, 12, 4)}` },
+  list: { d: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01' },
   refresh: { d: 'M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4' },
 } satisfies Record<string, IconDefinition>;
 

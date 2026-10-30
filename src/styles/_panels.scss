@@ -1,0 +1,128 @@
+// Shared recipes for the panel family (identity v2): collapsible sheets, rotating chevrons, guide-line grips.
+// Used with `@use '../../styles/panels';`. Top-level rules are emitted once per compilation.
+
+// A collapsible region reveals without touching its height: the content is clipped from the top edge and fades in.
+// Exits are faster (70%) and use easing-in. usePresence keeps the region mounted with data-state="closed" while it leaves.
+@keyframes ui-reveal-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes ui-reveal-out {
+  to {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@mixin reveal {
+  &[data-state='open'] {
+    animation: ui-reveal-in var(--ui-motion-part) var(--ui-easing-out);
+  }
+
+  &[data-state='closed'] {
+    pointer-events: none;
+    animation: ui-reveal-out calc(var(--ui-motion-part) * 0.7) var(--ui-easing-in) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &[data-state='open'],
+    &[data-state='closed'] {
+      animation: none;
+    }
+  }
+}
+
+// The 2px line-art chevron of a disclosure turns instead of swapping.
+@mixin chevron {
+  flex: none;
+  transition: transform var(--ui-motion-quick) var(--ui-easing-out);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// Indicators of a paged region (Carousel, Galleria): short 2px dashes with ONE accent mark that slides to the
+// current one (useSlidingMark supplies --ui-mark-pos / --ui-mark-size and data-mark="ready"). `$block` is the BEM
+// block; the container is `.<block>__indicators`, each dash a `.<block>__indicator` carrying aria-current="true".
+@mixin sliding-indicators($block) {
+  .#{$block}__indicators {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: safe center;
+    gap: var(--ui-space-1);
+    max-inline-size: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    // The mark: physical offsets (anchored at left: 0 in both reading directions), transform only.
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block-start: calc(50% - var(--ui-line-width) / 2);
+      left: 0;
+      inline-size: 1px;
+      block-size: var(--ui-line-width);
+      border-radius: var(--ui-radius-pill);
+      background: var(--ui-color-accent);
+      transform-origin: 0 0;
+      transform: translateX(calc(var(--ui-mark-pos, 0) * 1px)) scaleX(var(--ui-mark-size, 0));
+      pointer-events: none;
+    }
+
+    &[data-mark='ready']::after {
+      transition: transform var(--ui-motion-step) var(--ui-easing-out);
+    }
+  }
+
+  .#{$block}__indicator {
+    position: relative;
+    flex: none;
+    inline-size: 1.75rem;
+    block-size: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      inset-block-start: calc(50% - var(--ui-line-width) / 2);
+      block-size: var(--ui-line-width);
+      border-radius: var(--ui-radius-pill);
+      background: var(--ui-color-border-strong);
+      transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
+    }
+
+    &:hover::before {
+      background: var(--ui-color-line);
+    }
+
+    &:focus-visible {
+      outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+      outline-offset: -2px;
+      border-radius: var(--ui-radius-sm);
+      box-shadow: none;
+    }
+
+    @media (pointer: coarse) {
+      min-block-size: var(--ui-touch-target-min);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .#{$block}__indicators[data-mark='ready']::after,
+    .#{$block}__indicator::before {
+      transition: none;
+    }
+  }
+}

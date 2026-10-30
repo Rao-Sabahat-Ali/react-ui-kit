@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Galleria, type GalleriaItem } from './Galleria';
 
 const photos: GalleriaItem[] = [
@@ -70,5 +71,59 @@ describe('Galleria', () => {
     expect(bad.src).toBe('/x.jpg');
     render(<Galleria value={photos} />);
     expect(mainImage()).toHaveAttribute('alt', 'Red chair');
+  });
+
+  describe('autoplay', () => {
+    afterEach(() => vi.useRealTimers());
+    const alts = () => document.querySelector<HTMLImageElement>('.ui-galleria__figure:not(.ui-galleria__figure--leaving) .ui-galleria__image')!.alt;
+
+    it('advances on an interval and stops on hover, focus and in a hidden tab', () => {
+      vi.useFakeTimers();
+      render(<Galleria value={photos} autoplay={1000} showThumbnails={false} circular />);
+      const region = screen.getByRole('region');
+      act(() => vi.advanceTimersByTime(1000));
+      expect(alts()).toBe('Blue chair');
+      fireEvent.mouseEnter(region);
+      act(() => vi.advanceTimersByTime(3000));
+      expect(alts()).toBe('Blue chair');
+      fireEvent.mouseLeave(region);
+      const next = screen.getByRole('button', { name: 'Next slide' });
+      fireEvent.focus(next);
+      act(() => vi.advanceTimersByTime(3000));
+      expect(alts()).toBe('Blue chair');
+      fireEvent.blur(next);
+      const state = vi.spyOn(document, 'visibilityState', 'get');
+      state.mockReturnValue('hidden');
+      act(() => {
+        document.dispatchEvent(new Event('visibilitychange'));
+      });
+      act(() => vi.advanceTimersByTime(3000));
+      expect(alts()).toBe('Blue chair');
+      state.mockRestore();
+    });
+  });
+
+  it('indicators are dashes with a single sliding accent mark', async () => {
+    render(<Galleria value={photos} showIndicators showThumbnails={false} />);
+    const indicators = document.querySelector<HTMLElement>('.ui-galleria__indicators')!;
+    expect(indicators.style.getPropertyValue('--ui-mark-size')).not.toBe('');
+    await userEvent.click(screen.getByRole('button', { name: 'Go to slide 2' }));
+    expect(screen.getByRole('button', { name: 'Go to slide 2' })).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('turns without leaving a stale layer when animation is unavailable (jsdom)', async () => {
+    render(<Galleria value={photos} showThumbnails={false} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Next slide' }));
+    expect(mainImage().alt).toBe('Blue chair');
+    expect(document.querySelector('.ui-galleria__figure--leaving')).toBeNull();
+  });
+
+  it('v2: side thumbnails are a fixed-width column with a 2px accent marker on the edge facing the stage', () => {
+    const scss = readFileSync(`${process.cwd()}/src/components/Galleria/Galleria.scss`, 'utf8');
+    expect(scss).toMatch(/\.ui-galleria--thumbs-start,\s*\.ui-galleria--thumbs-end \{[\s\S]*?inline-size: 6rem/);
+    expect(scss).toMatch(/inline-size: var\(--ui-line-width\);[\s\S]*?background: var\(--ui-color-accent\)/);
+    render(<Galleria value={photos} thumbnailsPosition="end" aria-label="Side" />);
+    expect(document.querySelector('.ui-galleria--thumbs-end .ui-galleria__thumbs')).toBeInTheDocument();
+    expect(document.querySelector('.ui-galleria__thumb--active')).toBeInTheDocument();
   });
 });

@@ -1,30 +1,53 @@
 // Shared by Menu, TieredMenu, ContextMenu, SplitButton and Menubar submenus.
+@use '../../styles/parts';
+
 .ui-menu {
   --bs-dropdown-zindex: var(--ui-z-popover);
   --bs-dropdown-bg: var(--ui-color-surface-raised);
   --bs-dropdown-color: var(--ui-color-text);
-  --bs-dropdown-border-color: var(--ui-color-border);
-  --bs-dropdown-border-radius: var(--ui-radius);
+  --bs-dropdown-border-color: var(--ui-color-line);
+  --bs-dropdown-border-width: var(--ui-line-width);
+  --bs-dropdown-border-radius: var(--ui-radius-lg);
   --bs-dropdown-link-color: var(--ui-color-text);
   --bs-dropdown-link-hover-color: var(--ui-color-text);
-  --bs-dropdown-link-hover-bg: var(--ui-color-bg-subtle);
+  --bs-dropdown-link-hover-bg: var(--ui-color-accent-subtle);
   --bs-dropdown-link-active-color: var(--ui-color-text);
-  --bs-dropdown-link-active-bg: var(--ui-color-bg-subtle);
+  --bs-dropdown-link-active-bg: var(--ui-color-accent-subtle);
+  --bs-dropdown-padding-y: var(--ui-space-1);
+  --bs-dropdown-item-padding-x: var(--ui-space-3);
   --bs-dropdown-link-disabled-color: var(--ui-color-text-subtle);
   --bs-dropdown-header-color: var(--ui-color-text-muted);
   --bs-dropdown-divider-bg: var(--ui-color-border);
-  --bs-dropdown-box-shadow: var(--ui-shadow-md);
+  --bs-dropdown-box-shadow: var(--ui-shadow-lift);
   margin: 0;
   min-width: 12rem;
-  box-shadow: var(--ui-shadow-md);
+  box-shadow: var(--ui-shadow-lift);
+  // Lifted part: 2px ink line, large part corner (the Bootstrap variables above carry the same values).
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
 
   &[hidden] {
     display: none !important;
   }
 }
 
+// Enter: origin-aware scale 0.98 -> 1 plus opacity, from the edge that touches the trigger.
+.ui-menu-popup {
+  @include parts.origin-aware;
+
+  &[dir='rtl'][data-placement='bottom-start'] {
+    transform-origin: top right;
+  }
+}
+
 .ui-menu--popup {
-  animation: ui-menu-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  transform-origin: inherit;
+  @include parts.pop-in;
+}
+
+// Exit: usePresence keeps the popup mounted (inert) with data-state="closed" for ~70% of the entrance.
+.ui-menu-popup[data-state='closed'] .ui-menu--popup {
+  @include parts.pop-out;
 }
 
 .ui-menu--inline {
@@ -37,22 +60,26 @@
 }
 
 .ui-menu__item {
+  @include parts.item-marker;
   display: flex;
   align-items: center;
   gap: var(--ui-space-2);
   min-height: 2rem;
+  inline-size: auto;
+  width: auto;
+  margin-inline: var(--ui-space-1);
+  border-radius: var(--ui-radius);
   cursor: pointer;
   user-select: none;
   text-decoration: none;
 
+  // Hover, keyboard focus and the open parent are one style: accent-subtle ground and the 2px accent marker.
+  &:hover,
   &:focus,
-  &:focus-visible {
-    background-color: var(--ui-color-bg-subtle);
-    outline: 2px solid transparent;
-  }
-
-  &:focus-visible {
-    box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  &:focus-visible,
+  &.active,
+  &[aria-expanded='true'] {
+    @include parts.item-highlighted;
   }
 
   // aria-disabled items stay focusable (announced) but look disabled.
@@ -60,6 +87,22 @@
     pointer-events: auto;
     cursor: default;
     color: var(--ui-color-text-subtle);
+  }
+
+  &.disabled:hover,
+  &.disabled:focus {
+    background-color: transparent;
+
+    &::before {
+      transform: scaleY(0);
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-menu__item:focus,
+  .ui-menu__item:hover {
+    outline: 2px solid Highlight;
   }
 }
 
@@ -69,6 +112,11 @@
   &:hover,
   &:focus {
     color: var(--ui-color-danger-emphasis);
+    background-color: var(--ui-color-danger-subtle);
+
+    &::before {
+      background: var(--ui-color-danger);
+    }
   }
 }
 
@@ -86,7 +134,7 @@
   margin-inline-start: var(--ui-space-4);
   color: var(--ui-color-text-muted);
   font-size: var(--ui-font-size-xs);
-  font-family: var(--ui-font-family-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .ui-menu__submenu-icon {
@@ -100,7 +148,14 @@
 
 .ui-menu--submenu {
   z-index: var(--ui-z-popover);
-  animation: ui-menu-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  // Slides out from the parent's edge (reading direction decides which one).
+  animation: ui-flyout-in var(--ui-motion-part) var(--ui-easing-out);
+  transform-origin: left top;
+
+  [dir='rtl'] & {
+    animation-name: ui-flyout-in-rtl;
+    transform-origin: right top;
+  }
 }
 
 @media (pointer: coarse) {
@@ -109,15 +164,10 @@
   }
 }
 
-@keyframes ui-menu-in {
-  from {
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .ui-menu--popup,
-  .ui-menu--submenu {
+  .ui-menu--submenu,
+  .ui-menu-popup[data-state='closed'] .ui-menu--popup {
     animation: none;
   }
 }

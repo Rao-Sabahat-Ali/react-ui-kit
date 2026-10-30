@@ -1,10 +1,6 @@
-// Flyout styles live in Menu.scss (.ui-menu--submenu); TieredMenu only adds the inline container.
+// Flyout styles live in Menu.scss (.ui-menu--submenu slides out from the parent edge); TieredMenu only adds the inline container.
 .ui-tiered-menu.ui-menu--inline {
   display: inline-block;
-}
-
-.ui-menu__entry--parent > .ui-menu__item[aria-expanded='true'] {
-  background-color: var(--ui-color-bg-subtle);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,5 +1,6 @@
 import { createContext, useContext, useId, type ReactNode } from 'react';
 import { cx } from '../../utils/cx';
+import { Icon } from '../Icon/Icon';
 
 export interface FieldContextValue {
   id: string;
@@ -75,7 +76,7 @@ export function Field({ label, labelHidden = false, help, error, required = fals
               *
             </span>
           )}
-          {!required && optionalText && <span className="ui-field__optional text-body-secondary ms-1">{optionalText}</span>}
+          {!required && optionalText && <span className="ui-field__optional ms-1">{optionalText}</span>}
         </label>
         <div className={cx('ui-field__control', inline && 'col')}>{children}</div>
         {help && (
@@ -85,7 +86,8 @@ export function Field({ label, labelHidden = false, help, error, required = fals
         )}
         {error && (
           <div id={errorId} className="invalid-feedback d-block ui-field__error">
-            {error}
+            <Icon name="alert-circle" size="sm" className="ui-field__error-icon" />
+            <span>{error}</span>
           </div>
         )}
       </div>

@@ -1,6 +1,38 @@
+// The form family: labels above controls, help muted, errors with a line-art warning icon (never colour alone).
+// States of the bare .form-control / .form-select (invalid, disabled, read-only) live in the token bridge (_bridge-parts).
+
 .ui-field__label {
-  font-weight: var(--ui-font-weight-medium);
+  display: block;
   margin-bottom: var(--ui-space-1);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text);
+}
+
+.ui-field__optional {
+  font-weight: var(--ui-font-weight-regular);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-field__help.form-text {
+  margin-block-start: var(--ui-space-1);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-field__error.invalid-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-1);
+  margin-block-start: var(--ui-space-1);
+  color: var(--ui-color-danger-emphasis);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-field__error-icon {
+  flex: none;
+  margin-block-start: 0.2em;
+  color: var(--ui-color-danger);
 }
 
 .ui-field--inline .ui-field__help,

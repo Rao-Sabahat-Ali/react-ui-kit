@@ -1,9 +1,12 @@
-.ui-tri-state-checkbox {
+@use '../../styles/form-mixins' as form;
+
+.ui-tri-state-checkbox.form-check {
   display: flex;
   align-items: center;
   gap: var(--ui-space-2);
   padding-inline-start: 0;
   min-height: var(--ui-control-height-sm);
+  margin-bottom: 0;
 }
 
 .ui-tri-state-checkbox__box {
@@ -11,14 +14,19 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  inline-size: 1.25em;
-  block-size: 1.25em;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
   padding: 0;
+  overflow: hidden;
   color: var(--ui-color-text-muted);
   background: var(--ui-color-surface);
-  border: var(--bs-border-width) solid var(--ui-color-border-strong);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-sm);
-  transition: background-color var(--ui-duration) var(--ui-easing), border-color var(--ui-duration) var(--ui-easing);
+  cursor: pointer;
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
 
   &.is-checked {
     color: var(--ui-color-accent-contrast);
@@ -34,23 +42,46 @@
     border-color: var(--ui-color-danger);
   }
 
+  &:hover:not(:disabled, .is-checked) {
+    border-color: var(--ui-color-accent);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.94);
+  }
+
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.focus-ring;
   }
 
   &:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
+    color: var(--ui-color-text-subtle);
+    border-color: var(--ui-color-border-strong);
+    background-color: var(--ui-color-bg-subtle);
+  }
+}
+
+.ui-tri-state-checkbox__mark {
+  display: inline-flex;
+  line-height: 0;
+}
+
+.ui-tri-state-checkbox__mark--draw {
+  animation: ui-form-mark-draw var(--ui-motion-quick) var(--ui-easing-out);
+
+  [dir='rtl'] & {
+    animation-name: ui-form-mark-draw-rtl;
   }
 }
 
 .ui-tri-state-checkbox__label {
   margin: 0;
+  cursor: pointer;
 }
 
 @media (pointer: coarse) {
-  .ui-tri-state-checkbox {
+  .ui-tri-state-checkbox.form-check {
     min-height: var(--ui-touch-target-min);
   }
 }
@@ -58,5 +89,24 @@
 @media (prefers-reduced-motion: reduce) {
   .ui-tri-state-checkbox__box {
     transition: none;
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
+  }
+
+  .ui-tri-state-checkbox__mark--draw {
+    animation: none;
   }
 }
+
+@media (forced-colors: active) {
+  .ui-tri-state-checkbox__box.is-checked {
+    forced-color-adjust: none;
+    color: HighlightText;
+    background-color: Highlight;
+    border-color: Highlight;
+  }
+}
+
+@include form.mark-keyframes;

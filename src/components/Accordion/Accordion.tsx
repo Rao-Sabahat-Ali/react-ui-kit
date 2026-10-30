@@ -1,7 +1,8 @@
-import { Children, createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ElementType, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref } from 'react';
+import { Children, createContext, useCallback, useContext, useId, useRef, type ElementType, type HTMLAttributes, type KeyboardEvent, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
-import { usePrefersReducedMotion } from '../../hooks/useMediaQuery';
+import { usePresence } from '../../motion/usePresence';
 import { cx } from '../../utils/cx';
+import { Icon } from '../Icon/Icon';
 
 export interface AccordionItemData {
   value: string;
@@ -98,33 +99,16 @@ export interface AccordionItemProps extends Omit<HTMLAttributes<HTMLDivElement>,
   ref?: Ref<HTMLDivElement>;
 }
 
-const CLOSE_MS = 250;
-
 export function AccordionItem({ value, header, disabled = false, className, children, ref, ...rest }: AccordionItemProps) {
   const ctx = useContext(AccordionContext);
   if (!ctx) throw new Error('Accordion.Item must be used inside <Accordion>');
   const uid = useId();
   const triggerId = `${uid}-trigger`;
   const panelId = `${uid}-panel`;
-  const reduced = usePrefersReducedMotion();
   const open = ctx.isOpen(value);
-  const [mounted, setMounted] = useState(open);
+  // The panel stays mounted while it leaves, so the reveal can run backwards (clip-path + opacity, no height).
+  const { present, state, exiting } = usePresence(open);
   const Heading = `h${ctx.headingLevel}` as ElementType;
-
-  useEffect(() => {
-    if (open) {
-      setMounted(true);
-      return;
-    }
-    if (reduced) {
-      setMounted(false);
-      return;
-    }
-    const id = setTimeout(() => setMounted(false), CLOSE_MS);
-    return () => clearTimeout(id);
-  }, [open, reduced]);
-
-  const closing = !open && mounted;
 
   return (
     <div ref={ref} className={cx('accordion-item ui-accordion__item', open && 'ui-accordion__item--open', className)} {...rest}>
@@ -138,20 +122,20 @@ export function AccordionItem({ value, header, disabled = false, className, chil
           disabled={disabled}
           onClick={() => !disabled && ctx.toggle(value)}
         >
-          {header}
+          <span className="ui-accordion__header-text">{header}</span>
+          <Icon name="chevron-down" className="ui-accordion__chevron" />
         </button>
       </Heading>
       <div
         id={panelId}
         role={ctx.regions ? 'region' : undefined}
         aria-labelledby={ctx.regions ? triggerId : undefined}
-        hidden={!open && !mounted}
-        inert={closing}
-        className={cx('accordion-collapse ui-accordion__collapse', open && 'ui-accordion__collapse--open', closing && 'ui-accordion__collapse--closing')}
+        hidden={!present}
+        inert={exiting}
+        data-state={state}
+        className={cx('accordion-collapse ui-accordion__collapse', open && 'ui-accordion__collapse--open', exiting && 'ui-accordion__collapse--closing')}
       >
-        <div className="ui-accordion__clip">
-          <div className="accordion-body ui-accordion__body">{children}</div>
-        </div>
+        <div className="accordion-body ui-accordion__body">{children}</div>
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode, type Ref } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useTypeahead } from '../../hooks/useTypeahead';
 import { useLocale } from '../../locale/LocaleProvider';
+import { useReveal } from '../../motion/useReveal';
 import { cx } from '../../utils/cx';
 import { Checkbox } from '../Checkbox/Checkbox';
 import { Icon } from '../Icon/Icon';
@@ -88,6 +89,11 @@ export function Tree<T = unknown>({
   const [draggingKey, setDraggingKey] = useState<TreeKey | null>(null);
   const rootRef = useRef<HTMLUListElement | null>(null);
   const suppressClick = useRef(false);
+  // Groups open at the first paint stay still; groups toggled or mounted afterwards reveal (clip-path + opacity).
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+  }, []);
   const { childrenOf, needsLoad, isExpandable, load, loading } = useLazyChildren<T>(onLoadChildren);
 
   const filtered = useMemo(() => filterTree(value, query, childrenOf), [value, query, childrenOf]);
@@ -341,10 +347,10 @@ export function Tree<T = unknown>({
             </span>
             {isLoading && <span className="visually-hidden">{t('loading')}</span>}
           </div>
-          {open && children && children.length > 0 && (
-            <ul role="group" className="ui-tree__group list-unstyled mb-0">
+          {expandable && children && children.length > 0 && (
+            <TreeGroup open={open} level={level} animateEnter={mounted.current}>
               {renderNodes(children, level + 1)}
-            </ul>
+            </TreeGroup>
           )}
         </li>
       );
@@ -376,6 +382,17 @@ export function Tree<T = unknown>({
       </ul>
       {nodes.length === 0 && <div className="ui-tree__empty text-body-secondary">{emptyMessage ?? (filtering ? t('noResults') : t('noRecords'))}</div>}
     </div>
+  );
+}
+
+/** The children of an expanded node: stays mounted (inert, data-state="closed") while the reveal plays backwards. */
+function TreeGroup({ open, level, animateEnter, children }: { open: boolean; level: number; animateEnter: boolean; children: ReactNode }) {
+  const { present, state, exiting } = useReveal(open, animateEnter);
+  if (!present) return null;
+  return (
+    <ul role="group" className="ui-tree__group list-unstyled mb-0" data-state={state} inert={exiting || undefined} style={{ '--ui-tree-level': level } as CSSProperties}>
+      {children}
+    </ul>
   );
 }
 

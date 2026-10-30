@@ -1,4 +1,4 @@
-import { IndexItem, IndexList, Tag } from '@sabahat/react-ui-kit';
+import { IndexItem, IndexList } from '@sabahat/react-ui-kit';
 import { blueprints } from '../blueprints/registry';
 import { href } from '../router';
 
@@ -24,7 +24,6 @@ export function BlueprintsPage() {
                 Profile {b.profile} · patterns {b.patterns.join(', ')}
               </>
             }
-            action={<Tag value={b.profile} />}
           />
         ))}
       </IndexList>

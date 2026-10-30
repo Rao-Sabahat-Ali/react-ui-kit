@@ -1,29 +1,60 @@
+@use '../../styles/parts';
+
 .ui-dialog {
   --bs-modal-bg: var(--ui-color-surface-raised);
   --bs-modal-color: var(--ui-color-text);
-  --bs-modal-border-color: var(--ui-color-border);
+  --bs-modal-border-color: var(--ui-color-line);
+  --bs-modal-border-width: var(--ui-line-width);
   --bs-modal-border-radius: var(--ui-radius-lg);
-  --bs-modal-inner-border-radius: calc(var(--ui-radius-lg) - 1px);
-  --bs-modal-box-shadow: var(--ui-shadow-lg);
+  --bs-modal-inner-border-radius: calc(var(--ui-radius-lg) - var(--ui-line-width));
+  --bs-modal-box-shadow: var(--ui-shadow-lift);
   --bs-modal-zindex: var(--ui-z-modal);
-  --bs-modal-header-border-color: var(--ui-color-border);
-  --bs-modal-footer-border-color: var(--ui-color-border);
+  --bs-modal-header-border-color: var(--ui-color-line-muted);
+  --bs-modal-footer-border-color: var(--ui-color-line-muted);
 }
 
 .ui-dialog__backdrop {
   --bs-backdrop-zindex: var(--ui-z-modal-backdrop);
   --bs-backdrop-bg: var(--ui-color-overlay);
   --bs-backdrop-opacity: 1;
-  animation: ui-fade-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  animation: ui-fade-in var(--ui-motion-part) var(--ui-easing-out);
 }
 
 .ui-dialog__content {
-  box-shadow: var(--ui-shadow-lg);
-  animation: ui-dialog-in var(--ui-duration) var(--ui-motion-easing-emphasized);
+  box-shadow: var(--ui-shadow-lift);
+  animation: ui-dialog-in var(--ui-motion-step) var(--ui-easing-out);
 
   &:focus-visible {
-    outline: none;
+    outline: 2px solid transparent;
   }
+}
+
+// Exit (usePresence keeps the dialog mounted with data-state="closed"): faster than the entrance.
+.ui-dialog-root[data-state='closed'] {
+  pointer-events: none;
+
+  .ui-dialog__content {
+    animation: ui-dialog-out calc(var(--ui-motion-step) * 0.7) var(--ui-easing-in) forwards;
+  }
+
+  .ui-dialog__backdrop {
+    animation: ui-fade-out calc(var(--ui-motion-step) * 0.7) var(--ui-easing-in) forwards;
+  }
+}
+
+.ui-dialog__header {
+  padding: var(--ui-space-4);
+  border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+}
+
+.ui-dialog__body {
+  padding: var(--ui-space-4);
+}
+
+.ui-dialog__footer {
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-dialog__title {
@@ -31,22 +62,25 @@
   font-weight: var(--ui-font-weight-semibold);
 }
 
-@keyframes ui-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
 @keyframes ui-dialog-in {
   from {
     opacity: 0;
-    transform: translateY(0.5rem) scale(0.98);
+    transform: translateY(var(--ui-assemble-distance)) scale(0.98);
+  }
+}
+
+@keyframes ui-dialog-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * 0.5)) scale(0.99);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ui-dialog__content,
-  .ui-dialog__backdrop {
+  .ui-dialog__backdrop,
+  .ui-dialog-root[data-state='closed'] .ui-dialog__content,
+  .ui-dialog-root[data-state='closed'] .ui-dialog__backdrop {
     animation-duration: 1ms;
   }
 }

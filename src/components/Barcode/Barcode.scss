@@ -1,4 +1,5 @@
 // Barcodes are always dark on light (same tokens as QRCode): scanners need the contrast in both themes.
+// Identity v2 only touches the error plate (a dashed 2px part); the bars and their quiet zone are never restyled.
 .ui-barcode {
   display: inline-block;
   max-inline-size: 100%;
@@ -37,6 +38,7 @@
   color: var(--ui-color-text-muted);
   text-align: center;
   background: var(--ui-color-surface-sunken);
+  border: var(--ui-line-width) dashed var(--ui-color-border-strong);
   border-radius: var(--ui-radius);
 }
 

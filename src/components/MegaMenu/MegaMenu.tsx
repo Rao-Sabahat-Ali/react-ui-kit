@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type CSSProperties, type FocusEvent
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { usePresence } from '../../motion/usePresence';
 import type { IconName } from '../Icon/Icon';
 import { Icon } from '../Icon/Icon';
 import { HOVER_CLOSE_DELAY, HOVER_OPEN_DELAY } from '../Menu/MenuList';
@@ -118,7 +119,7 @@ export function MegaMenu({ items, orientation = 'horizontal', ariaLabel, activeH
                 {item.label}
                 <Icon name={orientation === 'vertical' ? 'chevron-right' : 'chevron-down'} directional={orientation === 'vertical'} className="ui-mega-menu__caret" />
               </button>
-              <div id={panelId} hidden={!open} className="dropdown-menu show ui-mega-menu__panel">
+              <MegaPanel id={panelId} open={open}>
                 <div className="row g-4">
                   {item.columns.map((column, c) => {
                     const headingId = `${panelId}-col-${c}`;
@@ -148,11 +149,21 @@ export function MegaMenu({ items, orientation = 'horizontal', ariaLabel, activeH
                     <NavLink item={{ label: `${viewAllLabel} ${item.label}`, href: item.href }} activeHref={activeHref} onNavigate={onNavigate} className="ui-mega-menu__view-all-link" after={close} />
                   </div>
                 )}
-              </div>
+              </MegaPanel>
             </li>
           );
         })}
       </ul>
     </nav>
+  );
+}
+
+/** The panel stays mounted (inert, data-state="closed") while its exit animation runs, then is hidden. */
+function MegaPanel({ id, open, children }: { id: string; open: boolean; children: ReactNode }) {
+  const { present, state } = usePresence(open, { exit: 'part' });
+  return (
+    <div id={id} hidden={!present} data-state={state} inert={state === 'closed' || undefined} className="dropdown-menu show ui-mega-menu__panel">
+      {children}
+    </div>
   );
 }

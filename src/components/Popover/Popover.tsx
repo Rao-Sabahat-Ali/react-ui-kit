@@ -4,6 +4,7 @@ import { useControllableState } from '../../hooks/useControllableState';
 import { useFloating } from '../../hooks/useFloating';
 import { useOverlay } from '../../hooks/useOverlay';
 import { cx } from '../../utils/cx';
+import { usePresence } from '../../motion/usePresence';
 import { getFocusable } from '../../utils/dom';
 import type { Placement } from '../../utils/position';
 import { Portal } from '../Portal/Portal';
@@ -59,6 +60,8 @@ export function Popover({
   const triggerRef = useRef<HTMLElement | null>(null);
   const triggerProps = trigger.props as TriggerProps;
 
+  // Stays mounted (inert, data-state="closed") while the exit animation runs.
+  const { present, state } = usePresence(open, { exit: 'part' });
   const toggle = () => setOpen(!open);
 
   const triggerEl = cloneElement(trigger as ReactElement<Record<string, unknown>>, {
@@ -87,8 +90,9 @@ export function Popover({
   return (
     <>
       {triggerEl}
-      {open && (
+      {present && (
         <PopoverPanel
+          state={state}
           id={panelId}
           triggerRef={triggerRef}
           placement={placement}
@@ -112,6 +116,7 @@ export function Popover({
 }
 
 interface PanelProps {
+  state: 'open' | 'closed';
   id: string;
   triggerRef: RefObject<HTMLElement | null>;
   placement: Placement;
@@ -129,7 +134,7 @@ interface PanelProps {
   children?: ReactNode;
 }
 
-function PopoverPanel({ id, triggerRef, placement, offset, title, ariaLabel, arrow, dismissOnOutside, initialFocus, appendTo, className, style, panelRef, onClose, children }: PanelProps) {
+function PopoverPanel({ state, id, triggerRef, placement, offset, title, ariaLabel, arrow, dismissOnOutside, initialFocus, appendTo, className, style, panelRef, onClose, children }: PanelProps) {
   const titleId = `${id}-title`;
   const rootRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -141,7 +146,7 @@ function PopoverPanel({ id, triggerRef, placement, offset, title, ariaLabel, arr
   };
 
   // Registers on the overlay stack (Escape top-most only); non-modal: no trap, inert or scroll lock.
-  useOverlay({ rootRef, contentRef, modal: false, onEscape: closeAndFocusTrigger });
+  useOverlay({ rootRef, contentRef, modal: false, onEscape: state === 'open' ? closeAndFocusTrigger : undefined });
 
   useEffect(() => {
     const panel = contentRef.current;
@@ -163,7 +168,7 @@ function PopoverPanel({ id, triggerRef, placement, offset, title, ariaLabel, arr
           if (!document.activeElement || document.activeElement === document.body) triggerRef.current?.focus();
         });
     },
-    dismissOnOutside,
+    dismissOnOutside && state === 'open',
   );
 
   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
@@ -199,7 +204,7 @@ function PopoverPanel({ id, triggerRef, placement, offset, title, ariaLabel, arr
 
   return (
     <Portal container={appendTo}>
-      <div ref={rootRef} className="ui-popover-root">
+      <div ref={rootRef} className="ui-popover-root" data-state={state} inert={state === 'closed' || undefined}>
         <div
           ref={mergeRefs(contentRef, panelRef)}
           id={id}

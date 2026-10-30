@@ -1,4 +1,8 @@
 // QR codes are always dark on light (tokens do not follow the dark theme): scanners cannot read inverted codes.
+// Identity v2 touches only the frame, the status overlays, the error plate and the caption; the code's colours,
+// quiet zone and modules are never restyled.
+@use '../../styles/parts';
+
 .ui-qr {
   --ui-qr-gap: var(--ui-space-2);
 
@@ -21,7 +25,7 @@
 }
 
 .ui-qr--bordered .ui-qr__frame {
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 .ui-qr__code {
@@ -81,24 +85,59 @@
   color: var(--ui-color-text-muted);
 }
 
+// Status overlays are parts lifted onto the (faded) code: 2px line, shadow-lift, they settle in like a menu.
 .ui-qr__status {
+  @include parts.lifted(var(--ui-radius));
+  @include parts.pop-in;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--ui-space-2);
   max-inline-size: 100%;
   padding: var(--ui-space-3);
-  color: var(--ui-color-text);
   text-align: center;
-  background: var(--ui-color-surface);
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius);
 }
 
 .ui-qr__status--success {
   color: var(--ui-color-success-emphasis);
   background: var(--ui-color-success-subtle);
   border-color: var(--ui-color-success);
+
+  // The check is drawn on (a clip-path wipe), mirrored in RTL.
+  .ui-icon {
+    animation: ui-qr-draw var(--ui-motion-part) var(--ui-easing-out) backwards;
+  }
+}
+
+[dir='rtl'] .ui-qr__status--success .ui-icon {
+  animation-name: ui-qr-draw-rtl;
+}
+
+@keyframes ui-qr-draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes ui-qr-draw-rtl {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-qr__status,
+  .ui-qr__status--success .ui-icon {
+    animation: none;
+  }
 }
 
 .ui-qr__status-text,
@@ -120,6 +159,8 @@
   color: var(--ui-color-text-muted);
   text-align: center;
   background: var(--ui-color-surface-sunken);
+  outline: var(--ui-line-width) dashed var(--ui-color-border-strong);
+  outline-offset: calc(var(--ui-line-width) * -1);
 }
 
 .ui-qr__caption {

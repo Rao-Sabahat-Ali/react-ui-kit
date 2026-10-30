@@ -120,7 +120,7 @@ describe('style split build', () => {
     expect(c.Tag?.utilities).toContain('subtle-border-color'); // `border-${tone}-subtle`
     expect(c.ConfirmDialog?.needs).toEqual(expect.arrayContaining(['Button', 'Dialog']));
     expect(c.InputText?.needs).not.toContain('KeyFilter'); // only a hook is imported
-    expect(c.ThemeToggle?.css).toBeNull();
+    expect(c.ThemeToggle?.css).toBe('components/ThemeToggle.css'); // the sun/moon swap has its own sheet
     expect(c.ThemeToggle?.needs).toEqual(expect.arrayContaining(['Button', 'Menu']));
   });
 

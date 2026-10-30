@@ -1,3 +1,5 @@
+// Image: the preview is the shared lifted Dialog (2px line, shadow-lift, presence); its toolbar buttons are ink-line
+// parts, the zoom is written as a quantity mark (1.25×) and the picture eases between zoom steps.
 .ui-image {
   position: relative;
   display: inline-block;
@@ -33,6 +35,10 @@
 .ui-image__img--cover { object-fit: cover; }
 .ui-image__img--contain { object-fit: contain; }
 
+.ui-image__img {
+  transition: opacity var(--ui-motion-part) var(--ui-easing-out);
+}
+
 .ui-image__img--hidden {
   opacity: 0;
 }
@@ -52,6 +58,8 @@
 
 .ui-image--error {
   background: var(--ui-color-surface-sunken);
+  outline: var(--ui-line-width) dashed var(--ui-color-border-strong);
+  outline-offset: calc(var(--ui-line-width) * -1);
 }
 
 .ui-image__trigger {
@@ -63,8 +71,9 @@
   border-radius: var(--ui-radius);
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
   }
 }
 
@@ -74,10 +83,21 @@
   gap: var(--ui-space-2);
   margin-block-end: var(--ui-space-3);
 
+  align-items: center;
+
   .btn {
     min-inline-size: 2.25rem;
     min-block-size: 2.25rem;
   }
+}
+
+.ui-image__zoom {
+  min-inline-size: 3.5ch;
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--ui-color-text-muted);
 }
 
 .ui-image__stage {
@@ -87,17 +107,19 @@
   overflow: auto;
   min-block-size: 50vh;
   background: var(--ui-color-surface-sunken);
+  border: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
   border-radius: var(--ui-radius);
 }
 
 .ui-image__preview {
   max-inline-size: 100%;
   max-block-size: 75vh;
-  transition: transform var(--ui-duration) var(--ui-easing);
+  transition: transform var(--ui-motion-part) var(--ui-easing-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-image__preview {
+  .ui-image__preview,
+  .ui-image__img {
     transition: none;
   }
 }

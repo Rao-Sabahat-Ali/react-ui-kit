@@ -25,8 +25,10 @@
   margin-block-start: var(--ui-space-1);
   color: var(--ui-color-text-muted);
 
+  font-variant-numeric: tabular-nums;
+
   &--limit {
-    color: var(--ui-color-danger);
+    color: var(--ui-color-danger-emphasis);
     font-weight: var(--ui-font-weight-medium);
   }
 }

@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 // Theme values a payment provider's hosted field should match. Provider iframes cannot read CSS variables:
 // resolve them with paymentFieldStyle() and pass the result to the provider.
 .ui-hosted-field {
@@ -14,13 +16,13 @@
   align-items: center;
   min-block-size: var(--ui-control-height-md);
   padding-inline: var(--ui-control-padding-x);
-  border: var(--bs-border-width) solid var(--ui-color-border-input);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius);
   background: var(--ui-color-surface);
   color: var(--ui-payment-field-color);
   font-family: var(--ui-font-family);
   font-size: var(--ui-payment-field-font-size);
-  transition: border-color var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  transition: border-color var(--ui-motion-quick) var(--ui-easing-out);
 
   // Provider elements fill the container.
   > * {
@@ -29,22 +31,25 @@
   }
 
   &:focus-within {
-    border-color: var(--ui-color-accent);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.line-box-focus;
   }
 }
 
 .ui-hosted-field[data-focused] .ui-hosted-field__control {
-  border-color: var(--ui-color-accent);
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  @include form.line-box-focus;
 }
 
 .ui-hosted-field[data-invalid] .ui-hosted-field__control {
   border-color: var(--ui-color-danger);
 }
 
+.ui-hosted-field[data-invalid] .ui-hosted-field__control:focus-within,
+.ui-hosted-field[data-invalid][data-focused] .ui-hosted-field__control {
+  outline-color: var(--ui-color-danger);
+}
+
 .ui-hosted-field--disabled .ui-hosted-field__control {
-  background: var(--ui-color-bg-subtle);
+  @include form.line-box-disabled;
   color: var(--ui-color-text-muted);
 }
 
@@ -63,6 +68,7 @@
   font-size: var(--ui-font-size-lg);
   font-weight: var(--ui-font-weight-heading);
   letter-spacing: var(--ui-letter-spacing-heading);
+  margin-block-end: var(--ui-space-3);
 }
 
 .ui-payment-card__summary {
@@ -112,6 +118,6 @@
 
   &:focus,
   &:focus-visible {
-    outline: 2px solid transparent;
+    outline: none;
   }
 }

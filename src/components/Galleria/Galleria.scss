@@ -1,3 +1,9 @@
+// Galleria: the stage is a framed sheet (2px ink line); images turn along the reading direction (see Galleria.tsx),
+// buttons over the image are lifted parts, the indicators are dashes with one sliding accent mark, and the active
+// thumbnail is outlined in the accent.
+@use '../../styles/parts';
+@use '../../styles/panels';
+
 .ui-galleria {
   display: flex;
   flex-direction: column;
@@ -17,12 +23,54 @@
     min-inline-size: 0;
   }
 
+  // Side thumbnails are a tidy column: fixed width, as tall as the stage (it scrolls when there are more), one
+  // 2px accent marker on the edge facing the stage marks the current one. The padding hosts the marker.
   .ui-galleria__thumbs {
+    flex: none;
     flex-direction: column;
     flex-wrap: nowrap;
-    max-block-size: 28rem;
+    align-self: stretch;
+    inline-size: 6rem;
+    padding-inline: var(--ui-space-2);
+    contain: size;
+    overflow-x: hidden;
     overflow-y: auto;
   }
+
+  .ui-galleria__thumb {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 4 / 3;
+    border-color: transparent;
+    opacity: 0.7;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      inline-size: var(--ui-line-width);
+      border-radius: var(--ui-radius-pill);
+      background: var(--ui-color-accent);
+      transform: scaleY(0);
+      transition: transform var(--ui-motion-quick) var(--ui-easing-out);
+    }
+
+    &--active {
+      border-color: transparent;
+    }
+
+    &--active::after {
+      transform: scaleY(1);
+    }
+  }
+}
+
+.ui-galleria--thumbs-end .ui-galleria__thumb::after {
+  inset-inline-start: calc(var(--ui-space-2) * -1);
+}
+
+.ui-galleria--thumbs-start .ui-galleria__thumb::after {
+  inset-inline-end: calc(var(--ui-space-2) * -1);
 }
 
 .ui-galleria--thumbs-start {
@@ -39,13 +87,24 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-radius: var(--ui-radius);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
   background: var(--ui-color-surface-sunken);
 }
 
 .ui-galleria__figure {
   margin: 0;
   inline-size: 100%;
+}
+
+// The previous image, sliding out over the stage while the new one arrives.
+.ui-galleria__figure--leaving {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .ui-galleria__image {
@@ -67,32 +126,41 @@
 
 .ui-galleria__nav,
 .ui-galleria__action {
+  @include parts.lifted(var(--ui-radius));
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-inline-size: 2.25rem;
   min-block-size: 2.25rem;
   padding: 0;
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius-circle);
-  background: var(--ui-color-surface-raised);
-  color: var(--ui-color-text);
   font-size: var(--ui-font-size-lg);
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    transform var(--ui-motion-instant) var(--ui-easing-out);
+
+  &:hover:not(:disabled) {
+    background: var(--ui-color-bg-subtle);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
 
   &:disabled {
-    opacity: 0.4;
+    opacity: 0.6;
+    color: var(--ui-color-text-subtle);
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
 .ui-galleria__nav {
   position: absolute;
   inset-block-start: 50%;
-  transform: translateY(-50%);
+  translate: 0 -50%;
 
   &--prev { inset-inline-start: var(--ui-space-2); }
   &--next { inset-inline-end: var(--ui-space-2); }
@@ -106,41 +174,10 @@
   gap: var(--ui-space-1);
 }
 
+@include panels.sliding-indicators('ui-galleria');
+
 .ui-galleria__indicators {
-  display: flex;
-  justify-content: center;
-  gap: var(--ui-space-1);
   margin-block-start: var(--ui-space-2);
-}
-
-.ui-galleria__indicator {
-  position: relative;
-  inline-size: 24px;
-  block-size: 24px;
-  padding: 0;
-  border: 0;
-  background: none;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 50% auto auto 50%;
-    inline-size: 0.625rem;
-    block-size: 0.625rem;
-    border-radius: var(--ui-radius-circle);
-    background: var(--ui-color-border-strong);
-    transform: translate(-50%, -50%);
-  }
-
-  &--active::before {
-    background: var(--ui-color-accent);
-  }
-
-  &:focus-visible {
-    outline: 2px solid transparent;
-    border-radius: var(--ui-radius-circle);
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-  }
 }
 
 .ui-galleria__thumbs {
@@ -150,16 +187,18 @@
 }
 
 .ui-galleria__thumb {
+  position: relative;
   flex: none;
   inline-size: 4.5rem;
   block-size: 3.25rem;
   padding: 0;
-  overflow: hidden;
-  border: 2px solid transparent;
-  border-radius: var(--ui-radius-sm);
+  border: var(--ui-line-width) solid transparent;
+  border-radius: var(--ui-radius);
   background: var(--ui-color-surface-sunken);
   opacity: 0.7;
-  transition: opacity var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  transition:
+    opacity var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:hover,
   &--active {
@@ -171,13 +210,14 @@
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
 .ui-galleria__thumb-img {
   display: block;
+  border-radius: calc(var(--ui-radius) - var(--ui-line-width));
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
@@ -186,6 +226,7 @@
 .ui-galleria__dialog {
   .ui-galleria__stage {
     block-size: 100%;
+    border: 0;
     background: transparent;
   }
 
@@ -195,15 +236,54 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-galleria__thumb {
+  .ui-galleria__thumb,
+  .ui-galleria__thumb::after,
+  .ui-galleria__nav,
+  .ui-galleria__action {
     transition: none;
+  }
+
+  .ui-galleria__nav:active:not(:disabled),
+  .ui-galleria__action:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+// Narrow screens: a side column of thumbnails would be as short as the stage, so it becomes the usual row below it.
+@media (max-width: 575.98px) {
+  .ui-galleria--thumbs-start,
+  .ui-galleria--thumbs-end {
+    flex-direction: column;
+
+    .ui-galleria__thumbs {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-self: auto;
+      inline-size: auto;
+      padding-inline: 0;
+      contain: none;
+      overflow: visible;
+    }
+
+    .ui-galleria__thumb {
+      inline-size: 4.5rem;
+      block-size: 3.25rem;
+      aspect-ratio: auto;
+
+      &::after {
+        display: none;
+      }
+
+      &--active {
+        border-color: var(--ui-color-accent);
+      }
+    }
   }
 }
 
 @media (pointer: coarse) {
   .ui-galleria__nav,
-  .ui-galleria__action,
-  .ui-galleria__indicator {
+  .ui-galleria__action {
     min-inline-size: var(--ui-touch-target-min);
     min-block-size: var(--ui-touch-target-min);
   }

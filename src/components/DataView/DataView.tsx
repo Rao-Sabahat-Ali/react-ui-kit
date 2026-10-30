@@ -1,6 +1,7 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useRef, type ReactNode } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
+import { useFlip } from '../../motion/useFlip';
 import { cx } from '../../utils/cx';
 import { getByPath } from '../../utils/object';
 import { sortRows } from '../DataTable/sort';
@@ -87,6 +88,10 @@ export function DataView<T>({
     onPageChange?.(next, nextSize);
   };
 
+  // Switching grid/list (or paging) reflows the items with FLIP: transform only, at most 8 items, none under reduced motion.
+  const listRef = useRef<HTMLUListElement | null>(null);
+  useFlip(listRef, [layout, loading, items.map((item, i) => String(getByPath(item, dataKey) ?? i)).join('\u0001')], { selector: ':scope > li', enabled: !loading });
+
   const listClass = cx('ui-data-view__items list-unstyled mb-0', layout === 'grid' ? cx('row g-3', ...gridClasses(gridColumns)) : 'd-flex flex-column gap-3');
   const cellClass = layout === 'grid' ? 'col ui-data-view__item' : 'ui-data-view__item';
 
@@ -115,7 +120,7 @@ export function DataView<T>({
         <div className="ui-data-view__empty">{emptyMessage ?? <EmptyState size="sm" variant="empty" title={t('noRecords')} />}</div>
       ) : (
         // eslint-disable-next-line jsx-a11y/no-redundant-roles -- restores list semantics removed by list-style: none in Safari
-        <ul className={listClass} role="list" aria-label={rest['aria-label']}>
+        <ul ref={listRef} className={listClass} role="list" aria-label={rest['aria-label']}>
           {items.map((item, index) => (
             <li key={String(getByPath(item, dataKey) ?? index)} className={cellClass}>
               {itemTemplate(item, layout)}

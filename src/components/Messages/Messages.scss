@@ -1,3 +1,5 @@
+// A stack of ruled notes. Neighbours slide into the gap a note leaves (FLIP, transform only); a removed note leaves
+// as an inert ghost for the exit duration so the list never jumps.
 .ui-messages {
   display: flex;
   flex-direction: column;

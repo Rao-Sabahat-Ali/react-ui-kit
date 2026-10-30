@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "2.0.0",
   "components": [
     {
       "name": "Accordion",
@@ -552,7 +552,7 @@
       "slug": "index-list",
       "category": "layout",
       "status": "implemented",
-      "purpose": "A ruled list of things the user opens or acts on: practice modes, topics, tests, settings groups, results. A serif title, a muted description and a trailing action per row, separated by hairlines. It replaces grids of equal cards and gives every screen the same list rhythm (see `rules/consistency`).",
+      "purpose": "A ruled list of things the user opens or acts on: practice modes, topics, tests, settings groups, results. A heading-weight title, a muted description and a trailing action per row, separated by hairlines. It replaces grids of equal cards and gives every screen the same list rhythm (see `rules/consistency`).",
       "profiles": [
         "all"
       ]
@@ -627,6 +627,19 @@
       "purpose": "Multi-line plain text with optional auto-resize and character counter.",
       "profiles": [
         "all"
+      ]
+    },
+    {
+      "name": "KanbanBoard",
+      "slug": "kanban-board",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "A task board: work items (cards) in ordered columns that users move between stages by dragging, by keyboard, or through a \"Move to…\" menu. In identity v2 a board reads like an assembly sheet laid out in stages: each column is a numbered stage with a quantity mark (`5×`), cards are parts that lift off the sheet when picked up, the rest make room with FLIP, and a dropped card clicks into place.",
+      "profiles": [
+        "saas",
+        "admin",
+        "dashboard",
+        "game"
       ]
     },
     {
@@ -764,6 +777,20 @@
         "admin",
         "saas"
       ]
+    },
+    {
+      "name": "Model3D",
+      "slug": "model-3d",
+      "category": "media",
+      "status": "implemented",
+      "purpose": "Declares one object inside a `Scene3D`: either a procedural factory (the output contract of the `img2threejs` skill: code that builds a `THREE.Object3D`) or a glTF/GLB file. It renders nothing to the DOM; the parent scene builds, places, styles, animates and disposes it.",
+      "profiles": [
+        "landing",
+        "game",
+        "saas",
+        "ecommerce"
+      ],
+      "package": "@sabahat/react-ui-kit-3d"
     },
     {
       "name": "MultiSelect",
@@ -913,7 +940,7 @@
       "slug": "payment-status",
       "category": "messages",
       "status": "implemented",
-      "purpose": "The result of a payment attempt, laid out like `EmptyState` (plain glyph, serif title, one action): `processing`, `requires_action` (for example 3-D Secure / SCA), `succeeded`, `failed` and `canceled`. The kit only displays the state your server confirmed; it never decides that a payment succeeded.",
+      "purpose": "The result of a payment attempt, laid out like `EmptyState` (plain glyph, heading-weight title, one action): `processing`, `requires_action` (for example 3-D Secure / SCA), `succeeded`, `failed` and `canceled`. The kit only displays the state your server confirmed; it never decides that a payment succeeded.",
       "profiles": [
         "ecommerce",
         "saas",
@@ -982,6 +1009,16 @@
       ]
     },
     {
+      "name": "QuantityTick",
+      "slug": "quantity-tick",
+      "category": "data",
+      "status": "implemented",
+      "purpose": "A count that rolls digit by digit when it changes (motion Tick): a quantity mark, score, XP or column total. Only the columns whose character changed move, so 199 to 200 rolls three digits and 12 to 13 rolls one. It is the building block under StatCard.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "RadioButton",
       "slug": "radio-button",
       "category": "form",
@@ -1002,6 +1039,20 @@
         "game",
         "saas"
       ]
+    },
+    {
+      "name": "Scene3D",
+      "slug": "scene-3d",
+      "category": "media",
+      "status": "implemented",
+      "purpose": "A lazy-loaded three.js stage for decorative or product depth: a landing hero object, a game menu backdrop, an empty-state illustration or a product turntable. Lives in the optional package `@sabahat/react-ui-kit-3d` (ADR 0003), so apps that don't use 3D pay nothing. In identity v2 the default `look=\"sheet\"` draws the assembly-sheet world in depth: paper-coloured flat parts with ink edges, and on first view the object can Assemble, its parts travelling in along dashed guide lines and clicking into place.",
+      "profiles": [
+        "landing",
+        "game",
+        "saas",
+        "ecommerce"
+      ],
+      "package": "@sabahat/react-ui-kit-3d"
     },
     {
       "name": "Scheduler",
@@ -1173,7 +1224,7 @@
       "slug": "stat-card",
       "category": "layout",
       "status": "implemented",
-      "purpose": "KPI tile: label, value, delta vs previous period, optional sparkline/icon.",
+      "purpose": "One item of the parts list (identity v2): a small line icon, the value written as a quantity mark (12×), a muted label, optional delta vs previous period and sparkline. Replaces the big-number hero tile.",
       "profiles": [
         "dashboard",
         "admin",
@@ -1186,7 +1237,17 @@
       "slug": "stat-group",
       "category": "data",
       "status": "implemented",
-      "purpose": "A ruled row of 2–5 headline numbers, set as typography rather than as separate boxes. It makes overview screens look the same across apps and removes the icon-tile KPI pattern (see `rules/consistency`).",
+      "purpose": "The parts list: a ruled strip of 2–5 items, each a small line icon, a quantity mark (12×) and a label, like the inventory on page one of an assembly sheet. It makes overview screens look the same across apps and replaces the big-number hero tile (see rules/consistency).",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
+      "name": "StepSheet",
+      "slug": "step-sheet",
+      "category": "panel",
+      "status": "implemented",
+      "purpose": "The signature component of identity v2: multi-step work rendered as numbered step panels, like a page of assembly instructions. Each StepPanel has a large light numeral, a title, a drawn figure (the picture before words), one key value and one action. The active panel is marked with the accent, completed panels carry an ink check, and entering panels assemble: parts slide along a dashed guide line and the last one clicks into place. Use it for learning sessions, onboarding, checkout and any short guided flow.",
       "profiles": [
         "all"
       ]
@@ -1452,49 +1513,49 @@
   "profiles": [
     {
       "name": "saas",
-      "description": "Baseline profile: Nordic editorial. Warm paper surfaces, ink primary actions, pine accent for links, focus and selection, serif headings over a grotesk body. General-purpose product UI.",
+      "description": "Baseline profile: Monteringsanvisning. White instruction paper, kraft shell, ink primary actions, signal-blue accent for the active step, selection and focus, Albert Sans throughout, numbered step panels for multi-step work.",
       "defaultTheme": "system",
       "density": "comfortable"
     },
     {
       "name": "admin",
-      "description": "Back-office / internal tools. Dense and quiet: grotesk headings, tight 2px corners, information first, accent only for state.",
+      "description": "Back-office / internal tools. Dense and quiet: compact controls, 3px corners, hairlines inside tables, information first, accent only for state.",
       "defaultTheme": "system",
       "density": "compact"
     },
     {
       "name": "dashboard",
-      "description": "Analytics and monitoring. Grotesk headings, numbers set large and tabular, ruled sections over boxed cards, earthy chart palette.",
+      "description": "Analytics and monitoring. The parts list leads, numbers are tabular, ruled sections over boxed cards, chart series in the kraft/blue world palette.",
       "defaultTheme": "system",
       "density": "comfortable"
     },
     {
       "name": "cms",
-      "description": "Content management and authoring. Long-form reading: serif headings, generous measure, oxblood accent like an editor's pen.",
+      "description": "Content management and authoring. Long-form reading with a generous measure; the accent becomes pencil red like an editor's mark-up.",
       "defaultTheme": "light",
       "density": "comfortable"
     },
     {
       "name": "pos",
-      "description": "Point of sale / kiosk. Touch-first, large targets, high contrast, minimal motion; the main action is solid pine so it reads at arm's length.",
+      "description": "Point of sale / kiosk. Touch-first, large targets, high contrast, minimal motion; the main action is solid go-green so it reads at arm's length.",
       "defaultTheme": "light",
       "density": "spacious"
     },
     {
       "name": "game",
-      "description": "Games and playful apps. Dark-first near-black, saffron accent, rounded shapes, expressive motion (respects reduced motion).",
+      "description": "Games and playful apps. The night sheet by default, warm signal-yellow accent, rounder parts, bolder assemble motion (respects reduced motion).",
       "defaultTheme": "dark",
       "density": "comfortable"
     },
     {
       "name": "ecommerce",
-      "description": "Storefronts and checkout. Product imagery first, clay call-to-action that stands apart from the pine links, trust signalling.",
+      "description": "Storefronts and checkout. Product imagery first (the one place cards lead), call-to-action orange primary that stands apart from the blue links, trust signalling.",
       "defaultTheme": "light",
       "density": "comfortable"
     },
     {
       "name": "landing",
-      "description": "Marketing and landing pages. Spacious, serif display type at large sizes, ruled sections, one accent.",
+      "description": "Marketing and landing pages. Spacious, display numerals at full scale in light weight, ruled sections, one assembly animation per section, one accent.",
       "defaultTheme": "light",
       "density": "spacious"
     }

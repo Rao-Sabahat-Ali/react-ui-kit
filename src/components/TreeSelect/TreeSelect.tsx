@@ -7,6 +7,7 @@ import { cx } from '../../utils/cx';
 import type { Size } from '../../types';
 import { useFieldControl } from '../Field/Field';
 import { Icon } from '../Icon/Icon';
+import { usePresence } from '../../motion/usePresence';
 import { Portal } from '../Portal/Portal';
 import { Tree } from '../Tree/Tree';
 import { ancestorKeys, checkState, findNode, nextSelection, resolveChecks, type TreeKey, type TreeNode, type TreeSelectionValue } from '../Tree/treeUtils';
@@ -62,6 +63,7 @@ export function TreeSelect<T = unknown>({
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const position = useFloating(triggerRef, panelRef, { open, placement: 'bottom-start', matchWidth: true });
+  const presence = usePresence(open);
 
   const selection = useMemo<TreeSelectionValue>(() => {
     if (selectionMode === 'checkbox') {
@@ -221,13 +223,15 @@ export function TreeSelect<T = unknown>({
           <Icon name="x" />
         </button>
       )}
-      {open && (
+      {presence.present && (
         <Portal>
           {/* Escape/Tab bubble from the tree inside the popup. */}
           {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div
             ref={panelRef}
             id={popupId}
+            data-state={presence.state}
+            inert={presence.exiting || undefined}
             className="dropdown-menu show ui-tree-select__panel"
             style={{ position: 'fixed', top: position.top, left: position.left, minWidth: position.minWidth }}
             onKeyDown={handlePanelKeyDown}

@@ -83,7 +83,7 @@ export function Button(props: ButtonProps) {
       {loading ? <Spinner decorative size="sm" className="ui-button__spinner" /> : iconPosition === 'start' && iconNode}
       {!iconOnly && <span className="ui-button__label">{label}</span>}
       {!loading && iconPosition === 'end' && iconNode}
-      {badge !== undefined && <span className="badge text-bg-light ui-button__badge">{badge}</span>}
+      {badge !== undefined && <span className="badge ui-badge text-bg-light ui-button__badge">{badge}</span>}
     </>
   );
 

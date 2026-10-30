@@ -1,3 +1,4 @@
+import { Icon } from '../Icon/Icon';
 import { Timeline, type TimelineAlign } from './Timeline';
 
 interface OrderEvent {
@@ -41,8 +42,13 @@ export const examples = [
     render: () => demo('top', 'horizontal'),
   },
   {
+    title: 'Numbered markers',
+    code: `<Timeline numbered value={events} content={(e) => <strong>{e.status}</strong>} />`,
+    render: () => <Timeline numbered value={events} content={(e) => <strong>{e.status}</strong>} opposite={(e) => e.detail} />,
+  },
+  {
     title: 'Custom marker',
-    code: `<Timeline value={events} marker={() => <Icon name="check-circle" />} content={…} />`,
-    render: () => <Timeline value={events} content={(e) => e.status} marker={() => <span className="badge rounded-pill text-bg-success">✓</span>} />,
+    code: `<Timeline value={events} marker={() => <Icon name="check" />} content={…} />`,
+    render: () => <Timeline value={events} content={(e) => e.status} marker={() => <Icon name="check" className="text-success-emphasis" />} />,
   },
 ];

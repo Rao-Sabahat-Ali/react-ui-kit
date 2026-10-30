@@ -2,6 +2,7 @@ import { cloneElement, useId, useRef, useState, type CSSProperties, type Keyboar
 import { useControllableState } from '../../hooks/useControllableState';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { usePresence } from '../../motion/usePresence';
 import type { Placement } from '../../utils/position';
 import { Button } from '../Button/Button';
 import { elementRef, mergeRefs } from '../../utils/element';
@@ -41,6 +42,8 @@ export function MenuBase({ tiered, items, popup = false, trigger, open: openProp
   const [request, setRequest] = useState<FocusRequest | null>({ position: 'first', seq: 0 });
   const triggerRef = useRef<HTMLElement | null>(null);
   const seq = useRef(0);
+  // Popups stay mounted (inert, data-state="closed") while their exit animation runs.
+  const { present, state } = usePresence(popup && open, { exit: 'part' });
 
   if (!popup) {
     return (
@@ -93,8 +96,9 @@ export function MenuBase({ tiered, items, popup = false, trigger, open: openProp
   return (
     <>
       {triggerEl}
-      {open && (
+      {present && (
         <MenuPopup
+          state={state}
           items={items}
           id={menuId}
           ariaLabel={ariaLabel}

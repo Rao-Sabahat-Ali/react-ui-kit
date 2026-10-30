@@ -76,3 +76,13 @@ describe('Knob', () => {
     expect(knob).toHaveAttribute('aria-valuenow', '40');
   });
 });
+
+describe('Knob (v2)', () => {
+  it('AC-v2-1: the centre value is a ticking quantity mark that is hidden from assistive tech', () => {
+    const { container } = render(<Knob aria-label="Volume" defaultValue={40} />);
+    const text = container.querySelector('.ui-knob__text')!;
+    expect(text).toHaveAttribute('aria-hidden', 'true');
+    expect(text.querySelector('.ui-qty-tick')).toBeInTheDocument();
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '40');
+  });
+});

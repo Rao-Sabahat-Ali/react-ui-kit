@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { useLocale } from '../../locale';
 import { useControllableState } from '../../hooks/useControllableState';
 import { cx } from '../../utils/cx';
@@ -106,6 +106,27 @@ function TabList({ children, fill = 'none', className, ...rest }: TabListProps) 
   const scrollable = ctx.scrollable;
   const [edges, setEdges] = useState<{ overflow: boolean; atStart: boolean; atEnd: boolean }>({ overflow: false, atStart: true, atEnd: true });
 
+  // Accent step indicator: a 2px bar under (or beside) the selected tab that slides with transform only.
+  const [indicator, setIndicator] = useState<{ pos: number; size: number; ready: boolean } | null>(null);
+  const showIndicator = ctx.variant !== 'pills';
+  const placeIndicator = useCallback(() => {
+    const selected = listRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
+    if (!selected) return setIndicator(null);
+    const pos = vertical ? selected.offsetTop : selected.offsetLeft;
+    const size = vertical ? selected.offsetHeight : selected.offsetWidth;
+    setIndicator((prev) => (prev && prev.pos === pos && prev.size === size ? prev : { pos, size, ready: prev !== null }));
+  }, [vertical]);
+
+  useLayoutEffect(() => {
+    if (!showIndicator) return;
+    placeIndicator();
+    const list = listRef.current;
+    const observer = typeof ResizeObserver === 'undefined' || !list ? null : new ResizeObserver(placeIndicator);
+    if (list) observer?.observe(list);
+    list?.querySelectorAll('[role="tab"]').forEach((tab) => observer?.observe(tab));
+    return () => observer?.disconnect();
+  }, [showIndicator, placeIndicator, ctx.value, children]);
+
   const measure = useCallback(() => {
     const el = viewportRef.current;
     if (!el) return;
@@ -193,9 +214,11 @@ function TabList({ children, fill = 'none', className, ...rest }: TabListProps) 
       )}
       onKeyDown={handleKeyDown}
       onFocus={scrollable ? (event) => reveal((event.target as Element).closest('[role="tab"]')) : undefined}
+      style={indicator ? ({ '--ui-tab-pos': indicator.pos, '--ui-tab-size': indicator.size } as CSSProperties) : undefined}
       {...rest}
     >
       {children}
+      {showIndicator && indicator && <span className={cx('ui-tabs__indicator', indicator.ready && 'ui-tabs__indicator--ready')} aria-hidden="true" />}
     </div>
   );
 
@@ -255,7 +278,7 @@ function Tab({ value, children, disabled = false, icon, badge, className }: TabP
     >
       {icon && <Icon name={icon} className="ui-tabs__icon" />}
       {children}
-      {badge !== undefined && <span className="badge rounded-pill text-bg-secondary ui-tabs__badge">{badge}</span>}
+      {badge !== undefined && <span className="badge ui-badge text-bg-secondary ui-tabs__badge">{badge}</span>}
     </button>
   );
 }

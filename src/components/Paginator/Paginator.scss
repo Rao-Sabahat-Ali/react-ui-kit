@@ -1,20 +1,61 @@
+@use '../../styles/data';
+
+// Page numbers are plain tabular figures on a 2px track; one accent mark slides to the current page (useSlidingMark).
+// No boxes, no filled pills: the mark is the indicator.
 .ui-paginator__list {
-  --bs-pagination-color: var(--ui-color-text);
-  --bs-pagination-bg: var(--ui-color-surface);
-  --bs-pagination-border-color: var(--ui-color-border);
+  --bs-pagination-color: var(--ui-color-text-muted);
+  --bs-pagination-bg: transparent;
+  --bs-pagination-border-width: 0;
+  --bs-pagination-border-color: transparent;
   --bs-pagination-hover-color: var(--ui-color-text);
   --bs-pagination-hover-bg: var(--ui-color-bg-subtle);
-  --bs-pagination-hover-border-color: var(--ui-color-border);
+  --bs-pagination-hover-border-color: transparent;
   --bs-pagination-focus-color: var(--ui-color-text);
   --bs-pagination-focus-bg: var(--ui-color-bg-subtle);
-  --bs-pagination-focus-box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-  --bs-pagination-active-color: var(--ui-color-accent-contrast);
-  --bs-pagination-active-bg: var(--ui-color-accent);
-  --bs-pagination-active-border-color: var(--ui-color-accent);
+  --bs-pagination-focus-box-shadow: none;
+  --bs-pagination-active-color: var(--ui-color-text);
+  --bs-pagination-active-bg: transparent;
+  --bs-pagination-active-border-color: transparent;
   --bs-pagination-disabled-color: var(--ui-color-text-subtle);
-  --bs-pagination-disabled-bg: var(--ui-color-surface);
-  --bs-pagination-disabled-border-color: var(--ui-color-border);
+  --bs-pagination-disabled-bg: transparent;
+  --bs-pagination-disabled-border-color: transparent;
   --bs-pagination-border-radius: var(--ui-radius);
+  @include data.sliding-mark-x;
+  gap: var(--ui-space-1);
+  padding-block-end: var(--ui-space-1);
+
+  // The track under the strip.
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: 0;
+    block-size: var(--ui-line-width);
+    background: var(--ui-color-line-muted);
+    pointer-events: none;
+  }
+
+  .page-item .page-link {
+    margin: 0;
+    border-radius: var(--ui-radius);
+    font-variant-numeric: tabular-nums;
+    transition: background-color var(--ui-motion-quick) var(--ui-easing-out), color var(--ui-motion-quick) var(--ui-easing-out);
+
+    &:focus-visible {
+      z-index: 1;
+      outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+      outline-offset: var(--ui-focus-ring-offset);
+    }
+  }
+
+  .page-item.active .page-link {
+    font-weight: var(--ui-font-weight-semibold);
+    color: var(--ui-color-accent-emphasis);
+  }
+
+  .page-item.disabled .page-link {
+    cursor: not-allowed;
+  }
 }
 
 .ui-paginator__page,
@@ -25,6 +66,10 @@
   align-items: center;
   justify-content: center;
   font-variant-numeric: tabular-nums;
+}
+
+.ui-paginator__nav {
+  color: var(--ui-color-text);
 }
 
 .ui-paginator__report {

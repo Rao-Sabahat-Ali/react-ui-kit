@@ -42,7 +42,9 @@ test.describe('split styles render identically @split', () => {
   // `shell`: the whole page with the styles of the docs shell + the component. `isolated`: only the styles of the
   // component under test (and what it needs) are loaded, and only the example previews are compared.
   for (const mode of ['shell', 'isolated'] as const) {
-    for (const c of catalog.components.filter((x) => x.status !== 'specified')) {
+    // Components of optional packages (Scene3D, Model3D) ship their own stylesheet, which the kit's split pieces do not cover.
+    const ownedByPackage = (name: string) => readdirSync(join(root, 'packages')).some((pkg) => existsSync(join(root, 'packages', pkg, 'src/components', name)));
+    for (const c of catalog.components.filter((x) => x.status !== 'specified' && !ownedByPackage(x.name))) {
       test(`${c.name} page (${mode})`, async ({ browser, baseURL }) => {
       // Foundation providers keep their examples next to the code (src/theme, src/locale).
       const examples = [join(root, 'src/components', c.name, `${c.name}.examples.tsx`), join(root, 'src/theme', `${c.name}.examples.tsx`), join(root, 'src/locale', `${c.name}.examples.tsx`)].find((f) => existsSync(f)) ?? join(root, 'src/components', c.name, `${c.name}.examples.tsx`);
@@ -64,10 +66,21 @@ test.describe('split styles render identically @split', () => {
           await page.evaluate(() =>
             Promise.all([...document.images].map((img) => (img.complete ? null : new Promise((resolve) => { img.onload = img.onerror = resolve; })))),
           );
+          // Components that measure themselves (the sliding marks of SelectButton, Tabs and others write `--ui-seg-pos`-style custom
+          // properties and a `--ready` class once their first measurement has landed, and measure again when the font swaps in) must
+          // be finished too: the signature covers every class list and inline style, and has to stay unchanged for two polls
+          // in a row. Any finite animation still running is awaited (infinite ones, such as a spinner, never finish), so no capture can fall inside a transition.
           let previous = '';
-          for (let i = 0; i < 20; i++) {
-            const signature = await page.evaluate(() => `${document.querySelectorAll('body *').length}:${document.documentElement.scrollHeight}`);
-            if (signature === previous) break;
+          let stable = 0;
+          for (let i = 0; i < 40 && stable < 2; i++) {
+            const signature = await page.evaluate(async () => {
+              await Promise.all(document.getAnimations().filter((a) => a.effect?.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => undefined)));
+              const state = [...document.querySelectorAll('body *')].map((el) => `${el.getAttribute('class') ?? ''}|${el.getAttribute('style') ?? ''}`).join('\n');
+              let hash = 0;
+              for (let c = 0; c < state.length; c++) hash = (hash * 31 + state.charCodeAt(c)) | 0;
+              return `${document.querySelectorAll('body *').length}:${document.documentElement.scrollHeight}:${hash}`;
+            });
+            stable = signature === previous ? stable + 1 : 0;
             previous = signature;
             await page.waitForTimeout(250);
           }

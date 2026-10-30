@@ -1,45 +1,51 @@
+@use '../../styles/parts';
+
+// A small lifted part: 2px ink line, part corner (a tooltip is label-sized, so --ui-radius, not the sheet corner).
 .ui-tooltip {
   --bs-tooltip-zindex: var(--ui-z-tooltip);
-  --bs-tooltip-bg: var(--ui-color-text);
-  --bs-tooltip-color: var(--ui-color-text-inverse);
-  --bs-tooltip-border-radius: var(--ui-radius-sm);
+  --bs-tooltip-bg: transparent;
+  --bs-tooltip-color: var(--ui-color-text);
+  --bs-tooltip-border-radius: var(--ui-radius);
   --bs-tooltip-font-size: var(--ui-font-size-sm);
+  --bs-tooltip-max-width: 16rem;
   --bs-tooltip-opacity: 1;
   margin: 0;
   pointer-events: auto;
-  animation: ui-tooltip-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  @include parts.lifted(var(--ui-radius));
+  @include parts.origin-aware;
+  @include parts.pop-in;
 
   // Bridges the offset gap so the pointer can travel onto the tooltip (WCAG 1.4.13 hoverable).
   &::before {
     content: '';
     position: absolute;
     inset: calc(-1 * var(--ui-space-2));
+    z-index: -1;
   }
+}
+
+.ui-tooltip-root[data-state='closed'] .ui-tooltip {
+  pointer-events: none;
+  @include parts.pop-out;
 }
 
 .ui-tooltip__inner {
   position: relative;
+  max-width: none;
+  padding: var(--ui-space-1) var(--ui-space-2);
+  background: transparent;
+  color: inherit;
+  text-align: start;
 }
 
-.ui-tooltip--top .ui-tooltip__arrow,
-.ui-tooltip--bottom .ui-tooltip__arrow {
-  left: calc(50% - var(--bs-tooltip-arrow-width) / 2);
-}
-
-.ui-tooltip--start .ui-tooltip__arrow,
-.ui-tooltip--end .ui-tooltip__arrow {
-  top: calc(50% - var(--bs-tooltip-arrow-width) / 2);
-}
-
-@keyframes ui-tooltip-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-}
+@include parts.arrow('ui-tooltip', 0.5rem);
 
 @media (prefers-reduced-motion: reduce) {
   .ui-tooltip {
+    animation: none;
+  }
+
+  .ui-tooltip-root[data-state='closed'] .ui-tooltip {
     animation: none;
   }
 }

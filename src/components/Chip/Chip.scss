@@ -1,16 +1,15 @@
+@use '../../styles/form-mixins' as form;
+
+// The same small part as the chips inside Chips: a hairline-ruled 6px part on a quiet ground. Filter chips mark the
+// selected state with the accent (line + subtle ground), never a fill; press feedback is a 90ms squeeze.
 .ui-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-space-1);
+  @include form.chip;
   min-block-size: var(--ui-control-height-sm);
-  padding-inline: var(--ui-space-3);
-  border: 1px solid var(--ui-color-border-strong);
-  border-radius: var(--ui-radius-pill);
-  background: var(--ui-color-surface);
-  color: var(--ui-color-text);
-  font-size: var(--ui-font-size-sm);
-  line-height: 1;
-  transition: background-color var(--ui-duration) var(--ui-easing), border-color var(--ui-duration) var(--ui-easing);
+  padding-inline-end: var(--ui-space-2);
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out),
+    color var(--ui-motion-quick) var(--ui-easing-out);
 }
 
 .ui-chip__main {
@@ -20,41 +19,48 @@
   min-block-size: inherit;
   padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-pill);
+  border-radius: var(--ui-radius-sm);
   background: transparent;
   color: inherit;
   font: inherit;
+  transition: transform var(--ui-motion-instant) var(--ui-easing-out);
 }
 
 button.ui-chip__main {
   cursor: pointer;
 
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
+    @include form.focus-ring(2px);
   }
 }
 
 .ui-chip__image {
   inline-size: 1.25rem;
   block-size: 1.25rem;
-  margin-inline-start: calc(var(--ui-space-3) * -0.5);
+  margin-inline-start: calc(var(--ui-space-2) * -0.5);
   border-radius: var(--ui-radius-circle);
   object-fit: cover;
 }
 
 .ui-chip--interactive:hover {
-  background: var(--ui-color-bg-subtle);
+  border-color: var(--ui-color-line);
+  background-color: var(--ui-color-border);
 }
 
-.ui-chip--selected {
+.ui-chip--selected,
+.ui-chip--selected.ui-chip--interactive:hover {
   border-color: var(--ui-color-accent);
-  background: var(--ui-color-accent-subtle);
+  background-color: var(--ui-color-accent-subtle);
   color: var(--ui-color-accent-emphasis);
 }
 
 .ui-chip--disabled {
-  opacity: 0.6;
+  border-color: var(--ui-color-border);
+  color: var(--ui-color-text-subtle);
   pointer-events: none;
 }
 
@@ -63,38 +69,16 @@ button.ui-chip__main {
 }
 
 .ui-chip__remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 1.5rem;
-  block-size: 1.5rem;
-  padding: 0;
-  border: 0;
-  border-radius: var(--ui-radius-circle);
-  background: transparent;
-  color: var(--ui-color-text-muted);
-  cursor: pointer;
-
-  &:hover {
-    background: var(--ui-color-secondary-subtle);
-    color: var(--ui-color-text);
-  }
-
-  &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
-  }
-}
-
-@media (pointer: coarse) {
-  .ui-chip__remove {
-    inline-size: var(--ui-touch-target-min);
-    block-size: var(--ui-touch-target-min);
-  }
+  @include form.chip-remove;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-chip {
+  .ui-chip,
+  .ui-chip__main {
     transition: none;
+  }
+
+  button.ui-chip__main:active:not(:disabled) {
+    transform: none;
   }
 }

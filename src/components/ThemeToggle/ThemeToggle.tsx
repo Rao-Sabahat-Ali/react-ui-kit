@@ -3,6 +3,7 @@ import { useLocale } from '../../locale/LocaleProvider';
 import { useTheme } from '../../theme/ThemeProvider';
 import type { ThemeSetting } from '../../theme/profiles.generated';
 import { Button, type ButtonAppearance } from '../Button/Button';
+import { Icon } from '../Icon/Icon';
 import { Menu } from '../Menu/Menu';
 import type { MenuItem } from '../Menu/types';
 import type { Size } from '../../types';
@@ -15,6 +16,16 @@ export interface ThemeToggleProps {
   size?: Size;
   appearance?: ButtonAppearance;
   className?: string;
+}
+
+/** The sun and the moon in one slot; the one that is not current turns away and fades (CSS, transform + opacity). */
+function ThemeIcons({ dark }: { dark: boolean }) {
+  return (
+    <span className="ui-theme-toggle__icons">
+      <Icon name="sun" className="ui-theme-toggle__icon" data-active={!dark} />
+      <Icon name="moon" className="ui-theme-toggle__icon ui-theme-toggle__icon--moon" data-active={dark} />
+    </span>
+  );
 }
 
 /** Light/dark (or light/dark/system) control bound to ThemeProvider. */
@@ -43,7 +54,7 @@ export function ThemeToggle({ mode = 'toggle', size = 'md', appearance = 'text',
         popup
         items={items}
         placement="bottom-end"
-        trigger={<Button variant="secondary" appearance={appearance} size={size} icon={dark ? 'moon' : 'sun'} aria-label={LABELS.theme} className={className} />}
+        trigger={<Button variant="secondary" appearance={appearance} size={size} icon={<ThemeIcons dark={dark} />} aria-label={LABELS.theme} className={className} />}
       />
     );
   }
@@ -53,7 +64,7 @@ export function ThemeToggle({ mode = 'toggle', size = 'md', appearance = 'text',
       variant="secondary"
       appearance={appearance}
       size={size}
-      icon={dark ? 'moon' : 'sun'}
+      icon={<ThemeIcons dark={dark} />}
       aria-label={t('darkMode')}
       aria-pressed={dark}
       onClick={toggleTheme}

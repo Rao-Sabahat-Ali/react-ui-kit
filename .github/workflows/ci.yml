@@ -23,6 +23,8 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: node scripts/check-bundle.mjs
+      # The optional 3D package (lint, typecheck and tests already cover it above): build it and check its own bundle budget.
+      - run: npm run check:3d
       - run: npm run build:docs
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test --project=desktop
@@ -33,4 +35,27 @@ jobs:
         with:
           name: playwright-report
           path: test-results
+          retention-days: 7
+
+  lighthouse:
+    # Performance >= 90 and accessibility 100 on the docs home and every blueprint (lighthouserc.json, desktop preset: errors).
+    # The mobile preset (lighthouserc.mobile.json) holds accessibility at 100 and reports performance as a warning: the docs app
+    # loads the whole catalogue on a throttled 4G profile.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run build:docs
+      - run: npx --yes @lhci/cli@0.15.1 autorun
+      - run: npx --yes @lhci/cli@0.15.1 autorun --config=lighthouserc.mobile.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse
+          path: .lighthouseci
           retention-days: 7

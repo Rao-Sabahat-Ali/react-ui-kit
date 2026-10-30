@@ -80,6 +80,6 @@ describe('Toast', () => {
     const css = compileScss('src/components/Toast/Toast.scss');
     expect(css).toMatch(/\.ui-toast-container--start\s*\{[^}]*inset-inline-start/);
     expect(css).toMatch(/\.ui-toast-container--end\s*\{[^}]*inset-inline-end/);
-    expect(mediaBlock(css, '(prefers-reduced-motion: reduce)')).toMatch(/\.ui-toast\s*\{[^}]*animation:\s*none/);
+    expect(mediaBlock(css, '(prefers-reduced-motion: reduce)')).toMatch(/\.ui-toast,[^{]*\{[^}]*animation:\s*none/);
   });
 });

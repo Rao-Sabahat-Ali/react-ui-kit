@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Image } from './Image';
@@ -56,5 +56,14 @@ describe('Image', () => {
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(trigger).toHaveFocus();
+  });
+
+  it('preview shows the zoom as a quantity mark and updates it', async () => {
+    render(<Image src="/a.jpg" alt="Lake" preview />);
+    await userEvent.click(screen.getByRole('button', { name: /Lake/ }));
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByRole('status')).toHaveTextContent('1×');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Zoom in' }));
+    expect(within(dialog).getByRole('status')).toHaveTextContent('1.25×');
   });
 });

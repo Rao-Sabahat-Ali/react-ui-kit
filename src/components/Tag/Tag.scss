@@ -2,8 +2,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
-  font-weight: var(--ui-font-weight-medium);
+  font-weight: var(--ui-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
   border-radius: var(--ui-radius-sm);
+  // Parts are labelled, not decorated: a hairline keeps the subtle tint readable on white.
+  border-width: var(--ui-line-width-hairline) !important;
 
   &.rounded-pill {
     border-radius: var(--ui-radius-pill);

@@ -55,7 +55,6 @@ export interface Kpi {
   delta: number;
   /** Lower is better. */
   invert?: boolean;
-  sparkline: number[];
 }
 
 const sum = (rows: DayPoint[], key: 'revenue' | 'orders' | 'returns') => rows.reduce((total, r) => total + r[key], 0);
@@ -64,16 +63,6 @@ const change = (now: number, before: number) => (before === 0 ? 0 : (now - befor
 
 export function windowOf(period: Period) {
   return { current: DAYS.slice(180 - period), previous: DAYS.slice(180 - 2 * period, 180 - period) };
-}
-
-/** At most 30 points: 90 days are averaged in groups of three. */
-function bucket(values: number[]): number[] {
-  if (values.length <= 30) return values;
-  const size = Math.ceil(values.length / 30);
-  return Array.from({ length: Math.ceil(values.length / size) }, (_, i) => {
-    const part = values.slice(i * size, (i + 1) * size);
-    return Math.round(part.reduce((a, b) => a + b, 0) / part.length);
-  });
 }
 
 export function kpisFor(period: Period): Kpi[] {
@@ -91,16 +80,14 @@ export function kpisFor(period: Period): Kpi[] {
       value: rev,
       format: { style: 'currency', currency: 'SEK', notation: 'compact', maximumFractionDigits: 1 },
       delta: change(rev, prevRev),
-      sparkline: bucket(current.map((d) => d.revenue)),
     },
-    { id: 'orders', label: 'Orders', value: ord, format: { maximumFractionDigits: 0 }, delta: change(ord, prevOrd), sparkline: bucket(current.map((d) => d.orders)) },
+    { id: 'orders', label: 'Orders', value: ord, format: { maximumFractionDigits: 0 }, delta: change(ord, prevOrd) },
     {
       id: 'aov',
       label: 'Average order value',
       value: Math.round(ratio(rev, ord)),
       format: { style: 'currency', currency: 'SEK', maximumFractionDigits: 0 },
       delta: change(ratio(rev, ord), ratio(prevRev, prevOrd)),
-      sparkline: bucket(current.map((d) => Math.round(ratio(d.revenue, d.orders)))),
     },
     {
       id: 'returns',
@@ -109,7 +96,6 @@ export function kpisFor(period: Period): Kpi[] {
       format: { style: 'percent', maximumFractionDigits: 1 },
       delta: change(ratio(ret, ord), ratio(prevRet, prevOrd)),
       invert: true,
-      sparkline: bucket(current.map((d) => Math.round(ratio(d.returns, d.orders) * 1000))),
     },
   ];
 }

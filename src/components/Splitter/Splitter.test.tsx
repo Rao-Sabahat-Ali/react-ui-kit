@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -103,5 +104,23 @@ describe('Splitter', () => {
       </Splitter>,
     );
     expect(screen.getAllByRole('separator')).toHaveLength(2);
+  });
+
+  it('the gutter is a dashed guide line with a grip, accent on focus and drag', () => {
+    const scss = readFileSync(`${process.cwd()}/src/components/Splitter/Splitter.scss`, 'utf8');
+    expect(scss).toMatch(/border-inline-start: var\(--ui-line-width\) dashed var\(--ui-splitter-guide\)/);
+    expect(scss).toMatch(/--ui-splitter-guide: var\(--ui-color-accent\)/);
+    render(tree());
+    expect(document.querySelector('.ui-splitter__gutter .ui-splitter__handle')).toBeInTheDocument();
+  });
+
+  it('v2: the hit area is at least 24px across the layout axis while the visible gutter stays slim', () => {
+    const scss = readFileSync(`${process.cwd()}/src/components/Splitter/Splitter.scss`, 'utf8');
+    const gutter = Number(/\.ui-splitter--horizontal > \.ui-splitter__gutter \{\s*inline-size: ([\d.]+)rem/.exec(scss)![1]);
+    const extend = Number(/\$hit-extend: -([\d.]+)rem/.exec(scss)![1]);
+    expect(gutter).toBeLessThanOrEqual(1);
+    expect((gutter + 2 * extend) * 16).toBeGreaterThanOrEqual(24);
+    expect(scss).toMatch(/inset-inline: \$hit-extend/);
+    expect(scss).toMatch(/inset-block: \$hit-extend/);
   });
 });

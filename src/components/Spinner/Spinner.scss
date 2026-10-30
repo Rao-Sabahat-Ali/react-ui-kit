@@ -1,5 +1,24 @@
+// A spinner is a 2px line arc: a quiet ring with one bright quarter turning on it. `grow` is a 2px ring that breathes
+// outwards. Under reduced motion nothing turns; the arc pulses in opacity instead (a loading cue must not vanish).
 .ui-spinner {
+  --bs-spinner-border-width: var(--ui-line-width);
+  --bs-spinner-animation-speed: 0.9s;
   flex-shrink: 0;
+
+  &.spinner-border {
+    border: var(--ui-line-width) solid color-mix(in srgb, currentcolor 20%, transparent);
+    border-top-color: currentcolor;
+  }
+
+  &.spinner-border-sm {
+    --bs-spinner-border-width: var(--ui-line-width);
+  }
+
+  &.spinner-grow {
+    border: var(--ui-line-width) solid currentcolor;
+    background-color: transparent;
+    --bs-spinner-animation-speed: 1.2s;
+  }
 }
 
 .ui-spinner--lg {
@@ -7,8 +26,16 @@
   height: 3rem;
 }
 
+@keyframes ui-spinner-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ui-spinner {
-    --bs-spinner-animation-speed: 1.5s;
+  .ui-spinner.spinner-border,
+  .ui-spinner.spinner-grow {
+    animation: ui-spinner-pulse 1.6s ease-in-out infinite;
+    opacity: 1;
   }
 }

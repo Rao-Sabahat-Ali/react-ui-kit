@@ -11,15 +11,37 @@
 
 .ui-toc__title {
   margin: 0 0 var(--ui-space-2);
-  font-weight: var(--ui-font-weight-medium);
+  font-weight: var(--ui-font-weight-semibold);
   color: var(--ui-color-text);
 }
 
+// One 2px track for the whole list; the accent marker slides along it to the current entry.
 .ui-toc__list {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-inline-start: 1px solid var(--ui-color-border);
+}
+
+.ui-toc__list:not(.ui-toc__list--nested) {
+  position: relative;
+  border-inline-start: var(--ui-line-width) solid var(--ui-color-line-muted);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(var(--ui-line-width) * -1);
+    inline-size: var(--ui-line-width);
+    block-size: 1px;
+    background: var(--ui-color-accent);
+    transform-origin: 0 0;
+    transform: translateY(calc(var(--ui-mark-pos, 0) * 1px)) scaleY(var(--ui-mark-size, 0));
+    pointer-events: none;
+  }
+
+  &[data-mark='ready']::before {
+    transition: transform var(--ui-motion-part) var(--ui-easing-out);
+  }
 }
 
 .ui-toc__list--nested {
@@ -28,26 +50,33 @@
 
 .ui-toc__link {
   display: block;
-  margin-inline-start: -1px;
   padding: var(--ui-space-1) var(--ui-space-3);
-  border-inline-start: 2px solid transparent;
+  border-radius: var(--ui-radius-sm);
   color: var(--ui-color-text-muted);
   text-decoration: none;
   overflow-wrap: anywhere;
+  transition: color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:hover {
     color: var(--ui-color-text);
     text-decoration: underline;
+    text-decoration-thickness: var(--ui-line-width-hairline);
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
   }
 
   &[aria-current='location'] {
-    border-inline-start-color: var(--ui-color-accent);
     color: var(--ui-color-accent-emphasis);
     font-weight: var(--ui-font-weight-medium);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-toc__list[data-mark='ready']::before,
+  .ui-toc__link {
+    transition: none;
   }
 }

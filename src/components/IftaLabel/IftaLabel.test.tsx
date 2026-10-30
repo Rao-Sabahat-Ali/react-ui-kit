@@ -60,11 +60,11 @@ describe('IftaLabel', () => {
     expect(screen.getByRole('textbox')).toHaveFocus();
   });
 
-  it('AC-6: the box owns the border; a disabled control marks the box disabled', () => {
+  it('AC-6: the box owns the 2px ink line; a disabled control marks the box disabled', () => {
     const { container } = render(<IftaLabel label="Email"><InputText disabled /></IftaLabel>);
     expect(container.querySelector('.ui-ifta__box')).toHaveClass('ui-ifta__box--disabled');
     const css = compileScss('src/components/IftaLabel/IftaLabel.scss');
-    expect(css).toMatch(/\.ui-ifta__box\s*\{[^}]*border:[^;}]*--ui-color-border-input/);
+    expect(css).toMatch(/\.ui-ifta__box\s*\{[^}]*border:[^;}]*--ui-color-line/);
     expect(css).toMatch(/\.ui-ifta__box \.form-control[^{]*\{[^}]*border:\s*0/);
   });
 });

@@ -10,6 +10,8 @@ Specs, tokens and rules: [`design-system-mcp`](https://github.com/Rao-Sabahat-Al
 npm install @sabahat/react-ui-kit react react-dom
 ```
 
+Upgrading from 1.x? Read the [2.0.0 upgrade guide](docs/migration-v2.md) first: the identity v2 look changes everywhere and a few defaults changed.
+
 Requires React 19. Bootstrap is compiled into the stylesheet; install `bootstrap` only if you import the SCSS (`@sabahat/react-ui-kit/scss/*`).
 
 ```tsx
@@ -28,19 +30,20 @@ createRoot(root).render(
 );
 ```
 
-Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash of the wrong theme. Fonts (Fraunces, Instrument Sans) ship in the package and load from your own origin.
+Add `themeScript({ profile })` output to `index.html` `<head>` to avoid a flash of the wrong theme. Fonts (Albert Sans) ship in the package and load from your own origin. For the fastest first paint preload the latin file (`<link rel="preload" as="font" type="font/woff2" crossorigin href="…/fonts/albert-sans-latin-wght-normal.woff2">`, the URL your bundler gives `@sabahat/react-ui-kit/dist/fonts/albert-sans-latin-wght-normal.woff2`), and if you precache assets in a service worker include the four `albert-sans-*.woff2` files (latin and latin-ext, normal and italic) instead of the old Fraunces and Instrument Sans files.
 
 ## Design contract
 
-The look is the "Nordic editorial" identity: paper surfaces, an ink primary action, a pine accent, serif headings, rules instead of boxes. Build screens from `PageHeader`, `Section`, `IndexList`, `StatGroup` and `DataTable`. Specs, tokens, patterns and the consistency rules live in [design-system-mcp](https://github.com/Rao-Sabahat-Ali/design-system-mcp) (an MCP server for coding agents).
+The look is the "Monteringsanvisning" (assembly sheet) identity: white instruction paper, a kraft shell, 2px ink lines, an ink primary action, a signal-blue accent, Albert Sans, quantity marks (`12×`) and numbered step panels for multi-step work. Build screens from `PageHeader`, `Section`, `IndexList`, `StatGroup` (the parts list), `StepSheet` and `DataTable`. Specs, tokens, patterns and the consistency rules live in [design-system-mcp](https://github.com/Rao-Sabahat-Ali/design-system-mcp) (an MCP server for coding agents).
 
 ## Start from a blueprint
 
-The docs app has a **Blueprints** section: complete, runnable screens (analytics dashboard, admin list to detail, overview and index page, settings, sign in, article/detail, checkout) built only from kit components and the design contract. Their source is `templates/blueprints/`.
+The docs app has a **Blueprints** section: complete, runnable screens (analytics dashboard, admin list to detail, task board, overview and index page, settings, sign in, article/detail, checkout) built only from kit components and the design contract. Their source is `templates/blueprints/`.
 
 ```bash
 npm run create-app -- ../my-dashboard --profile dashboard   # home screen = Analytics dashboard blueprint
 npm run create-app -- ../my-backoffice --profile admin      # home screen = Admin list to detail blueprint
+npm run create-app -- ../my-board --profile saas --blueprint board # home screen = Task board blueprint (any profile)
 npm run create-app -- ../my-app --profile dashboard --blank # empty starter page instead
 ```
 
@@ -107,6 +110,10 @@ Good to know:
 
 The pieces ship in the package as `dist/styles/**` (`@sabahat/react-ui-kit/styles/*`): `base.css`, `bootstrap/<partial>.css`, `utilities/<key>[@<breakpoint>].css`, `components/<Name>.css` and `manifest.json` (per component: its css file, the Bootstrap partials, utilities and other components it needs; the global cascade `order`; gzip size of every file). `node scripts/measure-style-split.mjs [Component …]` prints the size an app would load.
 
+## Depth (3D), optional
+
+`@sabahat/react-ui-kit-3d` (in [`packages/react-ui-kit-3d`](packages/react-ui-kit-3d), published separately) adds `Scene3D` and `Model3D` on plain three.js for a landing hero object, a game backdrop, an empty-state illustration or a product turntable. The core kit never imports three; apps that skip the package pay nothing. See its [README](packages/react-ui-kit-3d/README.md), [ADR 0003](docs/adr/0003-optional-3d-package.md) and the `Depth (3D)` page of the docs app. `node scripts/create-app.mjs <dir> --profile landing --with-3d` adds it to a new app.
+
 ## Status
 
 All specified components are implemented (see the [live catalogue](https://react-ui-kit-docs.vercel.app) and [CHANGELOG](CHANGELOG.md)). Every component ships with WCAG 2.2 AA keyboard and screen-reader support, light/dark themes and eight app profiles.
@@ -116,7 +123,7 @@ All specified components are implemented (see the [live catalogue](https://react
 ```bash
 npm install
 npm run dev     # docs app http://localhost:5180
-npm run check   # typecheck + tests + build
+npm run check   # lint, typecheck, tests, build, bundle budget, and the 3D package (npm run check:3d)
 ```
 
 See [CLAUDE.md](CLAUDE.md) for the spec-driven workflow, agents and conventions.

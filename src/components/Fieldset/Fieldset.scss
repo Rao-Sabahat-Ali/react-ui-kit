@@ -1,3 +1,7 @@
+// Fieldset: a sheet whose legend breaks the 2px ink line, like a label on an assembly drawing. The toggle turns a
+// 2px line-art chevron; the content reveals without touching its height (clip-path + opacity).
+@use '../../styles/panels';
+
 .ui-fieldset {
   min-inline-size: 0;
   margin: 0;
@@ -7,7 +11,7 @@
 
 .ui-fieldset--bordered {
   padding: var(--ui-space-4);
-  border: 1px solid var(--ui-color-border);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-lg);
   background: var(--ui-color-surface);
 }
@@ -44,21 +48,31 @@
   cursor: pointer;
 
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
   }
 }
 
+// Expanded: pointing down. Collapsed: pointing to the end of the line (right in LTR, left in RTL).
 .ui-fieldset__chevron {
-  transition: transform var(--ui-duration) var(--ui-easing);
+  @include panels.chevron;
+  font-size: 1.25em;
+  color: var(--ui-color-text-muted);
 }
 
-.ui-fieldset__content[hidden] {
-  display: none;
+.ui-fieldset--collapsed .ui-fieldset__chevron {
+  transform: rotate(-90deg);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ui-fieldset__chevron {
-    transition: none;
+[dir='rtl'] .ui-fieldset--collapsed .ui-fieldset__chevron {
+  transform: rotate(90deg);
+}
+
+.ui-fieldset__content {
+  @include panels.reveal;
+
+  &[hidden] {
+    display: none;
   }
 }

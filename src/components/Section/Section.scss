@@ -4,7 +4,7 @@
 
 .ui-section--separated {
   padding-block-start: var(--ui-space-6);
-  border-block-start: 1px solid var(--ui-color-border);
+  border-block-start: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 .ui-section__header {
@@ -25,6 +25,7 @@
   margin: 0;
   font-size: var(--ui-font-size-2xl);
   line-height: 1.2;
+  text-wrap: balance;
 }
 
 .ui-section__description {

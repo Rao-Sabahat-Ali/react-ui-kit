@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useImperativeHandle, useRef, useState, type HTMLAttributes, type Ref } from 'react';
+import { readMotionMs } from '../../motion/tokens';
+import { useExitGhosts, withGhosts } from '../../motion/useExitGhosts';
+import { useFlip } from '../../motion/useFlip';
 import { cx } from '../../utils/cx';
 import { Message, type MessageProps } from '../Message/Message';
 
@@ -91,11 +94,22 @@ export function Messages({ value, onRemove, className, ref, ...rest }: MessagesP
     };
   }, []);
 
+  // Removed notes stay as inert ghosts while they leave; the rest slide into the gap (FLIP).
+  const ghosts = useExitGhosts(list, list, (m) => m.id);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  useFlip(containerRef, [list.map((m) => m.id).join(), ghosts.map((g) => g.key).join()], { selector: '.ui-message', duration: readMotionMs(typeof document === 'undefined' ? null : document.documentElement, 'part') });
+
+  const nodes = list.map(({ id, life: _life, sticky, live, dismissible, ...message }) => (
+    <Message key={id} live={live ?? (message.severity === 'danger' ? 'assertive' : 'off')} dismissible={dismissible ?? true} onDismiss={() => remove(id)} {...message} />
+  ));
+  const withLeaving = withGhosts(nodes, ghosts, ({ item }) => {
+    const { id, life: _life, sticky: _sticky, live: _live, dismissible: _dismissible, ...message } = item as StoredItem;
+    return [<Message key={`ghost-${id}`} {...message} live="off" dismissible={false} aria-hidden="true" inert data-state="closed" />];
+  });
+
   return (
-    <div className={cx('ui-messages', className)} aria-live="polite" aria-relevant="additions text" {...rest}>
-      {list.map(({ id, life: _life, sticky, live, dismissible, ...message }) => (
-        <Message key={id} live={live ?? (message.severity === 'danger' ? 'assertive' : 'off')} dismissible={dismissible ?? true} onDismiss={() => remove(id)} {...message} />
-      ))}
+    <div ref={containerRef} className={cx('ui-messages', className)} aria-live="polite" aria-relevant="additions text" {...rest}>
+      {withLeaving}
     </div>
   );
 }

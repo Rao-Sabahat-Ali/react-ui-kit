@@ -1,0 +1,118 @@
+// Recipes shared by the data components (identity v2, wave 3). Used with `@use '../../styles/data';` so every component
+// stylesheet stays self-contained; top-level keyframes are emitted once per compilation.
+// Everything here animates transform / opacity / clip-path only, and every animation is switched off under
+// `prefers-reduced-motion: reduce` by the `motion-safe` mixin (the final state is the resting state).
+
+// ---------- keyframes (emitted once) ----------
+
+// A group of children is revealed from the top edge: no height animation, so surrounding layout never reflows mid-motion.
+@keyframes ui-reveal-down {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+// A part is added to a list: a short slide along the reading axis plus opacity.
+@keyframes ui-part-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * 0.5));
+  }
+}
+
+@keyframes ui-part-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * -0.25));
+  }
+}
+
+// Bars rise from their baseline; lines are drawn in from the start edge (clip-path wipe).
+@keyframes ui-rise {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes ui-rise-inline {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes ui-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+// ---------- mixins ----------
+
+// Run an animation only when motion is allowed; reduced motion shows the final state at once.
+@mixin motion-safe {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+// The dashed guide line of the assembly sheet, drawn as a border so it stays crisp at 2px.
+@mixin guide-line($axis: block, $color: var(--ui-color-line-muted)) {
+  @if $axis == block {
+    border-inline-start: var(--ui-line-width) dashed $color;
+  } @else {
+    border-block-start: var(--ui-line-width) dashed $color;
+  }
+}
+
+// Selected row / item: accent-subtle ground plus a 2px accent marker at the inline start, drawn as a pseudo-element
+// that scales in (transform only). The host must be positioned (the caller sets `position: relative`; frozen/sticky
+// cells already are).
+@mixin selection-marker {
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block: 0;
+    inline-size: var(--ui-line-width);
+    background: var(--ui-color-accent);
+    transform: scaleY(0);
+    transition: transform var(--ui-motion-quick) var(--ui-easing-out);
+    pointer-events: none;
+  }
+}
+
+@mixin selection-marker-on {
+  &::before {
+    transform: scaleY(1);
+  }
+}
+
+// The sliding accent mark of a horizontal strip (the same mark Tabs draws): `::after` of a `position: relative` host
+// whose `--ui-mark-pos` / `--ui-mark-size` are set by `useSlidingMark`.
+@mixin sliding-mark-x($thickness: var(--ui-line-width)) {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    left: 0;
+    inline-size: 1px;
+    block-size: $thickness;
+    background: var(--ui-color-accent);
+    transform-origin: 0 0;
+    transform: translateX(calc(var(--ui-mark-pos, 0) * 1px)) scaleX(var(--ui-mark-size, 0));
+    pointer-events: none;
+  }
+
+  &[data-mark='ready']::after {
+    transition: transform var(--ui-motion-step) var(--ui-easing-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &[data-mark='ready']::after {
+      transition: none;
+    }
+  }
+}

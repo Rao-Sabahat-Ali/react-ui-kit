@@ -1,19 +1,134 @@
-.ui-checkbox__input {
-  border-color: var(--ui-color-border-strong);
+@use '../../styles/form-mixins' as form;
+
+.ui-checkbox.form-check {
+  @include form.check-row;
+}
+
+.ui-checkbox__control {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  margin-block-start: 0.125rem;
+}
+
+// The input is the box (2px ink line, 3px corners); Bootstrap's baked-in check image is removed.
+.ui-checkbox__control > .ui-checkbox__input.form-check-input {
+  position: absolute;
+  inset: 0;
+  float: none;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  background-image: none;
+  background-color: var(--ui-color-surface);
+  border: var(--ui-line-width) solid var(--ui-color-line);
   border-radius: var(--ui-radius-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:checked,
   &:indeterminate {
+    background-image: none;
     background-color: var(--ui-color-accent);
     border-color: var(--ui-color-accent);
   }
+
+  &:hover:not(:disabled, :checked, :indeterminate) {
+    border-color: var(--ui-color-accent);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 1;
+    border-color: var(--ui-color-border-strong);
+    background-color: var(--ui-color-bg-subtle);
+
+    &:checked,
+    &:indeterminate {
+      background-color: var(--ui-color-border-strong);
+    }
+
+    ~ .ui-checkbox__mark {
+      color: var(--ui-color-bg-subtle);
+    }
+  }
+
+  &.is-invalid {
+    border-color: var(--ui-color-danger);
+
+    &:checked,
+    &:indeterminate {
+      background-color: var(--ui-color-danger);
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.94);
+  }
+
+  &:focus-visible {
+    border-color: var(--ui-color-accent);
+    box-shadow: none;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+  }
 }
 
-@media (pointer: coarse) {
-  .ui-checkbox {
-    min-height: var(--ui-touch-target-min);
-    display: flex;
-    align-items: center;
-    gap: var(--ui-space-2);
+.ui-checkbox__mark {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 1px;
+  color: var(--ui-color-accent-contrast);
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.ui-checkbox__tick,
+.ui-checkbox__dash {
+  @include form.mark-hidden;
+  @include form.mark-draw;
+}
+
+.ui-checkbox__input:checked ~ .ui-checkbox__mark .ui-checkbox__tick,
+.ui-checkbox__input:indeterminate ~ .ui-checkbox__mark .ui-checkbox__dash {
+  @include form.mark-shown;
+}
+
+// The dash replaces the tick, never both.
+.ui-checkbox__input:indeterminate ~ .ui-checkbox__mark .ui-checkbox__tick {
+  @include form.mark-hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-checkbox__control > .ui-checkbox__input.form-check-input {
+    transition: none;
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-checkbox__control > .ui-checkbox__input.form-check-input:checked,
+  .ui-checkbox__control > .ui-checkbox__input.form-check-input:indeterminate {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    border-color: Highlight;
+  }
+
+  .ui-checkbox__mark {
+    forced-color-adjust: none;
+    color: HighlightText;
   }
 }

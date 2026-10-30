@@ -1,24 +1,28 @@
+// A keycap is a small part drawn with a 2px line (hairline at the small size, which sits inside dense menus).
+// Albert Sans 600 with tabular figures: shortcuts are labels, not code, so no monospace.
 .ui-kbd {
   --ui-kbd-font-size: 0.85em;
+  --ui-kbd-line: var(--ui-line-width);
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-1);
   padding: 0;
   background: transparent;
   color: var(--ui-color-text);
-  font-family: var(--ui-font-family-mono);
+  font-family: var(--ui-font-family);
   font-size: var(--ui-kbd-font-size);
+  font-weight: var(--ui-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .ui-kbd__key {
   display: inline-block;
-  min-inline-size: 1.75em;
+  min-inline-size: 1.85em;
   padding: 0.1em 0.45em;
-  border: 1px solid var(--ui-color-border-strong);
-  border-block-end-width: 2px;
+  border: var(--ui-kbd-line) solid var(--ui-color-line);
   border-radius: var(--ui-radius-sm);
-  background: var(--ui-color-surface-sunken);
+  background: var(--ui-color-surface);
   color: var(--ui-color-text);
   font: inherit;
   line-height: var(--ui-font-line-height-normal);
@@ -27,14 +31,17 @@
 
 .ui-kbd__separator {
   color: var(--ui-color-text-muted);
+  font-weight: var(--ui-font-weight-regular);
 }
 
 .ui-kbd--sm {
   --ui-kbd-font-size: 0.75em;
+  --ui-kbd-line: var(--ui-line-width-hairline);
 
   .ui-kbd__key {
-    min-inline-size: 1.5em;
+    min-inline-size: 1.6em;
     padding: 0 0.35em;
+    border-color: var(--ui-color-border-strong);
   }
 }
 

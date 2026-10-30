@@ -1,36 +1,138 @@
+@use '../../styles/form-mixins' as form;
+
+// A segmented control drawn as one 2px part. In single mode an accent indicator slides to the selected segment
+// (transform only); in multiple mode every selected segment is marked on its own.
 .ui-select-button {
-  .ui-select-button__label {
+  position: relative;
+  isolation: isolate;
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-color-surface);
+  overflow: hidden;
+
+  .ui-select-button__item {
+    position: relative;
+    z-index: 1;
+  }
+
+  .ui-select-button__item:not(:first-child) {
+    border-inline-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+  }
+
+  .ui-select-button__label.btn {
+    --bs-btn-border-width: 0;
+    --bs-btn-border-radius: 0;
+    --bs-btn-color: var(--ui-color-text);
+    --bs-btn-bg: transparent;
+    --bs-btn-hover-color: var(--ui-color-text);
+    --bs-btn-hover-bg: var(--ui-color-bg-subtle);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-color: var(--ui-color-accent-emphasis);
+    --bs-btn-active-bg: transparent;
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-disabled-color: var(--ui-color-text-subtle);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: transparent;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--ui-space-2);
     min-height: var(--ui-control-height-md);
     padding-inline: var(--ui-control-padding-x);
+    margin: 0;
+    border: 0;
+    border-radius: 0;
     font-weight: var(--ui-font-weight-medium);
+    transition:
+      color var(--ui-motion-quick) var(--ui-easing-out),
+      background-color var(--ui-motion-quick) var(--ui-easing-out);
   }
 
   &.btn-group-sm .ui-select-button__label {
-    min-height: var(--ui-control-height-sm);
+    min-height: calc(var(--ui-control-height-sm) - var(--ui-line-width) * 2);
   }
 
   &.btn-group-lg .ui-select-button__label {
     min-height: var(--ui-control-height-lg);
   }
 
-  // Inputs are wrapped in spans, so restore Bootstrap's joined-border radius rules.
-  .ui-select-button__item:not(:first-child) .btn {
-    border-start-start-radius: 0;
-    border-end-start-radius: 0;
-    margin-inline-start: calc(var(--bs-border-width) * -1);
+  // Selected: accent text on an accent-subtle ground with a 2px accent underline.
+  .btn-check:checked + .ui-select-button__label.btn {
+    --bs-btn-color: var(--ui-color-accent-emphasis);
+    --bs-btn-hover-color: var(--ui-color-accent-emphasis);
+    --bs-btn-hover-bg: var(--ui-color-accent-subtle);
+    --bs-btn-bg: var(--ui-color-accent-subtle);
+    --bs-btn-active-bg: var(--ui-color-accent-subtle);
+    --bs-btn-active-color: var(--ui-color-accent-emphasis);
+    --bs-btn-border-color: transparent;
+    font-weight: var(--ui-font-weight-semibold);
+    box-shadow: inset 0 calc(var(--ui-line-width) * -1) 0 var(--ui-color-accent);
   }
 
-  .ui-select-button__item:not(:last-child) .btn {
-    border-start-end-radius: 0;
-    border-end-end-radius: 0;
+  .btn-check:disabled + .ui-select-button__label.btn {
+    opacity: 1;
+    color: var(--ui-color-text-subtle);
+    cursor: not-allowed;
   }
 
-  .btn-check:focus-visible + .btn {
-    z-index: 1;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  .btn-check:focus-visible + .ui-select-button__label.btn {
+    z-index: 2;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: calc(var(--ui-focus-ring-width) * -1);
+    box-shadow: none;
+  }
+}
+
+// Sliding mode: the indicator owns the selected ground and underline, so the label itself stays transparent.
+.ui-select-button--sliding .btn-check:checked + .ui-select-button__label.btn {
+  --bs-btn-bg: transparent;
+  --bs-btn-active-bg: transparent;
+  --bs-btn-hover-bg: transparent;
+  box-shadow: none;
+}
+
+.ui-select-button--sliding .btn-check:checked:focus-visible + .ui-select-button__label.btn {
+  box-shadow: none;
+}
+
+.ui-select-button__indicator {
+  position: absolute;
+  z-index: 0;
+  inset-block: 0;
+  left: 0;
+  inline-size: 1px;
+  background-color: var(--ui-color-accent-subtle);
+  box-shadow: inset 0 calc(var(--ui-line-width) * -1) 0 var(--ui-color-accent);
+  transform-origin: 0 0;
+  transform: translateX(calc(var(--ui-seg-pos, 0) * 1px)) scaleX(var(--ui-seg-size, 0));
+  pointer-events: none;
+}
+
+.ui-select-button__indicator--ready {
+  transition: transform var(--ui-motion-part) var(--ui-easing-out);
+}
+
+@media (pointer: coarse) {
+  .ui-select-button .ui-select-button__label.btn {
+    min-height: var(--ui-touch-target-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-select-button__indicator--ready,
+  .ui-select-button .ui-select-button__label.btn {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-select-button .btn-check:checked + .ui-select-button__label.btn {
+    forced-color-adjust: none;
+    color: HighlightText;
+    background-color: Highlight;
+  }
+
+  .ui-select-button__indicator {
+    display: none;
   }
 }

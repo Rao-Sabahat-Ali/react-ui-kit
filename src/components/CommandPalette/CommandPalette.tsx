@@ -3,7 +3,11 @@ import { useControllableState } from '../../hooks/useControllableState';
 import { useOverlay } from '../../hooks/useOverlay';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
+import { useAssemble } from '../../motion/useAssemble';
+import { useFlip } from '../../motion/useFlip';
+import { usePresence } from '../../motion/usePresence';
 import { safeUrl } from '../../utils/url';
+import { Highlight } from '../Highlight/Highlight';
 import { Icon, type IconName } from '../Icon/Icon';
 import { Portal } from '../Portal/Portal';
 
@@ -122,8 +126,16 @@ export function CommandPalette(props: CommandPaletteProps) {
     return () => document.removeEventListener('keydown', handler);
   }, [hotkey, setOpen]);
 
-  if (!open) return null;
-  return <PaletteInner {...props} close={() => setOpen(false)} />;
+  // Stays mounted (inert, data-state="closed") while the exit animation runs. Each opening starts a fresh palette.
+  const { present, state } = usePresence(open, { exit: 'part' });
+  const [session, setSession] = useState(0);
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) setSession((n) => n + 1);
+  }
+  if (!present) return null;
+  return <PaletteInner key={session} {...props} state={state} close={() => setOpen(false)} />;
 }
 
 function PaletteInner({
@@ -143,7 +155,8 @@ function PaletteInner({
   itemTemplate,
   onNavigate,
   className,
-}: CommandPaletteProps & { close: () => void }) {
+  state = 'open',
+}: CommandPaletteProps & { close: () => void; state?: 'open' | 'closed' }) {
   const { t, tp } = useLocale();
   const labels: CommandPaletteLabels = { title: t('commandPalette'), recent: t('recent'), loading: t('loading'), hint: t('commandPaletteHint'), ...labelsProp };
   const apple = useMemo(isApplePlatform, []);
@@ -167,11 +180,16 @@ function PaletteInner({
     rootRef,
     contentRef,
     initialFocus: inputRef,
-    onEscape: () => {
-      if (queryRef.current) setQuery('');
-      else close();
-    },
+    onEscape:
+      state === 'open'
+        ? () => {
+            if (queryRef.current) setQuery('');
+            else close();
+          }
+        : undefined,
   });
+
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   // ---------- async search ----------
   useEffect(() => {
@@ -248,6 +266,11 @@ function PaletteInner({
     setActiveKey(enabled[0]?.key ?? null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowsKey]);
+
+  // Results reflow (FLIP) as the query changes the list, and assemble when the palette opens. FLIP is declared first so
+  // it records the resting positions before the assembly's starting offsets apply.
+  useFlip(listRef, [rowsKey], { selector: '.ui-command-palette__item', duration: 160 });
+  useAssemble(contentRef, { parts: '[data-assemble]', enabled: state === 'open' });
 
   const optionId = (key: string) => `${baseId}-opt-${key}`;
   useEffect(() => {
@@ -339,6 +362,7 @@ function PaletteInner({
       <div
         key={row.key}
         id={optionId(row.key)}
+        data-assemble=""
         role="option"
         aria-selected={active}
         aria-disabled={command.disabled || undefined}
@@ -360,7 +384,7 @@ function PaletteInner({
             )}
             <span className="ui-command-palette__text">
               <span className="ui-command-palette__label">
-                <Highlight text={command.label} query={query} />
+                <Highlight query={query}>{command.label}</Highlight>
               </span>
               {command.description && (
                 <span id={descId} className="ui-command-palette__description">
@@ -401,7 +425,7 @@ function PaletteInner({
 
   return (
     <Portal>
-      <div ref={rootRef} className={cx('ui-command-palette-root', className)}>
+      <div ref={rootRef} className={cx('ui-command-palette-root', className)} data-state={state} inert={state === 'closed' || undefined}>
         <div className="modal-backdrop show ui-command-palette__backdrop" />
         {/* Pointer convenience; keyboard handled by the focused control (aria-activedescendant / roving focus, covered by AC tests). */}
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
@@ -436,7 +460,7 @@ function PaletteInner({
                 />
               </div>
               <div className="modal-body ui-command-palette__body">
-                <div id={listboxId} role="listbox" aria-label={labels.title} className="list-group list-group-flush ui-command-palette__list">
+                <div ref={listRef} id={listboxId} role="listbox" aria-label={labels.title} className="list-group list-group-flush ui-command-palette__list">
                   {sections.map((section, i) =>
                     section.name ? (
                       <div key={`${section.name}-${i}`} role="group" aria-labelledby={`${baseId}-group-${i}`} className="ui-command-palette__group">
@@ -464,19 +488,5 @@ function PaletteInner({
         </div>
       </div>
     </Portal>
-  );
-}
-
-/** Bold the first case-insensitive match of the query. */
-function Highlight({ text, query }: { text: string; query: string }) {
-  const q = query.trim();
-  const i = q ? text.toLowerCase().indexOf(q.toLowerCase()) : -1;
-  if (i === -1) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, i)}
-      <mark className="ui-command-palette__match">{text.slice(i, i + q.length)}</mark>
-      {text.slice(i + q.length)}
-    </>
   );
 }

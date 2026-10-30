@@ -8,7 +8,10 @@ describe('ProgressBar', () => {
     const bar = screen.getByRole('progressbar', { name: 'Daily goal' });
     expect(bar).toHaveAttribute('aria-valuenow', '30');
     expect(bar).toHaveAttribute('aria-valuemax', '60');
-    expect((container.querySelector('.progress-bar') as HTMLElement).style.width).toBe('50%');
+    // The fill grows by transform (scaleX of --ui-progress-value), never by width.
+    const fill = container.querySelector('.ui-progress-bar__fill') as HTMLElement;
+    expect(fill.style.getPropertyValue('--ui-progress-value')).toBe('0.5');
+    expect(fill.style.width).toBe('');
   });
 
   it('AC-2: indeterminate omits aria-valuenow and animates', () => {

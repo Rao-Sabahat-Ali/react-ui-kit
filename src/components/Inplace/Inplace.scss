@@ -1,3 +1,5 @@
+// Click-to-edit text. Resting, it looks like text; on hover a dashed 2px guide line shows where the part can be
+// swapped for its editor. The swap is a short presence: the new side fades and settles in (never on first render).
 .ui-inplace {
   display: inline-block;
   max-inline-size: 100%;
@@ -9,35 +11,42 @@
   gap: var(--ui-space-2);
   min-block-size: var(--ui-control-height-md);
   padding: var(--ui-space-1) var(--ui-space-2);
-  border: 1px solid transparent;
+  border: var(--ui-line-width) dashed transparent;
   border-radius: var(--ui-radius);
   background: transparent;
   color: inherit;
   font: inherit;
   text-align: start;
   cursor: pointer;
-  transition: background-color var(--ui-duration) var(--ui-easing), border-color var(--ui-duration) var(--ui-easing);
+  transition:
+    background-color var(--ui-motion-quick) var(--ui-easing-out),
+    border-color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:hover:not(:disabled) {
-    border-color: var(--ui-color-border);
+    border-color: var(--ui-color-border-strong);
     background: var(--ui-color-bg-subtle);
   }
 
+  &:active:not(:disabled) {
+    background: var(--ui-color-border);
+  }
+
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    border-color: var(--ui-color-accent);
   }
 
   &:disabled {
+    color: var(--ui-color-text-subtle);
     cursor: not-allowed;
-    opacity: 0.6;
   }
 }
 
 .ui-inplace__icon {
   color: var(--ui-color-text-muted);
   opacity: 0;
-  transition: opacity var(--ui-duration) var(--ui-easing);
+  transition: opacity var(--ui-motion-quick) var(--ui-easing-out);
 }
 
 .ui-inplace__display:hover .ui-inplace__icon,
@@ -57,7 +66,19 @@
   gap: var(--ui-space-2);
 
   &:focus {
-    outline: none;
+    outline: 2px solid transparent;
+  }
+}
+
+.ui-inplace--swap .ui-inplace__display,
+.ui-inplace--swap .ui-inplace__content {
+  animation: ui-inplace-in var(--ui-motion-quick) var(--ui-easing-out);
+}
+
+@keyframes ui-inplace-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--ui-assemble-distance) * 0.25));
   }
 }
 
@@ -65,5 +86,17 @@
   .ui-inplace__display,
   .ui-inplace__icon {
     transition: none;
+  }
+
+  // A fade of at most 120ms stays; the travel goes.
+  .ui-inplace--swap .ui-inplace__display,
+  .ui-inplace--swap .ui-inplace__content {
+    animation: ui-inplace-fade 90ms linear;
+  }
+}
+
+@keyframes ui-inplace-fade {
+  from {
+    opacity: 0;
   }
 }

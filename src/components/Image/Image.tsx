@@ -137,6 +137,9 @@ export function Image({
             <button type="button" className="btn btn-sm btn-outline-secondary" aria-label={t('zoomOut')} disabled={zoom <= MIN_ZOOM} onClick={() => setZoom((z) => Math.max(MIN_ZOOM, z - ZOOM_STEP))}>
               <Icon name="minus" />
             </button>
+            <span className="ui-image__zoom ui-qty ui-tabular" role="status">
+              {zoom}×
+            </span>
             <button type="button" className="btn btn-sm btn-outline-secondary" aria-label={t('zoomIn')} disabled={zoom >= MAX_ZOOM} onClick={() => setZoom((z) => Math.min(MAX_ZOOM, z + ZOOM_STEP))}>
               <Icon name="plus" />
             </button>

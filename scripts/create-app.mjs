@@ -1,10 +1,12 @@
 // OPS-017: create a new app from templates/starter for a design-system profile.
-// Usage: node scripts/create-app.mjs <target-dir> --profile <saas|admin|dashboard|cms|pos|game|ecommerce|landing> [--title "My app"] [--description "..."] [--blank]
+// Usage: node scripts/create-app.mjs <target-dir> --profile <saas|admin|dashboard|cms|pos|game|ecommerce|landing> [--title "My app"] [--description "..."] [--blank] [--blueprint <board>] [--with-3d]
 // Generated apps load only the styles they use (uiKitStyles in vite.config.ts, `virtual:ui-kit-styles` in main.tsx).
-// The dashboard and admin profiles start from a runnable blueprint (templates/blueprints) as the home screen; pass --blank for the empty starter page.
+// The dashboard and admin profiles start from a runnable blueprint (templates/blueprints) as the home screen; pass --blank for the empty starter page,
+// or --blueprint <slug> (for example `board`) to start any profile from a specific blueprint.
+// --with-3d adds the optional 3D package (@sabahat/react-ui-kit-3d + its three peer) and its stylesheet import.
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { BLUEPRINT_HOMES, PROFILES_SHELL, STARTER_INCLUDE } from './profile-shells.mjs';
+import { BLUEPRINTS, BLUEPRINT_HOMES, PROFILES_SHELL, STARTER_INCLUDE } from './profile-shells.mjs';
 
 const args = process.argv.slice(2);
 const target = args[0];
@@ -13,7 +15,7 @@ const opt = (name, fallback) => {
   return i === -1 ? fallback : args[i + 1];
 };
 if (!target) {
-  console.error('Usage: node scripts/create-app.mjs <target-dir> --profile <profile> [--title "..."] [--description "..."] [--blank]');
+  console.error('Usage: node scripts/create-app.mjs <target-dir> --profile <profile> [--title "..."] [--description "..."] [--blank] [--blueprint <board>] [--with-3d]');
   process.exit(1);
 }
 const blank = args.includes('--blank');
@@ -31,7 +33,12 @@ if (existsSync(dir) && readdirSync(dir).length) {
 const root = join(import.meta.dirname, '..');
 const kitVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version;
 const name = basename(dir).toLowerCase().replace(/[^a-z0-9-]+/g, '-');
-const home = blank ? undefined : BLUEPRINT_HOMES[profile];
+const blueprint = opt('blueprint', undefined);
+if (blueprint !== undefined && !Object.hasOwn(BLUEPRINTS, blueprint)) {
+  console.error(`Unknown blueprint "${blueprint}". Use one of: ${Object.keys(BLUEPRINTS).join(', ')}`);
+  process.exit(1);
+}
+const home = blueprint !== undefined ? BLUEPRINTS[blueprint] : blank ? undefined : BLUEPRINT_HOMES[profile];
 const replacements = {
   __HOME_NOTE__: home
     ? `- The home screen is the \`${home.screen}\` blueprint (\`src/screens/\`, copied from react-ui-kit \`templates/blueprints\`). Replace its sample data (\`*.data.ts\`) and navigation; keep its structure, states and one-ink-button rule.`
@@ -68,5 +75,18 @@ for (const file of walk(dir)) {
   let text = readFileSync(file, 'utf8');
   for (const [k, v] of Object.entries(replacements)) text = text.split(k).join(escapeFor(file, k, v));
   writeFileSync(file, text);
+}
+if (args.includes('--with-3d')) {
+  const pkgPath = join(dir, 'package.json');
+  const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
+  const threeVersion = JSON.parse(readFileSync(join(root, 'packages', 'react-ui-kit-3d', 'package.json'), 'utf8'));
+  pkg.dependencies['@sabahat/react-ui-kit-3d'] = `^${threeVersion.version}`;
+  pkg.dependencies.three = `^${threeVersion.devDependencies.three}`;
+  pkg.devDependencies['@types/three'] = threeVersion.devDependencies['@types/three'];
+  pkg.dependencies = Object.fromEntries(Object.entries(pkg.dependencies).sort(([a], [b]) => a.localeCompare(b)));
+  pkg.devDependencies = Object.fromEntries(Object.entries(pkg.devDependencies).sort(([a], [b]) => a.localeCompare(b)));
+  writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+  const mainPath = join(dir, 'src', 'main.tsx');
+  writeFileSync(mainPath, readFileSync(mainPath, 'utf8').replace("import 'virtual:ui-kit-styles';", "import 'virtual:ui-kit-styles';\nimport '@sabahat/react-ui-kit-3d/styles.css';"));
 }
 console.log(`Created ${dir} (profile ${profile}${home ? `, home screen: ${home.screen} blueprint` : ''}). Next: cd ${target} && npm install && npm run dev`);

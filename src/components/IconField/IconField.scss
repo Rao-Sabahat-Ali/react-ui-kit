@@ -1,3 +1,5 @@
+@use '../../styles/form-mixins' as form;
+
 .ui-icon-field {
   --ui-icon-field-size: var(--ui-control-height-md);
 
@@ -34,8 +36,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    @include form.focus-ring(-2px);
   }
 }
 

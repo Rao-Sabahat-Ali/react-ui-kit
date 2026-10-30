@@ -81,7 +81,9 @@ export function MultiStateCheckbox<T>({
         className,
       )}
     >
-      {current?.icon ? <Icon name={current.icon} /> : <span className="ui-multi-state-checkbox__text">{stateLabel}</span>}
+      <span key={stateLabel} className="ui-multi-state-checkbox__state">
+        {current?.icon ? <Icon name={current.icon} /> : <span className="ui-multi-state-checkbox__text">{stateLabel}</span>}
+      </span>
     </button>
   );
 }

@@ -75,4 +75,15 @@ describe('Stepper', () => {
     expect(screen.getByText('Address panel')).toBeInTheDocument();
     expect(document.querySelector('.ui-stepper')).toHaveClass('ui-stepper--vertical');
   });
+
+  it('uses the StepSheet numeral language: numerals, an ink check for complete steps, a guide line on the panel', async () => {
+    render(tree({ linear: false, defaultValue: 'b' }));
+    const steps = screen.getAllByRole('listitem');
+    expect(steps[0]!.querySelector('.ui-stepper__marker svg')).toBeInTheDocument(); // complete: check icon
+    expect(steps[1]!.querySelector('.ui-stepper__marker')).toHaveTextContent('2');
+    expect(steps[1]).toHaveClass('ui-stepper__step--current');
+    const panel = document.querySelector('.ui-stepper__panel')!;
+    expect(panel.querySelector('[data-assemble-guide]')).toBeInTheDocument();
+    expect(panel.querySelectorAll('[data-assemble]').length).toBeGreaterThanOrEqual(2);
+  });
 });

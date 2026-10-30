@@ -38,6 +38,8 @@ export interface MenuListProps {
   inline?: boolean;
   level?: number;
   hidden?: boolean;
+  /** Presence state of a menu that animates out (Menubar submenus): `closed` keeps it mounted and inert while it leaves. */
+  state?: 'open' | 'closed';
   focusRequest?: FocusRequest | null;
   /** Close every level (activation, Tab, Escape at root). */
   onCloseAll?: (reason: MenuCloseReason, event?: SyntheticEvent) => void;
@@ -80,6 +82,7 @@ export function MenuList({
   inline = false,
   level = 0,
   hidden = false,
+  state,
   focusRequest,
   onCloseAll,
   onCloseLevel,
@@ -342,7 +345,7 @@ export function MenuList({
         )}
         {item.icon ? <Icon name={item.icon} className="ui-menu__icon" /> : item.danger ? <Icon name="alert-triangle" className="ui-menu__icon" /> : null}
         <span className="ui-menu__label">{item.label}</span>
-        {item.badge !== undefined && <span className="badge rounded-pill text-bg-secondary ui-menu__badge">{item.badge}</span>}
+        {item.badge !== undefined && <span className="badge ui-badge text-bg-secondary ui-menu__badge">{item.badge}</span>}
         {item.shortcut && (
           <span className="ui-menu__shortcut" aria-hidden="true">
             {item.shortcut}
@@ -426,6 +429,8 @@ export function MenuList({
       aria-labelledby={ariaLabel ? undefined : ariaLabelledby}
       aria-orientation={orientation}
       hidden={hidden}
+      data-state={state}
+      inert={state === 'closed' || undefined}
       className={cx('dropdown-menu show ui-menu', level > 0 && 'ui-menu--level', className)}
       style={style}
     >

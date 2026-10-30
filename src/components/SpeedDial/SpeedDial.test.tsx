@@ -150,4 +150,32 @@ describe('SpeedDial', () => {
     await user.click(screen.getByText('Outside'));
     expect(screen.queryByRole('menu')).toBeNull();
   });
+
+  it('actions stay mounted (inert, data-state closed) while they fold back, then unmount', async () => {
+    const original = document.getAnimations;
+    document.getAnimations = () => [];
+    try {
+      const user = userEvent.setup();
+      const { trigger } = setup();
+      await user.click(trigger);
+      const list = document.querySelector('.ui-speed-dial__list')!;
+      expect(list).toHaveAttribute('data-state', 'open');
+      await user.click(trigger);
+      expect(list).toHaveAttribute('data-state', 'closed');
+      expect(list).toHaveAttribute('inert');
+      expect(list).not.toHaveAttribute('hidden');
+      await vi.waitFor(() => expect(list).toHaveAttribute('hidden'));
+    } finally {
+      document.getAnimations = original;
+    }
+  });
+
+  it('the last action settles with the snap easing and the guide line is drawn for linear layouts', () => {
+    expect(scss).toContain('ui-speed-dial__entry--last');
+    expect(scss).toContain('ui-speed-dial-guide-in');
+    setup();
+    const entries = document.querySelectorAll('.ui-speed-dial__entry');
+    expect(entries[entries.length - 1]).toHaveClass('ui-speed-dial__entry--last');
+    expect(entries[0]).not.toHaveClass('ui-speed-dial__entry--last');
+  });
 });

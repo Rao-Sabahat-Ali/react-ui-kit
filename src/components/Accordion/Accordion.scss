@@ -1,76 +1,106 @@
+// Accordion: a sheet drawn with a 2px ink line, sections divided by one hairline. A section opens with a
+// height-free reveal (clip-path + opacity) and a 2px line-art chevron that turns.
+@use '../../styles/panels';
+
 .ui-accordion {
   --bs-accordion-bg: var(--ui-color-surface);
   --bs-accordion-color: var(--ui-color-text);
-  --bs-accordion-border-color: var(--ui-color-border);
+  --bs-accordion-border-width: var(--ui-line-width);
+  --bs-accordion-border-color: var(--ui-color-line);
   --bs-accordion-border-radius: var(--ui-radius-lg);
-  --bs-accordion-inner-border-radius: calc(var(--ui-radius-lg) - 1px);
+  --bs-accordion-inner-border-radius: calc(var(--ui-radius-lg) - var(--ui-line-width));
   --bs-accordion-btn-color: var(--ui-color-text);
   --bs-accordion-btn-bg: var(--ui-color-surface);
   --bs-accordion-active-color: var(--ui-color-text);
-  --bs-accordion-active-bg: var(--ui-color-bg-subtle);
-  --bs-accordion-btn-focus-box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+  --bs-accordion-active-bg: var(--ui-color-surface);
+  --bs-accordion-btn-focus-box-shadow: none;
+  --bs-accordion-btn-padding-y: var(--ui-space-3);
+  overflow: hidden;
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
+  background-color: var(--ui-color-surface);
+}
+
+// Sections share the one outer line; a hairline sits between them.
+.ui-accordion .ui-accordion__item {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+
+  + .ui-accordion__item {
+    border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+  }
+}
+
+.ui-accordion.accordion-flush {
+  border-width: 0;
+  border-radius: 0;
+  background-color: transparent;
+
+  .ui-accordion__item {
+    border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+  }
 }
 
 .ui-accordion__trigger {
+  gap: var(--ui-space-3);
   min-block-size: var(--ui-control-height-md);
+  border-radius: 0;
   font-weight: var(--ui-font-weight-medium);
+  box-shadow: none;
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
+
+  // Bootstrap's background-image chevron is replaced by the kit Icon (2px line art).
+  &::after {
+    content: none;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--ui-color-bg-subtle);
+  }
+
+  &:not(.collapsed) {
+    box-shadow: none;
+  }
 
   &:focus-visible {
-    outline: 2px solid transparent;
+    z-index: 3;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: -2px;
+    box-shadow: none;
   }
 
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.ui-accordion__header-text {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  text-align: start;
+}
+
+.ui-accordion__chevron {
+  @include panels.chevron;
+  font-size: 1.25em;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-accordion__trigger:not(.collapsed) .ui-accordion__chevron {
+  transform: rotate(180deg);
+  color: var(--ui-color-accent);
 }
 
 .ui-accordion__collapse {
-  display: grid;
-  grid-template-rows: 0fr;
+  @include panels.reveal;
 
   &[hidden] {
     display: none;
-  }
-}
-
-.ui-accordion__collapse--open {
-  grid-template-rows: 1fr;
-  animation: ui-accordion-open var(--ui-duration) var(--ui-easing);
-}
-
-.ui-accordion__collapse--closing {
-  animation: ui-accordion-close var(--ui-duration) var(--ui-easing) forwards;
-}
-
-.ui-accordion__clip {
-  min-block-size: 0;
-  overflow: hidden;
-}
-
-@keyframes ui-accordion-open {
-  from {
-    grid-template-rows: 0fr;
-  }
-
-  to {
-    grid-template-rows: 1fr;
-  }
-}
-
-@keyframes ui-accordion-close {
-  from {
-    grid-template-rows: 1fr;
-  }
-
-  to {
-    grid-template-rows: 0fr;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ui-accordion__collapse--open,
-  .ui-accordion__collapse--closing {
-    animation: none;
   }
 }

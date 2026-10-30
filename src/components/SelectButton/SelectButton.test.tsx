@@ -43,3 +43,22 @@ describe('SelectButton', () => {
     expect(onChange).toHaveBeenLastCalledWith(null);
   });
 });
+
+describe('SelectButton (v2)', () => {
+  it('AC-v2-1: single mode slides an accent indicator to the selected segment (transform vars)', async () => {
+    const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(80);
+    const left = vi.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockReturnValue(80);
+    const { container } = render(<SelectButton aria-label="Level" options={levels} defaultValue="medium" />);
+    const group = screen.getByRole('group', { name: 'Level' });
+    expect(container.querySelector('.ui-select-button__indicator')).toHaveAttribute('aria-hidden', 'true');
+    expect(group.style.getPropertyValue('--ui-seg-pos')).toBe('80');
+    expect(group.style.getPropertyValue('--ui-seg-size')).toBe('80');
+    width.mockRestore();
+    left.mockRestore();
+  });
+
+  it('AC-v2-2: multiple mode has no sliding indicator', () => {
+    const { container } = render(<SelectButton aria-label="Level" multiple options={levels} defaultValue={['easy']} />);
+    expect(container.querySelector('.ui-select-button__indicator')).toBeNull();
+  });
+});

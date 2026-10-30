@@ -6,7 +6,7 @@ React 19 + Bootstrap 5.3 component library implementing the personal design syst
 - **Spec-driven.** Every component is implemented from its spec (`get_component_spec("<Name>")`). No spec → write it in design-system-mcp first. Every acceptance criterion gets a test named `AC-n`.
 - **Dependencies.** Runtime: React/ReactDOM only (Bootstrap SCSS is compiled into `dist/styles.css`). No PrimeReact, react-bootstrap, MUI, Popper, Bootstrap JS, CSS-in-JS, lodash, moment. New dev deps need the `architect` agent + ADR.
 - **Theming.** Only `--ui-*` tokens and Bootstrap utilities. Generated files (`src/styles/_tokens.generated.scss`, `src/theme/profiles.generated.ts`, `docs-app/src/catalog.generated.json`) come from design-system-mcp `npm run sync:ui-kit` — never edit by hand.
-- **Identity.** Nordic editorial (`get_guidelines('identity')`): ink primary only for the main action, `--ui-color-accent-*` for selection/focus/active/progress, headings in `--ui-font-family-heading`, flat resting surfaces (no shadows, gradients, blur or icon bubbles). Fonts are self-hosted in `src/fonts` and shipped to `dist/fonts` by the `ui-ship-fonts` Vite plugin.
+- **Identity.** Monteringsanvisning v2 (`get_guidelines('identity')`, `get_guidelines('motion')`): white sheet with a kraft shell, 2px ink lines (`--ui-line-width`), ink primary only for the main action, `--ui-color-accent-*` for the active step/selection/focus/progress, Albert Sans, flat resting surfaces (shadows only on lifted overlays: `--ui-shadow-lift`/`drag`; no gradients, blur, icon bubbles, eyebrows or hero-metric tiles). Multi-step work uses `StepSheet`; counts are quantity marks. Motion comes from `src/motion` (ADR 0002), never a library, and honours reduced motion. Fonts are self-hosted in `src/fonts` and shipped to `dist/fonts` by the `ui-ship-fonts` Vite plugin.
 - **Accessibility.** WCAG 2.2 AA, WAI-ARIA APG keyboard models, visible focus, reduced motion, RTL via logical properties.
 - **API conventions.** `value`/`defaultValue`/`onChange(value, event?)`, `size`, `variant`, `invalid`, `disabled`, ref-as-prop, named exports, `Props` types exported.
 
@@ -15,11 +15,13 @@ React 19 + Bootstrap 5.3 component library implementing the personal design syst
 src/
   components/<Name>/   <Name>.tsx · .scss · .test.tsx · .examples.tsx · index.ts
   hooks/               useControllableState, useFocusTrap, useFloating, useClickOutside, useScrollLock, useMediaQuery
+  motion/              tokens, useReducedMotion, usePresence, useAssemble, useFlip, useCountTick, useViewTransition
   utils/               cx, position (flip/shift), compare, url (safeUrl), dom, object
   theme/               ThemeProvider, useTheme, themeScript, profiles.generated.ts
   locale/              LocaleProvider, en.ts (all UI strings)
   styles/              index.scss (entry), _bridge.scss (tokens → Bootstrap), _tokens.generated.scss
-docs-app/              docs web app (Vite), auto-discovers *.examples.tsx
+packages/react-ui-kit-3d/  optional 3D package @sabahat/react-ui-kit-3d (npm workspace; Scene3D, Model3D; three only as a dynamically imported peer, ADR 0003)
+docs-app/              docs web app (Vite), auto-discovers *.examples.tsx (also in packages/*)
 test/setup.ts          jsdom setup
 tasks.md               all work items (UI-*, OPS-*)
 ```
@@ -52,6 +54,7 @@ npm run typecheck
 npm run build        # dist/index.js + dist/styles.css + dist/types
 npm run build:docs   # static docs → docs-dist/
 npm run check        # typecheck + test + build
+npm run check:3d     # 3D package: typecheck, build, bundle budget (≤ 12 KB gzip without three)
 ```
 Design-system MCP must be built in the sibling checkout (`../design-system-mcp`, `npm run build`) for `.mcp.json` to work.
 

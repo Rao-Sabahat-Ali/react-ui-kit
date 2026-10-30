@@ -1,14 +1,22 @@
+// A calm paper-grey placeholder. `wave` sweeps one soft band across it every 1.4s; `glow` breathes. Both stop under
+// reduced motion and while the skeleton is offscreen (Skeleton sets data-paused). Only transform and opacity move.
 .ui-skeleton {
+  // Feathered edge of the shimmer band (not elevation: it only softens the band).
+  --ui-skeleton-feather: 0 0 0.5rem 0.25rem color-mix(in srgb, var(--ui-color-surface) 55%, transparent);
   display: flex;
   flex-direction: column;
   gap: var(--ui-space-2);
 }
 
 .ui-skeleton__item {
+  position: relative;
   display: block;
+  overflow: hidden;
   border-radius: var(--ui-radius-sm);
-  background-color: var(--ui-color-border-strong);
+  background-color: var(--ui-color-border);
+  cursor: default;
   min-height: 1em;
+  opacity: 1;
 }
 
 .ui-skeleton--circle {
@@ -20,10 +28,70 @@
   border-radius: var(--ui-radius);
 }
 
+// Bootstrap's wave moves a mask; the sheet moves a band instead.
+.ui-skeleton.placeholder-wave {
+  mask-image: none;
+  animation: none;
+
+  // A soft band: a paper-tinted block whose edges are feathered by its own shadow (no gradient), moved by transform only.
+  .ui-skeleton__item::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 35%;
+    background: color-mix(in srgb, var(--ui-color-surface) 55%, transparent);
+    box-shadow: var(--ui-skeleton-feather);
+    transform: translateX(-160%);
+    animation: ui-skeleton-sweep 1.4s var(--ui-easing-out) infinite;
+  }
+}
+
+[dir='rtl'] .ui-skeleton.placeholder-wave .ui-skeleton__item::after {
+  animation-name: ui-skeleton-sweep-rtl;
+}
+
+.ui-skeleton.placeholder-glow .ui-skeleton__item {
+  animation: ui-skeleton-glow 1.6s ease-in-out infinite;
+}
+
+.ui-skeleton[data-paused='true'] .ui-skeleton__item,
+.ui-skeleton[data-paused='true'] .ui-skeleton__item::after {
+  animation-play-state: paused;
+}
+
+@keyframes ui-skeleton-sweep {
+  to {
+    transform: translateX(380%);
+  }
+}
+
+@keyframes ui-skeleton-sweep-rtl {
+  from {
+    transform: translateX(160%);
+  }
+
+  to {
+    transform: translateX(-380%);
+  }
+}
+
+@keyframes ui-skeleton-glow {
+  50% {
+    opacity: 0.55;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ui-skeleton.placeholder-wave,
-  .ui-skeleton.placeholder-glow .placeholder {
+  .ui-skeleton.placeholder-glow .placeholder,
+  .ui-skeleton .ui-skeleton__item {
     animation: none;
     mask-image: none;
+  }
+
+  .ui-skeleton.placeholder-wave .ui-skeleton__item::after {
+    display: none;
+    animation: none;
   }
 }

@@ -1,39 +1,88 @@
+// An empty state is a kraft plate on the sheet (the cardboard the parts came in): a 2px ink line, a faint kraft tint,
+// a line-art drawing instead of a bubble, one title, one sentence and one action. Its parts assemble in (useAssemble).
 .ui-empty-state {
+  --ui-empty-plate: color-mix(in srgb, var(--ui-color-shell) 22%, var(--ui-color-surface));
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--ui-space-2);
   padding: var(--ui-space-10) var(--ui-space-4);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-empty-plate);
   color: var(--ui-color-text-muted);
 }
 
 .ui-empty-state--sm {
+  gap: var(--ui-space-1);
   padding: var(--ui-space-6) var(--ui-space-3);
 }
 
-// A plain glyph, not a tinted circle (identity).
+// The drawing: a 2px line-art glyph at illustration size. The stroke stays 2px at any size (non-scaling).
 .ui-empty-state__icon {
   display: inline-flex;
-  font-size: 2rem;
-  color: var(--ui-color-text-subtle);
+  margin-bottom: var(--ui-space-2);
+  color: var(--ui-color-text);
+  font-size: 3rem;
+
+  svg {
+    inline-size: 1em;
+    block-size: 1em;
+  }
+
+  path {
+    vector-effect: non-scaling-stroke;
+  }
+}
+
+.ui-empty-state--sm .ui-empty-state__icon {
   margin-bottom: var(--ui-space-1);
+  font-size: 2rem;
 }
 
 .ui-empty-state--error .ui-empty-state__icon {
-  color: var(--ui-color-danger);
+  color: var(--ui-color-danger-emphasis);
 }
 
 .ui-empty-state--first-run .ui-empty-state__icon {
   color: var(--ui-color-accent);
 }
 
+// Media slot (a Scene3D or an Image): the empty state sizes it, the media fills it.
+.ui-empty-state__media {
+  position: relative;
+  inline-size: 10rem;
+  block-size: 10rem;
+  margin-bottom: var(--ui-space-2);
+  overflow: hidden;
+  border-radius: var(--ui-radius);
+
+  > * {
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: none;
+  }
+
+  img,
+  svg {
+    display: block;
+    object-fit: contain;
+  }
+}
+
+.ui-empty-state--sm .ui-empty-state__media {
+  inline-size: 6rem;
+  block-size: 6rem;
+  margin-bottom: var(--ui-space-1);
+}
+
 .ui-empty-state__title {
+  margin: 0;
+  color: var(--ui-color-text);
   font-family: var(--ui-font-family-heading);
   font-size: var(--ui-font-size-xl);
   font-weight: var(--ui-font-weight-heading);
   letter-spacing: var(--ui-letter-spacing-heading);
-  color: var(--ui-color-text);
-  margin: 0;
 }
 
 .ui-empty-state__description {

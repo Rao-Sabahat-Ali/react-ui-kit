@@ -4,6 +4,7 @@ import { useFloating } from '../../hooks/useFloating';
 import { usePrefersReducedMotion } from '../../hooks/useMediaQuery';
 import { useOverlay } from '../../hooks/useOverlay';
 import { useLocale } from '../../locale/LocaleProvider';
+import { EASING, readMotionMs, safeAnimate } from '../../motion';
 import { cx } from '../../utils/cx';
 import { getFocusable } from '../../utils/dom';
 import { focusAdjacentTabbable } from '../../utils/element';
@@ -111,6 +112,12 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
   const [anchorRef, setAnchor] = useState<RefObject<HTMLElement | null>>({ current: null });
   const target = anchorRef.current;
   const [box, setBox] = useState<Box | null>(null);
+  // FLIP of the ring between targets: `retarget` is true only during the first measurement of a new step's target,
+  // `pendingFrom` carries the previous box to the layout effect that plays the move after the ring has its new geometry.
+  const ringRef = useRef<HTMLDivElement | null>(null);
+  const boxRef = useRef<Box | null>(null);
+  const retarget = useRef(false);
+  const pendingFrom = useRef<Box | null>(null);
 
   // Resolve the target of the current step; skip steps whose target is missing.
   useLayoutEffect(() => {
@@ -154,9 +161,13 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
     target.scrollIntoView?.({ block: 'center', inline: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
     const measure = () => {
       const r = target.getBoundingClientRect();
+      const before = boxRef.current;
+      if (retarget.current && before && (before.top !== r.top || before.left !== r.left || before.width !== r.width || before.height !== r.height)) pendingFrom.current = before;
       setBox((prev) => (prev && prev.top === r.top && prev.left === r.left && prev.width === r.width && prev.height === r.height ? prev : { top: r.top, left: r.left, width: r.width, height: r.height }));
     };
+    retarget.current = true;
     measure();
+    retarget.current = false;
     window.addEventListener('resize', measure);
     window.addEventListener('scroll', measure, true);
     const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
@@ -167,6 +178,23 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
       observer?.disconnect();
     };
   }, [anchorRef, target, reduced]);
+
+  // The ring glides from the previous target to the new one (transform only; the layout already sits at the new box).
+  useLayoutEffect(() => {
+    boxRef.current = box;
+    const from = pendingFrom.current;
+    pendingFrom.current = null;
+    const ring = ringRef.current;
+    if (!from || !box || !ring) return;
+    const grown = (b: Box) => ({ width: b.width + ringPadding * 2, height: b.height + ringPadding * 2 });
+    const a = grown(from);
+    const b = grown(box);
+    safeAnimate(
+      ring,
+      [{ transform: `translate(${from.left - box.left}px, ${from.top - box.top}px) scale(${a.width / b.width}, ${a.height / b.height})` }, { transform: 'translate(0, 0) scale(1, 1)' }],
+      { duration: readMotionMs(ring, 'part'), easing: EASING.out, reduced: 'skip' },
+    );
+  }, [box, ringPadding]);
 
   const position = useFloating(anchorRef, contentRef, { open: target !== null, placement: step.placement ?? 'bottom', offset: ringPadding + 10 });
 
@@ -213,7 +241,7 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
   return (
     <Portal>
       <div ref={rootRef} className="ui-tour-root">
-        {box && <div className="ui-tour__ring" aria-hidden="true" style={{ position: 'fixed', top: box.top - pad, left: box.left - pad, width: box.width + pad * 2, height: box.height + pad * 2 }} />}
+        {box && <div ref={ringRef} className="ui-tour__ring" aria-hidden="true" style={{ position: 'fixed', top: box.top - pad, left: box.left - pad, width: box.width + pad * 2, height: box.height + pad * 2 }} />}
         <div
           ref={contentRef}
           role="dialog"
@@ -226,6 +254,16 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
           style={{ position: 'fixed', top: position.top, left: position.left, visibility: target ? undefined : 'hidden' }}
         >
           <div className="popover-arrow ui-popover__arrow" />
+          {/* The step numeral is drawn light like a StepSheet panel; the full "Step n of m" is read from the hidden text. */}
+          <div className="ui-tour__head">
+            <span className="ui-tour__numeral ui-tabular" aria-hidden="true">
+              {index + 1}
+            </span>
+            <span className="ui-tour__total ui-tabular" aria-hidden="true">
+              / {steps.length}
+            </span>
+            <span className="visually-hidden">{t('stepOf', { index: index + 1, total: steps.length })}</span>
+          </div>
           {step.title && (
             <h2 id={titleId} className="popover-header ui-popover__header ui-tour__title">
               {step.title}
@@ -235,7 +273,6 @@ function TourPanel({ steps, index, goTo, close, label, ringPadding }: PanelProps
             {step.content}
           </div>
           <div className="ui-tour__footer">
-            <span className="ui-tour__counter">{t('stepOf', { index: index + 1, total: steps.length })}</span>
             <div className="ui-tour__actions">
               {!last && (
                 <Button size="sm" appearance="text" variant="secondary" onClick={() => close('skip')}>

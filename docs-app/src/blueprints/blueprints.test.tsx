@@ -5,13 +5,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ThemeProvider, ToastProvider, type Profile } from '@sabahat/react-ui-kit';
 import { AdminListDetail } from '../../../templates/blueprints/AdminListDetail';
 import { Checkout } from '../../../templates/blueprints/Checkout';
-import { AnalyticsDashboard } from '../../../templates/blueprints/AnalyticsDashboard';
+import { AnalyticsDashboard, DASHBOARD_WIDGETS as DASHBOARD_TEMPLATE_WIDGETS } from '../../../templates/blueprints/AnalyticsDashboard';
 import { OrderDetail } from '../../../templates/blueprints/OrderDetail';
-import { Overview } from '../../../templates/blueprints/Overview';
-import { ReportsIndex } from '../../../templates/blueprints/ReportsIndex';
+import { Overview, OVERVIEW_WIDGETS as OVERVIEW_TEMPLATE_WIDGETS } from '../../../templates/blueprints/Overview';
+import { ReportsIndex, REPORTS_WIDGETS as REPORTS_TEMPLATE_WIDGETS } from '../../../templates/blueprints/ReportsIndex';
 import { Settings } from '../../../templates/blueprints/Settings';
 import { SignIn } from '../../../templates/blueprints/SignIn';
-import { blueprints, sourceOf } from './registry';
+import { blueprints, DASHBOARD_WIDGETS, loadSource, OVERVIEW_WIDGETS, REPORTS_WIDGETS } from './registry';
 
 function setViewport(desktop: boolean) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
@@ -49,9 +49,16 @@ function expectOrderedHeadings() {
   });
 }
 
+it('the registry keeps its own copy of the preview region choices equal to the templates', () => {
+  expect(DASHBOARD_WIDGETS).toEqual(DASHBOARD_TEMPLATE_WIDGETS);
+  expect(OVERVIEW_WIDGETS).toEqual(OVERVIEW_TEMPLATE_WIDGETS);
+  expect(REPORTS_WIDGETS).toEqual(REPORTS_TEMPLATE_WIDGETS);
+});
+
 describe.each(blueprints)('blueprint $slug (smoke)', (blueprint) => {
-  it('renders one h1, ordered headings, one main landmark and no console errors', () => {
+  it('renders one h1, ordered headings, one main landmark and no console errors', async () => {
     render(wrap(blueprint.render({ widget: 'all', state: 'ready' }), blueprint.profile));
+    await screen.findByRole('main'); // the screen is its own lazily loaded chunk
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expectOrderedHeadings();
     expect(screen.getAllByRole('main')).toHaveLength(1);
@@ -59,17 +66,18 @@ describe.each(blueprints)('blueprint $slug (smoke)', (blueprint) => {
     expect(warnings).not.toHaveBeenCalled();
   });
 
-  it('has its source ready to copy and every file imports only the kit', () => {
+  it('has its source ready to copy and every file imports only the kit', async () => {
     for (const file of blueprint.files) {
-      const source = sourceOf(file);
+      const source = await loadSource(file);
       expect(source.length, file).toBeGreaterThan(100);
       const imports = [...source.matchAll(/from '([^']+)'/g)].map((m) => m[1]!);
       for (const spec of imports) expect(spec === 'react' || spec === '@sabahat/react-ui-kit' || spec.startsWith('./'), `${file} imports ${spec}`).toBe(true);
     }
   });
 
-  it.each(blueprint.preview?.states.filter((s) => s.value !== 'ready') ?? [])('survives the $value preview state', (state) => {
+  it.each(blueprint.preview?.states.filter((s) => s.value !== 'ready') ?? [])('survives the $value preview state', async (state) => {
     render(wrap(blueprint.render({ widget: 'all', state: state.value }), blueprint.profile));
+    await screen.findAllByRole('heading', { level: 1 });
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expectOrderedHeadings();
     expect(errors).not.toHaveBeenCalled();
@@ -91,7 +99,7 @@ describe('analytics dashboard', () => {
     expect(screen.getByText(/Revenue totalled SEK/)).toBeInTheDocument();
     expect(screen.getByText(/is the largest channel/)).toBeInTheDocument();
     // Deltas announce direction in words, never colour only.
-    expect(screen.getAllByText(/(Up|Down) [\d.]+% vs previous period/).length).toBeGreaterThanOrEqual(4);
+    expect(screen.getAllByText(/(Up|Down) [\d.]+% vs prior period/).length).toBeGreaterThanOrEqual(4);
   });
 
   it('has exactly one solid button in the page header and identical row actions', () => {
@@ -241,6 +249,14 @@ describe('sign in', () => {
 const inMain = (node: ReactNode) => wrap(<main>{node}</main>);
 
 describe('overview and index page', () => {
+  it('only promises tasks while the Today list shows them', () => {
+    const { rerender } = render(inMain(<Overview />));
+    expect(screen.getByText(/Three things need you/)).toBeInTheDocument();
+    rerender(inMain(<Overview previewState={{ widget: 'today', state: 'empty' }} />));
+    expect(screen.queryByText(/Three things need you/)).toBeNull();
+    expect(screen.getByText(/Nothing needs you before the VAT return/)).toBeInTheDocument();
+  });
+
   it('shows numbers as a named group, a ruled Today list and one ink action', () => {
     render(inMain(<Overview />));
     expect(screen.getByRole('group', { name: 'Business at a glance' })).toBeInTheDocument();

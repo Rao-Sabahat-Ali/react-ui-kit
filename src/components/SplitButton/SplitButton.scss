@@ -1,9 +1,49 @@
+// SplitButton: two parts sharing one 2px seam. The toggle's caret is a 2px line-art chevron that turns when the
+// menu is open; the menu itself is the shared lifted Menu part (presence, origin-aware).
+.ui-split-button {
+  // Sibling parts overlap by one line width so the seam is a single 2px line.
+  > .ui-button:not(:first-child) {
+    margin-inline-start: calc(var(--ui-line-width) * -1);
+  }
+
+  > .ui-button:hover,
+  > .ui-button:focus-visible {
+    z-index: 2;
+  }
+}
+
 .ui-split-button__toggle {
-  min-inline-size: 24px;
+  min-inline-size: 2.25rem;
+
+  // Replace Bootstrap's triangle caret with a chevron drawn in the current text colour.
+  &.dropdown-toggle-split::after {
+    box-sizing: border-box;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    margin: 0;
+    border: 0;
+    border-inline-end: var(--ui-line-width) solid currentcolor;
+    border-block-end: var(--ui-line-width) solid currentcolor;
+    border-radius: 1px;
+    vertical-align: baseline;
+    transform: translateY(-0.125rem) rotate(45deg);
+    transition: transform var(--ui-motion-quick) var(--ui-easing-out);
+  }
+
+  &[aria-expanded='true'].dropdown-toggle-split::after {
+    transform: translateY(0.125rem) rotate(225deg);
+  }
+
+  // On a solid part the seam is a lighter line so the two halves still read as two parts.
+  &:not(.ui-button--text, [class*='btn-outline']) {
+    border-inline-start-color: color-mix(in srgb, var(--bs-btn-color) 45%, transparent);
+  }
 
   &:focus-visible {
-    outline: 2px solid transparent;
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    z-index: 3;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
   }
 }
 
@@ -16,7 +56,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-split-button .ui-menu--popup {
-    animation: none;
+  .ui-split-button__toggle.dropdown-toggle-split::after {
+    transition: none;
   }
 }

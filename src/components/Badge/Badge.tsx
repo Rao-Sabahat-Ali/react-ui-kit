@@ -6,6 +6,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   value?: ReactNode;
   variant?: Intent;
   appearance?: 'solid' | 'subtle';
+  /** Kept for compatibility. The v2 identity has no pills: the default is the small part radius. */
   pill?: boolean;
   dot?: boolean;
   max?: number;
@@ -20,13 +21,13 @@ const POSITION = {
   'bottom-start': 'top-100 start-0',
 } as const;
 
-export function Badge({ value, variant = 'primary', appearance = 'solid', pill = true, dot = false, max = 99, label, overlay, className, ...rest }: BadgeProps) {
+export function Badge({ value, variant = 'primary', appearance = 'solid', pill = false, dot = false, max = 99, label, overlay, className, ...rest }: BadgeProps) {
   const display = typeof value === 'number' && value > max ? `${max}+` : value;
   const badge = (
     <span
       className={cx(
         'badge ui-badge',
-        appearance === 'solid' ? `text-bg-${variant}` : `bg-${variant}-subtle text-${variant}-emphasis`,
+        appearance === 'solid' ? `text-bg-${variant}` : `bg-${variant}-subtle text-${variant}-emphasis border border-${variant}-subtle`,
         pill && 'rounded-pill',
         dot && 'ui-badge--dot p-1',
         overlay && `position-absolute translate-middle ${POSITION[overlay.position ?? 'top-end']}`,

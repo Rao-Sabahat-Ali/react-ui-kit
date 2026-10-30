@@ -37,6 +37,7 @@ describe('Tour', () => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
+    delete (HTMLElement.prototype as { animate?: unknown }).animate;
   });
 
   it('AC-1: renders a dialog named by the title, described by the content, with a step counter; closed renders nothing', () => {
@@ -253,5 +254,49 @@ describe('Tour', () => {
     expect(onCloseB).toHaveBeenCalledTimes(1);
     expect(onCloseA).not.toHaveBeenCalled();
     act(() => void 0);
+  });
+  it('v2: the ring glides to the next target with a transform FLIP, and not on mount', () => {
+    const rects: Record<string, DOMRect> = {
+      a: { top: 10, left: 10, width: 100, height: 40, right: 110, bottom: 50, x: 10, y: 10, toJSON: () => ({}) },
+      b: { top: 200, left: 120, width: 200, height: 80, right: 320, bottom: 280, x: 120, y: 200, toJSON: () => ({}) },
+    };
+    const animate = vi.fn((..._args: unknown[]) => ({ addEventListener: () => {}, cancel: () => {}, finish: () => {} }) as unknown as Animation);
+    HTMLElement.prototype.animate = animate as never;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      return rects[this.id] ?? ({ top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => ({}) } as DOMRect);
+    });
+    render(
+      <Page>
+        <Tour open steps={steps} ringPadding={4} />
+      </Page>,
+    );
+    expect(document.querySelector('.ui-tour__ring')).not.toBeNull();
+    expect(animate).not.toHaveBeenCalled();
+    next();
+    const call = animate.mock.calls.find(([frames]) => JSON.stringify(frames).includes('translate'));
+    expect(call).toBeDefined();
+    const [frames, timing] = call as unknown as [Keyframe[], KeyframeAnimationOptions];
+    // from (10,10,100x40) to (120,200,200x80), ring padding 4 each side: translate by the old minus the new origin, scale by the size ratio.
+    expect(frames[0]!.transform).toBe(`translate(${10 - 120}px, ${10 - 200}px) scale(${108 / 208}, ${48 / 88})`);
+    expect(frames[1]!.transform).toBe('translate(0, 0) scale(1, 1)');
+    expect(Object.keys(frames[0]!)).toEqual(['transform']);
+    expect(Number(timing.duration)).toBeGreaterThan(0);
+  });
+
+  it('v2: the ring does not play a move under reduced motion', () => {
+    const animate = vi.fn();
+    HTMLElement.prototype.animate = animate as never;
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: query.includes('reduce'), media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {} }));
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      const top = this.id === 'b' ? 200 : 10;
+      return { top, left: 10, width: 100, height: 40, right: 110, bottom: top + 40, x: 10, y: top, toJSON: () => ({}) } as DOMRect;
+    });
+    render(
+      <Page>
+        <Tour open steps={steps} />
+      </Page>,
+    );
+    next();
+    expect(animate).not.toHaveBeenCalled();
   });
 });

@@ -1,0 +1,202 @@
+// StepSheet: numbered step panels, the signature of multi-step work. Panels share 2px ink lines
+// (borders collapse by overlapping); the current panel is outlined in the accent; flat, no shadows.
+.ui-step-sheet {
+  --ui-step-line: var(--ui-line-width);
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-step-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+  min-height: 14rem;
+  padding: var(--ui-space-6);
+  background: var(--ui-color-surface);
+  border: var(--ui-step-line) solid var(--ui-color-line);
+  color: var(--ui-color-text);
+
+  + .ui-step-panel {
+    margin-block-start: calc(var(--ui-step-line) * -1);
+  }
+
+  &:first-child {
+    border-start-start-radius: var(--ui-radius-lg);
+    border-start-end-radius: var(--ui-radius-lg);
+  }
+
+  &:last-child {
+    border-end-start-radius: var(--ui-radius-lg);
+    border-end-end-radius: var(--ui-radius-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .ui-step-sheet--strip {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+
+    .ui-step-panel {
+      + .ui-step-panel {
+        margin-block-start: 0;
+        margin-inline-start: calc(var(--ui-step-line) * -1);
+      }
+
+      &:first-child {
+        border-start-start-radius: var(--ui-radius-lg);
+        border-end-start-radius: var(--ui-radius-lg);
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+      }
+
+      &:last-child {
+        border-start-end-radius: var(--ui-radius-lg);
+        border-end-end-radius: var(--ui-radius-lg);
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+      }
+
+      &:only-child {
+        border-radius: var(--ui-radius-lg);
+      }
+    }
+  }
+}
+
+.ui-step-panel__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.ui-step-panel__numeral {
+  font-size: clamp(3rem, 12vw, 6rem);
+  font-weight: var(--ui-font-weight-display);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ui-color-text-subtle);
+}
+
+.ui-step-panel__check {
+  color: var(--ui-color-text);
+  margin-block-start: var(--ui-space-2);
+}
+
+.ui-step-panel__title {
+  margin: 0;
+  font-size: var(--ui-font-size-xl);
+  font-weight: var(--ui-font-weight-heading);
+
+  &:focus-visible {
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+  }
+}
+
+// The drawn part: a line-art SVG at its own fixed size (1 unit = 1px), in ink; the guide inside it carries the accent.
+.ui-step-panel__figure {
+  align-self: flex-start;
+  max-inline-size: 100%;
+  color: var(--ui-color-line);
+  line-height: 0;
+
+  > svg {
+    display: block;
+    inline-size: min(100%, 12.5rem);
+    block-size: auto;
+    overflow: visible;
+  }
+}
+
+// Upcoming figures stay a clear step lighter than the current one (ink) but meet 3:1 against the sheet in both themes.
+.ui-step-panel--upcoming .ui-step-panel__figure {
+  color: color-mix(in srgb, var(--ui-color-line) 66%, var(--ui-color-surface));
+}
+
+// Wide stack: the picture sits beside the copy instead of above it.
+@media (min-width: 768px) {
+  .ui-step-sheet--stack .ui-step-panel:has(> .ui-step-panel__figure) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--ui-space-6);
+    align-items: start;
+
+    > * {
+      grid-column: 1;
+    }
+
+    > .ui-step-panel__figure {
+      grid-column: 2;
+      grid-row: 1 / span 6;
+      align-self: center;
+    }
+  }
+}
+
+.ui-step-panel__visual {
+  font-size: var(--ui-font-size-2xl);
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-step-panel__body {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+  max-width: 36ch;
+}
+
+.ui-step-panel__action {
+  margin-block-start: auto;
+  padding-block-start: var(--ui-space-3);
+
+  &[inert] {
+    opacity: 0.45;
+  }
+}
+
+// Dashed guide line the parts assemble along (visible on the current panel only).
+.ui-step-panel__guide {
+  position: absolute;
+  inset-block: var(--ui-space-4);
+  inset-inline-start: var(--ui-space-2);
+  display: none;
+  border-inline-start: 2px dashed var(--ui-color-accent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.ui-step-panel--current {
+  .ui-step-panel__numeral {
+    color: var(--ui-color-accent);
+  }
+
+  .ui-step-panel__guide {
+    display: block;
+  }
+
+  // Accent outline drawn over the shared lines (kept inside the box so it never shifts layout).
+  &::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ui-step-line) * -1);
+    border: var(--ui-step-line) solid var(--ui-color-accent);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}
+
+.ui-step-panel--complete .ui-step-panel__numeral {
+  color: var(--ui-color-text-muted);
+}
+
+.ui-step-panel--upcoming {
+  border-color: var(--ui-color-border-strong);
+
+  .ui-step-panel__title,
+  .ui-step-panel__visual {
+    color: var(--ui-color-text-muted);
+  }
+}

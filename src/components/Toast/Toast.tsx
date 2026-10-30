@@ -1,4 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { canAnimate, prefersReducedMotion } from '../../motion/env';
+import { readMotionMs } from '../../motion/tokens';
+import { useFlip } from '../../motion/useFlip';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import type { Severity } from '../../types';
@@ -16,6 +19,8 @@ export interface ToastOptions {
 
 interface ToastItem extends ToastOptions {
   id: number;
+  /** Exit animation running: the toast is still mounted with data-state="closed". */
+  leaving?: boolean;
 }
 
 export interface ToastApi {
@@ -45,7 +50,15 @@ export function ToastProvider({ position = 'top-end', max = 5, children }: Toast
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const nextId = useRef(1);
 
-  const dismiss = useCallback((id: number) => setToasts((list) => list.filter((t) => t.id !== id)), []);
+  const remove = useCallback((id: number) => setToasts((list) => list.filter((t) => t.id !== id)), []);
+  const dismiss = useCallback(
+    (id: number) => {
+      if (prefersReducedMotion() || !canAnimate()) return remove(id);
+      setToasts((list) => list.map((t) => (t.id === id ? { ...t, leaving: true } : t)));
+      window.setTimeout(() => remove(id), Math.round(readMotionMs(document.documentElement, 'part') * 0.7));
+    },
+    [remove],
+  );
   const show = useCallback(
     (options: ToastOptions) => {
       const id = nextId.current++;
@@ -75,14 +88,23 @@ export function ToastProvider({ position = 'top-end', max = 5, children }: Toast
     <ToastContext.Provider value={api}>
       {children}
       <div className={cx('toast-container position-fixed p-3 ui-toast-container', `ui-toast-container--${vertical}`, `ui-toast-container--${horizontal}`)}>
-        <div role="status" aria-live="polite" className="ui-toast-region">
-          {polite.map((t) => <ToastView key={t.id} toast={t} onDismiss={dismiss} />)}
-        </div>
-        <div role="alert" aria-live="assertive" className="ui-toast-region">
-          {assertive.map((t) => <ToastView key={t.id} toast={t} onDismiss={dismiss} />)}
-        </div>
+        <ToastRegion role="status" live="polite" toasts={polite} onDismiss={dismiss} />
+        <ToastRegion role="alert" live="assertive" toasts={assertive} onDismiss={dismiss} />
       </div>
     </ToastContext.Provider>
+  );
+}
+
+function ToastRegion({ role, live, toasts, onDismiss }: { role: 'status' | 'alert'; live: 'polite' | 'assertive'; toasts: ToastItem[]; onDismiss: (id: number) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  // Remaining toasts slide into the gap a dismissed one leaves (FLIP, transform only).
+  useFlip(ref, [toasts.map((t) => t.id).join()]);
+  return (
+    <div ref={ref} role={role} aria-live={live} className="ui-toast-region">
+      {toasts.map((t) => (
+        <ToastView key={t.id} toast={t} onDismiss={onDismiss} />
+      ))}
+    </div>
   );
 }
 
@@ -94,18 +116,19 @@ function ToastView({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: num
   const remaining = useRef(toast.life ?? DEFAULT_LIFE);
 
   useEffect(() => {
-    if (sticky || paused) return;
+    if (sticky || paused || toast.leaving) return;
     const started = Date.now();
     const timer = window.setTimeout(() => onDismiss(toast.id), remaining.current);
     return () => {
       window.clearTimeout(timer);
       remaining.current -= Date.now() - started;
     };
-  }, [sticky, paused, onDismiss, toast.id]);
+  }, [sticky, paused, onDismiss, toast.id, toast.leaving]);
 
   return (
     <div
       className={cx('toast show ui-toast', `ui-toast--${severity}`)}
+      data-state={toast.leaving ? 'closed' : 'open'}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}

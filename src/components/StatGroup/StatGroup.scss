@@ -1,8 +1,9 @@
-// Ruled row of plain stats: hairlines above and below, vertical rules between items.
+// The parts list: a ruled strip, like the inventory on page one of an assembly sheet.
+// Items sit between 2px ink lines; vertical rules are hairlines.
 .ui-stat-group {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
-  border-block: 1px solid var(--ui-color-border);
+  border-block: var(--ui-line-width) solid var(--ui-color-line);
 
   > * {
     padding: var(--ui-space-4) var(--ui-space-4) var(--ui-space-4) 0;
@@ -10,7 +11,7 @@
 
   > * + * {
     padding-inline-start: var(--ui-space-4);
-    border-inline-start: 1px solid var(--ui-color-border);
+    border-inline-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
   }
 }
 
@@ -24,7 +25,7 @@
     }
 
     > :nth-child(n + 3) {
-      border-block-start: 1px solid var(--ui-color-border);
+      border-block-start: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
     }
   }
 }

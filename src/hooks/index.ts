@@ -7,3 +7,4 @@ export { useFloating } from './useFloating';
 export { useOverlay, type OverlayOptions } from './useOverlay';
 export { useTypeahead } from './useTypeahead';
 export { useRovingFocus, type RovingOptions } from './useRovingFocus';
+export { useSlidingMark, type SlidingMarkOptions } from './useSlidingMark';

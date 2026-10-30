@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Card, useTheme } from '@sabahat/react-ui-kit';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Card, MOTION, useAssemble, useTheme } from '@sabahat/react-ui-kit';
 
 const INTENTS = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
 const SURFACES = ['bg', 'bg-subtle', 'surface', 'surface-raised', 'surface-sunken', 'border', 'border-strong'];
 const TEXT = ['text', 'text-muted', 'text-subtle', 'link'];
+const SHELL = ['shell', 'shell-hover', 'line', 'line-muted'];
 const SPACE = ['1', '2', '3', '4', '5', '6', '8', '10', '12', '16'];
 
 /** Read resolved token values from the live document so swatches reflect theme + profile. */
@@ -29,12 +30,30 @@ function Swatch({ token, value, fg }: { token: string; value: string | undefined
   );
 }
 
+function AssembleDemo() {
+  const ref = useRef<HTMLUListElement>(null);
+  const { replay } = useAssemble(ref, { parts: 'li' });
+  return (
+    <>
+      <ul ref={ref} className="docs-motion-demo">
+        {['Frame', 'Panel', 'Hinge', 'Screws'].map((part) => (
+          <li key={part}>{part}</li>
+        ))}
+      </ul>
+      <Button variant="secondary" appearance="outline" size="sm" icon="refresh" onClick={replay}>
+        Replay
+      </Button>
+    </>
+  );
+}
+
 export function FoundationsPage() {
   const { resolvedTheme, profile } = useTheme();
   const all = [
     ...INTENTS.flatMap((i) => [`color-${i}`, `color-${i}-subtle`]),
     ...SURFACES.map((s) => `color-${s}`),
     ...TEXT.map((t) => `color-${t}`),
+    ...SHELL.map((t) => `color-${t}`),
     ...Array.from({ length: 8 }, (_, i) => `color-chart-${i + 1}`),
     'radius', 'radius-lg', 'control-height-md', 'font-size-base',
   ];
@@ -62,10 +81,23 @@ export function FoundationsPage() {
         {SURFACES.map((s) => <Swatch key={s} token={`color-${s}`} value={values[`color-${s}`]} fg="color-text" />)}
         {TEXT.map((t) => <Swatch key={t} token={`color-${t}`} value={values[`color-${t}`]} />)}
       </div>
+      <h2 className="h4">Shell and lines</h2>
+      <p className="text-body-secondary">Kraft cardboard for the rail and top bars, 2px ink lines for structure, hairlines only inside dense data.</p>
+      <div className="docs-swatches mb-4">
+        <Swatch token="color-shell" value={values['color-shell']} fg="color-shell-contrast" />
+        <Swatch token="color-shell-hover" value={values['color-shell-hover']} fg="color-shell-contrast" />
+        <Swatch token="color-line" value={values['color-line']} />
+        <Swatch token="color-line-muted" value={values['color-line-muted']} />
+      </div>
       <h2 className="h4">Data visualisation</h2>
       <div className="docs-swatches mb-4">
         {Array.from({ length: 8 }, (_, i) => <Swatch key={i} token={`color-chart-${i + 1}`} value={values[`color-chart-${i + 1}`]} />)}
       </div>
+      <h2 className="h4">Motion: assemble</h2>
+      <p className="text-body-secondary">
+        Parts slide {MOTION.assembleDistance}px along the guide line, {MOTION.stagger} ms apart, and the last one clicks into place. Reduced motion turns this into a short fade.
+      </p>
+      <AssembleDemo />
       <h2 className="h4">Shape, density and spacing</h2>
       <div className="row g-3 mb-4">
         <div className="col-md-4"><Card title="Radius" subtitle={`${values.radius} / lg ${values['radius-lg']}`} /></div>

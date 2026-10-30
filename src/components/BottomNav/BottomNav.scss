@@ -1,15 +1,26 @@
+@use '../../styles/data';
+
+// The phone's rail: the same kraft cardboard as the sidebar and top bar, ruled off from the sheet by a 2px ink line.
+// The active item is ink and bold with an accent icon; one accent mark slides along the top edge to it (useSlidingMark).
 .ui-bottom-nav {
-  background: var(--ui-color-surface);
-  border-top: 1px solid var(--ui-color-border);
+  background: var(--ui-color-shell);
+  color: var(--ui-color-shell-contrast);
+  border-top: var(--ui-line-width) solid var(--ui-color-line);
   padding-bottom: env(safe-area-inset-bottom, 0);
-  box-shadow: var(--ui-shadow-sm);
 }
 
 .ui-bottom-nav__list {
+  @include data.sliding-mark-x;
   display: flex;
   margin: 0;
   padding: 0;
   list-style: none;
+
+  // The mark rides the top edge, over the line.
+  &::after {
+    inset-block-end: auto;
+    inset-block-start: calc(var(--ui-line-width) * -1);
+  }
 }
 
 .ui-bottom-nav__item {
@@ -24,18 +35,31 @@
   gap: 0.125rem;
   min-height: var(--ui-bottom-nav-height, 4rem);
   min-width: var(--ui-touch-target-min);
-  color: var(--ui-color-text-muted);
+  color: var(--ui-color-shell-contrast);
   font-size: var(--ui-font-size-xs);
   font-weight: var(--ui-font-weight-medium);
   text-decoration: none;
+  transition: background-color var(--ui-motion-quick) var(--ui-easing-out);
+
+  &:hover {
+    background: var(--ui-color-shell-hover);
+  }
+
+  &:active .ui-bottom-nav__icon {
+    transform: scale(0.94);
+  }
 
   &.active {
-    color: var(--ui-color-accent-emphasis);
+    color: var(--ui-color-shell-contrast);
     font-weight: var(--ui-font-weight-semibold);
+
+    .ui-bottom-nav__icon {
+      color: var(--ui-color-accent-emphasis);
+    }
   }
 
   &:focus-visible {
-    outline: 2px solid var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
     outline-offset: -4px;
     border-radius: var(--ui-radius);
   }
@@ -44,6 +68,7 @@
 .ui-bottom-nav__icon {
   position: relative;
   display: inline-flex;
+  transition: transform var(--ui-motion-instant) var(--ui-easing-out);
 }
 
 .ui-bottom-nav__badge {
@@ -51,4 +76,16 @@
   top: -0.25rem;
   inset-inline-end: -0.75rem;
   font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-bottom-nav__link,
+  .ui-bottom-nav__icon {
+    transition: none;
+  }
+
+  .ui-bottom-nav__link:active .ui-bottom-nav__icon {
+    transform: none;
+  }
 }

@@ -1,3 +1,5 @@
+@use '../../styles/panels';
+
 .ui-order-summary__title {
   margin: 0 0 var(--ui-space-3);
   font-family: var(--ui-font-family-heading);
@@ -16,9 +18,9 @@
   min-block-size: var(--ui-touch-target-min, 44px);
   padding: var(--ui-space-2) 0;
   border: 0;
-  border-block: var(--bs-border-width) solid var(--ui-color-border);
+  border-block: var(--ui-line-width) solid var(--ui-color-line);
   background: transparent;
-  color: var(--ui-color-link);
+  color: var(--ui-color-accent-emphasis);
   font: inherit;
   text-align: start;
 
@@ -44,9 +46,15 @@
   padding-block-start: var(--ui-space-3);
 }
 
+// The body reveals with clip-path + opacity (no height animation) and plays it backwards, faster, when it closes.
+.ui-order-summary--collapsible .ui-order-summary__body {
+  @include panels.reveal;
+}
+
 .ui-order-summary__table {
   inline-size: 100%;
   border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
 
   th,
   td {
@@ -59,7 +67,7 @@
 
 .ui-order-summary__line > * {
   padding-block: var(--ui-space-3);
-  border-block-end: var(--bs-border-width) solid var(--ui-color-border);
+  border-block-end: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
 }
 
 .ui-order-summary__item {
@@ -117,13 +125,16 @@
   th,
   td {
     padding-block-start: var(--ui-space-3);
-    border-block-start: var(--bs-border-width) solid var(--ui-color-border-strong);
+    border-block-start: var(--ui-line-width) solid var(--ui-color-line);
     color: var(--ui-color-text);
     font-size: var(--ui-font-size-lg);
     font-weight: var(--ui-font-weight-semibold);
   }
 
+  // Display numerals where the number leads: light weight, larger.
   td.ui-order-summary__amount {
     font-family: var(--ui-font-family-heading);
+    font-size: var(--ui-font-size-2xl);
+    font-weight: var(--ui-font-weight-display);
   }
 }

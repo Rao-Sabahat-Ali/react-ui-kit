@@ -49,12 +49,15 @@ export function Overview({ previewState, onNavigate }: OverviewProps) {
   };
   const retry = (widget: 'numbers' | 'today') => () => setRetried((r) => ({ ...r, [widget]: previewKey }));
   const numbers = stateOf('numbers');
+  const today = stateOf('today');
+  // Never promise tasks the regions below do not show.
+  const deadline = today === 'ready' ? 'Three things need you before the VAT return is due on 12 November.' : today === 'empty' ? 'Nothing needs you before the VAT return is due on 12 November.' : 'The VAT return is due on 12 November.';
 
   return (
     <>
       <PageHeader
         title="God morgon, Alva"
-        description="Three things need you before the VAT return is due on 12 November."
+        description={deadline}
         actions={
           <Button icon="plus" onClick={() => toast.info('New expense is not part of the blueprint')}>
             New expense
@@ -64,10 +67,10 @@ export function Overview({ previewState, onNavigate }: OverviewProps) {
 
       {numbers === 'ready' ? (
         <StatGroup aria-label="Business at a glance" style={SECTION_GAP}>
-          <StatCard label="Cash balance (SEK)" value={184_300} delta={0.042} deltaLabel="since September" />
+          <StatCard label="Cash balance (SEK)" value={184_300} quantity={false} delta={0.042} deltaLabel="since September" />
           <StatCard label="Invoices due" value={5} footer="SEK 62,400 outstanding" />
           <StatCard label="Receipts to match" value={8} />
-          <StatCard label="VAT to report (SEK)" value={21_450} />
+          <StatCard label="VAT to report (SEK)" value={21_450} quantity={false} />
         </StatGroup>
       ) : (
         <section aria-label="Business at a glance" style={SECTION_GAP}>
@@ -96,7 +99,7 @@ export function Overview({ previewState, onNavigate }: OverviewProps) {
           <Section title="Today" description="Pick one and it is done in a couple of minutes.">
             <StateBlock
               name="Today list"
-              state={stateOf('today')}
+              state={today}
               onRetry={retry('today')}
               empty="Nothing needs you today"
               emptyDescription="New tasks show up here as invoices and receipts arrive."

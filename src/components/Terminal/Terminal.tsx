@@ -105,7 +105,7 @@ export function Terminal({ onCommand, prompt = '$', welcome, maxHistory = 100, p
   return (
     // The click only forwards focus to the input, which is itself keyboard reachable.
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
-    <div ref={ref} role="group" aria-label={label} className={cx('ui-terminal', disabled && 'ui-terminal--disabled', className)} onClick={focusInput}>
+    <div ref={ref} role="group" aria-label={label} data-bs-theme="dark" className={cx('ui-terminal', disabled && 'ui-terminal--disabled', className)} onClick={focusInput}>
       {/* The log scrolls, so it must be keyboard scrollable (WCAG 2.1.1); role=log announces additions politely. */}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
       <div ref={logRef} role="log" aria-label={label} aria-relevant="additions" tabIndex={0} className="ui-terminal__log" style={{ height } as CSSProperties}>

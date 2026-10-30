@@ -1,4 +1,4 @@
-import { useId, type ButtonHTMLAttributes, type KeyboardEvent, type MouseEvent, type ReactNode, type Ref } from 'react';
+import { useId, useState, type ButtonHTMLAttributes, type KeyboardEvent, type MouseEvent, type ReactNode, type Ref } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
 import { cx } from '../../utils/cx';
 import { useFieldControl } from '../Field/Field';
@@ -38,6 +38,8 @@ export function TriStateCheckbox({
   const control = useFieldControl({ id: idProp, invalid: invalidProp, 'aria-describedby': rest['aria-describedby'] });
   const [value, setValue] = useControllableState<TriState>(valueProp, defaultValue);
   const stateTextId = useId();
+  // The mark is drawn in only after the user changes the state, never on first render.
+  const [touched, setTouched] = useState(false);
   const stateText = labels?.[String(value) as 'true' | 'false' | 'null'];
   const describedBy = [control.describedBy, stateText ? stateTextId : undefined].filter(Boolean).join(' ') || undefined;
 
@@ -45,6 +47,7 @@ export function TriStateCheckbox({
     onClick?.(event);
     if (event.defaultPrevented) return;
     const next = nextTriState(value);
+    setTouched(true);
     setValue(next);
     onChange?.(next, event);
   };
@@ -71,9 +74,9 @@ export function TriStateCheckbox({
         onKeyDown={handleKeyDown}
         className={cx('ui-tri-state-checkbox__box', value === true && 'is-checked', value === false && 'is-unchecked', value === null && 'is-mixed', control.invalid && 'is-invalid')}
       >
-        {value === true && <Icon name="check" size="sm" />}
-        {value === false && <Icon name="x" size="sm" />}
-        {value === null && <Icon name="minus" size="sm" />}
+        <span key={String(value)} className={cx('ui-tri-state-checkbox__mark', touched && 'ui-tri-state-checkbox__mark--draw')}>
+          <Icon name={value === true ? 'check' : value === false ? 'x' : 'minus'} size="sm" />
+        </span>
       </button>
       {stateText && (
         <span id={stateTextId} className="visually-hidden">

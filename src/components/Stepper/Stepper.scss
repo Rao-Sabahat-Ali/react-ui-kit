@@ -1,5 +1,8 @@
+// Stepper: the StepSheet numeral language in a compact row. Light numerals, the active step in the accent, an ink
+// check on complete steps, a 2px track above each step (ink when complete, accent when current). No filled circles.
 .ui-stepper {
-  --ui-stepper-marker-size: 2rem;
+  --ui-stepper-numeral-size: 2.25rem;
+  --ui-stepper-track: var(--ui-color-border-strong);
   display: flex;
   flex-direction: column;
   gap: var(--ui-space-4);
@@ -8,7 +11,7 @@
 .ui-stepper__list {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ui-space-3) var(--ui-space-6);
+  gap: var(--ui-space-3) var(--ui-space-2);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -17,26 +20,44 @@
 .ui-stepper--vertical {
   flex-direction: row;
   align-items: flex-start;
+  gap: var(--ui-space-6);
 
   .ui-stepper__list {
     flex: 0 0 auto;
     flex-direction: column;
     flex-wrap: nowrap;
+    gap: var(--ui-space-2);
+  }
+
+  // The track runs down the start edge instead of along the top.
+  .ui-stepper__step {
+    flex: 0 0 auto;
+    padding-block-start: 0;
+    padding-inline-start: var(--ui-space-3);
+    border-block-start: 0;
+    border-inline-start: var(--ui-line-width) solid var(--ui-stepper-track);
   }
 
   .ui-stepper__panel {
     flex: 1 1 auto;
+    min-inline-size: 0;
   }
 }
 
 .ui-stepper__step {
-  flex: 0 1 auto;
+  // 8rem: four steps still fit one row in a ~590px column (the checkout blueprint) and wrap two by two on a phone.
+  flex: 1 1 8rem;
+  min-inline-size: 0;
+  padding-block-start: var(--ui-space-2);
+  border-block-start: var(--ui-line-width) solid var(--ui-stepper-track);
+  transition: border-color var(--ui-motion-part) var(--ui-easing-out);
 }
 
 .ui-stepper__header {
   display: inline-flex;
   align-items: flex-start;
   gap: var(--ui-space-3);
+  max-inline-size: 100%;
   min-block-size: var(--ui-touch-target-min, 24px);
   padding: var(--ui-space-1);
   border: 0;
@@ -49,40 +70,50 @@
 
 button.ui-stepper__header {
   cursor: pointer;
+  transition: color var(--ui-motion-quick) var(--ui-easing-out);
 
   &:hover {
     color: var(--ui-color-text);
   }
 
+  &:active {
+    transform: translateY(1px);
+  }
+
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
-    outline: 2px solid transparent;
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
+    box-shadow: none;
   }
 }
 
+// The numeral: large, light, tabular (the same voice as the StepSheet numeral at a smaller size).
 .ui-stepper__marker {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  inline-size: var(--ui-stepper-marker-size);
-  block-size: var(--ui-stepper-marker-size);
-  border: 2px solid var(--ui-color-border-strong);
-  border-radius: var(--ui-radius-circle);
-  background: var(--ui-color-surface);
-  font-size: var(--ui-font-size-sm);
-  font-weight: var(--ui-font-weight-semibold);
-  transition: background-color var(--ui-duration) var(--ui-easing), border-color var(--ui-duration) var(--ui-easing);
+  min-inline-size: 1.5ch;
+  block-size: var(--ui-stepper-numeral-size);
+  font-size: var(--ui-stepper-numeral-size);
+  font-weight: var(--ui-font-weight-display);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--ui-color-text-subtle);
+  transition: color var(--ui-motion-part) var(--ui-easing-out);
 }
 
 .ui-stepper__text {
   display: flex;
   flex-direction: column;
   gap: var(--ui-space-1);
+  min-inline-size: 0;
+  padding-block-start: var(--ui-space-1);
 }
 
 .ui-stepper__label {
   font-weight: var(--ui-font-weight-medium);
+  overflow-wrap: anywhere;
 }
 
 .ui-stepper__optional,
@@ -92,28 +123,31 @@ button.ui-stepper__header {
 }
 
 .ui-stepper__step--current {
+  --ui-stepper-track: var(--ui-color-accent);
+
   .ui-stepper__header {
     color: var(--ui-color-text);
   }
 
   .ui-stepper__marker {
-    border-color: var(--ui-color-accent);
-    background: var(--ui-color-accent);
-    color: var(--ui-color-accent-contrast);
+    color: var(--ui-color-accent);
   }
 }
 
-.ui-stepper__step--done .ui-stepper__marker {
-  border-color: var(--ui-color-success);
-  background: var(--ui-color-success-subtle);
-  color: var(--ui-color-success-emphasis);
+// Complete: the track is drawn in ink and the numeral gives way to an ink check.
+.ui-stepper__step--done {
+  --ui-stepper-track: var(--ui-color-line);
+
+  .ui-stepper__marker {
+    color: var(--ui-color-text);
+  }
 }
 
 .ui-stepper__step--error {
+  --ui-stepper-track: var(--ui-color-danger);
+
   .ui-stepper__marker {
-    border-color: var(--ui-color-danger);
-    background: var(--ui-color-danger-subtle);
-    color: var(--ui-color-danger-emphasis);
+    color: var(--ui-color-danger);
   }
 }
 
@@ -122,21 +156,44 @@ button.ui-stepper__header {
   color: var(--ui-color-danger-emphasis);
 }
 
+// The step panel carries the dashed guide line the Assemble movement runs along.
+.ui-stepper__panel {
+  position: relative;
+  padding-inline-start: var(--ui-space-4);
+}
+
+.ui-stepper__guide {
+  position: absolute;
+  inset-block: var(--ui-space-1);
+  inset-inline-start: 0;
+  border-inline-start: var(--ui-line-width) dashed var(--ui-color-accent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
 .ui-stepper__heading {
   margin-block-end: var(--ui-space-3);
   font-size: var(--ui-font-size-lg);
+  font-weight: var(--ui-font-weight-heading);
 
   &:focus {
-    outline: none;
+    outline: 2px solid transparent;
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-color-focus-ring);
+    outline: var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);
+    outline-offset: var(--ui-focus-ring-offset);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-stepper__marker {
+  .ui-stepper__step,
+  .ui-stepper__marker,
+  button.ui-stepper__header {
     transition: none;
+  }
+
+  button.ui-stepper__header:active {
+    transform: none;
   }
 }

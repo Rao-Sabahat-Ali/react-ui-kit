@@ -1,6 +1,6 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Field } from '../Field/Field';
 import { Select, type Option } from './Select';
 
@@ -107,5 +107,30 @@ describe('Select', () => {
     render(<Select aria-label="Food" options={[{ label: 'Fruit', options: [{ label: 'Apple', value: 'a' }] }]} />);
     await userEvent.click(screen.getByRole('combobox'));
     expect(screen.getByText('Fruit')).toHaveClass('dropdown-header');
+  });
+});
+
+describe('Select (v2) presence', () => {
+  afterEach(() => {
+    delete (document as { getAnimations?: unknown }).getAnimations;
+  });
+
+  it('AC-v2-1: the panel is a lifted overlay that stays mounted and inert while it leaves', async () => {
+    (document as { getAnimations?: unknown }).getAnimations = () => [];
+    render(<Select aria-label="Fruit" options={fruits} />);
+    await userEvent.click(screen.getByRole('combobox'));
+    const panel = listbox().closest('.ui-select__panel')!;
+    expect(panel).toHaveAttribute('data-state', 'open');
+    await userEvent.keyboard('{Escape}');
+    expect(panel).toHaveAttribute('data-state', 'closed');
+    expect(panel).toHaveAttribute('inert');
+    await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull());
+  });
+
+  it('AC-v2-2: without animation support the panel unmounts at once', async () => {
+    render(<Select aria-label="Fruit" options={fruits} />);
+    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.keyboard('{Escape}');
+    expect(screen.queryByRole('listbox')).toBeNull();
   });
 });

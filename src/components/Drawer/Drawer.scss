@@ -1,10 +1,13 @@
+@use '../../styles/parts';
+
 .ui-drawer {
   --bs-offcanvas-bg: var(--ui-color-surface-raised);
   --bs-offcanvas-color: var(--ui-color-text);
-  --bs-offcanvas-border-color: var(--ui-color-border);
-  --bs-offcanvas-box-shadow: var(--ui-shadow-lg);
+  --bs-offcanvas-border-color: var(--ui-color-line);
+  --bs-offcanvas-border-width: var(--ui-line-width);
+  --bs-offcanvas-box-shadow: var(--ui-shadow-lift);
   --bs-offcanvas-zindex: var(--ui-z-drawer);
-  box-shadow: var(--ui-shadow-lg);
+  box-shadow: var(--ui-shadow-lift);
   visibility: visible;
 
   &:focus-visible {
@@ -14,7 +17,7 @@
 
   &.offcanvas-start,
   &.offcanvas-end {
-    animation: ui-drawer-in-x var(--ui-duration) var(--ui-motion-easing-emphasized);
+    animation: ui-drawer-in-x var(--ui-motion-step) var(--ui-easing-out);
   }
 
   &.offcanvas-start {
@@ -27,7 +30,7 @@
 
   &.offcanvas-top,
   &.offcanvas-bottom {
-    animation: ui-drawer-in-y var(--ui-duration) var(--ui-motion-easing-emphasized);
+    animation: ui-drawer-in-y var(--ui-motion-step) var(--ui-easing-out);
   }
 
   &.offcanvas-top {
@@ -71,7 +74,7 @@
   --bs-backdrop-zindex: var(--ui-z-drawer-backdrop);
   --bs-backdrop-bg: var(--ui-color-overlay);
   --bs-backdrop-opacity: 1;
-  animation: ui-fade-in var(--ui-motion-duration-fast) var(--ui-motion-easing-standard);
+  animation: ui-fade-in var(--ui-motion-part) var(--ui-easing-out);
 }
 
 .ui-drawer__title {
@@ -84,7 +87,38 @@
   justify-content: flex-end;
   gap: var(--ui-space-2);
   padding: var(--ui-space-3) var(--ui-space-4);
-  border-top: 1px solid var(--ui-color-border);
+  border-top: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+}
+
+// Exit: slide back out along the entry axis, faster than the entrance.
+.ui-drawer-root[data-state='closed'] {
+  pointer-events: none;
+
+  .ui-drawer.offcanvas-start,
+  .ui-drawer.offcanvas-end {
+    animation: ui-drawer-out-x calc(var(--ui-motion-step) * 0.7) var(--ui-easing-in) forwards;
+  }
+
+  .ui-drawer.offcanvas-top,
+  .ui-drawer.offcanvas-bottom {
+    animation: ui-drawer-out-y calc(var(--ui-motion-step) * 0.7) var(--ui-easing-in) forwards;
+  }
+
+  .ui-drawer__backdrop {
+    animation: ui-fade-out calc(var(--ui-motion-step) * 0.7) var(--ui-easing-in) forwards;
+  }
+}
+
+@keyframes ui-drawer-out-x {
+  to {
+    transform: translateX(var(--ui-drawer-from));
+  }
+}
+
+@keyframes ui-drawer-out-y {
+  to {
+    transform: translateY(var(--ui-drawer-from));
+  }
 }
 
 @keyframes ui-drawer-in-x {
@@ -102,7 +136,9 @@
 // Same specificity as the per-edge animation rules above, declared later, so reduced motion really wins.
 @media (prefers-reduced-motion: reduce) {
   .ui-drawer.offcanvas,
-  .ui-drawer__backdrop {
+  .ui-drawer__backdrop,
+  .ui-drawer-root[data-state='closed'] .ui-drawer.offcanvas,
+  .ui-drawer-root[data-state='closed'] .ui-drawer__backdrop {
     animation: none;
   }
 }
@@ -114,7 +150,8 @@
   flex-shrink: 0;
   background: var(--ui-color-surface);
   color: var(--ui-color-text);
-  border-inline-end: 1px solid var(--ui-color-border);
+  // Resting in the page flow: drawn with the 2px ink line, no shadow.
+  border-inline-end: var(--ui-line-width) solid var(--ui-color-line);
   box-shadow: none;
 }
 

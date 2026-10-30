@@ -67,3 +67,13 @@ describe('Password', () => {
     expect(screen.getByLabelText('Password')).toHaveAttribute('autocomplete', 'current-password');
   });
 });
+
+describe('Password (v2)', () => {
+  it('AC-v2-1: the strength bar grows with transform, not with its width', () => {
+    const { container } = render(<Password aria-label="Password" feedback defaultValue="Abcdef12!x" />);
+    const bar = container.querySelector<HTMLElement>('.ui-password__meter-bar');
+    expect(bar).toBeInTheDocument();
+    expect(bar!.style.transform).toMatch(/^scaleX\(/);
+    expect(bar!.style.inlineSize).toBe('');
+  });
+});

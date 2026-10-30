@@ -33,9 +33,9 @@
   width: var(--ui-sidebar-width);
   height: calc(100vh - var(--ui-topbar-height));
   overflow-y: auto;
-  background: var(--ui-color-bg-subtle);
-  border-inline-end: 1px solid var(--ui-color-border);
-  transition: width var(--ui-duration) var(--ui-easing), flex-basis var(--ui-duration) var(--ui-easing);
+  background: var(--ui-color-shell);
+  color: var(--ui-color-shell-contrast);
+  border-inline-end: var(--ui-line-width) solid var(--ui-color-line);
 }
 
 .ui-app-shell--collapsed .ui-app-shell__sidebar {
@@ -101,12 +101,6 @@
 
 .ui-app-shell--with-bottom-nav .ui-app-shell__footer {
   padding-bottom: calc(var(--ui-bottom-nav-height) + var(--ui-space-4));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ui-app-shell__sidebar {
-    transition: none;
-  }
 }
 
 // Docs/demo embedding: shell inside a fixed-height frame.

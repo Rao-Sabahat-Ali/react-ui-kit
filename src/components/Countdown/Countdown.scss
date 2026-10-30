@@ -1,7 +1,10 @@
+// A running count is a quantity mark: Albert Sans, tabular figures, digits that roll when they change (QuantityTick).
 .ui-countdown {
   display: inline-block;
   color: var(--ui-color-text);
+  font-family: var(--ui-font-family);
   font-variant-numeric: tabular-nums;
+  font-weight: var(--ui-font-weight-medium);
   line-height: 1.2;
 }
 
@@ -10,6 +13,7 @@
   white-space: nowrap;
 }
 
-.ui-countdown--paused {
+.ui-countdown--paused,
+.ui-countdown--completed {
   color: var(--ui-color-text-muted);
 }
