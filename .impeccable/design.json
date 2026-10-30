@@ -1,0 +1,805 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-30T13:24:18.381Z",
+  "title": "Design System: react-ui-kit (Monteringsanvisning, identity v2)",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Ink",
+        "canonical": "#121212",
+        "oklch": "oklch(18.2% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#f2f2f2",
+        "note": "Primary action, structural 2px line and body text. Inverts in the dark theme."
+      },
+      "ink-hover": {
+        "role": "primary",
+        "displayName": "Ink Hover",
+        "canonical": "#2c2c2c",
+        "oklch": "oklch(29.3% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#cdcdcd"
+      },
+      "ink-active": {
+        "role": "primary",
+        "displayName": "Ink Pressed",
+        "canonical": "#000000",
+        "oklch": "oklch(0.0% 0.000 0)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#a6a6a6"
+      },
+      "ink-subtle": {
+        "role": "primary",
+        "displayName": "Ink Wash",
+        "canonical": "#ededed",
+        "oklch": "oklch(94.6% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#232325"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#151517",
+        "note": "Dark: night sheet ground #0f0f10, surface #151517, raised #1c1c1e."
+      },
+      "paper-sunken": {
+        "role": "neutral",
+        "displayName": "Paper Sunken",
+        "canonical": "#f4f4f4",
+        "oklch": "oklch(96.7% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#151517"
+      },
+      "kraft": {
+        "role": "tertiary",
+        "displayName": "Kraft Cardboard",
+        "canonical": "#c49a6c",
+        "oklch": "oklch(71.5% 0.079 69)",
+        "tonalRamp": [
+          "#251000",
+          "#412705",
+          "#5f401c",
+          "#7f5b33",
+          "#a57d51",
+          "#cca67e",
+          "#edcaa5",
+          "#ffe8c6"
+        ],
+        "dark": "#3b2d1c",
+        "note": "Shell material. Dark ink on kraft #efe4d4."
+      },
+      "kraft-hover": {
+        "role": "tertiary",
+        "displayName": "Kraft Pressed",
+        "canonical": "#b58a5a",
+        "oklch": "oklch(66.4% 0.083 69)",
+        "tonalRamp": [
+          "#261000",
+          "#422702",
+          "#604019",
+          "#805b30",
+          "#a77d4e",
+          "#cda67c",
+          "#eecaa3",
+          "#ffe8c4"
+        ],
+        "dark": "#4a3823"
+      },
+      "kraft-ink": {
+        "role": "tertiary",
+        "displayName": "Ink On Kraft",
+        "canonical": "#121212",
+        "oklch": "oklch(18.2% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#efe4d4"
+      },
+      "signal-blue": {
+        "role": "secondary",
+        "displayName": "Signal Blue",
+        "canonical": "#1e5aa8",
+        "oklch": "oklch(47.3% 0.139 257)",
+        "tonalRamp": [
+          "#00123f",
+          "#002b61",
+          "#164685",
+          "#2d63ab",
+          "#4c87d7",
+          "#7ab0fb",
+          "#a2d4ff",
+          "#c3f2ff"
+        ],
+        "dark": "#8db3e8"
+      },
+      "signal-blue-hover": {
+        "role": "secondary",
+        "displayName": "Signal Blue Pressed",
+        "canonical": "#174a8c",
+        "oklch": "oklch(41.4% 0.122 257)",
+        "tonalRamp": [
+          "#00133a",
+          "#082c5b",
+          "#1f477e",
+          "#3664a2",
+          "#5487cd",
+          "#81b0f1",
+          "#a8d4ff",
+          "#c9f1ff"
+        ],
+        "dark": "#b2cdf1"
+      },
+      "signal-blue-subtle": {
+        "role": "secondary",
+        "displayName": "Signal Blue Wash",
+        "canonical": "#e8f0fb",
+        "oklch": "oklch(95.2% 0.017 256)",
+        "tonalRamp": [
+          "#13161b",
+          "#2a2e34",
+          "#434850",
+          "#5e646c",
+          "#808790",
+          "#a8afb8",
+          "#cbd2da",
+          "#e9eff7"
+        ],
+        "dark": "#0f2038"
+      },
+      "signal-blue-deep": {
+        "role": "secondary",
+        "displayName": "Signal Blue Deep",
+        "canonical": "#123b70",
+        "oklch": "oklch(35.6% 0.102 257)",
+        "tonalRamp": [
+          "#001534",
+          "#112d54",
+          "#274875",
+          "#3e6498",
+          "#5d88c2",
+          "#89b0e7",
+          "#afd4ff",
+          "#cff1ff"
+        ],
+        "dark": "#b2cdf1"
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Muted Text",
+        "canonical": "#5a5a5a",
+        "oklch": "oklch(46.8% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#b4b4b4"
+      },
+      "text-subtle": {
+        "role": "neutral",
+        "displayName": "Subtle Text",
+        "canonical": "#737373",
+        "oklch": "oklch(55.6% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#9a9a9a"
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e2e2e2",
+        "oklch": "oklch(91.3% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#2c2c2c"
+      },
+      "border-strong": {
+        "role": "neutral",
+        "displayName": "Strong Border",
+        "canonical": "#cdcdcd",
+        "oklch": "oklch(84.8% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#3c3c3c"
+      },
+      "border-input": {
+        "role": "neutral",
+        "displayName": "Input Border",
+        "canonical": "#858585",
+        "oklch": "oklch(61.7% 0.000 90)",
+        "tonalRamp": [
+          "#161616",
+          "#2e2e2e",
+          "#484848",
+          "#636363",
+          "#868686",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ],
+        "dark": "#7c7c7c"
+      },
+      "success": {
+        "role": "status",
+        "displayName": "Assembled Green",
+        "canonical": "#1f7a3e",
+        "oklch": "oklch(51.2% 0.125 150)",
+        "tonalRamp": [
+          "#001f00",
+          "#003a11",
+          "#085727",
+          "#25753e",
+          "#479b5e",
+          "#78c289",
+          "#a1e4af",
+          "#c3ffcf"
+        ],
+        "dark": "#1f7a3e"
+      },
+      "danger": {
+        "role": "status",
+        "displayName": "Warning Red",
+        "canonical": "#bf2a1f",
+        "oklch": "oklch(52.7% 0.187 29)",
+        "tonalRamp": [
+          "#3f0000",
+          "#630000",
+          "#890b06",
+          "#b02b20",
+          "#df4e3f",
+          "#ff806f",
+          "#ffaa98",
+          "#ffcbba"
+        ],
+        "dark": "#bf2a1f"
+      },
+      "warning": {
+        "role": "status",
+        "displayName": "Caution Yellow",
+        "canonical": "#f5b301",
+        "oklch": "oklch(80.7% 0.166 82)",
+        "tonalRamp": [
+          "#2e0900",
+          "#4c2100",
+          "#6c3b00",
+          "#8e5600",
+          "#b67800",
+          "#dca322",
+          "#fcc864",
+          "#ffe78e"
+        ],
+        "dark": "#f5b301"
+      },
+      "warning-deep": {
+        "role": "status",
+        "displayName": "Caution Deep",
+        "canonical": "#6b4600",
+        "oklch": "oklch(42.6% 0.090 75)",
+        "tonalRamp": [
+          "#261000",
+          "#412800",
+          "#5f410f",
+          "#7f5c27",
+          "#a67e46",
+          "#cca775",
+          "#edcb9d",
+          "#ffe9bf"
+        ],
+        "dark": "#ffd266"
+      },
+      "info": {
+        "role": "status",
+        "displayName": "Slate Info",
+        "canonical": "#3f6479",
+        "oklch": "oklch(48.4% 0.054 234)",
+        "tonalRamp": [
+          "#031824",
+          "#17313f",
+          "#2e4c5d",
+          "#46687c",
+          "#668ca2",
+          "#91b4c8",
+          "#b7d6e9",
+          "#d6f4ff"
+        ],
+        "dark": "#3f6479"
+      },
+      "go-green": {
+        "role": "profile",
+        "displayName": "Go Green (pos primary)",
+        "canonical": "#1f7a3e",
+        "oklch": "oklch(51.2% 0.125 150)",
+        "tonalRamp": [
+          "#001f00",
+          "#003a11",
+          "#085727",
+          "#25753e",
+          "#479b5e",
+          "#78c289",
+          "#a1e4af",
+          "#c3ffcf"
+        ],
+        "dark": "#8fd3a4"
+      },
+      "cta-orange": {
+        "role": "profile",
+        "displayName": "Call-To-Action Orange (ecommerce primary)",
+        "canonical": "#c2410c",
+        "oklch": "oklch(55.3% 0.174 38)",
+        "tonalRamp": [
+          "#3c0000",
+          "#5f0000",
+          "#841b00",
+          "#aa3604",
+          "#d8582c",
+          "#fe8862",
+          "#ffb08d",
+          "#ffd1b0"
+        ],
+        "dark": "#f58e4b"
+      },
+      "pencil-red": {
+        "role": "profile",
+        "displayName": "Pencil Red (cms accent)",
+        "canonical": "#b3261e",
+        "oklch": "oklch(50.1% 0.178 29)",
+        "tonalRamp": [
+          "#3d0000",
+          "#610000",
+          "#86130e",
+          "#ad2f26",
+          "#dc5244",
+          "#ff8373",
+          "#ffac9b",
+          "#ffcdbd"
+        ],
+        "dark": "#ee8a81"
+      },
+      "signal-yellow-light": {
+        "role": "profile",
+        "displayName": "Signal Yellow On Paper (game accent)",
+        "canonical": "#8a5f00",
+        "oklch": "oklch(51.8% 0.108 78)",
+        "tonalRamp": [
+          "#270f00",
+          "#442700",
+          "#624000",
+          "#825b0d",
+          "#a97d32",
+          "#cfa766",
+          "#f0cb91",
+          "#ffe9b4"
+        ]
+      },
+      "signal-yellow-night": {
+        "role": "profile",
+        "displayName": "Signal Yellow On Night (game accent)",
+        "canonical": "#ffc53d",
+        "oklch": "oklch(85.4% 0.157 84)",
+        "tonalRamp": [
+          "#2b0c00",
+          "#492400",
+          "#683e00",
+          "#895900",
+          "#b17b00",
+          "#d7a531",
+          "#f7ca6b",
+          "#ffe994"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Step Numeral",
+        "purpose": "Light 250 numeral of a StepSheet panel; clamp(3rem, 12vw, 6rem). Current = signal blue, complete = muted, upcoming = subtle."
+      },
+      "quantity": {
+        "displayName": "Quantity Mark",
+        "purpose": "Light tabular numerals for parts-list values and 12x style marks; the multiplication sign is muted."
+      },
+      "headline": {
+        "displayName": "Page Title",
+        "purpose": "PageHeader title, semibold, tight tracking, closed by a 2px ink rule."
+      },
+      "title": {
+        "displayName": "Step Title",
+        "purpose": "Step, dialog and empty-state titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text; admin 0.875rem, pos and landing 1.125rem."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Table headers, field labels, tab labels. Sentence case."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sm",
+        "value": "0 1px 2px 0 rgb(18 18 18 / 0.08)",
+        "purpose": "Sticky headers only."
+      },
+      {
+        "name": "lift",
+        "value": "0 8px 24px -6px rgb(18 18 18 / 0.2), 0 2px 6px 0 rgb(18 18 18 / 0.08)",
+        "purpose": "Menus, popovers, dropdowns, dialogs, drawers, toasts. Always with the 2px ink line."
+      },
+      {
+        "name": "drag",
+        "value": "0 16px 36px -8px rgb(18 18 18 / 0.3), 0 4px 10px 0 rgb(18 18 18 / 0.1)",
+        "purpose": "Dragged Kanban cards and rows, with scale 1.02."
+      },
+      {
+        "name": "lift-dark",
+        "value": "0 10px 28px -6px rgb(0 0 0 / 0.65), 0 2px 6px 0 rgb(0 0 0 / 0.4)",
+        "purpose": "Lift in the dark theme."
+      },
+      {
+        "name": "drag-dark",
+        "value": "0 18px 40px -8px rgb(0 0 0 / 0.75), 0 4px 10px 0 rgb(0 0 0 / 0.45)",
+        "purpose": "Drag in the dark theme."
+      },
+      {
+        "name": "md-lg-xl-legacy",
+        "value": "--ui-shadow-md / -lg / -xl",
+        "purpose": "Compatibility only; new work uses lift and drag."
+      }
+    ],
+    "motion": [
+      {
+        "name": "motion-instant",
+        "value": "90ms",
+        "purpose": "Press feedback, focus ring."
+      },
+      {
+        "name": "motion-quick",
+        "value": "160ms",
+        "purpose": "Hover and colour, small toggles."
+      },
+      {
+        "name": "motion-part",
+        "value": "280ms",
+        "purpose": "A part entering or leaving: menus, chips, toasts, rows."
+      },
+      {
+        "name": "motion-step",
+        "value": "420ms",
+        "purpose": "Step or sheet change, dialog, drawer, board reflow."
+      },
+      {
+        "name": "motion-stagger",
+        "value": "40ms",
+        "purpose": "Between parts of one assembly, max 8 parts."
+      },
+      {
+        "name": "easing-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default exponential ease-out."
+      },
+      {
+        "name": "easing-snap",
+        "value": "cubic-bezier(0.34, 1.4, 0.64, 1)",
+        "purpose": "The click into place: final part of an assembly or a dropped card only."
+      },
+      {
+        "name": "easing-in",
+        "value": "cubic-bezier(0.7, 0, 0.84, 0)",
+        "purpose": "Exits at about 70% of the enter duration."
+      },
+      {
+        "name": "assemble-distance",
+        "value": "12px",
+        "purpose": "Travel along the dashed guide (pos 4px, game 20px)."
+      },
+      {
+        "name": "profile-pace",
+        "value": "pos 90/120/200ms; game 280/280/520ms",
+        "purpose": "Profiles retune quick, part and step."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "576px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "xl",
+        "value": "1200px"
+      }
+    ],
+    "profiles": [
+      {
+        "name": "saas",
+        "note": "Baseline."
+      },
+      {
+        "name": "admin",
+        "note": "Compact: radius 3px/6px, base 0.875rem, 34px controls."
+      },
+      {
+        "name": "dashboard",
+        "note": "Parts list leads; chart series palette."
+      },
+      {
+        "name": "cms",
+        "note": "Accent pencil red #b3261e."
+      },
+      {
+        "name": "pos",
+        "note": "Primary go-green, base 1.125rem, 56px controls, radius 10/14px, minimal motion (120/200ms, 4px travel)."
+      },
+      {
+        "name": "game",
+        "note": "Night sheet #060607 by default, accent signal yellow, radius 10/14px, bolder motion (520ms step, 20px travel)."
+      },
+      {
+        "name": "ecommerce",
+        "note": "Primary call-to-action orange #c2410c; product images lead in cards."
+      },
+      {
+        "name": "landing",
+        "note": "Base 1.125rem, 48px controls, display numerals at full scale."
+      }
+    ],
+    "source": {
+      "tokens": "design-system-mcp/specs/tokens/tokens.json",
+      "generated": "src/styles/_tokens.generated.scss",
+      "specs": [
+        "specs/foundations/identity.md",
+        "specs/foundations/motion.md",
+        "specs/foundations/shape-elevation.md",
+        "specs/rules/consistency.md"
+      ]
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one ink action of a view.",
+      "html": "<button class=\"ds-btn-primary\">Continue</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:var(--ui-control-height-md);padding:0 var(--ui-control-padding-x);font:inherit;font-weight:var(--ui-font-weight-medium);color:var(--ui-color-primary-contrast);background:var(--ui-color-primary);border:var(--ui-line-width) solid var(--ui-color-primary);border-radius:var(--ui-radius);cursor:pointer;transition:background-color var(--ui-motion-quick) var(--ui-easing-out),transform var(--ui-motion-instant) var(--ui-easing-out)}.ds-btn-primary:hover{background:var(--ui-color-primary-hover);border-color:var(--ui-color-primary-hover)}.ds-btn-primary:active{background:var(--ui-color-primary-active);transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);outline-offset:var(--ui-focus-ring-offset)}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action drawn in a 2px ink line, no fill.",
+      "html": "<button class=\"ds-btn-outline\">Back</button>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:var(--ui-control-height-md);padding:0 var(--ui-control-padding-x);font:inherit;font-weight:var(--ui-font-weight-medium);color:var(--ui-color-text);background:transparent;border:var(--ui-line-width) solid var(--ui-color-line);border-radius:var(--ui-radius);cursor:pointer;transition:background-color var(--ui-motion-quick) var(--ui-easing-out)}.ds-btn-outline:hover{background:var(--ui-color-bg-subtle)}.ds-btn-outline:active{background:var(--ui-color-border)}.ds-btn-outline:focus-visible{outline:var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);outline-offset:var(--ui-focus-ring-offset)}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A 2px ink line that turns signal blue on focus.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Word\" aria-label=\"Word\">",
+      "css": ".ds-input{box-sizing:border-box;min-height:var(--ui-control-height-md);padding:0 var(--ui-control-padding-x);font:inherit;color:var(--ui-color-text);background:var(--ui-color-surface);border:var(--ui-line-width) solid var(--ui-color-line);border-radius:var(--ui-radius);transition:border-color var(--ui-motion-quick) var(--ui-easing-out)}.ds-input::placeholder{color:var(--ui-color-text-subtle)}.ds-input:focus{border-color:var(--ui-color-accent);outline:var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);outline-offset:var(--ui-focus-ring-offset)}.ds-input:disabled{border-color:var(--ui-color-border-strong);background:var(--ui-color-bg-subtle);color:var(--ui-color-text-subtle)}"
+    },
+    {
+      "name": "Step Panel (current)",
+      "kind": "custom",
+      "refersTo": "step-panel",
+      "description": "The signature: a numbered panel with a light numeral, one line-art figure, one action; current panel outlined in the accent.",
+      "html": "<div class=\"ds-step\"><div class=\"ds-step-numeral\">2</div><h3 class=\"ds-step-title\">Add the shelf</h3><p class=\"ds-step-body\">Lower it along the dashed line until it clicks.</p><svg class=\"ds-step-figure\" width=\"160\" height=\"96\" viewBox=\"0 0 160 96\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"20\" y=\"40\" width=\"120\" height=\"44\" rx=\"6\"/><line x1=\"80\" y1=\"6\" x2=\"80\" y2=\"36\" stroke-dasharray=\"5 5\" style=\"stroke:var(--ui-color-accent)\"/><rect x=\"50\" y=\"10\" width=\"60\" height=\"20\" rx=\"6\" fill=\"var(--ui-color-surface)\"/></svg><div class=\"ds-step-action\"><button class=\"ds-btn-primary\">Next</button></div></div>",
+      "css": ".ds-step{position:relative;display:flex;flex-direction:column;gap:var(--ui-space-3);min-height:14rem;max-width:22rem;padding:var(--ui-space-6);background:var(--ui-color-surface);color:var(--ui-color-text);border:var(--ui-line-width) solid var(--ui-color-line);border-radius:var(--ui-radius-lg)}.ds-step::after{content:\"\";position:absolute;inset:calc(var(--ui-line-width) * -1);border:var(--ui-line-width) solid var(--ui-color-accent);border-radius:inherit;pointer-events:none}.ds-step-numeral{font-size:clamp(3rem,12vw,6rem);font-weight:var(--ui-font-weight-display);line-height:.95;letter-spacing:-.03em;color:var(--ui-color-accent)}.ds-step-title{margin:0;font-size:var(--ui-font-size-xl);font-weight:var(--ui-font-weight-heading)}.ds-step-body{margin:0;max-width:36ch;font-size:var(--ui-font-size-sm);color:var(--ui-color-text-muted)}.ds-step-figure{color:var(--ui-color-line);max-width:100%}.ds-step-action{margin-top:auto;padding-top:var(--ui-space-3)}.ds-btn-primary{display:inline-flex;align-items:center;min-height:var(--ui-control-height-md);padding:0 var(--ui-control-padding-x);font:inherit;font-weight:var(--ui-font-weight-medium);color:var(--ui-color-primary-contrast);background:var(--ui-color-primary);border:var(--ui-line-width) solid var(--ui-color-primary);border-radius:var(--ui-radius)}"
+    },
+    {
+      "name": "Parts List",
+      "kind": "custom",
+      "refersTo": "parts-list-item",
+      "description": "Headline numbers as a ruled strip of quantity marks, not tiles.",
+      "html": "<div class=\"ds-parts\"><div class=\"ds-part\"><span class=\"ds-qty\">12<span class=\"ds-x\">×</span></span><span class=\"ds-lbl\">days in a row</span></div><div class=\"ds-part\"><span class=\"ds-qty\">8<span class=\"ds-x\">×</span></span><span class=\"ds-lbl\">words due</span></div><div class=\"ds-part\"><span class=\"ds-qty\">3<span class=\"ds-x\">×</span></span><span class=\"ds-lbl\">new today</span></div></div>",
+      "css": ".ds-parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr));border-block:var(--ui-line-width) solid var(--ui-color-line)}.ds-part{display:flex;flex-direction:column;padding:var(--ui-space-4) var(--ui-space-4) var(--ui-space-4) 0}.ds-part+.ds-part{padding-inline-start:var(--ui-space-4);border-inline-start:var(--ui-line-width-hairline) solid var(--ui-color-line-muted)}.ds-qty{font-size:var(--ui-font-size-4xl);font-weight:var(--ui-font-weight-display);letter-spacing:var(--ui-letter-spacing-heading);line-height:1.1;font-variant-numeric:tabular-nums;color:var(--ui-color-text)}.ds-x{color:var(--ui-color-text-muted);font-weight:var(--ui-font-weight-regular)}.ds-lbl{margin-top:var(--ui-space-1);font-size:var(--ui-font-size-sm);font-weight:var(--ui-font-weight-medium);color:var(--ui-color-text-muted)}"
+    },
+    {
+      "name": "Data Table",
+      "kind": "custom",
+      "refersTo": "data-table",
+      "description": "The sheet grid: 2px frame, 2px rule under the header, hairline rows, tabular numerals, accent marker on the selected row.",
+      "html": "<div class=\"ds-table\"><table><thead><tr><th>Order</th><th>Customer</th><th class=\"n\">Total</th></tr></thead><tbody><tr><td>1042</td><td>Aino L.</td><td class=\"n\">1 240</td></tr><tr class=\"sel\"><td>1043</td><td>Ravi K.</td><td class=\"n\">860</td></tr><tr><td>1044</td><td>Maja S.</td><td class=\"n\">2 015</td></tr></tbody></table></div>",
+      "css": ".ds-table{border:var(--ui-line-width) solid var(--ui-color-line);border-radius:var(--ui-radius-lg);background:var(--ui-color-surface);overflow:hidden;font-variant-numeric:tabular-nums}.ds-table table{width:100%;border-collapse:collapse;color:var(--ui-color-text)}.ds-table th{padding:var(--ui-space-3) var(--ui-space-4);text-align:start;font-size:var(--ui-font-size-sm);font-weight:var(--ui-font-weight-semibold);border-block-end:var(--ui-line-width) solid var(--ui-color-line)}.ds-table td{padding:var(--ui-space-3) var(--ui-space-4);border-block-end:var(--ui-line-width-hairline) solid var(--ui-color-line-muted)}.ds-table tr:last-child td{border-block-end:0}.ds-table .n{text-align:end}.ds-table tbody tr:hover{background:var(--ui-color-bg-subtle)}.ds-table tr.sel{background:var(--ui-color-accent-subtle);box-shadow:inset var(--ui-line-width) 0 0 var(--ui-color-accent)}"
+    },
+    {
+      "name": "Kraft Rail Item",
+      "kind": "nav",
+      "refersTo": "shell-rail",
+      "description": "Navigation on the kraft shell: ink text, kraft-hover on hover, 2px ink edge.",
+      "html": "<nav class=\"ds-rail\" aria-label=\"Sections\"><a class=\"ds-rail-item\" href=\"#\" aria-current=\"page\">Overview</a><a class=\"ds-rail-item\" href=\"#\">Orders</a><a class=\"ds-rail-item\" href=\"#\">Customers</a></nav>",
+      "css": ".ds-rail{display:flex;flex-direction:column;width:16rem;max-width:100%;padding:var(--ui-space-3) 0;background:var(--ui-color-shell);color:var(--ui-color-shell-contrast);border-inline-end:var(--ui-line-width) solid var(--ui-color-line)}.ds-rail-item{display:block;padding:var(--ui-space-2) var(--ui-space-4);color:var(--ui-color-shell-contrast);text-decoration:none;font-weight:var(--ui-font-weight-medium);transition:background-color var(--ui-motion-quick) var(--ui-easing-out)}.ds-rail-item:hover{background:var(--ui-color-shell-hover)}.ds-rail-item[aria-current=\"page\"]{font-weight:var(--ui-font-weight-semibold);box-shadow:inset var(--ui-line-width) 0 0 var(--ui-color-shell-contrast)}.ds-rail-item:focus-visible{outline:var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);outline-offset:-2px}"
+    },
+    {
+      "name": "Message",
+      "kind": "custom",
+      "refersTo": "message",
+      "description": "A ruled note on paper: 2px frame in the status colour, line-art icon, no tint, no side border.",
+      "html": "<div class=\"ds-msg\" role=\"status\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><line x1=\"12\" y1=\"11\" x2=\"12\" y2=\"16\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"8.01\"/></svg><div><div class=\"ds-msg-title\">Saved</div><div>Your changes are in place.</div></div></div>",
+      "css": ".ds-msg{display:flex;gap:var(--ui-space-3);align-items:flex-start;padding:var(--ui-space-3) var(--ui-space-4);background:var(--ui-color-surface);color:var(--ui-color-text);border:var(--ui-line-width) solid var(--ui-color-info);border-radius:var(--ui-radius-lg)}.ds-msg svg{margin-top:.125em;flex:none;color:var(--ui-color-info-emphasis)}.ds-msg-title{font-weight:var(--ui-font-weight-semibold);margin-bottom:var(--ui-space-1)}"
+    },
+    {
+      "name": "Dialog",
+      "kind": "custom",
+      "refersTo": "dialog",
+      "description": "A lifted part: raised surface, 2px ink line, 10px corners, the one soft shadow.",
+      "html": "<div class=\"ds-dialog\" role=\"dialog\" aria-label=\"Delete item\"><div class=\"ds-dialog-head\">Delete item</div><div class=\"ds-dialog-body\">This removes it from the sheet. You can add it again later.</div><div class=\"ds-dialog-foot\"><button class=\"ds-d-btn\">Cancel</button><button class=\"ds-d-btn ds-d-primary\">Delete</button></div></div>",
+      "css": ".ds-dialog{max-width:24rem;background:var(--ui-color-surface-raised);color:var(--ui-color-text);border:var(--ui-line-width) solid var(--ui-color-line);border-radius:var(--ui-radius-lg);box-shadow:var(--ui-shadow-lift)}.ds-dialog-head{padding:var(--ui-space-4);font-size:var(--ui-font-size-xl);font-weight:var(--ui-font-weight-heading);border-block-end:var(--ui-line-width-hairline) solid var(--ui-color-line-muted)}.ds-dialog-body{padding:var(--ui-space-4);color:var(--ui-color-text-muted)}.ds-dialog-foot{display:flex;justify-content:flex-end;gap:var(--ui-space-2);padding:var(--ui-space-3) var(--ui-space-4);border-block-start:var(--ui-line-width-hairline) solid var(--ui-color-line-muted)}.ds-d-btn{min-height:var(--ui-control-height-md);padding:0 var(--ui-control-padding-x);font:inherit;font-weight:var(--ui-font-weight-medium);color:var(--ui-color-text);background:transparent;border:var(--ui-line-width) solid var(--ui-color-line);border-radius:var(--ui-radius);cursor:pointer}.ds-d-primary{color:var(--ui-color-primary-contrast);background:var(--ui-color-primary)}.ds-d-btn:focus-visible{outline:var(--ui-focus-ring-width) solid var(--ui-color-focus-ring);outline-offset:var(--ui-focus-ring-offset)}"
+    },
+    {
+      "name": "Empty State",
+      "kind": "custom",
+      "refersTo": "empty-state",
+      "description": "A kraft-tinted plate with a 2px ink line, a line-art drawing, one title, one sentence, one action.",
+      "html": "<div class=\"ds-empty\"><svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8l9-5 9 5v8l-9 5-9-5z\"/><path d=\"M3 8l9 5 9-5\"/><path d=\"M12 13v8\"/></svg><h3 class=\"ds-empty-title\">No parts yet</h3><p class=\"ds-empty-text\">Add your first part to start the sheet.</p><button class=\"ds-btn-primary\">Add part</button></div>",
+      "css": ".ds-empty{display:flex;flex-direction:column;align-items:center;gap:var(--ui-space-2);padding:var(--ui-space-10) var(--ui-space-4);background:color-mix(in srgb,var(--ui-color-shell) 22%,var(--ui-color-surface));color:var(--ui-color-text-muted);border:var(--ui-line-width) solid var(--ui-color-line);border-radius:var(--ui-radius-lg)}.ds-empty svg{color:var(--ui-color-text)}.ds-empty-title{margin:0;color:var(--ui-color-text);font-size:var(--ui-font-size-xl);font-weight:var(--ui-font-weight-heading);letter-spacing:var(--ui-letter-spacing-heading)}.ds-empty-text{margin:0;max-width:40ch;text-align:center}.ds-btn-primary{margin-top:var(--ui-space-3);display:inline-flex;align-items:center;min-height:var(--ui-control-height-md);padding:0 var(--ui-control-padding-x);font:inherit;font-weight:var(--ui-font-weight-medium);color:var(--ui-color-primary-contrast);background:var(--ui-color-primary);border:var(--ui-line-width) solid var(--ui-color-primary);border-radius:var(--ui-radius)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Assembly Sheet",
+    "overview": "## Overview\n\n**Creative North Star: \"The Assembly Sheet\"** (Monteringsanvisning)\n\nEvery flow is an instruction sheet: numbered steps, one action each, a picture before words, and parts that slide along a dashed guide and click into place. White paper carries the work. Structure is drawn, not boxed or shadowed: 2px ink lines with rounded 6px part corners and 10px sheets. The shell (rail, top bar, empty-state plates) is kraft cardboard, the material the parts came in. One signal blue marks where you are: the active step, the selection, the focus ring, progress and links. Type is a single Scandinavian grotesk, Albert Sans, with large light numerals where the sheet counts.\n\nOn working screens the world lends type, palette, density and one signature move. Navigation, controls and layouts stay the standard ones people already know (buttons, tabs, inputs, tables, menus): a screen reads as a working product first and an instruction sheet second. Multi-step work (sessions, onboarding, checkout, steppers, board columns) is the one place the sheet shows itself fully, as `StepSheet` panels with a large light numeral, one line-art figure or key value, and one action. Headline numbers are a parts list (a ruled strip of quantity marks), never a row of big-number tiles.\n\nThe system is flat at rest. Only things lifted off the sheet (menus, popovers, dialogs, drawers, toasts, dragged cards) carry the one soft offset shadow. Eight profiles (saas, admin, dashboard, cms, pos, game, ecommerce, landing) vary density, radius, motion pace and the primary or accent colour inside the same world.\n\nKnown ceilings, recorded as facts and not as rules: kraft is a flat colour with no material cue beyond hue; dashboard and admin screens carry little assembly vocabulary beyond chrome, numerals and the parts list, by design.",
+    "keyCharacteristics": [
+      "White sheet, kraft shell, ink structure, one blue.",
+      "2px ink lines (`--ui-line-width`) draw every distinct object; 1px hairlines only inside dense data.",
+      "Albert Sans only; light display numerals (weight 250), UI text 400 to 600, tabular figures for counts.",
+      "Ink primary button, one per view; profiles may recolour it (pos go-green, ecommerce orange).",
+      "Flat resting surfaces; shadow only on lifted overlays and dragged items.",
+      "Motion is material: Assemble, Turn, Tick, Lift and drop, built in-house, skippable under reduced motion.",
+      "Optional 3D (`look=\"sheet\"`) is an object drawn on the sheet, never a working-screen device."
+    ],
+    "rules": [
+      {
+        "name": "The One Ink Rule",
+        "body": "The primary action is solid ink (or the profile's primary), once per view. Secondary actions are drawn: a 2px ink outline with no fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Signal Blue Rule",
+        "body": "Blue means \"this is where you are\": active step, selection, focus, progress, links. It is never decoration, never a second brand colour, never a button fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Chart Palette Rule",
+        "body": "Series colours come from `--ui-color-chart-1..8` (chart-1 is the signal blue, chart-2 a kraft brown); a chart never invents hues.",
+        "section": "colors"
+      },
+      {
+        "name": "The Light Numeral Rule",
+        "body": "Only numbers that count or order things (step numbers, quantities, scores) use the light display weight. Headings never do.",
+        "section": "typography"
+      },
+      {
+        "name": "The Real Count Rule",
+        "body": "A quantity mark (`8×`, `1×`) appears only on a real count. Never a decorative 01/02/03 and never a number invented to fill a figure.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Sheet Rule",
+        "body": "Line or shadow, never both. A resting surface is drawn with the 2px line; only a lifted part adds the soft offset shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Overlay Line Rule",
+        "body": "A lifted part keeps its 2px ink line and gets the shadow on top, so it reads as a part set on the sheet and not a glow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** draw structure with the 2px ink line (`--ui-line-width`, `--ui-color-line`) and use 1px hairlines only inside dense data.",
+      "**Do** keep the primary button ink, one per view, and put the action inside the step it belongs to.",
+      "**Do** use signal blue only for the active step, selection, focus, progress and links.",
+      "**Do** number a sequence only when order carries meaning; write counts as quantity marks (`8×`) only when they are real counts.",
+      "**Do** use kraft for the shell and empty-state plates and white for the work.",
+      "**Do** read every colour, radius, line, shadow and duration from `var(--ui-*)` tokens; theme the browser surfaces (selection in accent at 28%, accent caret, scrollbars in border-strong, tabular numerals).",
+      "**Do** start motion from the visible final state, honour reduced motion, and let a figure's parts lower along its dashed guide."
+    ],
+    "donts": [
+      "**Don't** put a line and a shadow on the same resting element, or add any shadow to a resting surface.",
+      "**Don't** use gradients, glass or blur, glow, neon, hard offset shadows, or a coloured side border on alerts and list items.",
+      "**Don't** use eyebrow or kicker labels above headings, all-caps labels, pills as the default shape, icon bubbles, or decorative emoji and unicode stand-ins for icons.",
+      "**Don't** build page structure from same-size icon-heading-text card grids, or headline numbers from big-number tiles.",
+      "**Don't** costume working screens as paper (torn edges, staples, texture behind data); kraft is a flat shell colour.",
+      "**Don't** put text or quantity marks inside a line-art figure, or give a figure any fill other than paper.",
+      "**Don't** use 3D for data, working screens, or as the only carrier of information.",
+      "**Don't** pull in another UI kit, animation library, Bootstrap JS or Popper."
+    ]
+  }
+}
