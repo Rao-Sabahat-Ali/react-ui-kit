@@ -57,6 +57,9 @@ function BlueprintView({ blueprint }: { blueprint: Blueprint }) {
       <p className="text-body-secondary docs-blueprint__try">
         Profile {blueprint.profile}. {blueprint.tryIt}
       </p>
+      <p className="docs-blueprint__sample">
+        <strong>Sample data.</strong> The companies, people, orders and amounts in this preview are made up.
+      </p>
 
       {preview && (
         <div className="docs-blueprint__controls" role="group" aria-label="Preview controls">

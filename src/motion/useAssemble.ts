@@ -16,6 +16,8 @@ export interface AssembleOptions {
   duration?: number;
   /** Direction of travel: `block` (default, from below) or `inline` (from the reading start; mirrors in RTL). */
   axis?: 'block' | 'inline';
+  /** Enter from the opposite side (from above for `block`, from the reading end for `inline`), for parts that are lowered into place. */
+  reverse?: boolean;
   /** Turn the movement off (parts simply sit in place). Default true. */
   enabled?: boolean;
   /** Replays the assembly whenever this value changes (for example the current step id). */
@@ -41,7 +43,7 @@ export interface AssembleControls {
  * - At most 8 parts animate; the rest appear immediately.
  */
 export function useAssemble(ref: RefObject<HTMLElement | null>, options: AssembleOptions = {}): AssembleControls {
-  const { parts = '[data-assemble]', guide = '[data-assemble-guide]', enabled = true, trigger, axis = 'block' } = options;
+  const { parts = '[data-assemble]', guide = '[data-assemble-guide]', enabled = true, trigger, axis = 'block', reverse = false } = options;
   const running = useRef<Animation[]>([]);
   const optionsRef = useRef(options);
   optionsRef.current = options;
@@ -60,7 +62,8 @@ export function useAssemble(ref: RefObject<HTMLElement | null>, options: Assembl
     const distance = o.distance ?? readAssembleDistance(root);
     const duration = o.duration ?? readMotionMs(root, 'part');
     const rtl = axis === 'inline' && getComputedStyle(root).direction === 'rtl';
-    const from = axis === 'inline' ? `translate(${rtl ? distance : -distance}px, 0)` : `translate(0, ${distance}px)`;
+    const sign = reverse ? -1 : 1;
+    const from = axis === 'inline' ? `translate(${(rtl ? distance : -distance) * sign}px, 0)` : `translate(0, ${distance * sign}px)`;
 
     const targets = Array.from(root.querySelectorAll<HTMLElement>(parts)).slice(0, MOTION.maxAnimated);
     const lines = Array.from(root.querySelectorAll<HTMLElement>(guide));
@@ -99,7 +102,7 @@ export function useAssemble(ref: RefObject<HTMLElement | null>, options: Assembl
         optionsRef.current.onComplete?.();
       }
     });
-  }, [ref, parts, guide, axis, cancel]);
+  }, [ref, parts, guide, axis, reverse, cancel]);
 
   useLayoutEffect(() => {
     if (!enabled) return;

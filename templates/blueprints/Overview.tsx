@@ -67,10 +67,10 @@ export function Overview({ previewState, onNavigate }: OverviewProps) {
 
       {numbers === 'ready' ? (
         <StatGroup aria-label="Business at a glance" style={SECTION_GAP}>
-          <StatCard label="Cash balance (SEK)" value={184_300} delta={0.042} deltaLabel="since September" />
+          <StatCard label="Cash balance (SEK)" value={184_300} quantity={false} delta={0.042} deltaLabel="since September" />
           <StatCard label="Invoices due" value={5} footer="SEK 62,400 outstanding" />
           <StatCard label="Receipts to match" value={8} />
-          <StatCard label="VAT to report (SEK)" value={21_450} />
+          <StatCard label="VAT to report (SEK)" value={21_450} quantity={false} />
         </StatGroup>
       ) : (
         <section aria-label="Business at a glance" style={SECTION_GAP}>

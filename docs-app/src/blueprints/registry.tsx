@@ -47,13 +47,14 @@ const ALL = { value: 'all', label: 'All regions' };
 export const blueprints: Blueprint[] = [
   {
     slug: 'analytics-dashboard',
+    appTheme: true,
     title: 'Analytics dashboard',
     summary: 'KPIs, trend and breakdown charts, a sortable order table and an activity feed, each widget loading independently.',
     profile: 'dashboard',
     patterns: ['dashboard-grid', 'overview'],
     files: ['AnalyticsDashboard.tsx', 'AnalyticsDashboard.data.ts', 'shared.tsx'],
     highlights: [
-      'PageHeader with a date-range Select and the single ink action; a StatGroup of four KPIs with delta words and sparklines instead of tiles.',
+      'PageHeader with a date-range Select and the single ink action; a StatGroup of four KPIs with the change written out in words instead of tiles or sparklines (quantity marks only on the order count, never on money or rates).',
       'Revenue line chart (this period against the previous one) and a horizontal bar chart. Both carry a text summary and a "View as table" fallback.',
       'DataTable of recent orders: sort, search (also driven by the top bar), status and channel filters, pagination, Tag statuses and an identical overflow menu on every row.',
       'Activity Timeline; Skeleton, empty and error states per widget (use the preview controls), with Retry bringing back only the failed widget.',
@@ -65,6 +66,7 @@ export const blueprints: Blueprint[] = [
   },
   {
     slug: 'admin-list-detail',
+    appTheme: true,
     title: 'Admin list to detail',
     summary: 'A back-office invoice list with filters, bulk actions, a detail drawer and confirmed deletes.',
     profile: 'admin',
@@ -83,13 +85,14 @@ export const blueprints: Blueprint[] = [
   },
   {
     slug: 'board',
+    appTheme: true,
     title: 'Task board',
     summary: 'A sprint board: numbered stages, cards that move by drag, keyboard or menu, WIP limits and a details drawer.',
     profile: 'saas',
     patterns: ['list-detail'],
     files: ['Board.tsx', 'Board.data.ts', 'shared.tsx'],
     highlights: [
-      'PageHeader with the single ink action (New task) and a Toolbar with the text filter; the filter hides cards, marks matches and the column counts follow.',
+      'PageHeader with the single ink action (New task) and a full-width text filter; the filter hides cards, marks matches and the column counts follow.',
       'KanbanBoard with four numbered stages that assemble in order; quantity marks tick when a card moves. Doing warns over its limit of 3, Review refuses drops when full and says so.',
       'Three ways to move a card: pointer drag with a placeholder at the drop index, Space then arrow keys (one polite announcement per step), or "Move to…" in the card menu (Shift+F10).',
       'A card opens a Drawer with its details and focus returns to the card on close; New task reuses a Drawer with a labelled Field.',
@@ -101,6 +104,7 @@ export const blueprints: Blueprint[] = [
   },
   {
     slug: 'overview-index',
+    appTheme: true,
     title: 'Overview and index page',
     summary: 'The home screen of a SaaS app and the ruled-list index page it links to.',
     profile: 'saas',
@@ -117,6 +121,7 @@ export const blueprints: Blueprint[] = [
   },
   {
     slug: 'settings',
+    appTheme: true,
     title: 'Settings page',
     summary: 'Vertical tabs with grouped settings, an explicit Save with validation, instant switches and a danger zone.',
     profile: 'saas',
@@ -133,11 +138,12 @@ export const blueprints: Blueprint[] = [
   },
   {
     slug: 'checkout',
+    appTheme: false,
     title: 'Checkout',
     summary: 'A guest-first, four-step checkout with hosted card fields, an order summary on every step and a payment result.',
     profile: 'ecommerce',
     patterns: ['checkout'],
-    files: ['Checkout.tsx', 'Checkout.data.ts'],
+    files: ['Checkout.tsx', 'Checkout.data.ts', 'figures.tsx'],
     highlights: [
       'Linear Stepper with four steps (contact, delivery, payment, review) and a confirmation that is not a step; guest first, each step keeps its data when you go back.',
       'PaymentMethodSelector with Card, Digital wallet, Bank transfer and Invoice as ruled rows; choosing Card reveals PaymentCardForm in hosted mode, with a simulated provider so no card data ever reaches the page.',
@@ -158,6 +164,7 @@ export const blueprints: Blueprint[] = [
   },
   {
     slug: 'sign-in',
+    appTheme: false,
     title: 'Sign in and reset',
     summary: 'A standalone sign-in page with password reset, using the auth and form-layout patterns.',
     profile: 'saas',
@@ -174,6 +181,7 @@ export const blueprints: Blueprint[] = [
   },
   {
     slug: 'article-detail',
+    appTheme: true,
     title: 'Article and detail page',
     summary: 'A page about one thing, an order, using the page itself as the container.',
     profile: 'saas',

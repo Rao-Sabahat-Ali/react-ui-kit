@@ -230,7 +230,7 @@ export function AnalyticsDashboard({ appName = 'Nordic Tools', previewState, emb
                 delta={k.delta}
                 deltaLabel="vs previous period"
                 invertDelta={k.invert}
-                sparkline={k.sparkline}
+                quantity={k.id === 'orders'}
               />
             ))}
           </StatGroup>

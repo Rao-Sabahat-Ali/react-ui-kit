@@ -153,4 +153,43 @@ describe('StepSheet', () => {
     expect(screen.getByRole('list')).toHaveClass('ui-step-sheet--stack');
     act(() => {});
   });
+
+  it('AC-12: figure renders before the title, hidden by default (role img with figureTitle), and assembles its parts when current', async () => {
+    const figure = (
+      <div data-testid="fig">
+        <span data-fig-guide />
+        <span data-fig-part>part</span>
+        <span data-fig-part>part</span>
+      </div>
+    );
+    const { container, rerender } = render(
+      <StepSheet aria-label="Fig">
+        <StepPanel title="One" figure={figure} action={<Next />}>
+          a
+        </StepPanel>
+        <StepPanel title="Two" figure={figure} figureTitle="A box going into a folder">
+          b
+        </StepPanel>
+      </StepSheet>,
+    );
+    const wrappers = container.querySelectorAll('.ui-step-panel__figure');
+    expect(wrappers).toHaveLength(2);
+    expect(wrappers[0]).toHaveAttribute('aria-hidden', 'true');
+    expect(wrappers[1]).toHaveAttribute('role', 'img');
+    expect(wrappers[1]).toHaveAttribute('aria-label', 'A box going into a folder');
+    const first = wrappers[0]!.closest('li')!;
+    expect(first.querySelector('.ui-step-panel__figure')!.compareDocumentPosition(first.querySelector('h3')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // Only the current panel's figure runs: one guide (clip-path) and two parts (transform + opacity) from the figure, besides the panel's own parts.
+    const figureGuides = animate.mock.calls.filter(([frames]) => 'clipPath' in (frames as Keyframe[])[0]!);
+    expect(figureGuides.length).toBe(2);
+    animate.mockClear();
+    rerender(
+      <StepSheet aria-label="Fig" assemble={false}>
+        <StepPanel title="One" figure={figure}>
+          a
+        </StepPanel>
+      </StepSheet>,
+    );
+    expect(animate).not.toHaveBeenCalled();
+  });
 });

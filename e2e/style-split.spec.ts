@@ -42,7 +42,9 @@ test.describe('split styles render identically @split', () => {
   // `shell`: the whole page with the styles of the docs shell + the component. `isolated`: only the styles of the
   // component under test (and what it needs) are loaded, and only the example previews are compared.
   for (const mode of ['shell', 'isolated'] as const) {
-    for (const c of catalog.components.filter((x) => x.status !== 'specified')) {
+    // Components of optional packages (Scene3D, Model3D) ship their own stylesheet, which the kit's split pieces do not cover.
+    const ownedByPackage = (name: string) => readdirSync(join(root, 'packages')).some((pkg) => existsSync(join(root, 'packages', pkg, 'src/components', name)));
+    for (const c of catalog.components.filter((x) => x.status !== 'specified' && !ownedByPackage(x.name))) {
       test(`${c.name} page (${mode})`, async ({ browser, baseURL }) => {
       // Foundation providers keep their examples next to the code (src/theme, src/locale).
       const examples = [join(root, 'src/components', c.name, `${c.name}.examples.tsx`), join(root, 'src/theme', `${c.name}.examples.tsx`), join(root, 'src/locale', `${c.name}.examples.tsx`)].find((f) => existsSync(f)) ?? join(root, 'src/components', c.name, `${c.name}.examples.tsx`);

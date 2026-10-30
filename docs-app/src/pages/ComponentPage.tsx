@@ -1,4 +1,4 @@
-import { Message, Tag } from '@sabahat/react-ui-kit';
+import { Message } from '@sabahat/react-ui-kit';
 import { ExampleCard } from '../components/ExampleCard';
 import { InlineMarkdown } from '../components/InlineMarkdown';
 import { CATEGORY_LABELS, components, isImplemented, useExamples } from '../registry';
@@ -11,15 +11,11 @@ export function ComponentPage({ slug }: { slug: string }) {
   return (
     <>
       <header className="docs-page-header">
-        <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
-          <Tag value={CATEGORY_LABELS[component.category] ?? component.category} />
-          <Tag value={implemented ? 'Implemented' : 'Specified'} severity={implemented ? 'success' : 'warning'} />
-        </div>
         <h1>{component.name}</h1>
-        <p className="lead text-body-secondary"><InlineMarkdown text={component.purpose} /></p>
-        <p className="small text-body-secondary mb-0">
-          Spec: <code>design-system-mcp/specs/components/{component.slug}.md</code> · MCP: <code>get_component_spec("{component.name}")</code>
+        <p className="small text-body-secondary mb-2">
+          {CATEGORY_LABELS[component.category] ?? component.category} · {implemented ? 'implemented' : 'specified'} · spec <code>specs/components/{component.slug}.md</code> · MCP <code>get_component_spec(&quot;{component.name}&quot;)</code>
         </p>
+        <p className="lead text-body-secondary mb-0"><InlineMarkdown text={component.purpose} /></p>
       </header>
       {implemented ? (
         examples?.map((example) => <ExampleCard key={example.title} example={example} />)

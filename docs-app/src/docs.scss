@@ -43,7 +43,9 @@
   position: sticky;
   top: 3.5rem;
   flex: 0 0 16rem;
+  // Sticky and exactly as tall as the viewport below the bar, so the kraft rail fills the screen however far the sheet scrolls.
   height: calc(100vh - 3.5rem);
+  height: calc(100dvh - 3.5rem);
   overflow-y: auto;
   padding: var(--ui-space-3) 0;
   background: var(--ui-color-shell);
@@ -67,6 +69,13 @@
 @media (max-width: 991.98px) {
   .docs-nav {
     @include docs-nav-drawer;
+  }
+}
+
+// A blueprint brings its own app header on phones: the docs bar shrinks to the brand (menu, profile and a duplicate theme toggle are hidden in the markup).
+@media (max-width: 767.98px) {
+  .docs-topbar--blueprint {
+    height: 2.5rem;
   }
 }
 
@@ -263,6 +272,12 @@
   font-size: var(--ui-font-size-sm);
 }
 
+.docs-blueprint__sample {
+  margin: 0 0 var(--ui-space-3);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
 .docs-blueprint__controls {
   display: flex;
   flex-wrap: wrap;
@@ -304,4 +319,34 @@
 .docs-code--tall pre {
   max-height: 32rem;
   overflow: auto;
+}
+
+// One app profile on its own surface (Profiles page): the profile's tokens and default theme apply inside.
+.docs-profile {
+  height: 100%;
+  padding: var(--ui-space-5);
+  border: var(--ui-line-width) solid var(--ui-color-line);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-bg);
+  color: var(--ui-color-text);
+}
+
+.docs-profile__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: var(--ui-space-2) var(--ui-space-4);
+  margin: 0 0 var(--ui-space-4);
+  padding-block: var(--ui-space-3);
+  border-block: var(--ui-line-width-hairline) solid var(--ui-color-line-muted);
+
+  dt {
+    font-size: var(--ui-font-size-sm);
+    font-weight: 400;
+    color: var(--ui-color-text-muted);
+  }
+
+  dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
 }

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
-import { Button, Icon, InputText, Select, ThemeProvider, ThemeToggle, type Profile } from '@sabahat/react-ui-kit';
+import { Button, Icon, InputText, Select, ThemeProvider, ThemeToggle, type Profile, type ThemeSetting } from '@sabahat/react-ui-kit';
 import { blueprints, findBlueprint } from './blueprints/registry';
 import { BlueprintPage } from './pages/BlueprintPage';
 import { BlueprintsPage } from './pages/BlueprintsPage';
@@ -21,8 +21,22 @@ function readProfile(): Profile {
   }
 }
 
+/** A theme the visitor picked (the kit stores it under `ui:theme` when the toggle is used); null until they do. */
+function readPickedTheme(): ThemeSetting | null {
+  try {
+    const v = localStorage.getItem('ui:theme');
+    return v === 'light' || v === 'dark' || v === 'system' ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+const defaultThemeOf = (profile: Profile): ThemeSetting => (profiles.find((p) => p.name === profile)?.defaultTheme as ThemeSetting | undefined) ?? 'system';
+
 export function App() {
   const [profile, setProfile] = useState<Profile>(readProfile);
+  // The profile decides the theme (game opens on the night sheet, pos and ecommerce on the light one) until the visitor picks one.
+  const [picked, setPicked] = useState<ThemeSetting | null>(readPickedTheme);
   useEffect(() => {
     try {
       localStorage.setItem('docs:profile', profile);
@@ -32,7 +46,7 @@ export function App() {
   }, [profile]);
 
   return (
-    <ThemeProvider profile={profile} theme="system">
+    <ThemeProvider profile={profile} theme={picked ?? defaultThemeOf(profile)} onThemeChange={setPicked}>
       <Shell profile={profile} onProfileChange={setProfile} />
     </ThemeProvider>
   );
@@ -85,15 +99,21 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
       <a href="#main" className="visually-hidden-focusable docs-skip" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }}>
         Skip to content
       </a>
-      <header className="docs-topbar">
-        <Button className={blueprint ? '' : 'd-lg-none'} appearance="text" variant="secondary" icon="menu" aria-label="Navigation" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)} />
+      <header className={`docs-topbar ${blueprint ? 'docs-topbar--blueprint' : ''}`}>
+        {/* On a phone a blueprint brings its own app header: the docs bar shrinks to the brand, and the way back is the breadcrumb. */}
+        <Button className={blueprint ? 'd-none d-md-inline-flex' : 'd-lg-none'} appearance="text" variant="secondary" icon="menu" aria-label="Docs navigation" aria-expanded={navOpen} aria-controls="docs-nav" onClick={() => setNavOpen((o) => !o)} />
         <a href={href()} className="docs-brand">react-ui-kit</a>
         <div className="ms-auto d-flex align-items-center gap-2">
-          <span className="small d-none d-sm-inline">Profile</span>
-          <div style={{ width: '9.5rem' }}>
-            <Select<Profile> aria-label="App profile" size="sm" options={profiles.map((p) => ({ label: p.name, value: p.name as Profile }))} value={profile} onChange={(v) => v && onProfileChange(v)} />
+          <div className={`align-items-center gap-2 ${blueprint ? 'd-none d-md-flex' : 'd-flex'}`}>
+            <span className="small d-none d-sm-inline">Profile</span>
+            <div style={{ width: '9.5rem' }}>
+              <Select<Profile> aria-label="App profile" size="sm" options={profiles.map((p) => ({ label: p.name, value: p.name as Profile }))} value={profile} onChange={(v) => v && onProfileChange(v)} />
+            </div>
           </div>
-          <ThemeToggle size="sm" />
+          {/* One theme control on phones: the screen's own when it has one, otherwise this one. */}
+          <span className={blueprint?.appTheme ? 'd-none d-md-inline-flex' : 'd-inline-flex'}>
+            <ThemeToggle size="sm" />
+          </span>
         </div>
       </header>
       <div className="docs-body">

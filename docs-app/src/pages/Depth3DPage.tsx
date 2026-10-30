@@ -1,4 +1,3 @@
-import { Tag } from '@sabahat/react-ui-kit';
 import { CodeBlock } from '../components/CodeBlock';
 import { ExampleCard } from '../components/ExampleCard';
 import { useExamples } from '../registry';
@@ -12,11 +11,10 @@ export function Depth3DPage() {
   return (
     <>
       <header className="docs-page-header">
-        <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
-          <Tag value="Optional package" />
-          <Tag value="@sabahat/react-ui-kit-3d" />
-        </div>
         <h1>Depth (3D)</h1>
+        <p className="small text-body-secondary mb-2">
+          Optional package · <code>@sabahat/react-ui-kit-3d</code>
+        </p>
         <p className="lead text-body-secondary">
           The sheet is flat. When an object earns depth, it is drawn the way the world draws things: flat paper fills with 2px ink edges, parts that travel in along dashed guide lines and click into place.
         </p>

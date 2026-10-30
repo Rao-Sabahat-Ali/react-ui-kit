@@ -94,7 +94,11 @@ export interface StepPanelProps extends Omit<HTMLAttributes<HTMLLIElement>, 'tit
   ref?: Ref<HTMLLIElement>;
   title: ReactNode;
   headingLevel?: 2 | 3 | 4 | 5 | 6;
-  /** The one key value or diagram. */
+  /** The drawn part for this step (a line-art SVG). Decorative unless `figureTitle` is set. Assembles when the panel becomes current. */
+  figure?: ReactNode;
+  /** Accessible name for the figure; without it the figure is hidden from assistive technology. */
+  figureTitle?: string;
+  /** The one key value. */
   visual?: ReactNode;
   /** The one action. Inert unless this panel is current. */
   action?: ReactNode;
@@ -102,7 +106,7 @@ export interface StepPanelProps extends Omit<HTMLAttributes<HTMLLIElement>, 'tit
   numeral?: ReactNode;
 }
 
-export function StepPanel({ title, headingLevel = 3, visual, action, status: statusProp, numeral, className, children, ref, ...rest }: StepPanelProps) {
+export function StepPanel({ title, headingLevel = 3, figure, figureTitle, visual, action, status: statusProp, numeral, className, children, ref, ...rest }: StepPanelProps) {
   const sheet = useContext(SheetCtx);
   if (!sheet) throw new Error('<StepPanel> must be used inside <StepSheet>');
   const index = useContext(IndexCtx);
@@ -110,8 +114,11 @@ export function StepPanel({ title, headingLevel = 3, visual, action, status: sta
   const status: StepSheetStatus = statusProp ?? (index < sheet.current ? 'complete' : index === sheet.current ? 'current' : 'upcoming');
   const Heading = `h${headingLevel}` as 'h3';
   const own = useRef<HTMLLIElement | null>(null);
+  const figureRef = useRef<HTMLDivElement | null>(null);
 
   useAssemble(own, { enabled: sheet.assemble && status === 'current', trigger: status });
+  // The drawn part assembles along its own guide line (`[data-fig-guide]`), its moving parts marked `[data-fig-part]`.
+  useAssemble(figureRef, { parts: '[data-fig-part]', guide: '[data-fig-guide]', reverse: true, enabled: sheet.assemble && status === 'current' && Boolean(figure), trigger: status });
 
   const statusText = t('stepStatus', { n: index + 1, count: sheet.count, status: t(status === 'complete' ? 'stepComplete' : status === 'current' ? 'stepCurrent' : 'stepUpcoming') });
 
@@ -135,6 +142,17 @@ export function StepPanel({ title, headingLevel = 3, visual, action, status: sta
         {status === 'complete' && <Icon name="check" size="lg" className="ui-step-panel__check" />}
       </div>
       <span className="visually-hidden">{statusText}</span>
+      {figure && (
+        <div
+          ref={figureRef}
+          className="ui-step-panel__figure"
+          aria-hidden={figureTitle ? undefined : true}
+          role={figureTitle ? 'img' : undefined}
+          aria-label={figureTitle}
+        >
+          {figure}
+        </div>
+      )}
       <Heading className="ui-step-panel__title" data-step-title tabIndex={status === 'current' ? -1 : undefined} data-assemble>
         {title}
       </Heading>

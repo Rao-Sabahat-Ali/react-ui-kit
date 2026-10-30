@@ -10,9 +10,11 @@
       // Same logic as themeScript() — applies stored theme before first paint.
       (function () {
         try {
-          var t = localStorage.getItem('ui:theme') || 'system';
-          if (t === 'system') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
           var p = localStorage.getItem('docs:profile') || 'saas';
+          // The profile's default theme applies until the visitor picks one (same table as the profiles).
+          var fallback = { cms: 'light', pos: 'light', game: 'dark', ecommerce: 'light', landing: 'light' }[p] || 'system';
+          var t = localStorage.getItem('ui:theme') || fallback;
+          if (t === 'system') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
           var d = document.documentElement;
           d.setAttribute('data-bs-theme', t);
           d.setAttribute('data-ui-profile', p);

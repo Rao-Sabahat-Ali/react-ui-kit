@@ -97,6 +97,45 @@
   }
 }
 
+// The drawn part: a line-art SVG at its own fixed size (1 unit = 1px), in ink; the guide inside it carries the accent.
+.ui-step-panel__figure {
+  align-self: flex-start;
+  max-inline-size: 100%;
+  color: var(--ui-color-line);
+  line-height: 0;
+
+  > svg {
+    display: block;
+    inline-size: min(100%, 12.5rem);
+    block-size: auto;
+    overflow: visible;
+  }
+}
+
+.ui-step-panel--upcoming .ui-step-panel__figure {
+  color: var(--ui-color-border-strong);
+}
+
+// Wide stack: the picture sits beside the copy instead of above it.
+@media (min-width: 768px) {
+  .ui-step-sheet--stack .ui-step-panel:has(> .ui-step-panel__figure) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--ui-space-6);
+    align-items: start;
+
+    > * {
+      grid-column: 1;
+    }
+
+    > .ui-step-panel__figure {
+      grid-column: 2;
+      grid-row: 1 / span 6;
+      align-self: center;
+    }
+  }
+}
+
 .ui-step-panel__visual {
   font-size: var(--ui-font-size-2xl);
   font-weight: var(--ui-font-weight-medium);

@@ -16,6 +16,8 @@ export interface Blueprint {
   /** Files copied to start an app, first is the screen. */
   files: string[];
   highlights: string[];
+  /** True when the screen has its own theme toggle (the docs bar then drops its toggle on phones). */
+  appTheme: boolean;
   /** Hint shown above the frame. */
   tryIt?: string;
   /** Demo controls: which regions can be forced into which state. */
