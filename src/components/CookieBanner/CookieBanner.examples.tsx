@@ -102,9 +102,14 @@ export const examples = [
   },
   {
     title: 'Cookie storage',
-    description: 'storage="cookie" writes a first-party ui_consent cookie (Path=/, SameSite=Lax, Max-Age from maxAgeDays, Secure on https) so a server can read it. It is written only after you decide here, and Reset example removes it.',
+    description: 'storage="cookie" writes a first-party ui_consent cookie (Path=/, SameSite=Lax, Max-Age from maxAgeDays, Secure on https) so a server can read it. This site sets no cookies, so the example shows the cookie instead of writing it.',
     code: `<ConsentProvider storage="cookie" maxAgeDays={180} categories={categories}>\n  <CookieBanner policyHref="/privacy" />\n</ConsentProvider>`,
-    render: () => <Stage id="cookie" storage="cookie" />,
+    render: () => (
+      <p className="small mb-0">
+        After a decision the browser stores:{' '}
+        <code>{'ui_consent=%7B%22version%22%3A%223%22%2C…%7D; Path=/; SameSite=Lax; Max-Age=15552000; Secure'}</code>
+      </p>
+    ),
   },
   {
     title: 'ConsentGate',

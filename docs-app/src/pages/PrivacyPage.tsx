@@ -11,7 +11,6 @@ const DEMOS: { where: string; key: string; what: string; when: string }[] = [
   { where: 'sessionStorage', key: 'docs:invoices', what: 'Sorting, filters and page of the DataTable example.', when: 'Written when you change the table. Gone when the tab closes.' },
   { where: 'sessionStorage', key: 'ui-scene3d:paused', what: 'Whether you paused the 3D scene.', when: 'Written when you pause or resume. Gone when the tab closes.' },
   { where: 'localStorage', key: 'docs:example:cookie-banner:*', what: 'The decision you make in a CookieBanner example (one key per example).', when: 'Written when you decide in an example. "Reset example" removes it.' },
-  { where: 'cookie', key: 'ui_consent', what: 'The same kind of record, written as a first-party cookie for the "Cookie storage" CookieBanner example only.', when: 'Written only after you decide in that example, with Path=/ and SameSite=Lax. "Reset example" removes it.' },
 ];
 
 function Table({ rows, caption }: { rows: typeof STORED; caption: string }) {
@@ -50,7 +49,7 @@ export function PrivacyPage() {
     <>
       <header className="docs-page-header">
         <h1>Privacy</h1>
-        <p className="lead text-body-secondary">This site keeps a few choices in your browser. It sets no cookies on its own, runs no analytics and sends nothing about you to anyone.</p>
+        <p className="lead text-body-secondary">This site keeps a few choices in your browser. It sets no cookies, runs no analytics and sends nothing about you to anyone.</p>
       </header>
       <section aria-labelledby="privacy-stored" className="mb-5">
         <h2 id="privacy-stored" className="h4">What the site stores</h2>
