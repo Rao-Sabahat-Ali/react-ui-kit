@@ -1,5 +1,6 @@
-import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useControllableState } from '../../hooks/useControllableState';
+import { useReveal } from '../../motion/useReveal';
 import { cx } from '../../utils/cx';
 import { Icon } from '../Icon/Icon';
 import { flattenVisible, isRtl, type TreeKey, type TreeNode } from '../Tree/treeUtils';
@@ -43,6 +44,11 @@ export function OrganizationChart<T = unknown>({
   const [collapsed, setCollapsed] = useControllableState<Set<TreeKey>>(collapsedProp, defaultCollapsedKeys, onToggle);
   const [focusedKey, setFocusedKey] = useState<TreeKey | null>(null);
   const rootRef = useRef<HTMLUListElement | null>(null);
+  // Branches open at the first paint stay still; branches toggled or mounted afterwards reveal (clip-path + opacity).
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+  }, []);
 
   const isOpen = (node: TreeNode<T>) => !collapsible || !collapsed.has(node.key);
   const flat = flattenVisible(value, isOpen, childrenOf);
@@ -159,10 +165,10 @@ export function OrganizationChart<T = unknown>({
               </span>
             )}
           </div>
-          {open && (
-            <ul role="group" className="ui-org-chart__children">
+          {hasChildren && (
+            <OrgChartChildren open={open} animateEnter={mounted.current}>
               {renderNodes(node.children!, level + 1)}
-            </ul>
+            </OrgChartChildren>
           )}
         </li>
       );
@@ -182,5 +188,16 @@ export function OrganizationChart<T = unknown>({
         {renderNodes(value, 1)}
       </ul>
     </div>
+  );
+}
+
+/** The children of a node: stay mounted (inert, data-state="closed") while the reveal plays backwards. */
+function OrgChartChildren({ open, animateEnter, children }: { open: boolean; animateEnter: boolean; children: ReactNode }) {
+  const { present, state, exiting } = useReveal(open, animateEnter);
+  if (!present) return null;
+  return (
+    <ul role="group" className="ui-org-chart__children" data-state={state} inert={exiting || undefined}>
+      {children}
+    </ul>
   );
 }

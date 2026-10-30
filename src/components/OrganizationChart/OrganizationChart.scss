@@ -1,4 +1,4 @@
-@use '../../styles/data';
+@use '../../styles/panels';
 
 .ui-org-chart {
   --ui-org-chart-gap: 1.5rem;
@@ -37,10 +37,8 @@
     border-inline-start: var(--ui-org-chart-line);
   }
 
-  // A branch opens with a clip reveal from the parent downwards (no height animation).
-  @include data.motion-safe {
-    animation: ui-reveal-down var(--ui-motion-part) var(--ui-easing-out);
-  }
+  // A branch opens with a clip reveal from the parent downwards (no height animation) and closes the same way, faster.
+  @include panels.reveal;
 }
 
 .ui-org-chart__item {

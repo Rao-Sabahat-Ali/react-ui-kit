@@ -1,4 +1,4 @@
-// Count badges are the one pill/circle part (shape-elevation). Same type as Tag; the subtle appearance keeps Tag's
+// Badges use the small part radius (identity v2 has no pills; `pill` stays only for compatibility). Same type as Tag; the subtle appearance keeps Tag's
 // hairline so a tint is readable on white. Overlay badges are cut from what they sit on by a paper ring.
 .ui-badge {
   min-inline-size: 1.5em;
@@ -16,10 +16,11 @@
   }
 }
 
-.ui-badge--dot {
+.ui-badge.ui-badge--dot {
   width: 0.625rem;
   height: 0.625rem;
   min-inline-size: 0;
+  border-radius: var(--ui-radius-circle); // a status dot is a mark, not a pill
   border: var(--ui-line-width) solid var(--ui-color-surface);
 }
 

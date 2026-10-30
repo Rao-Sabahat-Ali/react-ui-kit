@@ -113,4 +113,14 @@ describe('Splitter', () => {
     render(tree());
     expect(document.querySelector('.ui-splitter__gutter .ui-splitter__handle')).toBeInTheDocument();
   });
+
+  it('v2: the hit area is at least 24px across the layout axis while the visible gutter stays slim', () => {
+    const scss = readFileSync(`${process.cwd()}/src/components/Splitter/Splitter.scss`, 'utf8');
+    const gutter = Number(/\.ui-splitter--horizontal > \.ui-splitter__gutter \{\s*inline-size: ([\d.]+)rem/.exec(scss)![1]);
+    const extend = Number(/\$hit-extend: -([\d.]+)rem/.exec(scss)![1]);
+    expect(gutter).toBeLessThanOrEqual(1);
+    expect((gutter + 2 * extend) * 16).toBeGreaterThanOrEqual(24);
+    expect(scss).toMatch(/inset-inline: \$hit-extend/);
+    expect(scss).toMatch(/inset-block: \$hit-extend/);
+  });
 });

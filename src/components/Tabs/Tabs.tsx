@@ -278,7 +278,7 @@ function Tab({ value, children, disabled = false, icon, badge, className }: TabP
     >
       {icon && <Icon name={icon} className="ui-tabs__icon" />}
       {children}
-      {badge !== undefined && <span className="badge rounded-pill text-bg-secondary ui-tabs__badge">{badge}</span>}
+      {badge !== undefined && <span className="badge ui-badge text-bg-secondary ui-tabs__badge">{badge}</span>}
     </button>
   );
 }

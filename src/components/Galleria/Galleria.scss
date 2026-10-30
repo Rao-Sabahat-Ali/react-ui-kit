@@ -23,12 +23,54 @@
     min-inline-size: 0;
   }
 
+  // Side thumbnails are a tidy column: fixed width, as tall as the stage (it scrolls when there are more), one
+  // 2px accent marker on the edge facing the stage marks the current one. The padding hosts the marker.
   .ui-galleria__thumbs {
+    flex: none;
     flex-direction: column;
     flex-wrap: nowrap;
-    max-block-size: 28rem;
+    align-self: stretch;
+    inline-size: 6rem;
+    padding-inline: var(--ui-space-2);
+    contain: size;
+    overflow-x: hidden;
     overflow-y: auto;
   }
+
+  .ui-galleria__thumb {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 4 / 3;
+    border-color: transparent;
+    opacity: 0.7;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      inline-size: var(--ui-line-width);
+      border-radius: var(--ui-radius-pill);
+      background: var(--ui-color-accent);
+      transform: scaleY(0);
+      transition: transform var(--ui-motion-quick) var(--ui-easing-out);
+    }
+
+    &--active {
+      border-color: transparent;
+    }
+
+    &--active::after {
+      transform: scaleY(1);
+    }
+  }
+}
+
+.ui-galleria--thumbs-end .ui-galleria__thumb::after {
+  inset-inline-start: calc(var(--ui-space-2) * -1);
+}
+
+.ui-galleria--thumbs-start .ui-galleria__thumb::after {
+  inset-inline-end: calc(var(--ui-space-2) * -1);
 }
 
 .ui-galleria--thumbs-start {
@@ -145,11 +187,11 @@
 }
 
 .ui-galleria__thumb {
+  position: relative;
   flex: none;
   inline-size: 4.5rem;
   block-size: 3.25rem;
   padding: 0;
-  overflow: hidden;
   border: var(--ui-line-width) solid transparent;
   border-radius: var(--ui-radius);
   background: var(--ui-color-surface-sunken);
@@ -175,6 +217,7 @@
 
 .ui-galleria__thumb-img {
   display: block;
+  border-radius: calc(var(--ui-radius) - var(--ui-line-width));
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
@@ -194,6 +237,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ui-galleria__thumb,
+  .ui-galleria__thumb::after,
   .ui-galleria__nav,
   .ui-galleria__action {
     transition: none;
@@ -202,6 +246,38 @@
   .ui-galleria__nav:active:not(:disabled),
   .ui-galleria__action:active:not(:disabled) {
     transform: none;
+  }
+}
+
+// Narrow screens: a side column of thumbnails would be as short as the stage, so it becomes the usual row below it.
+@media (max-width: 575.98px) {
+  .ui-galleria--thumbs-start,
+  .ui-galleria--thumbs-end {
+    flex-direction: column;
+
+    .ui-galleria__thumbs {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-self: auto;
+      inline-size: auto;
+      padding-inline: 0;
+      contain: none;
+      overflow: visible;
+    }
+
+    .ui-galleria__thumb {
+      inline-size: 4.5rem;
+      block-size: 3.25rem;
+      aspect-ratio: auto;
+
+      &::after {
+        display: none;
+      }
+
+      &--active {
+        border-color: var(--ui-color-accent);
+      }
+    }
   }
 }
 

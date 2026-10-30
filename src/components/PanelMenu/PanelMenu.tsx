@@ -98,7 +98,7 @@ export function PanelMenu({ items, multiple = false, expandedKeys, defaultExpand
       <>
         {item.icon && <Icon name={item.icon} className="ui-panel-menu__icon" />}
         <span className="ui-panel-menu__label">{item.label}</span>
-        {item.badge !== undefined && <span className="badge rounded-pill text-bg-secondary ui-panel-menu__badge">{item.badge}</span>}
+        {item.badge !== undefined && <span className="badge ui-badge text-bg-secondary ui-panel-menu__badge">{item.badge}</span>}
       </>
     );
     const active = isActive(item);

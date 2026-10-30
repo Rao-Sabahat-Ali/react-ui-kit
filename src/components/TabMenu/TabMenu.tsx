@@ -57,7 +57,7 @@ export function TabMenu({ items, activeHref, variant = 'tabs', ariaLabel, onNavi
             <>
               {item.icon && <Icon name={item.icon} className="ui-tab-menu__icon" />}
               <span>{item.label}</span>
-              {item.badge !== undefined && <span className="badge rounded-pill text-bg-secondary ui-tab-menu__badge">{item.badge}</span>}
+              {item.badge !== undefined && <span className="badge ui-badge text-bg-secondary ui-tab-menu__badge">{item.badge}</span>}
             </>
           );
           return (

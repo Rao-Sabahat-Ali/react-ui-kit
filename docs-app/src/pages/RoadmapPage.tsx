@@ -1,4 +1,5 @@
 import { DataTable, Tag, type Column } from '@sabahat/react-ui-kit';
+import { InlineMarkdown } from '../components/InlineMarkdown';
 import { href } from '../router';
 import { CATEGORY_LABELS, components, isImplemented, type CatalogComponent } from '../registry';
 
@@ -8,7 +9,7 @@ const columns: Column<Row>[] = [
   { field: 'name', header: 'Component', sortable: true, body: (c) => <a href={href('components', c.slug)}>{c.name}</a> },
   { field: 'category', header: 'Category', sortable: true, body: (c) => CATEGORY_LABELS[c.category] ?? c.category },
   { field: 'implemented', header: 'Status', sortable: true, body: (c) => <Tag value={c.implemented} severity={c.implemented === 'Implemented' ? 'success' : 'warning'} /> },
-  { field: 'purpose', header: 'Purpose' },
+  { field: 'purpose', header: 'Purpose', body: (c) => <InlineMarkdown text={c.purpose} /> },
 ];
 
 export function RoadmapPage() {

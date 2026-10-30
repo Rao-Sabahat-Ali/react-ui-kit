@@ -80,7 +80,7 @@ export function Galleria({
   const turnId = useRef(0);
   const thumbsRef = useRef<HTMLDivElement>(null);
   const vertical = thumbnailsPosition === 'start' || thumbnailsPosition === 'end';
-  const roving = useRovingFocus(thumbsRef, { selector: '.ui-galleria__thumb', orientation: vertical ? 'vertical' : 'horizontal', loop: circular });
+  const roving = useRovingFocus(thumbsRef, { selector: '.ui-galleria__thumb', orientation: vertical ? 'both' : 'horizontal', loop: circular });
 
   const interval = autoplay === true ? DEFAULT_INTERVAL : typeof autoplay === 'number' ? autoplay : 0;
   const canAutoplay = interval > 0 && !reducedMotion && count > 1;

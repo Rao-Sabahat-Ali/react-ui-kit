@@ -2,11 +2,12 @@ import { useEffect, useId, useRef, useState, type CSSProperties, type FocusEvent
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useTypeahead } from '../../hooks/useTypeahead';
+import { usePresence } from '../../motion/usePresence';
 import { useLocale } from '../../locale/LocaleProvider';
 import { cx } from '../../utils/cx';
 import { routerLinkHandler } from '../../utils/navigation';
 import { Icon } from '../Icon/Icon';
-import { HOVER_CLOSE_DELAY, HOVER_OPEN_DELAY, linkProps, MenuList } from '../Menu/MenuList';
+import { HOVER_CLOSE_DELAY, HOVER_OPEN_DELAY, linkProps, MenuList, type MenuListProps } from '../Menu/MenuList';
 import type { FocusRequest, MenuCloseReason, MenuItem, NavigateHandler } from '../Menu/types';
 import { focusAdjacentTabbable, isRtl } from '../../utils/element';
 
@@ -217,12 +218,22 @@ function DisclosureNav({ items, activeHref, onNavigate, vertical = false, openOn
               {item.icon && <Icon name={item.icon} className="ui-menubar__icon" />}
               {item.label}
             </button>
-            <ul id={subId} hidden={!open} className="dropdown-menu show ui-menubar__submenu">
+            <DisclosureSubmenu id={subId} open={open}>
               {renderLinks(item.items!, 1)}
-            </ul>
+            </DisclosureSubmenu>
           </li>
         );
       })}
+    </ul>
+  );
+}
+
+/** A disclosure submenu stays mounted (inert, data-state="closed") while it leaves, then is hidden. */
+function DisclosureSubmenu({ id, open, children }: { id: string; open: boolean; children: ReactNode }) {
+  const { present, state } = usePresence(open, { exit: 'part' });
+  return (
+    <ul id={id} hidden={!present} data-state={state} inert={state === 'closed' || undefined} className="dropdown-menu show ui-menubar__submenu">
+      {children}
     </ul>
   );
 }
@@ -251,6 +262,12 @@ export function NavLink({ item, activeHref, onNavigate, className, after }: { it
 }
 
 /* ---------- Menubar mode: APG Menubar ---------- */
+
+/** First-level submenu of the menubar: presence keeps it mounted and inert while its (faster) exit animation runs. */
+function MenubarSubmenu({ open, ...props }: Omit<MenuListProps, 'tiered' | 'level' | 'hidden' | 'state' | 'className'> & { open: boolean }) {
+  const { present, state } = usePresence(open, { exit: 'part' });
+  return <MenuList {...props} tiered level={1} hidden={!present} state={state} className="ui-menubar__submenu" />;
+}
 
 interface MenubarBarProps {
   items: MenuItem[];
@@ -438,13 +455,11 @@ function MenubarBar({ items, ariaLabel, activeHref, onNavigate, openOnHover }: M
               <div {...common}>{content}</div>
             )}
             {parent && (
-              <MenuList
+              <MenubarSubmenu
+                open={isOpen}
                 items={item.items!}
                 id={subId}
                 ariaLabelledby={itemId}
-                tiered
-                level={1}
-                hidden={!isOpen}
                 focusRequest={isOpen ? request : null}
                 hoverOpen={openOnHover}
                 onCloseAll={subCloseAll(index)}
@@ -454,7 +469,6 @@ function MenubarBar({ items, ariaLabel, activeHref, onNavigate, openOnHover }: M
                   moveTo(target, true, 'first');
                 }}
                 onNavigate={onNavigate}
-                className="ui-menubar__submenu"
               />
             )}
           </li>

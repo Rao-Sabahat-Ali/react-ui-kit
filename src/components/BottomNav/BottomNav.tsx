@@ -36,7 +36,7 @@ export function BottomNav({ items, activeHref, onNavigate, ariaLabel, className 
               <a href={href} className={cx('ui-bottom-nav__link', active && 'active')} aria-current={active ? 'page' : undefined} onClick={routerLinkHandler(href, onNavigate)}>
                 <span className="ui-bottom-nav__icon">
                   <Icon name={item.icon} size="lg" />
-                  {item.badge !== undefined && <span className="badge rounded-pill text-bg-danger ui-bottom-nav__badge">{item.badge}</span>}
+                  {item.badge !== undefined && <span className="badge ui-badge text-bg-danger ui-bottom-nav__badge">{item.badge}</span>}
                 </span>
                 <span className="ui-bottom-nav__label">{item.label}</span>
               </a>

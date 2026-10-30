@@ -5,7 +5,14 @@ import { Badge } from './Badge';
 describe('Badge', () => {
   it('AC-1: default classes', () => {
     render(<Badge value={3} />);
-    expect(screen.getByText('3').parentElement).toHaveClass('badge', 'text-bg-primary', 'rounded-pill');
+    const badge = screen.getByText('3').parentElement;
+    expect(badge).toHaveClass('badge', 'text-bg-primary');
+    expect(badge).not.toHaveClass('rounded-pill');
+  });
+
+  it('AC-1: pill=true still adds rounded-pill for compatibility', () => {
+    render(<Badge value={3} pill />);
+    expect(screen.getByText('3').parentElement).toHaveClass('rounded-pill');
   });
 
   it('AC-2: max caps display', () => {

@@ -43,7 +43,7 @@ export function HomePage() {
         </StepPanel>
       </StepSheet>
       <CodeBlock
-        code={`npm install github:Rao-Sabahat-Ali/react-ui-kit#main\n\n// main.tsx\nimport '@sabahat/react-ui-kit/styles.css';\nimport { ThemeProvider } from '@sabahat/react-ui-kit';\n\n<ThemeProvider profile="admin">\n  <App />\n</ThemeProvider>`}
+        code={`npm install @sabahat/react-ui-kit\n\n// main.tsx\nimport '@sabahat/react-ui-kit/styles.css';\nimport { ThemeProvider } from '@sabahat/react-ui-kit';\n\n<ThemeProvider profile="admin">\n  <App />\n</ThemeProvider>`}
       />
       <h2 className="h4 mt-4">Principles</h2>
       <ul className="docs-list">

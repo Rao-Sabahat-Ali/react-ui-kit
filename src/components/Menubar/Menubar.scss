@@ -83,6 +83,12 @@
   &[hidden] {
     display: none !important;
   }
+
+  // Exit: usePresence keeps the submenu mounted and inert for ~70% of the entrance, then hides it.
+  &[data-state='closed'] {
+    pointer-events: none;
+    @include parts.pop-out;
+  }
 }
 
 .ui-menubar__link {
@@ -135,7 +141,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-menubar__submenu {
+  .ui-menubar__submenu,
+  .ui-menubar__submenu[data-state='closed'] {
     animation: none;
   }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useLocale } from '../../locale/LocaleProvider';
+import { useReveal } from '../../motion/useReveal';
 import { cx } from '../../utils/cx';
 import { EmptyState } from '../EmptyState/EmptyState';
 import { Icon } from '../Icon/Icon';
@@ -211,6 +212,9 @@ export function OrderSummary({
 
   const collapses = collapsible === 'always' || (collapsible === 'below-lg' && !wide);
   const open = !collapses || expanded;
+  // The body reveals (clip-path + opacity) when toggled and stays mounted, inert, while it leaves; a body that is open at
+  // the first paint, or never collapses, carries no state and plays nothing.
+  const { present, state, exiting } = useReveal(open, false);
   const headingId = `${uid}-title`;
   const bodyId = `${uid}-body`;
   const heading = title ?? t('orderSummary');
@@ -320,7 +324,7 @@ export function OrderSummary({
           <span className="ui-order-summary__toggle-total">{totalText}</span>
         </button>
       )}
-      <div id={bodyId} hidden={!open} className="ui-order-summary__body">
+      <div id={bodyId} hidden={!present} data-state={state} inert={exiting || undefined} className="ui-order-summary__body">
         <Title id={headingId} className={cx('ui-order-summary__title', collapses && 'visually-hidden')}>
           {heading}
         </Title>

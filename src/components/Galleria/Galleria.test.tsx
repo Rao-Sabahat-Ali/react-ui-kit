@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -115,5 +116,14 @@ describe('Galleria', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Next slide' }));
     expect(mainImage().alt).toBe('Blue chair');
     expect(document.querySelector('.ui-galleria__figure--leaving')).toBeNull();
+  });
+
+  it('v2: side thumbnails are a fixed-width column with a 2px accent marker on the edge facing the stage', () => {
+    const scss = readFileSync(`${process.cwd()}/src/components/Galleria/Galleria.scss`, 'utf8');
+    expect(scss).toMatch(/\.ui-galleria--thumbs-start,\s*\.ui-galleria--thumbs-end \{[\s\S]*?inline-size: 6rem/);
+    expect(scss).toMatch(/inline-size: var\(--ui-line-width\);[\s\S]*?background: var\(--ui-color-accent\)/);
+    render(<Galleria value={photos} thumbnailsPosition="end" aria-label="Side" />);
+    expect(document.querySelector('.ui-galleria--thumbs-end .ui-galleria__thumbs')).toBeInTheDocument();
+    expect(document.querySelector('.ui-galleria__thumb--active')).toBeInTheDocument();
   });
 });
