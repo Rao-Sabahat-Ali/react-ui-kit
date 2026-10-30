@@ -1,6 +1,6 @@
 {
   "name": "@sabahat/react-ui-kit",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "React 19 + Bootstrap 5.3 component library implementing the personal design system (specs served by design-system-mcp).",
   "license": "MIT",
   "type": "module",
