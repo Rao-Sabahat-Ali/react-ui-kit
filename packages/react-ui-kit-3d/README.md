@@ -9,7 +9,7 @@ npm install @sabahat/react-ui-kit-3d three
 npm install -D @types/three   # when you write model factories in TypeScript
 ```
 
-Peers: `react` and `react-dom` 19, `@sabahat/react-ui-kit` (`^1.4.0 || ^2.0.0`) and `three` (`>=0.170.0`). There are no other runtime dependencies (no react-three-fiber, no drei).
+Peers: `react` and `react-dom` 19, `@sabahat/react-ui-kit` (`^2.0.0`) and `three` (`>=0.170.0`). There are no other runtime dependencies (no react-three-fiber, no drei).
 
 ```tsx
 import '@sabahat/react-ui-kit-3d/styles.css'; // once, next to the kit styles
