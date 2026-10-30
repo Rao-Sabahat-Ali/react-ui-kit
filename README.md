@@ -4,6 +4,10 @@ React 19 + Bootstrap 5.3 component library for the personal design system — Pr
 
 Specs, tokens and rules: [`design-system-mcp`](https://github.com/Rao-Sabahat-Ali/design-system-mcp) (also an MCP server for coding agents).
 
+**Live docs:** https://react-ui-kit-docs.vercel.app · **npm:** [`@sabahat/react-ui-kit`](https://www.npmjs.com/package/@sabahat/react-ui-kit), optional 3D package [`@sabahat/react-ui-kit-3d`](https://www.npmjs.com/package/@sabahat/react-ui-kit-3d)
+
+**Stack:** React 19, TypeScript, Bootstrap 5.3 SCSS (no Bootstrap JS), Vite, in-house motion on CSS and the Web Animations API, three.js in the optional 3D package only. Tested with Vitest, Testing Library, Playwright and Lighthouse CI; docs hosted on Vercel.
+
 ## Install
 
 ```bash
