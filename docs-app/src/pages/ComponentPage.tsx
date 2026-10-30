@@ -1,5 +1,6 @@
 import { Message, Tag } from '@sabahat/react-ui-kit';
 import { ExampleCard } from '../components/ExampleCard';
+import { InlineMarkdown } from '../components/InlineMarkdown';
 import { CATEGORY_LABELS, components, examplesByName } from '../registry';
 
 export function ComponentPage({ slug }: { slug: string }) {
@@ -14,7 +15,7 @@ export function ComponentPage({ slug }: { slug: string }) {
           <Tag value={examples ? 'Implemented' : 'Specified'} severity={examples ? 'success' : 'warning'} />
         </div>
         <h1>{component.name}</h1>
-        <p className="lead text-body-secondary">{component.purpose}</p>
+        <p className="lead text-body-secondary"><InlineMarkdown text={component.purpose} /></p>
         <p className="small text-body-secondary mb-0">
           Spec: <code>design-system-mcp/specs/components/{component.slug}.md</code> · MCP: <code>get_component_spec("{component.name}")</code>
         </p>

@@ -1,4 +1,4 @@
-@use '../../styles/data';
+@use '../../styles/panels';
 
 .ui-order-summary__title {
   margin: 0 0 var(--ui-space-3);
@@ -46,11 +46,9 @@
   padding-block-start: var(--ui-space-3);
 }
 
-// The body opens with a short clip reveal (no height animation); closing is immediate.
-.ui-order-summary--collapsible.ui-order-summary--open .ui-order-summary__body {
-  @include data.motion-safe {
-    animation: ui-reveal-down var(--ui-motion-part) var(--ui-easing-out);
-  }
+// The body reveals with clip-path + opacity (no height animation) and plays it backwards, faster, when it closes.
+.ui-order-summary--collapsible .ui-order-summary__body {
+  @include panels.reveal;
 }
 
 .ui-order-summary__table {

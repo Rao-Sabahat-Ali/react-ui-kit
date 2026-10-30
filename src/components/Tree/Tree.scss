@@ -1,4 +1,5 @@
 @use '../../styles/data';
+@use '../../styles/panels';
 
 .ui-tree {
   --ui-tree-indent: 1.25rem;
@@ -33,10 +34,8 @@
     pointer-events: none;
   }
 
-  // Expanding reveals the children with a short clip-path wipe: no height animation, no layout reflow.
-  @include data.motion-safe {
-    animation: ui-reveal-down var(--ui-motion-part) var(--ui-easing-out);
-  }
+  // Expanding reveals the children (clip-path + opacity, no height animation); collapsing plays it backwards, faster.
+  @include panels.reveal;
 }
 
 .ui-tree__node--dragging > .ui-tree__row {

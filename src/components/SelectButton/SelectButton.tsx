@@ -66,9 +66,21 @@ export function SelectButton<T>(props: SelectButtonProps<T>) {
     if (!slides) return;
     place();
     const group = groupRef.current;
+    // Segment widths change without the group changing size (a web font swapping in, a label changing), so every segment is
+    // observed too and the indicator is placed again once fonts are ready; otherwise it could stay at a stale width.
     const observer = typeof ResizeObserver === 'undefined' || !group ? null : new ResizeObserver(place);
-    if (group) observer?.observe(group);
-    return () => observer?.disconnect();
+    if (group) {
+      observer?.observe(group);
+      for (const item of Array.from(group.children)) observer?.observe(item);
+    }
+    let cancelled = false;
+    void document.fonts?.ready.then(() => {
+      if (!cancelled) place();
+    });
+    return () => {
+      cancelled = true;
+      observer?.disconnect();
+    };
   }, [slides, single, options.length, size, block]);
 
   const isSelected = (v: T) => (props.multiple ? many.includes(v) : single === v);

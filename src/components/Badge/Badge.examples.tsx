@@ -15,6 +15,17 @@ export const examples = [
     ),
   },
   {
+    title: 'Dot and compact counts',
+    code: `<Badge dot label="Online" variant="success" />\n<Badge value={7} variant="secondary" />`,
+    render: () => (
+      <div className="d-flex align-items-center gap-3">
+        <Badge dot label="Online" variant="success" />
+        <Badge value={7} variant="secondary" />
+        <Badge value={99} variant="danger" />
+      </div>
+    ),
+  },
+  {
     title: 'Overlay',
     code: `<Badge value={3} label="3 unread messages" variant="danger" overlay={{ children: <Button icon="user" aria-label="Inbox" appearance="text" variant="secondary" /> }} />`,
     render: () => (

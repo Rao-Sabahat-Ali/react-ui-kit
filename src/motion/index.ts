@@ -6,3 +6,4 @@ export { useAssemble, type AssembleOptions, type AssembleControls } from './useA
 export { useFlip, type FlipOptions } from './useFlip';
 export { useCountTick, type CountTick, type TickChar } from './useCountTick';
 export { useViewTransition, type ViewTransitionApi, type ViewTransitionRunOptions } from './useViewTransition';
+export { useReveal, type RevealResult } from './useReveal';

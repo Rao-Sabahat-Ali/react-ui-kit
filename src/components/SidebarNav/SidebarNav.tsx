@@ -69,7 +69,7 @@ function NavEntry({ item, activeHref, collapsed, onNavigate, afterNavigate, dept
     <>
       {item.icon && <Icon name={item.icon} className="ui-sidebar-nav__icon" />}
       <span className={cx('ui-sidebar-nav__label', collapsed && 'visually-hidden')}>{item.label}</span>
-      {item.badge !== undefined && !collapsed && <span className="badge rounded-pill text-bg-secondary ui-sidebar-nav__badge">{item.badge}</span>}
+      {item.badge !== undefined && !collapsed && <span className="badge ui-badge text-bg-secondary ui-sidebar-nav__badge">{item.badge}</span>}
     </>
   );
 
