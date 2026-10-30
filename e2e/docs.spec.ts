@@ -1,5 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 import catalog from '../docs-app/src/catalog.generated.json' with { type: 'json' };
+import { acknowledgeNotice } from './consent';
+
+test.beforeEach(async ({ page }) => {
+  await acknowledgeNotice(page);
+});
 
 const errorsOn = (page: Page) => {
   const errors: string[] = [];

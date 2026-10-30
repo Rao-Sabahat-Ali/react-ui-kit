@@ -2,6 +2,18 @@
 
 All notable changes to `@sabahat/react-ui-kit`. Versions follow [semver](https://semver.org/); each release is a git tag (`vX.Y.Z`) and the design-system-mcp submodule is bumped to it.
 
+## Unreleased (2.1.0)
+
+### Added
+
+- **CookieBanner**, with `ConsentProvider`, `useConsent` and `ConsentGate` (spec: design-system-mcp `components/cookie-banner`). A non-modal region lifted at the bottom of the sheet that says what an app stores on the visitor's device. Consent mode offers Reject all, Accept all (the same button, neither focused) and Choose, which opens the kit `Dialog` with one `Switch` per category; notice mode is one OK button for apps that only store what they need. The decision is a small record (`version`, `decidedAt`, `mode`, per-category booleans) in localStorage (`ui:consent`) or, with `storage="cookie"`, a first-party `ui_consent` cookie. Records are validated by shape and expire after `maxAgeDays` or when `policyVersion` changes; a decision in another tab applies without a reload. `ConsentGate` mounts optional scripts only after the category is granted; `openSettings()` reopens the choice. While visible it reserves its height (`--ui-consent-offset`, plus bottom padding and `scroll-padding-bottom` on the document), so a focused element is never hidden behind it. New locale keys: `cookieTitle`, `cookiePolicyLabel`, `cookieNoticeMessage`, `cookieConsentMessage`, `cookieReject`, `cookieAccept`, `cookieChoose`, `cookieSave`, `cookieAcknowledge`, `cookiePreferencesTitle`, `cookiePreferencesIntro`, `cookieRequiredReason`.
+- Docs: a CookieBanner page with consent, notice, cookie-storage, ConsentGate and reopen examples (each with its own storage key and a Reset example action), a Privacy page listing exactly what the docs store, and a cookie notice with a "Cookies and storage" link in the docs rail.
+
+### Fixed
+
+- **Switch.** A switch that is on and disabled now shows its knob (it was the same colour as the greyed track).
+- **Docs.** The first page load no longer moves focus to `main`; route changes still do.
+
 ## 2.0.0 — 2026-10-30
 
 Identity v2, "Monteringsanvisning" (the assembly sheet). The look changes everywhere: white instruction paper, kraft shell, 2px ink lines, signal-blue accent, Albert Sans and an assembly motion grammar. Several components change their markup and a few defaults change, so read **Breaking changes** and the [upgrade guide](docs/migration-v2.md) before you move from 1.4.0. Install with `npm install @sabahat/react-ui-kit@2.0.0`.

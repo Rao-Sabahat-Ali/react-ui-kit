@@ -141,6 +141,7 @@ Needed by every profile; unlocks real app scaffolds.
 - [x] **UI-903** Scheduler: eventCount_one/_other + schedulerView keys; compact month view (< md: dots + selected-day agenda). "+n more" keeps its anchored dialog (same behaviour as Popover, avoids per-cell triggers).
 - [x] **UI-904** Helpers moved to `src/utils/element.ts`; locale keys added; built-in icons pause, play, rotate, maximize replace inline SVGs.
 - [x] **UI-902** `Responsive<T>` moved to `src/utils/responsive.ts`. ListBox keeps its own windowing on purpose: activedescendant scrolling needs direct control of scrollTop.
+- [x] **UI-905** CookieBanner + ConsentProvider/useConsent/ConsentGate (spec cookie-banner, 16 ACs tested; consent and notice modes, localStorage or `ui_consent` cookie). Docs: component page, Privacy page, notice + "Cookies and storage" link in the rail. Targeted at 2.1.0.
 
 ## Ops / quality
 

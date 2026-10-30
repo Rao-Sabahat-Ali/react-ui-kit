@@ -46,8 +46,10 @@
   // Sticky and exactly as tall as the viewport below the bar, so the kraft rail fills the screen however far the sheet scrolls.
   height: calc(100vh - 3.5rem);
   height: calc(100dvh - 3.5rem);
-  overflow-y: auto;
-  padding: var(--ui-space-3) 0;
+  // The rail scrolls inside; the footer below it stays put and never overlaps a link.
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: var(--ui-color-shell);
   color: var(--ui-color-shell-contrast);
   border-inline-end: var(--ui-line-width) solid var(--ui-color-line);
@@ -143,6 +145,35 @@
 
 .docs-nav__section {
   padding: 0 var(--ui-space-2) var(--ui-space-3);
+}
+
+.docs-nav__scroll {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  padding: var(--ui-space-3) 0 0;
+}
+
+// Pinned to the bottom of the rail: what the site stores, and the way to look at it again.
+.docs-nav__footer {
+  flex: none;
+  display: grid;
+  padding: var(--ui-space-2);
+  background: var(--ui-color-shell);
+  border-block-start: var(--ui-line-width) solid var(--ui-color-line);
+
+  button.docs-nav__link {
+    inline-size: 100%;
+    background-color: transparent;
+    font: inherit;
+    font-size: var(--ui-font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--ui-color-shell-hover);
+    }
+  }
 }
 
 .docs-nav__heading {

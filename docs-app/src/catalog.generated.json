@@ -251,6 +251,16 @@
       ]
     },
     {
+      "name": "CookieBanner",
+      "slug": "cookie-banner",
+      "category": "messages",
+      "status": "specified",
+      "purpose": "Tells visitors what an app stores on their device and, when the app uses optional cookies or trackers, asks for consent per category. Two modes from one component: **consent** (Reject all / Accept all / Choose, as GDPR and the ePrivacy Directive require for anything not strictly necessary) and **notice** (an honest statement when everything stored is strictly necessary: no fake choices). Comes with `ConsentProvider`, `useConsent` and `ConsentGate` so apps load optional scripts only after consent and can reopen the choice at any time. In identity v2 it is a ruled note lifted at the bottom of the sheet.",
+      "profiles": [
+        "all"
+      ]
+    },
+    {
       "name": "CopyButton",
       "slug": "copy-button",
       "category": "button",

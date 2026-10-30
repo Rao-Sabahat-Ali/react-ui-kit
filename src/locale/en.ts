@@ -396,6 +396,18 @@ export const en = {
   kanbanComments_one: '{count} comment',
   kanbanComments_other: '{count} comments',
   kanbanPending: 'Saving move',
+  cookieTitle: 'Cookies and storage',
+  cookiePolicyLabel: 'Privacy and cookies',
+  cookieNoticeMessage: 'This site stores only what it needs to work on this device. No tracking.',
+  cookieConsentMessage: 'Besides what the site needs to work, we would like to store optional data on this device. You choose what to allow, and you can change it at any time.',
+  cookieReject: 'Reject all',
+  cookieAccept: 'Accept all',
+  cookieChoose: 'Choose…',
+  cookieSave: 'Save choices',
+  cookieAcknowledge: 'OK',
+  cookiePreferencesTitle: 'Cookie preferences',
+  cookiePreferencesIntro: 'Choose which optional data this site may store on your device. Anything marked always on is needed for the site to work.',
+  cookieRequiredReason: 'Always on: the site does not work without it.',
 };
 
 export type Messages = typeof en;

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { acknowledgeNotice } from './consent';
 
 // Real rendering of @sabahat/react-ui-kit-3d in Chromium with software WebGL (SwiftShader), against the docs app.
 test.use({ launchOptions: { args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] } });
@@ -35,6 +36,7 @@ async function inkPixels(page: Page, index: number): Promise<number> {
 }
 
 test.beforeEach(async ({ page }) => {
+  await acknowledgeNotice(page);
   await page.addInitScript(() => localStorage.setItem('ui:theme', 'light'));
 });
 

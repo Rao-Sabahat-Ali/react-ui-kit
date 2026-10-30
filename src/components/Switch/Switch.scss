@@ -53,6 +53,11 @@
     ~ .ui-switch__knob {
       background-color: var(--ui-color-border-strong);
     }
+
+    // A switch that is on and locked (a required cookie category): the knob stays visible against the greyed track.
+    &:checked ~ .ui-switch__knob {
+      background-color: var(--ui-color-surface);
+    }
   }
 
   &:focus-visible {
