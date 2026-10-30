@@ -49,12 +49,15 @@ export function Overview({ previewState, onNavigate }: OverviewProps) {
   };
   const retry = (widget: 'numbers' | 'today') => () => setRetried((r) => ({ ...r, [widget]: previewKey }));
   const numbers = stateOf('numbers');
+  const today = stateOf('today');
+  // Never promise tasks the regions below do not show.
+  const deadline = today === 'ready' ? 'Three things need you before the VAT return is due on 12 November.' : today === 'empty' ? 'Nothing needs you before the VAT return is due on 12 November.' : 'The VAT return is due on 12 November.';
 
   return (
     <>
       <PageHeader
         title="God morgon, Alva"
-        description="Three things need you before the VAT return is due on 12 November."
+        description={deadline}
         actions={
           <Button icon="plus" onClick={() => toast.info('New expense is not part of the blueprint')}>
             New expense
@@ -96,7 +99,7 @@ export function Overview({ previewState, onNavigate }: OverviewProps) {
           <Section title="Today" description="Pick one and it is done in a couple of minutes.">
             <StateBlock
               name="Today list"
-              state={stateOf('today')}
+              state={today}
               onRetry={retry('today')}
               empty="Nothing needs you today"
               emptyDescription="New tasks show up here as invoices and receipts arrive."

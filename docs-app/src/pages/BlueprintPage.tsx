@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Select, SelectButton, ToastProvider, type Profile } from '@sabahat/react-ui-kit';
 import { CodeBlock } from '../components/CodeBlock';
-import { findBlueprint, sourceOf, type Blueprint } from '../blueprints/registry';
+import { findBlueprint, loadSource, type Blueprint } from '../blueprints/registry';
 import { href } from '../router';
 
 /**
@@ -21,10 +21,32 @@ export function BlueprintPage({ slug, onProfileChange }: { slug: string; onProfi
   );
 }
 
+const NO_FILES: string[] = [];
+
+/** The copyable source files, loaded after the screen (they sit below the fold). */
+function useSources(files: string[]): Record<string, string> {
+  const [sources, setSources] = useState<Record<string, string>>({});
+  useEffect(() => {
+    let live = true;
+    void Promise.all(files.map(async (file) => [file, await loadSource(file)] as const)).then((entries) => live && setSources(Object.fromEntries(entries)));
+    return () => {
+      live = false;
+    };
+  }, [files]);
+  return sources;
+}
+
 function BlueprintView({ blueprint }: { blueprint: Blueprint }) {
   const [widget, setWidget] = useState('all');
   const [state, setState] = useState('ready');
   const { preview } = blueprint;
+  // The page chrome paints first; the (heavy) screen and the copyable sources load right after that first paint.
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setReady(true), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+  const sources = useSources(ready ? blueprint.files : NO_FILES);
   return (
     <div className="docs-blueprint">
       <p className="docs-blueprint__lead">
@@ -48,7 +70,7 @@ function BlueprintView({ blueprint }: { blueprint: Blueprint }) {
         </div>
       )}
 
-      <div className="docs-blueprint__frame">{blueprint.render({ widget, state })}</div>
+      <div className="docs-blueprint__frame">{ready ? blueprint.render({ widget, state }) : <div className="docs-blueprint__pending" aria-hidden="true" />}</div>
 
       <section className="docs-blueprint__notes" aria-labelledby="bp-pattern">
         <h2 id="bp-pattern" className="h4">
@@ -93,7 +115,7 @@ function BlueprintView({ blueprint }: { blueprint: Blueprint }) {
         {blueprint.files.map((file) => (
           <div key={file} className="mb-4">
             <h3 className="h6 font-monospace">{file}</h3>
-            <CodeBlock tall label={file} code={sourceOf(file)} />
+            {sources[file] !== undefined && <CodeBlock tall label={file} code={sources[file]} />}
           </div>
         ))}
       </section>

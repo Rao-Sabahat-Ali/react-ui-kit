@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Button, Icon, InputText, Select, ThemeProvider, ThemeToggle, type Profile } from '@sabahat/react-ui-kit';
-import { blueprintNav } from './blueprints/nav';
+import { blueprints, findBlueprint } from './blueprints/registry';
+import { BlueprintPage } from './pages/BlueprintPage';
+import { BlueprintsPage } from './pages/BlueprintsPage';
 import { ComponentPage } from './pages/ComponentPage';
 import { HomePage } from './pages/HomePage';
 import { CATEGORY_LABELS, components, isImplemented, profiles } from './registry';
@@ -9,8 +11,6 @@ import { href, useRoute } from './router';
 const FoundationsPage = lazy(() => import('./pages/FoundationsPage').then((m) => ({ default: m.FoundationsPage })));
 const ProfilesPage = lazy(() => import('./pages/ProfilesPage').then((m) => ({ default: m.ProfilesPage })));
 const RoadmapPage = lazy(() => import('./pages/RoadmapPage').then((m) => ({ default: m.RoadmapPage })));
-const BlueprintPage = lazy(() => import('./pages/BlueprintPage').then((m) => ({ default: m.BlueprintPage })));
-const BlueprintsPage = lazy(() => import('./pages/BlueprintsPage').then((m) => ({ default: m.BlueprintsPage })));
 const Depth3DPage = lazy(() => import('./pages/Depth3DPage').then((m) => ({ default: m.Depth3DPage })));
 
 function readProfile(): Profile {
@@ -62,10 +62,10 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
     return Object.keys(CATEGORY_LABELS).filter((k) => map.has(k)).map((k) => [k, map.get(k)!] as const);
   }, [query]);
 
-  const blueprint = route[0] === 'blueprints' ? blueprintNav.find((b) => b.slug === route[1]) : undefined;
+  const blueprint = route[0] === 'blueprints' ? findBlueprint(route[1]) : undefined;
   const page =
-    blueprint ? <Suspense fallback={null}><BlueprintPage slug={blueprint.slug} onProfileChange={onProfileChange} /></Suspense> :
-    route[0] === 'blueprints' ? <Suspense fallback={null}><BlueprintsPage /></Suspense> :
+    blueprint ? <BlueprintPage slug={blueprint.slug} onProfileChange={onProfileChange} /> :
+    route[0] === 'blueprints' ? <BlueprintsPage /> :
     route[0] === 'components' && route[1] ? <ComponentPage slug={route[1]} /> :
     route[0] === 'foundations' ? <Suspense fallback={null}><FoundationsPage /></Suspense> :
     route[0] === 'profiles' ? <Suspense fallback={null}><ProfilesPage /></Suspense> :
@@ -111,7 +111,7 @@ function Shell({ profile, onProfileChange }: { profile: Profile; onProfileChange
           </div>
           <div className="docs-nav__section">
             <div className="docs-nav__heading">Blueprints</div>
-            {blueprintNav.map((b) => navLink(`blueprints/${b.slug}`, b.title))}
+            {blueprints.map((b) => navLink(`blueprints/${b.slug}`, b.title))}
           </div>
           {groups.map(([category, list]) => (
             <div key={category} className="docs-nav__section">

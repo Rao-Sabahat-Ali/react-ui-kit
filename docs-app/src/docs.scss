@@ -276,6 +276,11 @@
 }
 
 // `clip` (not hidden) keeps sticky table headers inside the frame working.
+.docs-blueprint__pending {
+  // Holds the frame's place while its screen chunk loads, so the notes below do not jump when it arrives.
+  min-block-size: 100vh;
+}
+
 .docs-blueprint__frame {
   margin-bottom: var(--ui-space-8);
   border: var(--ui-line-width) solid var(--ui-color-line);

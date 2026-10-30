@@ -3,11 +3,7 @@ import react from '@vitejs/plugin-react';
 import { defineConfig, type Plugin } from 'vite';
 import { scssOptions } from './vite.config';
 
-/**
- * Two preloads for the first paint. The latin font (as the kit's _fonts.scss advises) so the first paint does not reflow when it
- * swaps in; and, when the page opens on a blueprint route, the lazily loaded blueprint chunk with everything it imports, so the
- * request chain index → page → registry → components is fetched in parallel instead of one level at a time.
- */
+/** Preloads the latin font (as the kit's _fonts.scss advises) so the first paint does not reflow when it swaps in. */
 const docsPreloads = (): Plugin => ({
   name: 'docs-preloads',
   transformIndexHtml: {
@@ -18,23 +14,6 @@ const docsPreloads = (): Plugin => ({
       const font = Object.keys(bundle).find((name) => /albert-sans-latin-wght-normal-.*\.woff2$/.test(name));
       if (font) tags.push({ tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', crossorigin: '', href: `./${font}` }, injectTo: 'head-prepend' });
 
-      const page = Object.values(bundle).find((o) => o.type === 'chunk' && o.facadeModuleId?.endsWith('/pages/BlueprintPage.tsx'));
-      if (page && page.type === 'chunk') {
-        const files = new Set<string>();
-        const visit = (name: string) => {
-          const chunk = bundle[name];
-          if (files.has(name) || !chunk || chunk.type !== 'chunk') return;
-          files.add(name);
-          chunk.imports.forEach(visit);
-        };
-        visit(page.fileName);
-        const list = JSON.stringify([...files].map((f) => `./${f}`));
-        tags.push({
-          tag: 'script',
-          children: `if (location.hash.indexOf('#/blueprints/') === 0) ${list}.forEach(function (h) { var l = document.createElement('link'); l.rel = 'modulepreload'; l.href = h; document.head.appendChild(l); });`,
-          injectTo: 'head',
-        });
-      }
       return tags;
     },
   },
